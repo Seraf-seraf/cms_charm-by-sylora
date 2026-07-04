@@ -5,4 +5,4 @@ RewriteCond %{THE_REQUEST} \s/+upload/([^\s?]*) [NC]
 RewriteRule ^upload/(.*)$ /$1 [R=301,L]
 
 RewriteCond %{REQUEST_URI} !^/upload/ [NC]
-RewriteRule ^(.*)$ upload/$1 [L,QSA]
+RewriteRule ^(.*)$ /upload/$1 [L,QSA]
