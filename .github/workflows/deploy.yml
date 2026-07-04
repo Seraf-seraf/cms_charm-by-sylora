@@ -16,18 +16,26 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT || 22 }}
           script_stop: true
+          debug: true
           script: |
-            set -eu
+            set -eux
 
             cd "${{ secrets.DEPLOY_PATH }}"
 
             git fetch origin main
             git reset --hard origin/main
 
+            php -v
+
             if command -v composer >/dev/null 2>&1; then
+              composer --version
               composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
-            else
+            elif [ -f composer.phar ]; then
+              php composer.phar --version
               php composer.phar install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+            else
+              echo "Composer is not installed and composer.phar was not found in DEPLOY_PATH."
+              exit 1
             fi
 
             find upload/system/storage/cache storage/cache upload/image/cache -type f ! -name .gitkeep -delete 2>/dev/null || true
