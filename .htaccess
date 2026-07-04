@@ -1,10 +1,8 @@
 Options -Indexes
 RewriteEngine On
 
-# Keep public URLs clean if someone opens /upload/... directly.
 RewriteCond %{THE_REQUEST} \s/+upload/([^\s?]*) [NC]
 RewriteRule ^upload/(.*)$ /$1 [R=301,L]
 
-# Internally serve the OpenCart application from upload/.
 RewriteCond %{REQUEST_URI} !^/upload/ [NC]
 RewriteRule ^(.*)$ upload/$1 [L,QSA]
