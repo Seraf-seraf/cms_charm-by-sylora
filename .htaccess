@@ -1,0 +1,14 @@
+Options -Indexes
+RewriteEngine On
+
+# Keep public URLs clean if someone opens /upload/... directly.
+RewriteCond %{THE_REQUEST} \s/+upload/([^\s?]*) [NC]
+RewriteRule ^upload/(.*)$ /$1 [R=301,L]
+
+# Serve existing files and directories from upload/.
+RewriteCond %{DOCUMENT_ROOT}/upload%{REQUEST_URI} -f [OR]
+RewriteCond %{DOCUMENT_ROOT}/upload%{REQUEST_URI} -d
+RewriteRule ^(.*)$ upload/$1 [L]
+
+# Let OpenCart handle all other routes from upload/index.php.
+RewriteRule ^(.*)$ upload/index.php?_route_=$1 [L,QSA]
