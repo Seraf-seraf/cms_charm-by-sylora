@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ['8.5.7']
+        php: ['8.3']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -57,7 +57,7 @@ jobs:
           ./upload/system/storage/vendor/bin/phpstan analyze --no-progress
 
       - name: Code style
-        if: matrix.php == '8.5.7'
+        if: matrix.php == '8.3'
         run: |
           composer require --dev -w friendsofphp/php-cs-fixer v3.41.1
           ./upload/system/storage/vendor/bin/php-cs-fixer fix --dry-run --diff --ansi || true
