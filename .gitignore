@@ -1,0 +1,86 @@
+# Config and Htaccess Files
+/upload/.htaccess
+/upload/config.php
+/upload/admin/config.php
+/.env
+/.env.*
+
+# Image File
+!/upload/image/no_image.jpg
+
+# Image Cache Files
+/upload/image/cache/*
+!/upload/image/cache/.gitkeep
+
+# System Cache Files
+/upload/system/storage/cache/*
+!/upload/system/storage/cache/.gitkeep
+/storage/cache/*
+!/storage/cache/.gitkeep
+
+# Modification Files
+/upload/system/storage/modification/*
+!/upload/system/storage/modification/.gitkeep
+/storage/modification/*
+!/storage/modification/.gitkeep
+
+# Templates Files
+/upload/image/templates/*
+/upload/image/templates/default.jpg
+
+# Download Files
+/upload/system/storage/download/*
+!/upload/system/storage/download/.gitkeep
+/storage/download/*
+!/storage/download/.gitkeep
+
+# Session Files
+/upload/system/storage/session/*
+!/upload/system/storage/session/.gitkeep
+/storage/session/*
+!/storage/session/.gitkeep
+
+# Upload Files
+/upload/system/storage/upload/*
+!/upload/system/storage/upload/.gitkeep
+/storage/upload/*
+!/storage/upload/.gitkeep
+
+# Flags
+# remove sharp char if you want to add flags to gitignore
+# /upload/flags/*
+
+# Log Files
+/upload/system/storage/logs/*
+!/upload/system/storage/logs/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# If you want to ignore install file use following lines [on development mode]
+# /upload/backup.install/*
+# /upload/install/*
+/upload/install_disabled/
+
+# Composer dependencies
+/vendor/
+/upload/system/storage/vendor/
+/storage/vendor/
+/tests/phpunit/vendor/*
+
+# Test lock file
+/tests/phpunit/composer.lock
+
+# Test Config File
+/tests/phpunit/bootstrap.php
+
+# IDE Project files
+/.idea
+/upload/.idea
+/.vscode
+/.cache/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
