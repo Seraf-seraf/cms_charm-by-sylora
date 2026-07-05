@@ -1768,3 +1768,243 @@ footer h5 {
 		display: none;
 	}
 }
+
+/* Product page */
+.product-page {
+	display: grid;
+	grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.75fr);
+	gap: 42px;
+	align-items: start;
+}
+
+.product-page__media,
+.product-page__summary {
+	min-width: 0;
+}
+
+.product-gallery__main .thumbnail,
+.product-page .thumbnail {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-surface);
+}
+
+.product-gallery__main .thumbnail img {
+	width: 100%;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+}
+
+.product-page .image-additional {
+	margin-top: 12px;
+	margin-left: 12px;
+}
+
+.product-page .image-additional .thumbnail {
+	width: 86px;
+	height: 86px;
+}
+
+.product-page .image-additional img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.product-tabs {
+	margin-top: 26px;
+	border-bottom-color: var(--color-border);
+}
+
+.product-tabs > li > a {
+	color: var(--color-earth);
+	border-radius: 8px 8px 0 0;
+	font-weight: 700;
+}
+
+.product-tabs > li.active > a,
+.product-tabs > li.active > a:hover,
+.product-tabs > li.active > a:focus {
+	background: var(--color-surface);
+	border-color: var(--color-border);
+	border-bottom-color: var(--color-surface);
+	color: var(--color-text);
+}
+
+.product-tabs__content {
+	padding: 22px;
+	border: 1px solid var(--color-border);
+	border-top: 0;
+	border-radius: 0 0 8px 8px;
+	background: var(--color-surface);
+	color: var(--color-text);
+}
+
+.product-tabs__content table {
+	background: var(--color-bg);
+}
+
+.product-summary__tools {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 10px;
+}
+
+.product-page__summary {
+	position: sticky;
+	top: 96px;
+	padding: 22px;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-bg);
+	box-shadow: var(--shadow-soft);
+}
+
+.product-page__summary h1 {
+	margin: 0 0 18px;
+	font-size: 34px;
+	line-height: 1.16;
+}
+
+.product-meta {
+	display: grid;
+	gap: 9px;
+	margin-bottom: 20px;
+	padding: 0;
+}
+
+.product-meta li {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	color: var(--color-text);
+}
+
+.product-meta span {
+	color: var(--color-muted);
+}
+
+.product-stock.is-in {
+	color: var(--color-success);
+}
+
+.product-stock.is-low {
+	color: var(--color-earth);
+}
+
+.product-stock.is-out {
+	color: var(--color-danger);
+}
+
+.product-price {
+	margin: 0 0 20px;
+}
+
+.product-price h2 {
+	margin: 0;
+	color: var(--color-earth);
+	font-size: 30px;
+}
+
+.product-price__old {
+	color: var(--color-muted);
+	text-decoration: line-through;
+}
+
+.product-price__tax {
+	color: var(--color-muted);
+	font-size: 12px;
+}
+
+.product-purchase {
+	padding-top: 4px;
+}
+
+.product-purchase h2 {
+	margin: 16px 0 14px;
+	font-size: 20px;
+}
+
+.product-purchase .form-control {
+	border-color: var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-text);
+	box-shadow: none;
+}
+
+.product-purchase .control-label {
+	color: var(--color-earth);
+	font-weight: 700;
+}
+
+.product-purchase #input-quantity {
+	max-width: 92px;
+	text-align: center;
+}
+
+.product-trust {
+	display: grid;
+	gap: 10px;
+	margin-top: 18px;
+	padding-top: 18px;
+	border-top: 1px solid var(--color-border);
+}
+
+.product-trust div {
+	padding: 12px;
+	border-radius: 8px;
+	background: var(--color-surface);
+}
+
+.product-trust strong,
+.product-trust span {
+	display: block;
+}
+
+.product-trust strong {
+	margin-bottom: 4px;
+	color: var(--color-earth);
+}
+
+.product-trust span {
+	color: var(--color-muted);
+	font-size: 13px;
+}
+
+.related-products {
+	margin-top: 44px;
+}
+
+@media (max-width: 991px) {
+	.product-page {
+		grid-template-columns: 1fr;
+		gap: 28px;
+	}
+
+	.product-page__summary {
+		position: static;
+	}
+}
+
+@media (max-width: 767px) {
+	.product-page__summary {
+		padding: 18px;
+	}
+
+	.product-page__summary h1 {
+		font-size: 28px;
+	}
+
+	.product-meta li {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.product-tabs__content {
+		padding: 16px;
+	}
+}
