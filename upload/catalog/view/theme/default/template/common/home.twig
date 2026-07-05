@@ -1,6 +1,108 @@
 {{ header }}
-<div id="common-home" class="container">
-  <div class="row">{{ column_left }}
+<main id="common-home">
+  <section class="sylora-hero">
+    <div class="container sylora-hero__grid">
+      <div class="sylora-hero__content">
+        <p class="sylora-eyebrow">Charm by Sylora</p>
+        <h1>Ручные украшения, созданные с вниманием к деталям</h1>
+        <p>Серьги, браслеты, подвески и комплекты для повседневных образов, подарков и небольших личных ритуалов.</p>
+        <div class="sylora-actions">
+          <a class="btn btn-primary btn-lg" href="index.php?route=product/search">Смотреть каталог</a>
+          <a class="sylora-link" href="index.php?route=information/information&information_id=4">О бренде</a>
+        </div>
+      </div>
+      <div class="sylora-hero__media" aria-label="Украшения ручной работы">
+        <img src="image/catalog/sylora/jewelry-collection.png" alt="Коллекция украшений ручной работы Charm by Sylora">
+        <img src="image/catalog/sylora/jewelry-collection.png" alt="Детали авторских украшений в розовых и зеленых оттенках">
+      </div>
+    </div>
+  </section>
+
+  <section class="container sylora-section">
+    <div class="sylora-section__head">
+      <h2>Категории</h2>
+      <a href="index.php?route=product/search">Все украшения</a>
+    </div>
+    <div class="sylora-category-grid">
+      {% set categories = [
+        ['Серьги', 'Легкие акценты на каждый день'],
+        ['Браслеты', 'Мягкие формы и натуральные оттенки'],
+        ['Колье', 'Украшения для выразительного образа'],
+        ['Подвески', 'Минималистичные детали'],
+        ['Комплекты', 'Готовые сочетания'],
+        ['Подарки', 'Бережная упаковка']
+      ] %}
+      {% for item in categories %}
+      <a class="sylora-category-card" href="index.php?route=product/search">
+        <span>{{ item[0] }}</span>
+        <small>{{ item[1] }}</small>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="container sylora-section">
+    <div class="sylora-section__head">
+      <h2>Избранные украшения</h2>
+      <a href="index.php?route=product/search">Перейти в каталог</a>
+    </div>
+    <div class="sylora-product-preview">
+      <article>
+        <img src="image/catalog/sylora/jewelry-collection.png" alt="Серьги ручной работы">
+        <div>
+          <p class="sylora-badge">Новинка</p>
+          <h3>Серьги с мягким розовым акцентом</h3>
+          <p class="sylora-stock">В наличии</p>
+          <a class="btn btn-primary" href="index.php?route=product/search">Смотреть</a>
+        </div>
+      </article>
+      <article>
+        <img src="image/catalog/sylora/jewelry-collection.png" alt="Браслет ручной работы">
+        <div>
+          <p class="sylora-badge sylora-badge--leaf">Под заказ</p>
+          <h3>Браслет с природными оттенками</h3>
+          <p class="sylora-stock">Изготовление 3-5 дней</p>
+          <a class="btn btn-primary" href="index.php?route=product/search">Подробнее</a>
+        </div>
+      </article>
+      <article>
+        <img src="image/catalog/sylora/jewelry-collection.png" alt="Подвеска ручной работы">
+        <div>
+          <p class="sylora-badge">Подарок</p>
+          <h3>Подвеска для лаконичного образа</h3>
+          <p class="sylora-stock">Осталось мало</p>
+          <a class="btn btn-primary" href="index.php?route=product/search">Смотреть</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sylora-benefits">
+    <div class="container sylora-benefits__grid">
+      <div><strong>Ручная работа</strong><span>Каждое изделие собирается небольшими партиями.</span></div>
+      <div><strong>Бережная упаковка</strong><span>Украшения готовы к подарку сразу после получения.</span></div>
+      <div><strong>Ограниченные коллекции</strong><span>Повторы возможны только при наличии материалов.</span></div>
+      <div><strong>Доставка по России</strong><span>Условия доставки видны до оформления заказа.</span></div>
+    </div>
+  </section>
+
+  <section class="container sylora-about-teaser">
+    <div>
+      <p class="sylora-eyebrow">О мастере</p>
+      <h2>Украшения с теплым характером</h2>
+      <p>Charm by Sylora вырос из любви к аккуратным деталям, спокойным природным оттенкам и вещам, которые приятно носить каждый день. В работе важны баланс формы, качество материалов и ощущение личного выбора.</p>
+      <a class="sylora-link" href="index.php?route=information/information&information_id=4">Читать историю</a>
+    </div>
+    <img src="image/catalog/sylora/jewelry-collection.png" alt="Украшения ручной работы на рабочем столе мастера">
+  </section>
+
+  <section class="container sylora-seo">
+    <h2>Авторские украшения ручной работы</h2>
+    <p>В интернет-магазине Charm by Sylora можно выбрать ручные украшения для себя и в подарок: серьги, браслеты, подвески, колье и комплекты в спокойной современной эстетике. В коллекциях используются натуральные оттенки, мягкие сочетания розового, зеленого и теплого коричневого, аккуратная фурнитура и материалы, которые помогают изделию выглядеть деликатно и уместно в повседневном образе. Каждое украшение создается небольшими партиями, поэтому ассортимент легко обновлять новинками, сезонными подборками и подарочными наборами. Заказ можно оформить через каталог и корзину, а условия оплаты, доставки и возврата вынесены в понятные разделы сайта.</p>
+  </section>
+
+  <div class="container">
+    <div class="row">{{ column_left }}
     {% if column_left and column_right %}
     {% set class = 'col-sm-6' %}
     {% elseif column_left or column_right %}
@@ -10,5 +112,6 @@
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}{{ content_bottom }}</div>
     {{ column_right }}</div>
-</div>
+  </div>
+</main>
 {{ footer }}
