@@ -195,6 +195,23 @@ class ControllerProductCategory extends Controller {
 					$rating = false;
 				}
 
+				if ($result['quantity'] <= 0) {
+					if ($result['stock_status'] == 'Pre-Order' || $result['stock_status'] == '2-3 Days') {
+						$stock = 'Под заказ';
+					} elseif ($result['stock_status'] == 'Out Of Stock') {
+						$stock = 'Нет в наличии';
+					} else {
+						$stock = $result['stock_status'];
+					}
+					$stock_class = 'is-out';
+				} elseif ($result['quantity'] <= 2) {
+					$stock = 'Осталось мало';
+					$stock_class = 'is-low';
+				} else {
+					$stock = 'В наличии';
+					$stock_class = 'is-in';
+				}
+
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
@@ -202,6 +219,8 @@ class ControllerProductCategory extends Controller {
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 					'price'       => $price,
 					'special'     => $special,
+					'stock'       => $stock,
+					'stock_class' => $stock_class,
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $result['rating'],

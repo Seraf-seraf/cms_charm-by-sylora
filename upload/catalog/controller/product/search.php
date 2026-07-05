@@ -70,7 +70,8 @@ class ControllerProductSearch extends Controller {
 		} elseif (isset($this->request->get['tag'])) {
 			$this->document->setTitle($this->language->get('heading_title') .  ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']);
 		} else {
-			$this->document->setTitle($this->language->get('heading_title'));
+			$this->document->setTitle('Каталог украшений Charm by Sylora');
+			$this->document->setDescription('Каталог авторских украшений ручной работы: серьги, браслеты, подвески, колье и комплекты с доставкой по России.');
 		}
 
 		$data['breadcrumbs'] = array();
@@ -126,7 +127,7 @@ class ControllerProductSearch extends Controller {
 		if (isset($this->request->get['search'])) {
 			$data['heading_title'] = $this->language->get('heading_title') .  ' - ' . $this->request->get['search'];
 		} else {
-			$data['heading_title'] = $this->language->get('heading_title');
+			$data['heading_title'] = 'Каталог украшений';
 		}
 
 		$data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
@@ -171,7 +172,7 @@ class ControllerProductSearch extends Controller {
 
 		$data['products'] = array();
 
-		if (isset($this->request->get['search']) || isset($this->request->get['tag'])) {
+		if (isset($this->request->get['search']) || isset($this->request->get['tag']) || !isset($this->request->get['route']) || $this->request->get['route'] == 'product/search') {
 			$filter_data = array(
 				'filter_name'         => $search,
 				'filter_tag'          => $tag,
@@ -221,6 +222,23 @@ class ControllerProductSearch extends Controller {
 					$rating = false;
 				}
 
+				if ($result['quantity'] <= 0) {
+					if ($result['stock_status'] == 'Pre-Order' || $result['stock_status'] == '2-3 Days') {
+						$stock = 'Под заказ';
+					} elseif ($result['stock_status'] == 'Out Of Stock') {
+						$stock = 'Нет в наличии';
+					} else {
+						$stock = $result['stock_status'];
+					}
+					$stock_class = 'is-out';
+				} elseif ($result['quantity'] <= 2) {
+					$stock = 'Осталось мало';
+					$stock_class = 'is-low';
+				} else {
+					$stock = 'В наличии';
+					$stock_class = 'is-in';
+				}
+
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
@@ -228,6 +246,8 @@ class ControllerProductSearch extends Controller {
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 					'price'       => $price,
 					'special'     => $special,
+					'stock'       => $stock,
+					'stock_class' => $stock_class,
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $result['rating'],
