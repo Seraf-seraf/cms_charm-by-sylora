@@ -30,10 +30,10 @@ GITHUB_TOOLSETS = "repos,issues,pull_requests,actions"
 
 [mcp_servers.mysql]
 command = "uvx"
-args = ["mysql-mcp-server"]
+args = ["--from", "mysql-mcp-server", "mysql_mcp_server"]
 
 [mcp_servers.mysql.env]
-MYSQL_HOST = "$$MYSQL_HOST"
+MYSQL_HOST = "$MYSQL_HOST"
 MYSQL_PORT = "$MYSQL_PORT"
 MYSQL_USER = "$MYSQL_USER"
 MYSQL_PASSWORD = "$MYSQL_PASSWORD"
