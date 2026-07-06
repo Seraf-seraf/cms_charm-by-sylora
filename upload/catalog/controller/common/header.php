@@ -28,11 +28,31 @@ class ControllerCommonHeader extends Controller {
 		$data['keywords'] = $this->document->getKeywords();
 		$data['og_title'] = $this->document->getTitle();
 		$data['og_description'] = $this->document->getDescription();
+		$data['og_type'] = 'website';
 		$data['og_image'] = $server . 'image/catalog/sylora/jewelry-collection.png';
 		$data['og_url'] = $server;
 
 		if (isset($this->request->server['REQUEST_URI'])) {
 			$data['og_url'] = rtrim($server, '/') . $this->request->server['REQUEST_URI'];
+		}
+
+		if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/product' && !empty($this->request->get['product_id'])) {
+			$this->load->model('catalog/product');
+
+			$product_info = $this->model_catalog_product->getProduct((int)$this->request->get['product_id']);
+
+			if ($product_info) {
+				$data['og_type'] = 'product';
+				$data['og_title'] = $product_info['meta_title'] ? $product_info['meta_title'] : $product_info['name'];
+
+				if ($product_info['meta_description']) {
+					$data['og_description'] = $product_info['meta_description'];
+				}
+
+				if ($product_info['image'] && is_file(DIR_IMAGE . $product_info['image'])) {
+					$data['og_image'] = rtrim($server, '/') . '/image/' . $product_info['image'];
+				}
+			}
 		}
 
 		$data['links'] = $this->document->getLinks();

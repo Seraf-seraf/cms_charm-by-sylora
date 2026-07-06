@@ -293,13 +293,15 @@ class ControllerProductProduct extends Controller {
 			}
 
 			$data['images'] = array();
+			$data['main_image_alt'] = $product_info['name'];
 
 			$results = $this->model_catalog_product->getProductImages($this->request->get['product_id']);
 
-			foreach ($results as $result) {
+			foreach ($results as $image_index => $result) {
 				$data['images'][] = array(
 					'popup' => $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height')),
-					'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_height'))
+					'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_height')),
+					'alt'   => $product_info['name'] . ' - фото ' . ($image_index + 2)
 				);
 			}
 
@@ -405,7 +407,10 @@ class ControllerProductProduct extends Controller {
 			$data['product_details'] = array(
 				'materials' => '',
 				'size'      => '',
-				'color'     => ''
+				'color'     => '',
+				'care'      => '',
+				'delivery_return' => '',
+				'image_alt' => ''
 			);
 
 			foreach ($data['attribute_groups'] as $attribute_group) {
@@ -423,12 +428,35 @@ class ControllerProductProduct extends Controller {
 					if (strpos($name, 'цвет') !== false || strpos($name, 'color') !== false || strpos($name, 'colour') !== false) {
 						$data['product_details']['color'] = $attribute['text'];
 					}
+
+					if (strpos($name, 'уход') !== false || strpos($name, 'care') !== false) {
+						$data['product_details']['care'] = $attribute['text'];
+					}
+
+					if (strpos($name, 'доставка') !== false || strpos($name, 'возврат') !== false || strpos($name, 'delivery') !== false || strpos($name, 'return') !== false) {
+						$data['product_details']['delivery_return'] = $attribute['text'];
+					}
+
+					if (strpos($name, 'alt') !== false || strpos($name, 'альт') !== false) {
+						$data['product_details']['image_alt'] = $attribute['text'];
+					}
 				}
 			}
 
+			if ($data['product_details']['image_alt']) {
+				$data['main_image_alt'] = $data['product_details']['image_alt'];
+			}
+
+			foreach ($data['images'] as $image_index => $image) {
+				$data['images'][$image_index]['alt'] = $data['main_image_alt'] . ' - дополнительное фото ' . ($image_index + 1);
+			}
+
+			$data['care_text'] = $data['product_details']['care'] ? $data['product_details']['care'] : 'Храните украшение отдельно от других изделий, снимайте перед душем, сном и тренировками. Избегайте длительного контакта с водой, парфюмом и бытовой химией.';
+			$data['delivery_return_text'] = $data['product_details']['delivery_return'] ? $data['product_details']['delivery_return'] : 'Доставка по России и итоговая стоимость рассчитываются при оформлении заказа. Если украшение создается под заказ, срок изготовления уточняется отдельно.';
+
 			$is_https = !empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off';
 			$server = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
-			$product_url = $this->url->link('product/product', 'product_id=' . (int)$this->request->get['product_id']);
+			$product_url = html_entity_decode($this->url->link('product/product', 'product_id=' . (int)$this->request->get['product_id']), ENT_QUOTES, 'UTF-8');
 			$image_url = '';
 
 			if ($product_info['image']) {
@@ -472,6 +500,18 @@ class ControllerProductProduct extends Controller {
 				$product_schema['image'] = array($image_url);
 			}
 
+			if ($data['product_details']['materials']) {
+				$product_schema['material'] = $data['product_details']['materials'];
+			}
+
+			if ($data['product_details']['color']) {
+				$product_schema['color'] = $data['product_details']['color'];
+			}
+
+			if ($data['product_details']['size']) {
+				$product_schema['size'] = $data['product_details']['size'];
+			}
+
 			if ($data['rating'] && $product_info['reviews']) {
 				$product_schema['aggregateRating'] = array(
 					'@type' => 'AggregateRating',
@@ -488,7 +528,7 @@ class ControllerProductProduct extends Controller {
 					'@type' => 'ListItem',
 					'position' => $breadcrumb_position++,
 					'name' => strip_tags(html_entity_decode($breadcrumb['text'], ENT_QUOTES, 'UTF-8')),
-					'item' => $breadcrumb['href']
+					'item' => html_entity_decode($breadcrumb['href'], ENT_QUOTES, 'UTF-8')
 				);
 			}
 

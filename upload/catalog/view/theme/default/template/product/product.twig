@@ -22,11 +22,11 @@
         <div class="{{ class }}"> {% if thumb or images %}
           <ul class="thumbnails">
             {% if thumb %}
-            <li class="product-gallery__main"><a class="thumbnail" href="{{ popup }}" title="{{ heading_title }}"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" /></a></li>
+            <li class="product-gallery__main"><a class="thumbnail" href="{{ popup }}" title="{{ main_image_alt }}"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ main_image_alt }}" /></a></li>
             {% endif %}
             {% if images %}
             {% for image in images %}
-            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ heading_title }}"> <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ heading_title }} - дополнительное фото" loading="lazy" /></a></li>
+            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ image.alt }}"> <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ image.alt }}" loading="lazy" /></a></li>
             {% endfor %}
             {% endif %}
           </ul>
@@ -305,13 +305,13 @@
             <details>
               <summary>Уход</summary>
               <div>
-                <p>Храните украшение отдельно от других изделий, снимайте перед душем, сном и тренировками. Избегайте длительного контакта с водой, парфюмом и бытовой химией.</p>
+                <p>{{ care_text }}</p>
               </div>
             </details>
             <details>
               <summary>Доставка и возврат</summary>
               <div>
-                <p>Доставка по России и итоговая стоимость рассчитываются при оформлении заказа. Если украшение создается под заказ, срок изготовления уточняется отдельно.</p>
+                <p>{{ delivery_return_text }}</p>
               </div>
             </details>
           </div>

@@ -2347,6 +2347,13 @@ footer h5 {
 	object-fit: cover;
 }
 
+#product-product .breadcrumb > li,
+#product-product .breadcrumb > li > a {
+	max-width: 100%;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
 .product-tabs {
 	margin-top: 26px;
 	border-bottom-color: var(--color-border);
@@ -2530,6 +2537,7 @@ footer h5 {
 .product-accordions details > div {
 	padding: 0 14px 14px;
 	color: var(--color-muted);
+	overflow-wrap: anywhere;
 }
 
 .product-accordions p {
@@ -2568,6 +2576,16 @@ footer h5 {
 
 	.product-tabs__content {
 		padding: 16px;
+	}
+
+	#product-product .thumbnails {
+		margin-left: 0;
+		overflow: visible;
+	}
+
+	#product-product .thumbnails > li,
+	#product-product .thumbnails .image-additional {
+		margin-left: 0;
 	}
 }
 
