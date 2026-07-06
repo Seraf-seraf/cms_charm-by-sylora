@@ -213,7 +213,7 @@ class ControllerCheckoutCart extends Controller {
 				);
 			}
 
-			$data['continue'] = $this->url->link('common/home');
+			$data['continue'] = $this->url->link('product/search');
 
 			$data['checkout'] = $this->url->link('checkout/checkout', '', true);
 
@@ -244,7 +244,7 @@ class ControllerCheckoutCart extends Controller {
 		} else {
 			$data['text_error'] = $this->language->get('text_empty');
 			
-			$data['continue'] = $this->url->link('common/home');
+			$data['continue'] = $this->url->link('product/search');
 
 			unset($this->session->data['success']);
 
