@@ -1,37 +1,37 @@
 <?php
 // Heading
-$_['heading_title']     = 'Languages';
+$_['heading_title']     = 'Языки';
 
 // Text
-$_['text_success']      = 'Success: You have modified languages!';
-$_['text_list']         = 'Language List';
-$_['text_add']          = 'Add Language';
-$_['text_edit']         = 'Edit Language';
+$_['text_success']      = 'Настройки языков изменены!';
+$_['text_list']         = 'Список языков';
+$_['text_add']          = 'Добавить язык';
+$_['text_edit']         = 'Редактировать язык';
 
 // Column
-$_['column_name']       = 'Language Name';
-$_['column_code']       = 'Code';
-$_['column_sort_order'] = 'Sort Order';
-$_['column_action']     = 'Action';
+$_['column_name']       = 'Название языка';
+$_['column_code']       = 'Код';
+$_['column_sort_order'] = 'Порядок сортировки';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_name']        = 'Language Name';
-$_['entry_code']        = 'Code';
-$_['entry_locale']      = 'Locale';
-$_['entry_status']      = 'Status';
-$_['entry_sort_order']  = 'Sort Order';
+$_['entry_name']        = 'Название языка';
+$_['entry_code']        = 'Код';
+$_['entry_locale']      = 'Локаль';
+$_['entry_status']      = 'Статус';
+$_['entry_sort_order']  = 'Порядок сортировки';
 
 // Help
-$_['help_locale']       = 'Example: ru_RU.UTF-8,ru_RU,ru-ru,russian';
-$_['help_status']       = 'Hide/Show it in language dropdown';
+$_['help_locale']       = 'Пример: ru_RU.UTF-8,ru_RU,ru-ru,russian';
+$_['help_status']       = 'Показывать или скрывать язык в выпадающем списке';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify languages!';
-$_['error_exists']      = 'Warning: You added before the language!';
-$_['error_name']        = 'Language Name must be between 3 and 32 characters!';
-$_['error_code']        = 'Language Code must at least 2 characters!';
-$_['error_locale']      = 'Locale required!';
-$_['error_default']     = 'Warning: This language cannot be deleted as it is currently assigned as the default store language!';
-$_['error_admin']       = 'Warning: This Language cannot be deleted as it is currently assigned as the administration language!';
-$_['error_store']       = 'Warning: This language cannot be deleted as it is currently assigned to %s stores!';
-$_['error_order']       = 'Warning: This language cannot be deleted as it is currently assigned to %s orders!';
+$_['error_permission']  = 'У вас нет прав для изменения языков!';
+$_['error_exists']      = 'Этот язык уже добавлен!';
+$_['error_name']        = 'Название языка должно содержать от 3 до 32 символов!';
+$_['error_code']        = 'Код языка должен содержать минимум 2 символа!';
+$_['error_locale']      = 'Укажите локаль!';
+$_['error_default']     = 'Этот язык нельзя удалить, так как он назначен языком магазина по умолчанию!';
+$_['error_admin']       = 'Этот язык нельзя удалить, так как он назначен языком админ-панели!';
+$_['error_store']       = 'Этот язык нельзя удалить, так как он назначен для магазинов: %s!';
+$_['error_order']       = 'Этот язык нельзя удалить, так как он назначен для заказов: %s!';
