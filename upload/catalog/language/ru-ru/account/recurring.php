@@ -1,52 +1,52 @@
 <?php
 // Heading
-$_['heading_title']                        = 'Recurring Payments';
+$_['heading_title']                        = 'Регулярные платежи';
 
 // Text
-$_['text_account']                         = 'Account';
-$_['text_recurring']                       = 'Recurring Payment Information';
-$_['text_recurring_detail']                = 'Recurring Payment Details';
-$_['text_order_recurring_id']              = 'Recurring ID:';
-$_['text_date_added']                      = 'Date Added:';
-$_['text_status']                          = 'Status:';
-$_['text_payment_method']                  = 'Payment Method:';
-$_['text_order_id']                        = 'Order ID:';
-$_['text_product']                         = 'Product:';
-$_['text_quantity']                        = 'Quantity:';
-$_['text_description']                     = 'Description';
-$_['text_reference']                       = 'Reference';
-$_['text_transaction']                     = 'Transactions';
-$_['text_status_1']                        = 'Active';
-$_['text_status_2']                        = 'Inactive';
-$_['text_status_3']                        = 'Cancelled';
-$_['text_status_4']                        = 'Suspended';
-$_['text_status_5']                        = 'Expired';
-$_['text_status_6']                        = 'Pending';
-$_['text_transaction_date_added']          = 'Created';
-$_['text_transaction_payment']             = 'Payment';
-$_['text_transaction_outstanding_payment'] = 'Outstanding payment';
-$_['text_transaction_skipped']             = 'Payment skipped';
-$_['text_transaction_failed']              = 'Payment failed';
-$_['text_transaction_cancelled']           = 'Cancelled';
-$_['text_transaction_suspended']           = 'Suspended';
-$_['text_transaction_suspended_failed']    = 'Suspended from failed payment';
-$_['text_transaction_outstanding_failed']  = 'Outstanding payment failed';
-$_['text_transaction_expired']             = 'Expired';
-$_['text_empty']                           = 'No recurring payments found!';
-$_['text_error']                           = 'The recurring order you requested could not be found!';
-$_['text_cancelled']                       = 'Recurring payment has been cancelled';
+$_['text_account']                         = 'Аккаунт';
+$_['text_recurring']                       = 'Информация о регулярном платеже';
+$_['text_recurring_detail']                = 'Детали регулярного платежа';
+$_['text_order_recurring_id']              = 'ID регулярного платежа:';
+$_['text_date_added']                      = 'Дата добавления:';
+$_['text_status']                          = 'Статус:';
+$_['text_payment_method']                  = 'Способ оплаты:';
+$_['text_order_id']                        = 'Номер заказа:';
+$_['text_product']                         = 'Товар:';
+$_['text_quantity']                        = 'Количество:';
+$_['text_description']                     = 'Описание';
+$_['text_reference']                       = 'Ссылка';
+$_['text_transaction']                     = 'Операции';
+$_['text_status_1']                        = 'Активен';
+$_['text_status_2']                        = 'Неактивен';
+$_['text_status_3']                        = 'Отменен';
+$_['text_status_4']                        = 'Приостановлен';
+$_['text_status_5']                        = 'Истек';
+$_['text_status_6']                        = 'Ожидает';
+$_['text_transaction_date_added']          = 'Создан';
+$_['text_transaction_payment']             = 'Платеж';
+$_['text_transaction_outstanding_payment'] = 'Ожидающий платеж';
+$_['text_transaction_skipped']             = 'Платеж пропущен';
+$_['text_transaction_failed']              = 'Платеж не прошел';
+$_['text_transaction_cancelled']           = 'Отменен';
+$_['text_transaction_suspended']           = 'Приостановлен';
+$_['text_transaction_suspended_failed']    = 'Приостановлен из-за ошибки платежа';
+$_['text_transaction_outstanding_failed']  = 'Ожидающий платеж не прошел';
+$_['text_transaction_expired']             = 'Истек';
+$_['text_empty']                           = 'Регулярные платежи не найдены.';
+$_['text_error']                           = 'Запрошенный регулярный заказ не найден.';
+$_['text_cancelled']                       = 'Регулярный платеж отменен';
 
 // Column
-$_['column_date_added']                    = 'Date Added';
-$_['column_type']                          = 'Type';
-$_['column_amount']                        = 'Amount';
-$_['column_status']                        = 'Status';
-$_['column_product']                       = 'Product';
-$_['column_order_recurring_id']            = 'Recurring ID';
+$_['column_date_added']                    = 'Дата';
+$_['column_type']                          = 'Тип';
+$_['column_amount']                        = 'Сумма';
+$_['column_status']                        = 'Статус';
+$_['column_product']                       = 'Товар';
+$_['column_order_recurring_id']            = 'ID регулярного платежа';
 
 // Error
-$_['error_not_cancelled']                  = 'Error: %s';
-$_['error_not_found']                      = 'Could not cancel recurring';
+$_['error_not_cancelled']                  = 'Ошибка: %s';
+$_['error_not_found']                      = 'Не удалось отменить регулярный платеж';
 
 // Button
-$_['button_return']                        = 'Return';
+$_['button_return']                        = 'Назад';

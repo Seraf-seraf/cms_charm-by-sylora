@@ -1,22 +1,22 @@
 <?php
 // Heading
-$_['heading_title']     = 'Product Comparison';
+$_['heading_title']     = 'Сравнение товаров';
 
 // Text
-$_['text_product']      = 'Product Details';
-$_['text_name']         = 'Product';
-$_['text_image']        = 'Image';
-$_['text_price']        = 'Price';
-$_['text_model']        = 'Model';
-$_['text_manufacturer'] = 'Brand';
-$_['text_availability'] = 'Availability';
-$_['text_instock']      = 'In Stock';
-$_['text_rating']       = 'Rating';
-$_['text_reviews']      = 'Based on %s reviews.';
-$_['text_summary']      = 'Summary';
-$_['text_weight']       = 'Weight';
-$_['text_dimension']    = 'Dimensions (L x W x H)';
-$_['text_compare']      = 'Product Compare (%s)';
-$_['text_success']      = 'Success: You have added <a href="%s">%s</a> to your <a href="%s">product comparison</a>!';
-$_['text_remove']       = 'Success: You have modified your product comparison!';
-$_['text_empty']        = 'You have not chosen any products to compare.';
+$_['text_product']      = 'Детали товара';
+$_['text_name']         = 'Товар';
+$_['text_image']        = 'Фото';
+$_['text_price']        = 'Цена';
+$_['text_model']        = 'Артикул';
+$_['text_manufacturer'] = 'Бренд';
+$_['text_availability'] = 'Наличие';
+$_['text_instock']      = 'В наличии';
+$_['text_rating']       = 'Рейтинг';
+$_['text_reviews']      = 'На основе отзывов: %s.';
+$_['text_summary']      = 'Кратко';
+$_['text_weight']       = 'Вес';
+$_['text_dimension']    = 'Размеры (Д x Ш x В)';
+$_['text_compare']      = 'Сравнение товаров (%s)';
+$_['text_success']      = 'Товар <a href="%s">%s</a> добавлен в <a href="%s">сравнение</a>.';
+$_['text_remove']       = 'Сравнение товаров обновлено.';
+$_['text_empty']        = 'Вы не выбрали товары для сравнения.';

@@ -11,17 +11,17 @@ $_['thousand_point']        = ' ';
 
 // Text
 $_['text_home']             = '<i class="fa fa-home"></i>';
-$_['text_yes']              = 'Yes';
-$_['text_no']               = 'No';
-$_['text_none']             = ' --- None --- ';
-$_['text_select']           = ' --- Please Select --- ';
-$_['text_all_zones']        = 'All Zones';
-$_['text_pagination']       = 'Showing %d to %d of %d (%d Pages)';
-$_['text_loading']          = 'Loading...';
-$_['text_no_results']       = 'No results!';
+$_['text_yes']              = 'Да';
+$_['text_no']               = 'Нет';
+$_['text_none']             = ' --- Нет --- ';
+$_['text_select']           = ' --- Выберите --- ';
+$_['text_all_zones']        = 'Все зоны';
+$_['text_pagination']       = 'Показано с %d по %d из %d (%d стр.)';
+$_['text_loading']          = 'Загрузка...';
+$_['text_no_results']       = 'Нет результатов.';
 
 // Buttons
-$_['button_address_add']    = 'Add Address';
+$_['button_address_add']    = 'Добавить адрес';
 $_['button_back']           = 'Назад';
 $_['button_continue']       = 'Продолжить';
 $_['button_cart']           = 'В корзину';
@@ -43,32 +43,32 @@ $_['button_login']          = 'Войти';
 $_['button_update']         = 'Обновить';
 $_['button_remove']         = 'Удалить';
 $_['button_reorder']        = 'Повторить заказ';
-$_['button_return']         = 'Return';
+$_['button_return']         = 'Вернуть товар';
 $_['button_shopping']       = 'Вернуться в каталог';
-$_['button_search']         = 'Search';
-$_['button_shipping']       = 'Apply Shipping';
-$_['button_submit']         = 'Submit';
-$_['button_guest']          = 'Guest Checkout';
-$_['button_view']           = 'View';
-$_['button_voucher']        = 'Apply Gift Certificate';
-$_['button_upload']         = 'Upload File';
-$_['button_reward']         = 'Apply Points';
-$_['button_quote']          = 'Get Quotes';
-$_['button_list']           = 'List';
-$_['button_grid']           = 'Grid';
-$_['button_map']            = 'View Google Map';
+$_['button_search']         = 'Найти';
+$_['button_shipping']       = 'Применить доставку';
+$_['button_submit']         = 'Отправить';
+$_['button_guest']          = 'Оформить без регистрации';
+$_['button_view']           = 'Посмотреть';
+$_['button_voucher']        = 'Применить сертификат';
+$_['button_upload']         = 'Загрузить файл';
+$_['button_reward']         = 'Применить баллы';
+$_['button_quote']          = 'Рассчитать доставку';
+$_['button_list']           = 'Список';
+$_['button_grid']           = 'Сетка';
+$_['button_map']            = 'Открыть карту Google';
 
 // Error
-$_['error_exception']       = 'Error Code(%s): %s in %s on line %s';
-$_['error_upload_1']        = 'Warning: The uploaded file exceeds the upload_max_filesize directive in php.ini!';
-$_['error_upload_2']        = 'Warning: The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form!';
-$_['error_upload_3']        = 'Warning: The uploaded file was only partially uploaded!';
-$_['error_upload_4']        = 'Warning: No file was uploaded!';
-$_['error_upload_6']        = 'Warning: Missing a temporary folder!';
-$_['error_upload_7']        = 'Warning: Failed to write file to disk!';
-$_['error_upload_8']        = 'Warning: File upload stopped by extension!';
-$_['error_upload_999']      = 'Warning: No error code available!';
-$_['error_curl']            = 'CURL: Error Code(%s): %s';
+$_['error_exception']       = 'Код ошибки (%s): %s в %s на строке %s';
+$_['error_upload_1']        = 'Предупреждение: размер файла превышает ограничение upload_max_filesize в php.ini!';
+$_['error_upload_2']        = 'Предупреждение: размер файла превышает ограничение MAX_FILE_SIZE, указанное в HTML-форме!';
+$_['error_upload_3']        = 'Предупреждение: файл был загружен только частично!';
+$_['error_upload_4']        = 'Предупреждение: файл не был загружен!';
+$_['error_upload_6']        = 'Предупреждение: отсутствует временная папка!';
+$_['error_upload_7']        = 'Предупреждение: не удалось записать файл на диск!';
+$_['error_upload_8']        = 'Предупреждение: загрузка файла остановлена расширением!';
+$_['error_upload_999']      = 'Предупреждение: код ошибки недоступен!';
+$_['error_curl']            = 'CURL: код ошибки (%s): %s';
 
 /* When doing translations only include the matching language code */
 

@@ -1,37 +1,37 @@
 <?php
 // Heading
-$_['heading_title']         = 'Order History';
+$_['heading_title']         = 'История заказов';
 
 // Text
-$_['text_account']          = 'Account';
-$_['text_order']            = 'Order Information';
-$_['text_order_detail']     = 'Order Details';
-$_['text_invoice_no']       = 'Invoice No.:';
-$_['text_order_id']         = 'Order ID:';
-$_['text_date_added']       = 'Date Added:';
-$_['text_shipping_address'] = 'Shipping Address';
-$_['text_shipping_method']  = 'Shipping Method:';
-$_['text_payment_address']  = 'Payment Address';
-$_['text_payment_method']   = 'Payment Method:';
-$_['text_comment']          = 'Order Comments';
-$_['text_history']          = 'Order History';
-$_['text_success']          = 'Success: You have added <a href="%s">%s</a> to your <a href="%s">shopping cart</a>!';
-$_['text_empty']            = 'You have not made any previous orders!';
-$_['text_error']            = 'The order you requested could not be found!';
+$_['text_account']          = 'Аккаунт';
+$_['text_order']            = 'Информация о заказе';
+$_['text_order_detail']     = 'Детали заказа';
+$_['text_invoice_no']       = 'Счет N:';
+$_['text_order_id']         = 'Номер заказа:';
+$_['text_date_added']       = 'Дата заказа:';
+$_['text_shipping_address'] = 'Адрес доставки';
+$_['text_shipping_method']  = 'Способ доставки:';
+$_['text_payment_address']  = 'Адрес плательщика';
+$_['text_payment_method']   = 'Способ оплаты:';
+$_['text_comment']          = 'Комментарии к заказу';
+$_['text_history']          = 'История заказа';
+$_['text_success']          = 'Товар <a href="%s">%s</a> добавлен в <a href="%s">корзину</a>.';
+$_['text_empty']            = 'У вас пока нет заказов.';
+$_['text_error']            = 'Запрошенный заказ не найден.';
 
 // Column
-$_['column_order_id']       = 'Order ID';
-$_['column_customer']       = 'Customer';
-$_['column_product']        = 'No. of Products';
-$_['column_name']           = 'Product Name';
-$_['column_model']          = 'Model';
-$_['column_quantity']       = 'Quantity';
-$_['column_price']          = 'Price';
-$_['column_total']          = 'Total';
-$_['column_action']         = 'Action';
-$_['column_date_added']     = 'Date Added';
-$_['column_status']         = 'Status';
-$_['column_comment']        = 'Comment';
+$_['column_order_id']       = 'Номер заказа';
+$_['column_customer']       = 'Покупатель';
+$_['column_product']        = 'Кол-во товаров';
+$_['column_name']           = 'Товар';
+$_['column_model']          = 'Артикул';
+$_['column_quantity']       = 'Количество';
+$_['column_price']          = 'Цена';
+$_['column_total']          = 'Итого';
+$_['column_action']         = 'Действие';
+$_['column_date_added']     = 'Дата';
+$_['column_status']         = 'Статус';
+$_['column_comment']        = 'Комментарий';
 
 // Error
-$_['error_reorder']         = '%s is not currently available to be reordered.';
+$_['error_reorder']         = '%s сейчас недоступен для повторного заказа.';

@@ -1,14 +1,14 @@
 <?php
 // Heading
-$_['heading_title']      = 'Your Reward Points';
+$_['heading_title']      = 'Бонусные баллы';
 
 // Column
-$_['column_date_added']  = 'Date Added';
-$_['column_description'] = 'Description';
-$_['column_points']      = 'Points';
+$_['column_date_added']  = 'Дата';
+$_['column_description'] = 'Описание';
+$_['column_points']      = 'Баллы';
 
 // Text
-$_['text_account']       = 'Account';
-$_['text_reward']        = 'Reward Points';
-$_['text_total']         = 'Your total number of reward points is:';
-$_['text_empty']         = 'You do not have any reward points!';
+$_['text_account']       = 'Аккаунт';
+$_['text_reward']        = 'Бонусные баллы';
+$_['text_total']         = 'Всего бонусных баллов:';
+$_['text_empty']         = 'Бонусных баллов пока нет.';

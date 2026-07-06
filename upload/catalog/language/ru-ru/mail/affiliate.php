@@ -1,17 +1,17 @@
 <?php
 // Text
-$_['text_subject']        = '%s - Affiliate Program';
-$_['text_welcome']        = 'Thank you for joining the %s Affiliate Program!';
-$_['text_login']          = 'Your account has now been created and you can log in by using your e-mail address and password by visiting our website or at the following URL:';
-$_['text_approval']       = 'Your account must be approved before you can login. Once approved you can log in by using your e-mail address and password by visiting our website or at the following URL:';
-$_['text_service']        = 'Upon logging in, you will be able to generate tracking codes, track commission payments and edit your account information.';
-$_['text_thanks']         = 'Thanks,';
-$_['text_new_affiliate']  = 'New Affiliate';
-$_['text_signup']         = 'A new affiliate has signed up:';
-$_['text_website']        = 'Web Site:';
-$_['text_customer_group'] = 'Customer Group:';
-$_['text_firstname']      = 'First Name:';
-$_['text_lastname']       = 'Last Name:';
-$_['text_company']        = 'Company:';
-$_['text_email']          = 'E-Mail:';
-$_['text_telephone']      = 'Telephone:';
+$_['text_subject']        = '%s - партнерская программа';
+$_['text_welcome']        = 'Спасибо за регистрацию в партнерской программе %s!';
+$_['text_login']          = 'Аккаунт создан. Вы можете войти по email и паролю на сайте или по ссылке ниже:';
+$_['text_approval']       = 'Перед входом аккаунт должен быть подтвержден. После подтверждения вы сможете войти по email и паролю на сайте или по ссылке ниже:';
+$_['text_service']        = 'После входа вы сможете создавать tracking-коды, отслеживать выплаты и редактировать данные аккаунта.';
+$_['text_thanks']         = 'Спасибо,';
+$_['text_new_affiliate']  = 'Новый партнер';
+$_['text_signup']         = 'Зарегистрировался новый партнер:';
+$_['text_website']        = 'Сайт:';
+$_['text_customer_group'] = 'Группа покупателей:';
+$_['text_firstname']      = 'Имя:';
+$_['text_lastname']       = 'Фамилия:';
+$_['text_company']        = 'Компания:';
+$_['text_email']          = 'Email:';
+$_['text_telephone']      = 'Телефон:';

@@ -18,13 +18,13 @@ $_['text_week']                = 'неделя';
 $_['text_semi_month']          = 'полмесяца';
 $_['text_month']               = 'месяц';
 $_['text_year']                = 'год';
-$_['text_trial']               = '%s every %s %s for %s payments then ';
-$_['text_recurring']           = '%s every %s %s';
+$_['text_trial']               = '%s каждые %s %s, %s платежей, затем ';
+$_['text_recurring']           = '%s каждые %s %s';
 $_['text_recurring_item']      = 'Регулярный платеж';
 $_['text_payment_recurring']   = 'Профиль оплаты';
-$_['text_trial_description']   = '%s every %d %s(s) for %d payment(s) then';
-$_['text_payment_description'] = '%s every %d %s(s) for %d payment(s)';
-$_['text_payment_cancel']      = '%s every %d %s(s) until canceled';
+$_['text_trial_description']   = '%s каждые %d %s, %d платежей, затем';
+$_['text_payment_description'] = '%s каждые %d %s, %d платежей';
+$_['text_payment_cancel']      = '%s каждые %d %s до отмены';
 
 // Column
 $_['column_image']             = 'Фото';
