@@ -276,6 +276,18 @@ class ControllerProductCategory extends Controller {
 			);
 
 			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_popular_desc'),
+				'value' => 'p.viewed-DESC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.viewed&order=DESC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_date_desc'),
+				'value' => 'p.date_added-DESC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.date_added&order=DESC' . $url)
+			);
+
+			$data['sorts'][] = array(
 				'text'  => $this->language->get('text_name_asc'),
 				'value' => 'pd.name-ASC',
 				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=pd.name&order=ASC' . $url)

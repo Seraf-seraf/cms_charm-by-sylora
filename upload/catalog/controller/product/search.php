@@ -319,6 +319,18 @@ class ControllerProductSearch extends Controller {
 			);
 
 			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_popular_desc'),
+				'value' => 'p.viewed-DESC',
+				'href'  => $this->url->link('product/search', 'sort=p.viewed&order=DESC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_date_desc'),
+				'value' => 'p.date_added-DESC',
+				'href'  => $this->url->link('product/search', 'sort=p.date_added&order=DESC' . $url)
+			);
+
+			$data['sorts'][] = array(
 				'text'  => $this->language->get('text_name_asc'),
 				'value' => 'pd.name-ASC',
 				'href'  => $this->url->link('product/search', 'sort=pd.name&order=ASC' . $url)

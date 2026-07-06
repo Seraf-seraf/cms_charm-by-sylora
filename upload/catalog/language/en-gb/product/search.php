@@ -1,34 +1,36 @@
 <?php
 // Heading
-$_['heading_title']     = 'Search';
-$_['heading_tag']       = 'Tag - ';
+$_['heading_title']     = 'Поиск';
+$_['heading_tag']       = 'Тег - ';
 
 // Text
-$_['text_search']       = 'Products meeting the search criteria';
-$_['text_keyword']      = 'Keywords';
-$_['text_category']     = 'All Categories';
-$_['text_sub_category'] = 'Search in subcategories';
-$_['text_empty']        = 'There is no product that matches the search criteria.';
-$_['text_quantity']     = 'Qty:';
-$_['text_manufacturer'] = 'Brand:';
-$_['text_model']        = 'Product Code:';
-$_['text_points']       = 'Reward Points:';
-$_['text_price']        = 'Price:';
-$_['text_tax']          = 'Ex Tax:';
-$_['text_reviews']      = 'Based on %s reviews.';
-$_['text_compare']      = 'Product Compare (%s)';
-$_['text_sort']         = 'Sort By:';
-$_['text_default']      = 'Default';
-$_['text_name_asc']     = 'Name (A - Z)';
-$_['text_name_desc']    = 'Name (Z - A)';
-$_['text_price_asc']    = 'Price (Low &gt; High)';
-$_['text_price_desc']   = 'Price (High &gt; Low)';
-$_['text_rating_asc']   = 'Rating (Lowest)';
-$_['text_rating_desc']  = 'Rating (Highest)';
-$_['text_model_asc']    = 'Model (A - Z)';
-$_['text_model_desc']   = 'Model (Z - A)';
-$_['text_limit']        = 'Show:';
+$_['text_search']       = 'Товары по вашему запросу';
+$_['text_keyword']      = 'Ключевые слова';
+$_['text_category']     = 'Все категории';
+$_['text_sub_category'] = 'Искать в подкатегориях';
+$_['text_empty']        = 'По вашему запросу ничего не найдено.';
+$_['text_quantity']     = 'Кол-во:';
+$_['text_manufacturer'] = 'Бренд:';
+$_['text_model']        = 'Артикул:';
+$_['text_points']       = 'Бонусные баллы:';
+$_['text_price']        = 'Цена:';
+$_['text_tax']          = 'Без налога:';
+$_['text_reviews']      = 'На основе %s отзывов.';
+$_['text_compare']      = 'Сравнение товаров (%s)';
+$_['text_sort']         = 'Сортировка:';
+$_['text_default']      = 'По умолчанию';
+$_['text_popular_desc'] = 'Популярные';
+$_['text_date_desc']    = 'Новинки';
+$_['text_name_asc']     = 'Название А-Я';
+$_['text_name_desc']    = 'Название Я-А';
+$_['text_price_asc']    = 'Цена по возрастанию';
+$_['text_price_desc']   = 'Цена по убыванию';
+$_['text_rating_asc']   = 'Рейтинг по возрастанию';
+$_['text_rating_desc']  = 'Рейтинг по убыванию';
+$_['text_model_asc']    = 'Артикул А-Я';
+$_['text_model_desc']   = 'Артикул Я-А';
+$_['text_limit']        = 'Показать:';
 
 // Entry
-$_['entry_search']      = 'Search Criteria';
-$_['entry_description'] = 'Search in product descriptions';
+$_['entry_search']      = 'Что ищем';
+$_['entry_description'] = 'Искать в описаниях товаров';
