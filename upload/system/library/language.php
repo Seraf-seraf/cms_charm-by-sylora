@@ -11,7 +11,7 @@
 * Language class
 */
 class Language {
-	private $default = 'en-gb';
+	private $default = 'ru-ru';
 	private $directory;
 	public $data = array();
 	

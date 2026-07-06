@@ -22,7 +22,7 @@ $_['entry_status']      = 'Status';
 $_['entry_sort_order']  = 'Sort Order';
 
 // Help
-$_['help_locale']       = 'Example: en_US.UTF-8,en_US,en-gb,en_gb,english';
+$_['help_locale']       = 'Example: ru_RU.UTF-8,ru_RU,ru-ru,russian';
 $_['help_status']       = 'Hide/Show it in language dropdown';
 
 // Error

@@ -1,13 +1,13 @@
 <?php
 // Locale
-$_['code']                  = 'en';
+$_['code']                  = 'ru-ru';
 $_['direction']             = 'ltr';
-$_['date_format_short']     = 'd/m/Y';
-$_['date_format_long']      = 'l dS F Y';
-$_['time_format']           = 'h:i:s A';
-$_['datetime_format']       = 'd/m/Y H:i:s';
+$_['date_format_short']     = 'd.m.Y';
+$_['date_format_long']      = 'd.m.Y';
+$_['time_format']           = 'H:i:s';
+$_['datetime_format']       = 'd.m.Y H:i:s';
 $_['decimal_point']         = '.';
-$_['thousand_point']        = ',';
+$_['thousand_point']        = ' ';
 
 // Text
 $_['text_home']             = '<i class="fa fa-home"></i>';
@@ -100,7 +100,7 @@ $_['error_curl']            = 'CURL: Error Code(%s): %s';
 //$_['datepicker']            = 'el';
 //$_['datepicker']            = 'en-au';
 //$_['datepicker']            = 'en-ca';
-$_['datepicker']            = 'en-gb';
+$_['datepicker']            = 'ru';
 //$_['datepicker']            = 'en-ie';
 //$_['datepicker']            = 'en-nz';
 //$_['datepicker']            = 'eo';
