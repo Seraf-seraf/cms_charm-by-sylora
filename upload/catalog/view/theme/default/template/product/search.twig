@@ -106,10 +106,13 @@
         <article class="product-layout product-grid catalog-card">
           <div class="product-thumb">
             <a class="catalog-card__image" href="{{ product.href }}">
-              {% if product.special %}
-              <span class="catalog-card__badge">Скидка</span>
+              {% if product.badge %}
+              <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
               {% endif %}
-              <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
+              <img class="catalog-card__image-primary" src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
+              {% if product.hover_thumb %}
+              <img class="catalog-card__image-hover" src="{{ product.hover_thumb }}" alt="{{ product.name }} - дополнительное фото" title="{{ product.name }}" loading="lazy" />
+              {% endif %}
             </a>
             <div class="catalog-card__body">
               <div class="caption">
