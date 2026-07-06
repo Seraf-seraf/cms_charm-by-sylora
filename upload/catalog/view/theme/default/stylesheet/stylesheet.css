@@ -929,7 +929,6 @@ a:focus {
 	align-items: center;
 	gap: 24px;
 	min-height: 76px;
-	white-space: nowrap;
 }
 
 .site-brand {
@@ -986,6 +985,7 @@ a:focus {
 	font-size: 14px;
 	font-weight: 600;
 	text-decoration: none;
+	white-space: nowrap;
 }
 
 .site-nav a:hover,
