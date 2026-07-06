@@ -188,10 +188,37 @@
               <div class="button-group catalog-card__actions">
                 <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
                 <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
+                <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" onclick="document.getElementById('quick-view-{{ product.product_id }}').showModal();"><i class="fa fa-eye"></i></button>
                 <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
               </div>
             </div>
           </div>
+          <dialog class="quick-view" id="quick-view-{{ product.product_id }}">
+            <form class="quick-view__close" method="dialog">
+              <button type="submit" aria-label="Закрыть"><i class="fa fa-times"></i></button>
+            </form>
+            <div class="quick-view__grid">
+              <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="lazy" />
+              <div class="quick-view__content">
+                {% if product.badge %}
+                <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
+                {% endif %}
+                <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+                <h2>{{ product.name }}</h2>
+                <p>{{ product.quick_description }}</p>
+                {% if product.price %}
+                <p class="price"> {% if not product.special %}
+                  {{ product.price }}
+                  {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
+                  {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
+                {% endif %}
+                <div class="quick-view__actions">
+                  <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+                  <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
+                </div>
+              </div>
+            </div>
+          </dialog>
         </article>
         {% endfor %} </div>
       <div class="row">
