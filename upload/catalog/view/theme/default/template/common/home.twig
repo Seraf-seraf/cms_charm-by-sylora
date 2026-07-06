@@ -23,22 +23,18 @@
       <h2>Категории</h2>
       <a href="index.php?route=product/search">Все украшения</a>
     </div>
+    {% if home_categories %}
     <div class="sylora-category-grid">
-      {% set categories = [
-        ['Серьги', 'Легкие акценты на каждый день'],
-        ['Браслеты', 'Мягкие формы и натуральные оттенки'],
-        ['Колье', 'Украшения для выразительного образа'],
-        ['Подвески', 'Минималистичные детали'],
-        ['Комплекты', 'Готовые сочетания'],
-        ['Подарки', 'Бережная упаковка']
-      ] %}
-      {% for item in categories %}
-      <a class="sylora-category-card" href="index.php?route=product/search">
-        <span>{{ item[0] }}</span>
-        <small>{{ item[1] }}</small>
+      {% for category in home_categories %}
+      <a class="sylora-category-card" href="{{ category.href }}">
+        <span>{{ category.name }}</span>
+        <small>{{ category.description }}</small>
       </a>
       {% endfor %}
     </div>
+    {% else %}
+    <p class="sylora-empty">Категории появятся здесь после настройки каталога.</p>
+    {% endif %}
   </section>
 
   <section class="container sylora-section">
@@ -46,35 +42,35 @@
       <h2>Избранные украшения</h2>
       <a href="index.php?route=product/search">Перейти в каталог</a>
     </div>
+    {% if featured_products %}
     <div class="sylora-product-preview">
+      {% for product in featured_products %}
       <article>
-        <img src="image/catalog/sylora/jewelry-collection.png" alt="Серьги ручной работы">
+        <a class="sylora-product-preview__image" href="{{ product.href }}">
+          <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="lazy">
+        </a>
         <div>
-          <p class="sylora-badge">Новинка</p>
-          <h3>Серьги с мягким розовым акцентом</h3>
-          <p class="sylora-stock">В наличии</p>
-          <a class="btn btn-primary" href="index.php?route=product/search">Смотреть</a>
+          <p class="sylora-badge {{ product.badge_class }}">{{ product.badge }}</p>
+          <h3><a href="{{ product.href }}">{{ product.name }}</a></h3>
+          <p class="sylora-stock {{ product.stock_class }}">{{ product.stock }}</p>
+          {% if product.price %}
+          <p class="sylora-product-preview__price">
+            {% if product.special %}
+            <span>{{ product.special }}</span>
+            <s>{{ product.price }}</s>
+            {% else %}
+            <span>{{ product.price }}</span>
+            {% endif %}
+          </p>
+          {% endif %}
+          <a class="btn btn-primary" href="{{ product.href }}">Смотреть</a>
         </div>
       </article>
-      <article>
-        <img src="image/catalog/sylora/jewelry-collection.png" alt="Браслет ручной работы">
-        <div>
-          <p class="sylora-badge sylora-badge--leaf">Под заказ</p>
-          <h3>Браслет с природными оттенками</h3>
-          <p class="sylora-stock">Изготовление 3-5 дней</p>
-          <a class="btn btn-primary" href="index.php?route=product/search">Подробнее</a>
-        </div>
-      </article>
-      <article>
-        <img src="image/catalog/sylora/jewelry-collection.png" alt="Подвеска ручной работы">
-        <div>
-          <p class="sylora-badge">Подарок</p>
-          <h3>Подвеска для лаконичного образа</h3>
-          <p class="sylora-stock">Осталось мало</p>
-          <a class="btn btn-primary" href="index.php?route=product/search">Смотреть</a>
-        </div>
-      </article>
+      {% endfor %}
     </div>
+    {% else %}
+    <p class="sylora-empty">Товары появятся здесь после добавления ассортимента.</p>
+    {% endif %}
   </section>
 
   <section class="sylora-benefits">

@@ -5,8 +5,99 @@ class ControllerCommonHome extends Controller {
 		$this->document->setDescription('Интернет-магазин авторских украшений ручной работы: серьги, браслеты, подвески, колье и подарочные комплекты.');
 		$this->document->setKeywords('украшения ручной работы, авторские украшения, серьги, браслеты, подвески, Charm by Sylora');
 
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/product');
+		$this->load->model('tool/image');
+
 		if (isset($this->request->get['route'])) {
 			$this->document->addLink($this->config->get('config_url'), 'canonical');
+		}
+
+		$data['home_categories'] = array();
+
+		$categories = $this->model_catalog_category->getCategories(0);
+
+		foreach ($categories as $category) {
+			$data['home_categories'][] = array(
+				'name'        => $category['name'],
+				'description' => $this->getCategorySummary($category['description']),
+				'href'        => $this->url->link('product/category', 'path=' . $category['category_id'])
+			);
+
+			if (count($data['home_categories']) >= 6) {
+				break;
+			}
+		}
+
+		$data['featured_products'] = array();
+		$featured_products = array();
+
+		foreach ($this->model_catalog_product->getProductSpecials(array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => 6)) as $product) {
+			$featured_products[$product['product_id']] = $product;
+		}
+
+		foreach ($this->model_catalog_product->getLatestProducts(6) as $product) {
+			$featured_products[$product['product_id']] = $product;
+		}
+
+		foreach ($this->model_catalog_product->getPopularProducts(6) as $product) {
+			$featured_products[$product['product_id']] = $product;
+		}
+
+		foreach ($featured_products as $product) {
+			if ($product['image']) {
+				$image = $this->model_tool_image->resize($product['image'], 420, 315);
+			} else {
+				$image = $this->model_tool_image->resize('placeholder.png', 420, 315);
+			}
+
+			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
+				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+			} else {
+				$price = false;
+			}
+
+			if (!is_null($product['special']) && (float)$product['special'] >= 0) {
+				$special = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+				$badge = 'Скидка';
+				$badge_class = '';
+			} elseif (!empty($product['date_added']) && strtotime($product['date_added']) >= strtotime('-30 days')) {
+				$special = false;
+				$badge = 'Новинка';
+				$badge_class = 'sylora-badge--leaf';
+			} else {
+				$special = false;
+				$badge = 'Популярное';
+				$badge_class = 'sylora-badge--earth';
+			}
+
+			if ($product['quantity'] <= 0) {
+				$stock = 'Под заказ';
+				$stock_class = 'is-out';
+			} elseif ($product['quantity'] <= 2) {
+				$stock = 'Осталось мало';
+				$stock_class = 'is-low';
+			} else {
+				$stock = 'В наличии';
+				$stock_class = 'is-in';
+			}
+
+			$data['featured_products'][] = array(
+				'product_id'  => $product['product_id'],
+				'thumb'       => $image,
+				'name'        => $product['name'],
+				'price'       => $price,
+				'special'     => $special,
+				'badge'       => $badge,
+				'badge_class' => $badge_class,
+				'stock'       => $stock,
+				'stock_class' => $stock_class,
+				'href'        => $this->url->link('product/product', 'product_id=' . $product['product_id'])
+			);
+
+			if (count($data['featured_products']) >= 3) {
+				break;
+			}
 		}
 
 		$data['column_left'] = $this->load->controller('common/column_left');
@@ -17,5 +108,15 @@ class ControllerCommonHome extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 
 		$this->response->setOutput($this->load->view('common/home', $data));
+	}
+
+	private function getCategorySummary($description) {
+		$summary = trim(strip_tags(html_entity_decode($description, ENT_QUOTES, 'UTF-8')));
+
+		if ($summary) {
+			return utf8_substr($summary, 0, 96);
+		}
+
+		return 'Подборка украшений из управляемого каталога';
 	}
 }
