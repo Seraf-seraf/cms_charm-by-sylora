@@ -42,6 +42,11 @@ class ControllerCommonHeader extends Controller {
 		$data['direction'] = $this->language->get('direction');
 
 		$data['name'] = $this->config->get('config_name');
+		$data['brand_logo'] = '';
+
+		if (is_file(DIR_IMAGE . 'catalog/sylora/charm-by-sylora.png')) {
+			$data['brand_logo'] = $server . 'image/catalog/sylora/charm-by-sylora.png';
+		}
 
 		if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
 			$data['logo'] = $server . 'image/' . $this->config->get('config_logo');

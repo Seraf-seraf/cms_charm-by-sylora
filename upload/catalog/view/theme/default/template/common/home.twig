@@ -12,8 +12,33 @@
         </div>
       </div>
       <div class="sylora-hero__media" aria-label="Украшения ручной работы">
-        <img src="image/catalog/sylora/jewelry-collection.png" alt="Коллекция украшений ручной работы Charm by Sylora">
-        <img src="image/catalog/sylora/jewelry-collection.png" alt="Детали авторских украшений в розовых и зеленых оттенках">
+        {% if hero_products %}
+        <div class="sylora-product-slider">
+          <div class="sylora-product-slider__track">
+            {% for product in hero_products %}
+            <a class="sylora-product-slide" href="{{ product.href }}">
+              <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+              <span>{{ product.name }}</span>
+            </a>
+            {% endfor %}
+            {% for product in hero_products %}
+            <a class="sylora-product-slide" href="{{ product.href }}" aria-hidden="true" tabindex="-1">
+              <img src="{{ product.thumb }}" alt="" loading="lazy">
+              <span>{{ product.name }}</span>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+        <div class="sylora-product-slider sylora-product-slider--fallback">
+          <div class="sylora-product-slider__track">
+            <img src="image/catalog/sylora/jewelry-collection.png" alt="Коллекция украшений ручной работы Charm by Sylora">
+            <img src="image/catalog/sylora/jewelry-collection.png" alt="Детали авторских украшений в розовых и зеленых оттенках">
+            <img src="image/catalog/sylora/jewelry-collection.png" alt="" aria-hidden="true">
+            <img src="image/catalog/sylora/jewelry-collection.png" alt="" aria-hidden="true">
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </section>

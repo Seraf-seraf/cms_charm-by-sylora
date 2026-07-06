@@ -31,6 +31,7 @@ class ControllerCommonHome extends Controller {
 		}
 
 		$data['featured_products'] = array();
+		$data['hero_products'] = array();
 		$featured_products = array();
 
 		foreach ($this->model_catalog_product->getProductSpecials(array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => 6)) as $product) {
@@ -83,7 +84,7 @@ class ControllerCommonHome extends Controller {
 				$stock_class = 'is-in';
 			}
 
-			$data['featured_products'][] = array(
+			$product_data = array(
 				'product_id'  => $product['product_id'],
 				'thumb'       => $image,
 				'name'        => $product['name'],
@@ -96,7 +97,13 @@ class ControllerCommonHome extends Controller {
 				'href'        => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 			);
 
-			if (count($data['featured_products']) >= 3) {
+			$data['hero_products'][] = $product_data;
+
+			if (count($data['featured_products']) < 3) {
+				$data['featured_products'][] = $product_data;
+			}
+
+			if (count($data['hero_products']) >= 6) {
 				break;
 			}
 		}

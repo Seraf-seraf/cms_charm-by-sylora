@@ -42,6 +42,11 @@
 {% for link in links %}
 <link href="{{ link.href }}" rel="{{ link.rel }}" />
 {% endfor %}
+<link rel="apple-touch-icon" sizes="180x180" href="image/catalog/sylora/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="image/catalog/sylora/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="image/catalog/sylora/favicons/favicon-16x16.png">
+<link rel="icon" href="image/catalog/sylora/favicons/favicon.ico">
+<link rel="manifest" href="image/catalog/sylora/favicons/site.webmanifest">
 {% for analytic in analytics %}
 {{ analytic }}
 {% endfor %}
@@ -57,8 +62,13 @@
 <header class="site-header">
   <div class="container site-header__inner">
     <a class="site-brand" href="{{ home }}" aria-label="Charm by Sylora">
-      <span class="site-brand__mark">Charm by Sylora</span>
-      <span class="site-brand__sub">handmade jewelry</span>
+      {% if brand_logo %}
+      <img class="site-brand__logo" src="{{ brand_logo }}" alt="" width="54" height="54" loading="eager" decoding="async">
+      {% endif %}
+      <span class="site-brand__text">
+        <span class="site-brand__mark">Charm by Sylora</span>
+        <span class="site-brand__sub">handmade jewelry</span>
+      </span>
     </a>
 
     <nav class="site-nav" id="site-nav" aria-label="Основное меню">
