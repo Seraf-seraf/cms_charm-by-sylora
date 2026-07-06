@@ -14,11 +14,8 @@ class ControllerCommonHeader extends Controller {
 			}
 		}
 
-		if ($this->request->server['HTTPS']) {
-			$server = $this->config->get('config_ssl');
-		} else {
-			$server = $this->config->get('config_url');
-		}
+		$is_https = !empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off';
+		$server = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
 
 		if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
 			$this->document->addLink($server . 'image/' . $this->config->get('config_icon'), 'icon');
@@ -51,6 +48,49 @@ class ControllerCommonHeader extends Controller {
 		} else {
 			$data['logo'] = '';
 		}
+
+		$organization_schema = array(
+			'@type' => 'Organization',
+			'@id'   => rtrim($server, '/') . '/#organization',
+			'name'  => $data['name'] ? $data['name'] : 'Charm by Sylora',
+			'url'   => $server
+		);
+
+		if ($data['logo']) {
+			$organization_schema['logo'] = $data['logo'];
+			$organization_schema['image'] = $data['logo'];
+		} else {
+			$organization_schema['image'] = $data['og_image'];
+		}
+
+		if ($this->config->get('config_telephone')) {
+			$organization_schema['telephone'] = $this->config->get('config_telephone');
+		}
+
+		if ($this->config->get('config_email')) {
+			$organization_schema['email'] = $this->config->get('config_email');
+		}
+
+		$data['site_schema'] = json_encode(array(
+			'@context' => 'https://schema.org',
+			'@graph'   => array(
+				$organization_schema,
+				array(
+					'@type' => 'WebSite',
+					'@id'   => rtrim($server, '/') . '/#website',
+					'url'   => $server,
+					'name'  => $data['name'] ? $data['name'] : 'Charm by Sylora',
+					'publisher' => array(
+						'@id' => rtrim($server, '/') . '/#organization'
+					),
+					'potentialAction' => array(
+						'@type'       => 'SearchAction',
+						'target'      => rtrim($server, '/') . '/index.php?route=product/search&search={search_term_string}',
+						'query-input' => 'required name=search_term_string'
+					)
+				)
+			)
+		), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 		$this->load->language('common/header');
 

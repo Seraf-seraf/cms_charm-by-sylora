@@ -5,6 +5,12 @@ class ControllerErrorNotFound extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
+		$data['heading_title'] = $this->language->get('heading_title');
+		$data['text_error'] = $this->language->get('text_error');
+		$data['text_catalog'] = $this->language->get('text_catalog');
+		$data['text_home'] = $this->language->get('text_home');
+		$data['text_contact'] = $this->language->get('text_contact');
+
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -34,6 +40,8 @@ class ControllerErrorNotFound extends Controller {
 		}
 
 		$data['continue'] = $this->url->link('common/home');
+		$data['catalog'] = $this->url->link('product/search');
+		$data['contact'] = $this->url->link('information/contact');
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

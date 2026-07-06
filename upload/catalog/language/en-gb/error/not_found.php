@@ -1,6 +1,9 @@
 <?php
 // Heading
-$_['heading_title'] = 'The page you requested cannot be found!';
+$_['heading_title'] = 'Страница не найдена';
 
 // Text
-$_['text_error']    = 'The page you requested cannot be found.';
+$_['text_error']    = 'Возможно, ссылка устарела или украшение больше не доступно. Перейдите в каталог, вернитесь на главную или напишите нам, если искали конкретное изделие.';
+$_['text_catalog']  = 'Перейти в каталог';
+$_['text_home']     = 'На главную';
+$_['text_contact']  = 'Связаться';
