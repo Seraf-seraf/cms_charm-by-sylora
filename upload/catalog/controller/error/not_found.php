@@ -2,6 +2,7 @@
 class ControllerErrorNotFound extends Controller {
 	public function index() {
 		$this->load->language('error/not_found');
+		$this->load->model('catalog/category');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -40,7 +41,7 @@ class ControllerErrorNotFound extends Controller {
 		}
 
 		$data['continue'] = $this->url->link('common/home');
-		$data['catalog'] = $this->url->link('product/search');
+		$data['catalog'] = $this->getCatalogUrl();
 		$data['contact'] = $this->url->link('information/contact');
 
 		$data['column_left'] = $this->load->controller('common/column_left');
@@ -53,5 +54,19 @@ class ControllerErrorNotFound extends Controller {
 		$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 
 		$this->response->setOutput($this->load->view('error/not_found', $data));
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$category) {
+			$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
 	}
 }

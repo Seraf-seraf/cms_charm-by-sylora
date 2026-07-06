@@ -4,6 +4,7 @@ class ControllerInformationInformation extends Controller {
 		$this->load->language('information/information');
 
 		$this->load->model('catalog/information');
+		$this->load->model('catalog/category');
 
 		$data['breadcrumbs'] = array();
 
@@ -38,7 +39,7 @@ class ControllerInformationInformation extends Controller {
 
 			$data['heading_title'] = $information_info['title'];
 			$data['about_page'] = ($information_id == 4);
-			$data['catalog_href'] = $this->url->link('product/search');
+			$data['catalog_href'] = $this->getCatalogUrl();
 			$data['contact_href'] = $this->url->link('information/contact');
 
 			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
@@ -100,5 +101,19 @@ class ControllerInformationInformation extends Controller {
 		$this->response->addHeader('X-Robots-Tag: noindex');
 
 		$this->response->setOutput($output);
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$category) {
+			$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
 	}
 }

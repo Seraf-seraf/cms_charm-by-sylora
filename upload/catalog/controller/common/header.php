@@ -133,7 +133,11 @@ class ControllerCommonHeader extends Controller {
 	}
 
 	private function getCatalogUrl() {
-		$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		$category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$category) {
+			$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
 
 		if ($category) {
 			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);

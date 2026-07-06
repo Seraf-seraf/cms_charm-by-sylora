@@ -2,6 +2,7 @@
 class ControllerCheckoutCart extends Controller {
 	public function index() {
 		$this->load->language('checkout/cart');
+		$this->load->model('catalog/category');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -213,7 +214,7 @@ class ControllerCheckoutCart extends Controller {
 				);
 			}
 
-			$data['continue'] = $this->url->link('product/search');
+			$data['continue'] = $this->getCatalogUrl();
 
 			$data['checkout'] = $this->url->link('checkout/checkout', '', true);
 
@@ -244,7 +245,7 @@ class ControllerCheckoutCart extends Controller {
 		} else {
 			$data['text_error'] = $this->language->get('text_empty');
 			
-			$data['continue'] = $this->url->link('product/search');
+			$data['continue'] = $this->getCatalogUrl();
 
 			unset($this->session->data['success']);
 
@@ -378,6 +379,20 @@ class ControllerCheckoutCart extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$category) {
+			$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
 	}
 
 	public function edit() {
