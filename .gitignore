@@ -51,6 +51,7 @@
 # /upload/flags/*
 
 # Log Files
+/logs/*
 /upload/system/storage/logs/*
 !/upload/system/storage/logs/.gitkeep
 /storage/logs/*
