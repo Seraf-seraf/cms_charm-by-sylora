@@ -19,6 +19,8 @@ jobs:
           script: |
             set -eux
 
+            export PATH="$HOME/bin:$PATH"
+
             cd "${{ secrets.DEPLOY_PATH }}"
 
             git fetch origin main
