@@ -2588,3 +2588,133 @@ footer h5 {
 		grid-template-columns: 52px minmax(0, 1fr) 32px;
 	}
 }
+
+/* Checkout */
+.checkout-page {
+	margin-bottom: 48px;
+}
+
+.checkout-head {
+	max-width: 760px;
+	margin-bottom: 28px;
+}
+
+.checkout-head h1 {
+	margin: 0 0 12px;
+	font-size: 38px;
+	line-height: 1.14;
+}
+
+.checkout-head p {
+	color: var(--color-muted);
+	font-size: 16px;
+}
+
+.checkout-accordion {
+	display: grid;
+	gap: 14px;
+}
+
+.checkout-accordion .panel {
+	overflow: hidden;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-bg);
+	box-shadow: none;
+}
+
+.checkout-accordion .panel + .panel {
+	margin-top: 0;
+}
+
+.checkout-accordion .panel-heading {
+	padding: 0;
+	border: 0;
+	background: var(--color-surface);
+}
+
+.checkout-accordion .panel-title,
+.checkout-accordion .panel-title a {
+	display: block;
+	margin: 0;
+	color: var(--color-earth);
+	font-size: 16px;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.checkout-accordion .panel-title {
+	padding: 16px 18px;
+}
+
+.checkout-accordion .panel-title a {
+	padding: 16px 18px;
+}
+
+.checkout-accordion .panel-body {
+	padding: 20px;
+	border-top: 1px solid var(--color-border);
+}
+
+.checkout-accordion h2,
+.checkout-accordion legend {
+	margin: 0 0 16px;
+	border: 0;
+	color: var(--color-text);
+	font-size: 22px;
+	font-weight: 700;
+}
+
+.checkout-accordion .form-group {
+	margin-bottom: 16px;
+}
+
+.checkout-accordion .control-label {
+	margin-bottom: 7px;
+	color: var(--color-earth);
+	font-weight: 700;
+}
+
+.checkout-accordion .form-control {
+	min-height: 42px;
+	border-color: var(--color-border);
+	border-radius: 8px;
+	background: var(--color-bg);
+	color: var(--color-text);
+	box-shadow: none;
+}
+
+.checkout-accordion textarea.form-control {
+	min-height: 120px;
+	resize: vertical;
+}
+
+.checkout-accordion .radio,
+.checkout-accordion .checkbox {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	color: var(--color-muted);
+}
+
+.checkout-accordion .buttons {
+	margin-top: 18px;
+}
+
+.checkout-accordion .table {
+	background: var(--color-bg);
+}
+
+.checkout-accordion .table td,
+.checkout-accordion .table th {
+	border-color: var(--color-border);
+}
+
+@media (max-width: 767px) {
+	.checkout-head h1 {
+		font-size: 32px;
+	}
+
+	.checkout-accordion .panel-body {
+		padding: 16px;
+	}
+}
