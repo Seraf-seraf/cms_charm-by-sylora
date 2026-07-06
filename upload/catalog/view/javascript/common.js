@@ -157,7 +157,20 @@ var cart = {
 				}
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					var cartUrl = json['cart_url'] || 'index.php?route=checkout/cart';
+					var continueUrl = json['continue_url'] || 'index.php?route=product/search';
+					var cartText = json['text_cart_action'] || 'Перейти в корзину';
+					var continueText = json['text_continue_action'] || 'Продолжить покупки';
+					var notification = '<div class="alert alert-success alert-dismissible cart-notice" role="status">';
+
+					notification += '<div class="cart-notice__message"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>';
+					notification += '<div class="cart-notice__actions">';
+					notification += '<a class="btn btn-primary btn-sm" href="' + cartUrl + '">' + cartText + '</a>';
+					notification += '<a class="btn btn-default btn-sm" href="' + continueUrl + '">' + continueText + '</a>';
+					notification += '</div>';
+					notification += '<button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+
+					$('#content').parent().before(notification);
 
 					// Need to set timeout otherwise it wont update the total
 					setTimeout(function () {

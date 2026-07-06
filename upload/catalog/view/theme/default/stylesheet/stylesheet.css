@@ -350,6 +350,28 @@ footer h5 {
 	right: 0px;
 	color: inherit;
 }
+
+.cart-notice {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto auto;
+	gap: 12px;
+	align-items: center;
+	padding: 14px 16px;
+}
+
+.cart-notice__message {
+	min-width: 0;
+}
+
+.cart-notice__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.cart-notice > .close {
+	align-self: start;
+}
 /* breadcrumb */
 .breadcrumb {
 	margin: 0 0 20px 0;
@@ -1390,6 +1412,18 @@ footer h5 {
 }
 
 @media (max-width: 767px) {
+	.cart-notice {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+
+	.cart-notice__actions {
+		grid-column: 1 / -1;
+	}
+
+	.cart-notice__actions .btn {
+		flex: 1 1 150px;
+	}
+
 	.site-header__inner {
 		min-height: 66px;
 	}
