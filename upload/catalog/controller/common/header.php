@@ -93,6 +93,7 @@ class ControllerCommonHeader extends Controller {
 		), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 		$this->load->language('common/header');
+		$this->load->model('catalog/category');
 
 		// Wishlist
 		if ($this->customer->isLogged()) {
@@ -118,7 +119,7 @@ class ControllerCommonHeader extends Controller {
 		$data['shopping_cart'] = $this->url->link('checkout/cart');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', true);
 		$data['contact'] = $this->url->link('information/contact');
-		$data['catalog'] = $this->url->link('product/search');
+		$data['catalog'] = $this->getCatalogUrl();
 		$data['about'] = $this->url->link('information/information', 'information_id=4');
 		$data['telephone'] = $this->config->get('config_telephone');
 		
@@ -129,5 +130,15 @@ class ControllerCommonHeader extends Controller {
 		$data['menu'] = $this->load->controller('common/menu');
 
 		return $this->load->view('common/header', $data);
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
 	}
 }

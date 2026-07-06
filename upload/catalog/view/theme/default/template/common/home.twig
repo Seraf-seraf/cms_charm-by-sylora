@@ -7,7 +7,7 @@
         <h1>Ручные украшения, созданные с вниманием к деталям</h1>
         <p>Серьги, браслеты, подвески и комплекты для повседневных образов, подарков и небольших личных ритуалов.</p>
         <div class="sylora-actions">
-          <a class="btn btn-primary btn-lg" href="index.php?route=product/search">Смотреть каталог</a>
+          <a class="btn btn-primary btn-lg" href="{{ catalog }}">Смотреть каталог</a>
           <a class="sylora-link" href="index.php?route=information/information&information_id=4">О бренде</a>
         </div>
       </div>
@@ -21,7 +21,7 @@
   <section class="container sylora-section">
     <div class="sylora-section__head">
       <h2>Категории</h2>
-      <a href="index.php?route=product/search">Все украшения</a>
+      <a href="{{ catalog }}">Все украшения</a>
     </div>
     {% if home_categories %}
     <div class="sylora-category-grid">
@@ -40,7 +40,7 @@
   <section class="container sylora-section">
     <div class="sylora-section__head">
       <h2>Избранные украшения</h2>
-      <a href="index.php?route=product/search">Перейти в каталог</a>
+      <a href="{{ catalog }}">Перейти в каталог</a>
     </div>
     {% if featured_products %}
     <div class="sylora-product-preview">

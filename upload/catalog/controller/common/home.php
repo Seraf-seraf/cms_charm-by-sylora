@@ -14,6 +14,7 @@ class ControllerCommonHome extends Controller {
 		}
 
 		$data['home_categories'] = array();
+		$data['catalog'] = $this->getCatalogUrl();
 
 		$categories = $this->model_catalog_category->getCategories(0);
 
@@ -118,5 +119,15 @@ class ControllerCommonHome extends Controller {
 		}
 
 		return 'Подборка украшений из управляемого каталога';
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
 	}
 }

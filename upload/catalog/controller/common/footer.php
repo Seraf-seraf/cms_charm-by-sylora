@@ -4,6 +4,7 @@ class ControllerCommonFooter extends Controller {
 		$this->load->language('common/footer');
 
 		$this->load->model('catalog/information');
+		$this->load->model('catalog/category');
 
 		$data['informations'] = array();
 
@@ -18,7 +19,7 @@ class ControllerCommonFooter extends Controller {
 
 		$data['contact'] = $this->url->link('information/contact');
 		$data['home'] = $this->url->link('common/home');
-		$data['catalog'] = $this->url->link('product/search');
+		$data['catalog'] = $this->getCatalogUrl();
 		$data['cart'] = $this->url->link('checkout/cart');
 		$data['about'] = $this->url->link('information/information', 'information_id=4');
 		$data['delivery'] = $this->url->link('information/information', 'information_id=6');
@@ -71,5 +72,15 @@ class ControllerCommonFooter extends Controller {
 		$data['styles'] = $this->document->getStyles('footer');
 		
 		return $this->load->view('common/footer', $data);
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
 	}
 }
