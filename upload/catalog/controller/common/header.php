@@ -29,6 +29,15 @@ class ControllerCommonHeader extends Controller {
 		$data['base'] = $server;
 		$data['description'] = $this->document->getDescription();
 		$data['keywords'] = $this->document->getKeywords();
+		$data['og_title'] = $this->document->getTitle();
+		$data['og_description'] = $this->document->getDescription();
+		$data['og_image'] = $server . 'image/catalog/sylora/jewelry-collection.png';
+		$data['og_url'] = $server;
+
+		if (isset($this->request->server['REQUEST_URI'])) {
+			$data['og_url'] = rtrim($server, '/') . $this->request->server['REQUEST_URI'];
+		}
+
 		$data['links'] = $this->document->getLinks();
 		$data['styles'] = $this->document->getStyles();
 		$data['scripts'] = $this->document->getScripts('header');

@@ -1,45 +1,52 @@
 <footer>
-  <div class="container">
-    <div class="row">
-      {% if informations %}
-      <div class="col-sm-3">
-        <h5>{{ text_information }}</h5>
-        <ul class="list-unstyled">
-         {% for information in informations %}
-          <li><a href="{{ information.href }}">{{ information.title }}</a></li>
-          {% endfor %}
-        </ul>
+  <div class="container site-footer">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <h5>Charm by Sylora</h5>
+        <p>{{ text_description }}</p>
+        <p class="site-footer__note">{{ text_payment_note }}</p>
       </div>
-      {% endif %}
-      <div class="col-sm-3">
-        <h5>{{ text_service }}</h5>
-        <ul class="list-unstyled">
-          <li><a href="{{ contact }}">{{ text_contact }}</a></li>
-          <li><a href="{{ return }}">{{ text_return }}</a></li>
-          <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
-        </ul>
-      </div>
-      <div class="col-sm-3">
+      <nav aria-label="Навигация в подвале">
         <h5>{{ text_extra }}</h5>
         <ul class="list-unstyled">
-          <li><a href="{{ manufacturer }}">{{ text_manufacturer }}</a></li>
-          <li><a href="{{ voucher }}">{{ text_voucher }}</a></li>
-          <li><a href="{{ affiliate }}">{{ text_affiliate }}</a></li>
-          <li><a href="{{ special }}">{{ text_special }}</a></li>
+          <li><a href="{{ home }}">Главная</a></li>
+          <li><a href="{{ catalog }}">{{ text_catalog }}</a></li>
+          <li><a href="{{ about }}">{{ text_about }}</a></li>
+          <li><a href="{{ cart }}">{{ text_cart }}</a></li>
         </ul>
-      </div>
-      <div class="col-sm-3">
-        <h5>{{ text_account }}</h5>
+      </nav>
+      <nav aria-label="Информация для покупателей">
+        <h5>{{ text_service }}</h5>
         <ul class="list-unstyled">
-          <li><a href="{{ account }}">{{ text_account }}</a></li>
-          <li><a href="{{ order }}">{{ text_order }}</a></li>
-          <li><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
-          <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+          <li><a href="{{ delivery }}">{{ text_delivery }}</a></li>
+          <li><a href="{{ return }}">{{ text_return }}</a></li>
+          <li><a href="{{ care }}">{{ text_care }}</a></li>
+          <li><a href="{{ contact }}">{{ text_contact }}</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Юридическая информация">
+        <h5>{{ text_information }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ privacy }}">{{ text_privacy }}</a></li>
+          <li><a href="{{ terms }}">{{ text_terms }}</a></li>
+          <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h5>{{ text_contact }}</h5>
+        <ul class="list-unstyled">
+          {% if telephone %}
+          <li><a href="tel:{{ telephone|replace({' ': '', '-': '', '(': '', ')': ''}) }}">{{ telephone }}</a></li>
+          {% endif %}
+          {% if email %}
+          <li><a href="mailto:{{ email }}">{{ email }}</a></li>
+          {% endif %}
         </ul>
       </div>
     </div>
-    <hr>
-    <p>{{ powered }}</p>
+    <div class="site-footer__bottom">
+      <p>{{ powered }}</p>
+    </div>
   </div>
 </footer>
 {% for style in styles %}

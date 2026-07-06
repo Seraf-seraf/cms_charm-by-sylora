@@ -17,6 +17,14 @@ class ControllerCommonFooter extends Controller {
 		}
 
 		$data['contact'] = $this->url->link('information/contact');
+		$data['home'] = $this->url->link('common/home');
+		$data['catalog'] = $this->url->link('product/search');
+		$data['cart'] = $this->url->link('checkout/cart');
+		$data['about'] = $this->url->link('information/information', 'information_id=4');
+		$data['delivery'] = $this->url->link('information/information', 'information_id=6');
+		$data['privacy'] = $this->url->link('information/information', 'information_id=3');
+		$data['terms'] = $this->url->link('information/information', 'information_id=5');
+		$data['care'] = $this->url->link('information/information', 'information_id=7');
 		$data['return'] = $this->url->link('account/return/add', '', true);
 		$data['sitemap'] = $this->url->link('information/sitemap');
 		$data['tracking'] = $this->url->link('information/tracking');
@@ -28,8 +36,11 @@ class ControllerCommonFooter extends Controller {
 		$data['order'] = $this->url->link('account/order', '', true);
 		$data['wishlist'] = $this->url->link('account/wishlist', '', true);
 		$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+		$data['store'] = $this->config->get('config_name');
+		$data['telephone'] = $this->config->get('config_telephone');
+		$data['email'] = $this->config->get('config_email');
 
-		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
+		$data['powered'] = sprintf($this->language->get('text_powered'), date('Y', time()));
 
 		// Whos Online
 		if ($this->config->get('config_customer_online')) {

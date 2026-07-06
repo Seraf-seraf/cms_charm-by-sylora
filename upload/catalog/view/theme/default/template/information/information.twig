@@ -14,8 +14,57 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
+      {% if about_page %}
+      <article class="about-page">
+        <section class="about-hero">
+          <div>
+            <p class="sylora-eyebrow">О мастере</p>
+            <h1>Charm by Sylora</h1>
+            <p>Ручные украшения с мягким характером, созданные небольшими партиями для повседневных образов, подарков и личных деталей.</p>
+            <div class="sylora-actions">
+              <a class="btn btn-primary" href="{{ catalog_href }}">Смотреть каталог</a>
+              <a class="sylora-link" href="{{ contact_href }}">Связаться</a>
+            </div>
+          </div>
+          <img src="image/catalog/sylora/jewelry-collection.png" alt="Украшения ручной работы Charm by Sylora">
+        </section>
+
+        <section class="about-grid">
+          <div>
+            <h2>История бренда</h2>
+            <p>Charm by Sylora вырос из внимания к спокойным оттенкам, аккуратной фурнитуре и вещам, которые приятно носить каждый день. В основе бренда - ручная сборка, малые партии и бережное отношение к деталям.</p>
+          </div>
+          <div>
+            <h2>Философия</h2>
+            <p>Украшение должно дополнять человека, а не спорить с ним. Поэтому коллекции строятся вокруг мягких форм, природных сочетаний и понятных материалов.</p>
+          </div>
+          <div>
+            <h2>Как создаются изделия</h2>
+            <p>Каждая модель проходит подбор материалов, сборку, проверку креплений и упаковку. Повторы возможны, если нужные элементы остаются в наличии.</p>
+          </div>
+          <div>
+            <h2>Чем отличаются украшения</h2>
+            <p>Небольшие партии, ручная работа, спокойная палитра и готовая подарочная подача помогают выбрать изделие для себя или близкого человека.</p>
+          </div>
+        </section>
+
+        <section class="about-trust">
+          <div><strong>Бережная упаковка</strong><span>Украшение готово к подарку после получения.</span></div>
+          <div><strong>Доставка по России</strong><span>Сроки и условия уточняются при оформлении заказа.</span></div>
+          <div><strong>Онлайн-оплата</strong><span>Оплата планируется через платежный агрегатор.</span></div>
+        </section>
+
+        {% if description %}
+        <section class="about-content">
+          {{ description }}
+        </section>
+        {% endif %}
+      </article>
+      {% else %}
       <h1>{{ heading_title }}</h1>
-      {{ description }}{{ content_bottom }}</div>
+      {{ description }}
+      {% endif %}
+      {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
 {{ footer }}

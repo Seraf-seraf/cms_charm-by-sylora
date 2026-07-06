@@ -25,12 +25,21 @@ class ControllerInformationInformation extends Controller {
 			$this->document->setDescription($information_info['meta_description']);
 			$this->document->setKeywords($information_info['meta_keyword']);
 
+			if ($information_id == 4) {
+				$this->document->setTitle('О мастере Charm by Sylora - ручные украшения');
+				$this->document->setDescription('История Charm by Sylora: ручная работа, аккуратные материалы, ограниченные коллекции и украшения с теплым характером.');
+				$this->document->setKeywords('Charm by Sylora, о мастере, ручные украшения, авторские украшения');
+			}
+
 			$data['breadcrumbs'][] = array(
 				'text' => $information_info['title'],
 				'href' => $this->url->link('information/information', 'information_id=' .  $information_id)
 			);
 
 			$data['heading_title'] = $information_info['title'];
+			$data['about_page'] = ($information_id == 4);
+			$data['catalog_href'] = $this->url->link('product/search');
+			$data['contact_href'] = $this->url->link('information/contact');
 
 			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
 

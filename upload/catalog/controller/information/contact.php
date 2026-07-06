@@ -6,8 +6,15 @@ class ControllerInformationContact extends Controller {
 		$this->load->language('information/contact');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setDescription('Контакты Charm by Sylora: форма связи, email, телефон при наличии, регион работы и вопросы по доставке, оплате и заказам.');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+			$message = "Новое сообщение с сайта Charm by Sylora\n\n";
+			$message .= "Имя: " . $this->request->post['name'] . "\n";
+			$message .= "Email: " . $this->request->post['email'] . "\n";
+			$message .= "Телефон: " . $this->request->post['telephone'] . "\n\n";
+			$message .= "Сообщение:\n" . $this->request->post['enquiry'];
+
 			$mail = new Mail($this->config->get('config_mail_engine'));
 			$mail->parameter = $this->config->get('config_mail_parameter');
 			$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
@@ -18,10 +25,12 @@ class ControllerInformationContact extends Controller {
 
 			$mail->setTo($this->config->get('config_email'));
 			$mail->setFrom($this->config->get('config_email'));
-			$mail->setReplyTo($this->request->post['email']);
+			if (!empty($this->request->post['email'])) {
+				$mail->setReplyTo($this->request->post['email']);
+			}
 			$mail->setSender(html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8'));
 			$mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $this->request->post['name']), ENT_QUOTES, 'UTF-8'));
-			$mail->setText($this->request->post['enquiry']);
+			$mail->setText($message);
 			$mail->send();
 
 			$this->response->redirect($this->url->link('information/contact/success'));
@@ -57,7 +66,25 @@ class ControllerInformationContact extends Controller {
 			$data['error_enquiry'] = '';
 		}
 
+		if (isset($this->error['privacy'])) {
+			$data['error_privacy'] = $this->error['privacy'];
+		} else {
+			$data['error_privacy'] = '';
+		}
+
+		if (isset($this->error['spam'])) {
+			$data['error_spam'] = $this->error['spam'];
+		} else {
+			$data['error_spam'] = '';
+		}
+
 		$data['button_submit'] = $this->language->get('button_submit');
+		$data['text_intro'] = $this->language->get('text_intro');
+		$data['text_region'] = $this->language->get('text_region');
+		$data['text_delivery'] = $this->language->get('text_delivery');
+		$data['text_privacy'] = $this->language->get('text_privacy');
+		$data['entry_telephone'] = $this->language->get('entry_telephone');
+		$data['delivery_href'] = $this->url->link('information/information', 'information_id=6');
 
 		$data['action'] = $this->url->link('information/contact', '', true);
 
@@ -118,11 +145,19 @@ class ControllerInformationContact extends Controller {
 			$data['email'] = $this->customer->getEmail();
 		}
 
+		if (isset($this->request->post['telephone'])) {
+			$data['telephone_value'] = $this->request->post['telephone'];
+		} else {
+			$data['telephone_value'] = '';
+		}
+
 		if (isset($this->request->post['enquiry'])) {
 			$data['enquiry'] = $this->request->post['enquiry'];
 		} else {
 			$data['enquiry'] = '';
 		}
+
+		$data['privacy_agree'] = !empty($this->request->post['privacy_agree']);
 
 		// Captcha
 		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
@@ -142,6 +177,10 @@ class ControllerInformationContact extends Controller {
 	}
 
 	protected function validate() {
+		if (!empty($this->request->post['company'])) {
+			$this->error['spam'] = $this->language->get('error_spam');
+		}
+
 		if (!empty($this->request->post['name'])) {
 			if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 32)) {
 				$this->error['name'] = $this->language->get('error_name');
@@ -150,8 +189,12 @@ class ControllerInformationContact extends Controller {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if (!empty($this->request->post['email'])) {
-			if (!filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+		if (!empty($this->request->post['email']) || !empty($this->request->post['telephone'])) {
+			if (!empty($this->request->post['email']) && !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+				$this->error['email'] = $this->language->get('error_email');
+			}
+
+			if (empty($this->request->post['email']) && utf8_strlen(preg_replace('/[^0-9+]/', '', $this->request->post['telephone'])) < 7) {
 				$this->error['email'] = $this->language->get('error_email');
 			}
 		} else {
@@ -164,6 +207,10 @@ class ControllerInformationContact extends Controller {
 			}
 		} else {
 			$this->error['enquiry'] = $this->language->get('error_enquiry');
+		}
+
+		if (empty($this->request->post['privacy_agree'])) {
+			$this->error['privacy'] = $this->language->get('error_privacy');
 		}
 
 		// Captcha

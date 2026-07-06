@@ -1,27 +1,38 @@
 <?php
 // Heading
-$_['heading_title']  = 'Contact Us';
+$_['heading_title']  = 'Контакты';
 
 // Text
-$_['text_location']  = 'Our Location';
-$_['text_store']     = 'Our Stores';
-$_['text_contact']   = 'Contact Form';
-$_['text_address']   = 'Address';
-$_['text_telephone'] = 'Telephone';
-$_['text_fax']       = 'Fax';
-$_['text_open']      = 'Opening Times';
-$_['text_comment']   = 'Comments';
-$_['text_message']   = '<p>Your enquiry has been successfully sent to the store owner!</p>'; 
+$_['text_location']  = 'Как с нами связаться';
+$_['text_store']     = 'Дополнительные адреса';
+$_['text_contact']   = 'Написать нам';
+$_['text_address']   = 'Адрес';
+$_['text_telephone'] = 'Телефон';
+$_['text_fax']       = 'Факс';
+$_['text_open']      = 'Время обработки заказов';
+$_['text_comment']   = 'Комментарий';
+$_['text_message']   = '<p>Сообщение отправлено. Мы ответим на указанные контакты после обработки обращения.</p>'; 
+$_['text_intro']     = 'Напишите вопрос о наличии, сроках изготовления, доставке или индивидуальном заказе. Если телефон пока не указан, используйте email.';
+$_['text_region']    = 'Работаем с заказами по России';
+$_['text_delivery']  = 'Доставка и оплата';
+$_['text_privacy']   = 'Я согласен на обработку персональных данных';
 
 // Entry
-$_['entry_name']     = 'Your Name';
-$_['entry_email']    = 'E-Mail Address';
-$_['entry_enquiry']  = 'Enquiry';
+$_['entry_name']     = 'Имя';
+$_['entry_email']    = 'Email';
+$_['entry_telephone'] = 'Телефон';
+$_['entry_enquiry']  = 'Сообщение';
+
+// Button
+$_['button_submit']  = 'Отправить сообщение';
+$_['button_map']     = 'Открыть карту';
 
 // Email
-$_['email_subject']  = 'Enquiry %s';
+$_['email_subject']  = 'Сообщение с сайта от %s';
 
 // Errors
-$_['error_name']     = 'Name must be between 3 and 32 characters!';
-$_['error_email']    = 'E-Mail Address does not appear to be valid!';
-$_['error_enquiry']  = 'Enquiry must be between 10 and 3000 characters!';
+$_['error_name']     = 'Имя должно быть от 3 до 32 символов!';
+$_['error_email']    = 'Укажите корректный email или телефон для ответа!';
+$_['error_enquiry']  = 'Сообщение должно быть от 10 до 3000 символов!';
+$_['error_privacy']  = 'Нужно согласие на обработку персональных данных.';
+$_['error_spam']     = 'Сообщение не отправлено. Попробуйте отправить форму еще раз.';
