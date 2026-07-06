@@ -1974,6 +1974,35 @@ footer h5 {
 	font-size: 13px;
 }
 
+.product-accordions {
+	display: grid;
+	gap: 10px;
+	margin-top: 18px;
+}
+
+.product-accordions details {
+	overflow: hidden;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-surface);
+}
+
+.product-accordions summary {
+	padding: 13px 14px;
+	color: var(--color-earth);
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.product-accordions details > div {
+	padding: 0 14px 14px;
+	color: var(--color-muted);
+}
+
+.product-accordions p {
+	margin-bottom: 0;
+}
+
 .related-products {
 	margin-top: 44px;
 }

@@ -402,6 +402,102 @@ class ControllerProductProduct extends Controller {
 			$data['share'] = $this->url->link('product/product', 'product_id=' . (int)$this->request->get['product_id']);
 
 			$data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
+			$data['product_details'] = array(
+				'materials' => '',
+				'size'      => '',
+				'color'     => ''
+			);
+
+			foreach ($data['attribute_groups'] as $attribute_group) {
+				foreach ($attribute_group['attribute'] as $attribute) {
+					$name = utf8_strtolower($attribute['name']);
+
+					if (strpos($name, 'материал') !== false || strpos($name, 'material') !== false) {
+						$data['product_details']['materials'] = $attribute['text'];
+					}
+
+					if (strpos($name, 'размер') !== false || strpos($name, 'size') !== false) {
+						$data['product_details']['size'] = $attribute['text'];
+					}
+
+					if (strpos($name, 'цвет') !== false || strpos($name, 'color') !== false || strpos($name, 'colour') !== false) {
+						$data['product_details']['color'] = $attribute['text'];
+					}
+				}
+			}
+
+			$is_https = !empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off';
+			$server = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
+			$product_url = $this->url->link('product/product', 'product_id=' . (int)$this->request->get['product_id']);
+			$image_url = '';
+
+			if ($product_info['image']) {
+				$image_url = rtrim($server, '/') . '/image/' . $product_info['image'];
+			}
+
+			$schema_availability = 'https://schema.org/InStock';
+			$schema_price = $this->tax->calculate($tax_price, $product_info['tax_class_id'], $this->config->get('config_tax'));
+
+			if ($product_info['quantity'] <= 0) {
+				if ($data['stock'] == 'Под заказ') {
+					$schema_availability = 'https://schema.org/PreOrder';
+				} else {
+					$schema_availability = 'https://schema.org/OutOfStock';
+				}
+			} elseif ($product_info['quantity'] <= 2) {
+				$schema_availability = 'https://schema.org/LimitedAvailability';
+			}
+
+			$product_schema = array(
+				'@context' => 'https://schema.org',
+				'@type' => 'Product',
+				'name' => $product_info['name'],
+				'description' => utf8_substr(trim(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))), 0, 300),
+				'sku' => $product_info['model'],
+				'brand' => array(
+					'@type' => 'Brand',
+					'name' => $product_info['manufacturer'] ? $product_info['manufacturer'] : 'Charm by Sylora'
+				),
+				'offers' => array(
+					'@type' => 'Offer',
+					'url' => $product_url,
+					'priceCurrency' => $this->session->data['currency'],
+					'price' => number_format($schema_price, 2, '.', ''),
+					'availability' => $schema_availability,
+					'itemCondition' => 'https://schema.org/NewCondition'
+				)
+			);
+
+			if ($image_url) {
+				$product_schema['image'] = array($image_url);
+			}
+
+			if ($data['rating'] && $product_info['reviews']) {
+				$product_schema['aggregateRating'] = array(
+					'@type' => 'AggregateRating',
+					'ratingValue' => $data['rating'],
+					'reviewCount' => (int)$product_info['reviews']
+				);
+			}
+
+			$breadcrumb_items = array();
+			$breadcrumb_position = 1;
+
+			foreach ($data['breadcrumbs'] as $breadcrumb) {
+				$breadcrumb_items[] = array(
+					'@type' => 'ListItem',
+					'position' => $breadcrumb_position++,
+					'name' => strip_tags(html_entity_decode($breadcrumb['text'], ENT_QUOTES, 'UTF-8')),
+					'item' => $breadcrumb['href']
+				);
+			}
+
+			$data['product_schema'] = json_encode($product_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+			$data['breadcrumb_schema'] = json_encode(array(
+				'@context' => 'https://schema.org',
+				'@type' => 'BreadcrumbList',
+				'itemListElement' => $breadcrumb_items
+			), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 			$data['products'] = array();
 

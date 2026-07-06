@@ -26,24 +26,23 @@
             {% endif %}
             {% if images %}
             {% for image in images %}
-            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ heading_title }}"> <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" /></a></li>
+            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ heading_title }}"> <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ heading_title }} - дополнительное фото" loading="lazy" /></a></li>
             {% endfor %}
             {% endif %}
           </ul>
           {% endif %}
+          {% if attribute_groups or review_status %}
           <ul class="nav nav-tabs product-tabs">
-            <li class="active"><a href="#tab-description" data-toggle="tab">Описание</a></li>
             {% if attribute_groups %}
-            <li><a href="#tab-specification" data-toggle="tab">Характеристики</a></li>
+            <li class="active"><a href="#tab-specification" data-toggle="tab">Характеристики</a></li>
             {% endif %}
             {% if review_status %}
-            <li><a href="#tab-review" data-toggle="tab">Отзывы</a></li>
+            <li{% if not attribute_groups %} class="active"{% endif %}><a href="#tab-review" data-toggle="tab">Отзывы</a></li>
             {% endif %}
           </ul>
           <div class="tab-content product-tabs__content">
-            <div class="tab-pane active" id="tab-description">{{ description }}</div>
             {% if attribute_groups %}
-            <div class="tab-pane" id="tab-specification">
+            <div class="tab-pane active" id="tab-specification">
               <table class="table table-bordered">
                 {% for attribute_group in attribute_groups %}
                 <thead>
@@ -64,7 +63,7 @@
             </div>
             {% endif %}
             {% if review_status %}
-            <div class="tab-pane" id="tab-review">
+            <div class="tab-pane{% if not attribute_groups %} active{% endif %}" id="tab-review">
               <form class="form-horizontal" id="form-review">
                 <div id="review"></div>
                 <h2>{{ text_write }}</h2>
@@ -109,6 +108,7 @@
               </form>
             </div>
             {% endif %}</div>
+          {% endif %}
         </div>
         {% if column_left or column_right %}
         {% set class = 'col-sm-6' %}
@@ -128,6 +128,15 @@
             <li><span>Артикул</span> {{ model }}</li>
             {% if reward %}
             <li><span>Бонусные баллы</span> {{ reward }}</li>
+            {% endif %}
+            {% if product_details.materials %}
+            <li><span>Материалы</span> {{ product_details.materials }}</li>
+            {% endif %}
+            {% if product_details.size %}
+            <li><span>Размер</span> {{ product_details.size }}</li>
+            {% endif %}
+            {% if product_details.color %}
+            <li><span>Цвет</span> {{ product_details.color }}</li>
             {% endif %}
             <li><span>Наличие</span> <strong class="product-stock {{ stock_class }}">{{ stock }}</strong></li>
           </ul>
@@ -288,6 +297,24 @@
             <div><strong>Доставка по России</strong><span>Сроки и стоимость уточняются при оформлении заказа.</span></div>
             <div><strong>Уход за украшением</strong><span>Храните изделие отдельно и избегайте длительного контакта с водой.</span></div>
           </div>
+          <div class="product-accordions" role="list">
+            <details open>
+              <summary>Описание</summary>
+              <div>{{ description }}</div>
+            </details>
+            <details>
+              <summary>Уход</summary>
+              <div>
+                <p>Храните украшение отдельно от других изделий, снимайте перед душем, сном и тренировками. Избегайте длительного контакта с водой, парфюмом и бытовой химией.</p>
+              </div>
+            </details>
+            <details>
+              <summary>Доставка и возврат</summary>
+              <div>
+                <p>Доставка по России и итоговая стоимость рассчитываются при оформлении заказа. Если украшение создается под заказ, срок изготовления уточняется отдельно.</p>
+              </div>
+            </details>
+          </div>
           {% if review_status %}
           <div class="rating">
             <p>{% for i in 1..5 %}
@@ -349,6 +376,12 @@
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
+{% if product_schema %}
+<script type="application/ld+json">{{ product_schema|raw }}</script>
+{% endif %}
+{% if breadcrumb_schema %}
+<script type="application/ld+json">{{ breadcrumb_schema|raw }}</script>
+{% endif %}
 <script type="text/javascript"><!--
 $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 	$.ajax({
