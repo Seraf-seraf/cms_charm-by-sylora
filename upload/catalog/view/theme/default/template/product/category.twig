@@ -52,6 +52,81 @@
       <br/>
       {% endif %}
       {% endif %}
+      {% if filter_groups or products or active_filter_count %}
+      <details class="catalog-filters" {% if active_filter_count %}open{% endif %}>
+        <summary class="catalog-filters__summary">
+          <span>Фильтры</span>
+          {% if active_filter_count %}
+          <strong>{{ active_filter_count }}</strong>
+          {% endif %}
+        </summary>
+        <form class="catalog-filters__form" action="{{ filter_action }}" method="get">
+          <input type="hidden" name="route" value="product/category" />
+          <input type="hidden" name="path" value="{{ filter_path }}" />
+          <input type="hidden" name="sort" value="{{ sort }}" />
+          <input type="hidden" name="order" value="{{ order }}" />
+          <input type="hidden" name="limit" value="{{ limit }}" />
+          <div class="catalog-filters__grid">
+            <fieldset class="catalog-filters__group">
+              <legend>Цена</legend>
+              <div class="catalog-filters__price">
+                <label>
+                  <span>от</span>
+                  <input type="number" name="price_min" value="{{ filter_price_min }}" min="0" step="1" inputmode="decimal" />
+                </label>
+                <label>
+                  <span>до</span>
+                  <input type="number" name="price_max" value="{{ filter_price_max }}" min="0" step="1" inputmode="decimal" />
+                </label>
+              </div>
+            </fieldset>
+            <fieldset class="catalog-filters__group">
+              <legend>Наличие</legend>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="" {% if not filter_availability %}checked="checked"{% endif %} />
+                <span>Любое</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="in_stock" {% if filter_availability == 'in_stock' %}checked="checked"{% endif %} />
+                <span>В наличии</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="out_of_stock" {% if filter_availability == 'out_of_stock' %}checked="checked"{% endif %} />
+                <span>Под заказ или нет в наличии</span>
+              </label>
+            </fieldset>
+            <fieldset class="catalog-filters__group">
+              <legend>Подборки</legend>
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="is_new" value="1" {% if filter_is_new %}checked="checked"{% endif %} />
+                <span>Новинки</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="is_sale" value="1" {% if filter_is_sale %}checked="checked"{% endif %} />
+                <span>Скидки</span>
+              </label>
+            </fieldset>
+            {% for filter_group in filter_groups %}
+            <fieldset class="catalog-filters__group">
+              <legend>{{ filter_group.name }}</legend>
+              {% for filter in filter_group.filter %}
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="filter[]" value="{{ filter.filter_id }}" {% if filter.filter_id in filter_category %}checked="checked"{% endif %} />
+                <span>{{ filter.name }}</span>
+              </label>
+              {% endfor %}
+            </fieldset>
+            {% endfor %}
+          </div>
+          <div class="catalog-filters__actions">
+            <button type="submit">Применить</button>
+            {% if active_filter_count %}
+            <a href="{{ filter_reset }}">Сбросить</a>
+            {% endif %}
+          </div>
+        </form>
+      </details>
+      {% endif %}
       {% if products %}
       <div class="catalog-toolbar">
         <div class="catalog-toolbar__count">{{ results }}</div>

@@ -153,6 +153,30 @@ class ModelCatalogProduct extends Model {
 			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 		}
 
+		if (isset($data['filter_price_min']) && $data['filter_price_min'] !== '') {
+			$sql .= " AND p.price >= '" . (float)$data['filter_price_min'] . "'";
+		}
+
+		if (isset($data['filter_price_max']) && $data['filter_price_max'] !== '') {
+			$sql .= " AND p.price <= '" . (float)$data['filter_price_max'] . "'";
+		}
+
+		if (!empty($data['filter_availability'])) {
+			if ($data['filter_availability'] == 'in_stock') {
+				$sql .= " AND p.quantity > 0";
+			} elseif ($data['filter_availability'] == 'out_of_stock') {
+				$sql .= " AND p.quantity <= 0";
+			}
+		}
+
+		if (!empty($data['filter_is_new'])) {
+			$sql .= " AND p.date_added >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+		}
+
+		if (!empty($data['filter_is_sale'])) {
+			$sql .= " AND EXISTS (SELECT 1 FROM " . DB_PREFIX . "product_special ps_filter WHERE ps_filter.product_id = p.product_id AND ps_filter.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps_filter.date_start = '0000-00-00' OR ps_filter.date_start < NOW()) AND (ps_filter.date_end = '0000-00-00' OR ps_filter.date_end > NOW())))";
+		}
+
 		$sql .= " GROUP BY p.product_id";
 
 		$sort_data = array(
@@ -513,6 +537,30 @@ class ModelCatalogProduct extends Model {
 
 		if (!empty($data['filter_manufacturer_id'])) {
 			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
+		}
+
+		if (isset($data['filter_price_min']) && $data['filter_price_min'] !== '') {
+			$sql .= " AND p.price >= '" . (float)$data['filter_price_min'] . "'";
+		}
+
+		if (isset($data['filter_price_max']) && $data['filter_price_max'] !== '') {
+			$sql .= " AND p.price <= '" . (float)$data['filter_price_max'] . "'";
+		}
+
+		if (!empty($data['filter_availability'])) {
+			if ($data['filter_availability'] == 'in_stock') {
+				$sql .= " AND p.quantity > 0";
+			} elseif ($data['filter_availability'] == 'out_of_stock') {
+				$sql .= " AND p.quantity <= 0";
+			}
+		}
+
+		if (!empty($data['filter_is_new'])) {
+			$sql .= " AND p.date_added >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+		}
+
+		if (!empty($data['filter_is_sale'])) {
+			$sql .= " AND EXISTS (SELECT 1 FROM " . DB_PREFIX . "product_special ps_filter WHERE ps_filter.product_id = p.product_id AND ps_filter.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps_filter.date_start = '0000-00-00' OR ps_filter.date_start < NOW()) AND (ps_filter.date_end = '0000-00-00' OR ps_filter.date_end > NOW())))";
 		}
 
 		$query = $this->db->query($sql);

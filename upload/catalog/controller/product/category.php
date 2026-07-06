@@ -10,9 +10,60 @@ class ControllerProductCategory extends Controller {
 		$this->load->model('tool/image');
 
 		if (isset($this->request->get['filter'])) {
-			$filter = $this->request->get['filter'];
+			if (is_array($this->request->get['filter'])) {
+				$filter = implode(',', array_map('intval', $this->request->get['filter']));
+			} else {
+				$filter = $this->request->get['filter'];
+			}
 		} else {
 			$filter = '';
+		}
+
+		if (isset($this->request->get['price_min']) && $this->request->get['price_min'] !== '') {
+			$price_min = max(0, (float)$this->request->get['price_min']);
+		} else {
+			$price_min = '';
+		}
+
+		if (isset($this->request->get['price_max']) && $this->request->get['price_max'] !== '') {
+			$price_max = max(0, (float)$this->request->get['price_max']);
+		} else {
+			$price_max = '';
+		}
+
+		if (isset($this->request->get['availability']) && in_array($this->request->get['availability'], array('in_stock', 'out_of_stock'))) {
+			$availability = $this->request->get['availability'];
+		} else {
+			$availability = '';
+		}
+
+		$filter_is_new = !empty($this->request->get['is_new']) ? 1 : 0;
+		$filter_is_sale = !empty($this->request->get['is_sale']) ? 1 : 0;
+
+		$filter_url = '';
+
+		if ($filter !== '') {
+			$filter_url .= '&filter=' . urlencode(html_entity_decode($filter, ENT_QUOTES, 'UTF-8'));
+		}
+
+		if ($price_min !== '') {
+			$filter_url .= '&price_min=' . $price_min;
+		}
+
+		if ($price_max !== '') {
+			$filter_url .= '&price_max=' . $price_max;
+		}
+
+		if ($availability !== '') {
+			$filter_url .= '&availability=' . $availability;
+		}
+
+		if ($filter_is_new) {
+			$filter_url .= '&is_new=1';
+		}
+
+		if ($filter_is_sale) {
+			$filter_url .= '&is_sale=1';
 		}
 
 		if (isset($this->request->get['sort'])) {
@@ -115,9 +166,7 @@ class ControllerProductCategory extends Controller {
 
 			$url = '';
 
-			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
-			}
+			$url .= $filter_url;
 
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -152,6 +201,11 @@ class ControllerProductCategory extends Controller {
 			$filter_data = array(
 				'filter_category_id' => $category_id,
 				'filter_filter'      => $filter,
+				'filter_price_min'   => $price_min,
+				'filter_price_max'   => $price_max,
+				'filter_availability' => $availability,
+				'filter_is_new'      => $filter_is_new,
+				'filter_is_sale'     => $filter_is_sale,
 				'sort'               => $sort,
 				'order'              => $order,
 				'start'              => ($page - 1) * $limit,
@@ -259,9 +313,7 @@ class ControllerProductCategory extends Controller {
 
 			$url = '';
 
-			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
-			}
+			$url .= $filter_url;
 
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
@@ -339,9 +391,7 @@ class ControllerProductCategory extends Controller {
 
 			$url = '';
 
-			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
-			}
+			$url .= $filter_url;
 
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -367,9 +417,7 @@ class ControllerProductCategory extends Controller {
 
 			$url = '';
 
-			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
-			}
+			$url .= $filter_url;
 
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -411,6 +459,17 @@ class ControllerProductCategory extends Controller {
 			$data['sort'] = $sort;
 			$data['order'] = $order;
 			$data['limit'] = $limit;
+			$data['filter_groups'] = $this->model_catalog_category->getCategoryFilters($category_id);
+			$data['filter_category'] = $filter !== '' ? explode(',', $filter) : array();
+			$data['filter_price_min'] = $price_min;
+			$data['filter_price_max'] = $price_max;
+			$data['filter_availability'] = $availability;
+			$data['filter_is_new'] = $filter_is_new;
+			$data['filter_is_sale'] = $filter_is_sale;
+			$data['filter_path'] = isset($this->request->get['path']) ? $this->request->get['path'] : '';
+			$data['filter_action'] = 'index.php';
+			$data['filter_reset'] = $this->url->link('product/category', 'path=' . $this->request->get['path']);
+			$data['active_filter_count'] = count($data['filter_category']) + ($price_min !== '' ? 1 : 0) + ($price_max !== '' ? 1 : 0) + ($availability !== '' ? 1 : 0) + ($filter_is_new ? 1 : 0) + ($filter_is_sale ? 1 : 0);
 
 			$data['continue'] = $this->url->link('common/home');
 
