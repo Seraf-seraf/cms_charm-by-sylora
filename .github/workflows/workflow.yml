@@ -15,8 +15,14 @@ jobs:
   lint:
     uses: ./.github/workflows/Lint.yml
 
-  deploy:
+  migrate:
     needs: lint
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/migrate.yml
+    secrets: inherit
+
+  deploy:
+    needs: migrate
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     uses: ./.github/workflows/deploy.yml
     secrets: inherit

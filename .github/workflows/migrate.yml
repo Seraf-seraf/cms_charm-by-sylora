@@ -1,0 +1,29 @@
+name: Migrate
+
+on:
+  workflow_call:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Run migrations over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          debug: true
+          script: |
+            set -eux
+
+            export PATH="$HOME/bin:$PATH"
+
+            cd "${{ secrets.DEPLOY_PATH }}"
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            php database/migrate.php
