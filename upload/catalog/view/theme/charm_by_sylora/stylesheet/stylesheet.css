@@ -1497,6 +1497,20 @@ footer h5 {
 		display: none;
 	}
 
+	.site-cart #cart > .btn {
+		width: 42px;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.site-cart #cart-total {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+	}
+
 	.sylora-hero__grid,
 	.sylora-about-teaser {
 		grid-template-columns: 1fr;
@@ -1583,20 +1597,6 @@ footer h5 {
 		inset: 0;
 		z-index: 999;
 		background: rgba(23, 19, 18, 0.34);
-	}
-
-	.site-cart #cart > .btn {
-		width: 42px;
-		overflow: hidden;
-		white-space: nowrap;
-	}
-
-	.site-cart #cart-total {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
 	}
 
 	.sylora-hero__grid {
