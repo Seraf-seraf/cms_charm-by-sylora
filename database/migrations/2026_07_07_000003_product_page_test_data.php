@@ -158,5 +158,5 @@ function getProductId(mysqli $mysqli, string $model): int {
 		return (int)$result->fetch_assoc()['product_id'];
 	}
 
-	throw new RuntimeException("Product '" . $model . "' was not found. Run 2026_07_07_home_showcase_test_data.php first.");
+	throw new RuntimeException("Product '" . $model . "' was not found. Run 2026_07_07_000001_home_showcase_test_data.php first.");
 }

@@ -37,3 +37,15 @@ git fetch origin main
 
 OpenCart runtime-файлы игнорируются git: локальные конфиги, cache, logs,
 sessions и Composer `vendor`.
+
+## Миграции БД
+
+Миграции не запускаются OpenCart автоматически. После деплоя их можно выполнить
+из корня проекта:
+
+```bash
+php database/migrate.php
+```
+
+Выполненные файлы записываются в таблицу `migrations`, повторный запуск
+пропускает уже примененные миграции.
