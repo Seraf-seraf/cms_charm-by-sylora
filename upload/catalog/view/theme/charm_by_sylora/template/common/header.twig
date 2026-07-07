@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html dir="{{ direction }}" lang="{{ lang }}">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{{ title }}</title>
+<base href="{{ base }}" />
+{% if description %}
+<meta name="description" content="{{ description }}" />
+{% endif %}
+{% if keywords %}
+<meta name="keywords" content="{{ keywords }}" />
+{% endif %}
+<meta property="og:type" content="{{ og_type }}" />
+<meta property="og:title" content="{{ og_title }}" />
+{% if og_description %}
+<meta property="og:description" content="{{ og_description }}" />
+{% endif %}
+<meta property="og:url" content="{{ og_url }}" />
+<meta property="og:image" content="{{ og_image }}" />
+{% if site_schema %}
+<script type="application/ld+json">{{ site_schema|raw }}</script>
+{% endif %}
+<script src="catalog/view/javascript/jquery/jquery-3.7.1.min.js" type="text/javascript"></script>
+<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css" rel="stylesheet">
+{% for style in styles %}
+<link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
+{% endfor %}
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+<script src="catalog/view/javascript/common.js" type="text/javascript"></script>
+{% for link in links %}
+<link href="{{ link.href }}" rel="{{ link.rel }}" />
+{% endfor %}
+<link rel="apple-touch-icon" sizes="180x180" href="image/catalog/sylora/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="image/catalog/sylora/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="image/catalog/sylora/favicons/favicon-16x16.png">
+<link rel="icon" href="image/catalog/sylora/favicons/favicon.ico">
+<link rel="manifest" href="image/catalog/sylora/favicons/site.webmanifest">
+{% for analytic in analytics %}
+{{ analytic }}
+{% endfor %}
+<script>
+(function() {
+  var storedTheme = localStorage.getItem('sylora-theme');
+  var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme', storedTheme || (systemDark ? 'dark' : 'light'));
+})();
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-brand" href="{{ home }}" aria-label="Charm by Sylora">
+      {% if brand_logo %}
+      <img class="site-brand__logo" src="{{ brand_logo }}" alt="" width="54" height="54" loading="eager" decoding="async">
+      {% endif %}
+      <span class="site-brand__text">
+        <span class="site-brand__mark">Charm by Sylora</span>
+        <span class="site-brand__sub">handmade jewelry</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Основное меню">
+      <a href="{{ home }}">Главная</a>
+      <a href="{{ catalog }}">Каталог</a>
+      <a href="{{ about }}">Обо мне</a>
+      <a href="{{ contact }}">Контакты</a>
+      <a href="{{ shopping_cart }}">Корзина</a>
+    </nav>
+
+    <div class="site-actions">
+      <div class="site-search">{{ search }}</div>
+      <button class="theme-toggle" type="button" aria-label="Переключить тему" aria-pressed="false">
+        <i class="fa fa-moon-o" aria-hidden="true"></i>
+      </button>
+      <div class="site-cart">{{ cart }}</div>
+      <button class="mobile-nav-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="site-nav">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="site-nav-backdrop" hidden></div>
+<script>
+(function() {
+  var root = document.documentElement;
+  var themeButton = document.querySelector('.theme-toggle');
+  var nav = document.getElementById('site-nav');
+  var navButton = document.querySelector('.mobile-nav-toggle');
+  var backdrop = document.querySelector('.site-nav-backdrop');
+
+  function syncThemeButton() {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    if (themeButton) {
+      themeButton.setAttribute('aria-pressed', dark ? 'true' : 'false');
+      themeButton.innerHTML = '<i class="fa ' + (dark ? 'fa-sun-o' : 'fa-moon-o') + '" aria-hidden="true"></i>';
+    }
+  }
+
+  function closeNav() {
+    if (!nav || !navButton || !backdrop) return;
+    nav.classList.remove('is-open');
+    navButton.setAttribute('aria-expanded', 'false');
+    backdrop.hidden = true;
+  }
+
+  if (themeButton) {
+    syncThemeButton();
+    themeButton.addEventListener('click', function() {
+      var nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('sylora-theme', nextTheme);
+      syncThemeButton();
+    });
+  }
+
+  if (navButton && nav && backdrop) {
+    navButton.addEventListener('click', function() {
+      var isOpen = nav.classList.toggle('is-open');
+      navButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      backdrop.hidden = !isOpen;
+    });
+    backdrop.addEventListener('click', closeNav);
+    nav.addEventListener('click', function(event) {
+      if (event.target.tagName === 'A') closeNav();
+    });
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') closeNav();
+    });
+  }
+})();
+</script>

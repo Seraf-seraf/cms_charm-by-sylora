@@ -1,0 +1,143 @@
+{{ header }}
+<div id="checkout-cart" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  {% if attention %}
+  <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ attention }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  {% if success %}
+  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  {% if error_warning %}
+  <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <section class="cart-page">
+        <header class="cart-head">
+          <p class="sylora-eyebrow">Оформление заказа</p>
+          <h1>{{ heading_title }}{% if weight %} <span>{{ weight }}</span>{% endif %}</h1>
+          <p>{{ text_cart_intro }}</p>
+        </header>
+        <div class="cart-layout">
+          <div class="cart-main">
+            <form action="{{ action }}" method="post" enctype="multipart/form-data">
+              <div class="cart-items">
+                {% for product in products %}
+                <article class="cart-item">
+                  <a class="cart-item__image" href="{{ product.href }}">
+                    {% if product.thumb %}
+                    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
+                    {% endif %}
+                  </a>
+                  <div class="cart-item__body">
+                    <div class="cart-item__top">
+                      <div>
+                        <h2><a href="{{ product.href }}">{{ product.name }}</a>{% if not product.stock %} <span class="text-danger">***</span>{% endif %}</h2>
+                        <p class="cart-item__model">{{ column_model }}: {{ product.model }}</p>
+                      </div>
+                      <button type="button" class="cart-item__remove" data-toggle="tooltip" title="{{ button_remove }}" aria-label="{{ button_remove }}" onclick="cart.remove('{{ product.cart_id }}');"><i class="fa fa-times"></i></button>
+                    </div>
+                    {% if product.option or product.reward or product.recurring %}
+                    <div class="cart-item__meta" aria-label="{{ text_product_details }}">
+                      {% if product.option %}
+                      {% for option in product.option %}
+                      <span>{{ option.name }}: {{ option.value }}</span>
+                      {% endfor %}
+                      {% endif %}
+                      {% if product.reward %}
+                      <span>{{ product.reward }}</span>
+                      {% endif %}
+                      {% if product.recurring %}
+                      <span>{{ text_recurring_item }}: {{ product.recurring }}</span>
+                      {% endif %}
+                    </div>
+                    {% endif %}
+                    <div class="cart-item__bottom">
+                      <div class="cart-quantity">
+                        <label for="quantity-{{ product.cart_id }}">{{ column_quantity }}</label>
+                        <div class="input-group">
+                          <input type="number" min="1" name="quantity[{{ product.cart_id }}]" value="{{ product.quantity }}" id="quantity-{{ product.cart_id }}" class="form-control" />
+                          <span class="input-group-btn">
+                            <button type="submit" title="{{ button_update }}" class="btn btn-primary"><i class="fa fa-refresh"></i></button>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="cart-item__price">
+                        <span>{{ column_price }}</span>
+                        <strong>{{ product.price }}</strong>
+                      </div>
+                      <div class="cart-item__total">
+                        <span>{{ column_total }}</span>
+                        <strong>{{ product.total }}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+                {% endfor %}
+                {% for voucher in vouchers %}
+                <article class="cart-item cart-item--voucher">
+                  <div class="cart-item__body">
+                    <div class="cart-item__top">
+                      <h2>{{ voucher.description }}</h2>
+                      <button type="button" class="cart-item__remove" title="{{ button_remove }}" aria-label="{{ button_remove }}" onclick="voucher.remove('{{ voucher.key }}');"><i class="fa fa-times"></i></button>
+                    </div>
+                    <div class="cart-item__bottom">
+                      <div class="cart-item__price"><span>{{ column_quantity }}</span><strong>1</strong></div>
+                      <div class="cart-item__total"><span>{{ column_total }}</span><strong>{{ voucher.amount }}</strong></div>
+                    </div>
+                  </div>
+                </article>
+                {% endfor %}
+              </div>
+            </form>
+            {% if modules %}
+            <section class="cart-modules">
+              <h2>{{ text_next }}</h2>
+              <p>{{ text_next_choice }}</p>
+              <div class="panel-group" id="accordion">
+                {% for module in modules %}
+                {{ module }}
+                {% endfor %}
+              </div>
+            </section>
+            {% endif %}
+          </div>
+          <aside class="cart-summary">
+            <h2>{{ text_summary }}</h2>
+            <table class="table">
+              {% for total in totals %}
+              <tr>
+                <td><strong>{{ total.title }}:</strong></td>
+                <td>{{ total.text }}</td>
+              </tr>
+              {% endfor %}
+            </table>
+            <p>{{ text_cart_help }}</p>
+            <div class="cart-summary__actions">
+              <a href="{{ checkout }}" class="btn btn-primary btn-lg btn-block">{{ button_checkout }}</a>
+              <a href="{{ continue }}" class="btn btn-default btn-block">{{ button_shopping }}</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

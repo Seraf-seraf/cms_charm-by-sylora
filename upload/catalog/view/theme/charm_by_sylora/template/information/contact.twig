@@ -1,0 +1,162 @@
+{{ header }}
+<div id="information-contact" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <section class="contact-page">
+        <header class="contact-head">
+          <p class="sylora-eyebrow">Charm by Sylora</p>
+          <h1>{{ heading_title }}</h1>
+          <p>{{ text_intro }}</p>
+        </header>
+        <div class="contact-layout">
+          <aside class="contact-card" aria-label="{{ text_location }}">
+            {% if image %}
+            <img src="{{ image }}" alt="{{ store }}" title="{{ store }}" class="contact-card__image" />
+            {% endif %}
+            <h2>{{ store }}</h2>
+            <ul class="contact-list">
+              <li><span>{{ text_region }}</span></li>
+              {% if telephone %}
+              <li><strong>{{ text_telephone }}</strong><a href="tel:{{ telephone|replace({' ': '', '-': '', '(': '', ')': ''}) }}">{{ telephone }}</a></li>
+              {% endif %}
+              {% if address %}
+              <li><strong>{{ text_address }}</strong><span>{{ address }}</span></li>
+              {% endif %}
+              {% if open %}
+              <li><strong>{{ text_open }}</strong><span>{{ open }}</span></li>
+              {% endif %}
+              {% if comment %}
+              <li><strong>{{ text_comment }}</strong><span>{{ comment }}</span></li>
+              {% endif %}
+            </ul>
+            <a class="sylora-link" href="{{ delivery_href }}">{{ text_delivery }}</a>
+            {% if geocode %}
+            <a href="https://maps.google.com/maps?q={{ geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" rel="noopener" class="btn btn-default"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
+            {% endif %}
+          </aside>
+          <div class="contact-form-card">
+            <h2>{{ text_contact }}</h2>
+            {% if error_spam %}
+            <div class="alert alert-danger">{{ error_spam }}</div>
+            {% endif %}
+      {% if locations %}
+      <h3>{{ text_store }}</h3>
+      <div class="panel-group" id="accordion">
+        {% for location in locations %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><a href="#collapse-location{{ location.location_id }}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion">{{ location.name }} <i class="fa fa-caret-down"></i></a></h4>
+          </div>
+          <div class="panel-collapse collapse" id="collapse-location{{ location.location_id }}">
+            <div class="panel-body">
+              <div class="row">
+                {% if location.image %}
+                <div class="col-sm-3"><img src="{{ location.image }}" alt="{{ location.name }}" title="{{ location.name }}" class="img-thumbnail" /></div>
+                {% endif %}
+                <div class="col-sm-3"><strong>{{ location.name }}</strong><br/>
+                  <address>
+                  {{ location.address }}
+                  </address>
+                  {% if location.geocode %}
+                  <a href="https://maps.google.com/maps?q={{ location.geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" class="btn btn-info"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
+                  {% endif %}
+                </div>
+                <div class="col-sm-3"> <strong>{{ text_telephone }}</strong><br/>
+                  {{ location.telephone }}<br/>
+                  <br/>
+                  {% if location.fax %}
+                  <strong>{{ text_fax }}</strong><br/>
+                  {{ location.fax }}
+                  {% endif %}
+                </div>
+                <div class="col-sm-3">
+                  {% if location.open %}
+                  <strong>{{ text_open }}</strong><br/>
+                  {{ location.open }}<br/>
+                  <br/>
+                  {% endif %}
+                  {% if location.comment %}
+                  <strong>{{ text_comment }}</strong><br/>
+                  {{ location.comment }}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal sylora-form">
+        <fieldset>
+          <div class="form-group sylora-hp" aria-hidden="true">
+            <label for="input-company">Компания</label>
+            <input type="text" name="company" value="" id="input-company" tabindex="-1" autocomplete="off" class="form-control" />
+          </div>
+          <div class="form-group required">
+            <label class="control-label" for="input-name">{{ entry_name }}</label>
+            <div>
+              <input type="text" name="name" value="{{ name }}" id="input-name" class="form-control" />
+              {% if error_name %}
+              <div class="text-danger">{{ error_name }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="contact-form-grid">
+            <div class="form-group required">
+              <label class="control-label" for="input-email">{{ entry_email }}</label>
+              <input type="email" name="email" value="{{ email }}" id="input-email" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="input-telephone">{{ entry_telephone }}</label>
+              <input type="tel" name="telephone" value="{{ telephone_value }}" id="input-telephone" class="form-control" />
+            </div>
+          </div>
+              {% if error_email %}
+              <div class="text-danger">{{ error_email }}</div>
+              {% endif %}
+          <div class="form-group required">
+            <label class="control-label" for="input-enquiry">{{ entry_enquiry }}</label>
+            <div>
+              <textarea name="enquiry" rows="10" id="input-enquiry" class="form-control">{{ enquiry }}</textarea>
+              {% if error_enquiry %}
+              <div class="text-danger">{{ error_enquiry }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group required">
+            <label class="checkbox sylora-checkbox">
+              <input type="checkbox" name="privacy_agree" value="1"{% if privacy_agree %} checked="checked"{% endif %} />
+              <span>{{ text_privacy }}</span>
+            </label>
+            {% if error_privacy %}
+            <div class="text-danger">{{ error_privacy }}</div>
+            {% endif %}
+          </div>
+          {{ captcha }}
+        </fieldset>
+        <div class="buttons">
+          <div>
+            <input class="btn btn-primary" type="submit" value="{{ button_submit }}" />
+          </div>
+        </div>
+      </form>
+          </div>
+        </div>
+      </section>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

@@ -1,0 +1,63 @@
+<div id="cart" class="btn-group btn-block">
+  <button type="button" data-toggle="dropdown" data-loading-text="{{ text_loading }}" class="btn btn-inverse btn-block btn-lg dropdown-toggle"><i class="fa fa-shopping-cart"></i> <span id="cart-total">{{ text_items }}</span></button>
+  <ul class="dropdown-menu pull-right mini-cart">
+    {% if products or vouchers %}
+    <li>
+      <div class="mini-cart__items">
+        {% for product in products %}
+        <article class="mini-cart__item mini-cart__item--voucher">
+          {% if product.thumb %}
+          <a class="mini-cart__image" href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" /></a>
+          {% endif %}
+          <div>
+            <a class="mini-cart__name" href="{{ product.href }}">{{ product.name }}</a>
+            {% if product.option %}
+            {% for option in product.option %}
+            <small>{{ option.name }}: {{ option.value }}</small>
+            {% endfor %}
+            {% endif %}
+            {% if product.recurring %}
+            <small>{{ text_recurring }} {{ product.recurring }}</small>
+            {% endif %}
+            <span class="mini-cart__line">x {{ product.quantity }} · {{ product.total }}</span>
+          </div>
+          <button type="button" onclick="cart.remove('{{ product.cart_id }}');" title="{{ button_remove }}" class="mini-cart__remove"><i class="fa fa-times"></i></button>
+        </article>
+        {% endfor %}
+        {% for voucher in vouchers %}
+        <article class="mini-cart__item">
+          <div>
+            <span class="mini-cart__name">{{ voucher.description }}</span>
+            <span class="mini-cart__line">x 1 · {{ voucher.amount }}</span>
+          </div>
+          <button type="button" onclick="voucher.remove('{{ voucher.key }}');" title="{{ button_remove }}" class="mini-cart__remove"><i class="fa fa-times"></i></button>
+        </article>
+        {% endfor %}
+      </div>
+    </li>
+    <li>
+      <div class="mini-cart__summary">
+        <table class="table">
+          {% for total in totals %}
+          <tr>
+            <td><strong>{{ total.title }}</strong></td>
+            <td>{{ total.text }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <div class="mini-cart__actions">
+          <a href="{{ cart }}" class="btn btn-default btn-block">{{ text_cart }}</a>
+          <a href="{{ checkout }}" class="btn btn-primary btn-block">{{ text_checkout }}</a>
+        </div>
+      </div>
+    </li>
+    {% else %}
+    <li>
+      <div class="mini-cart__empty">
+        <p>{{ text_empty }}</p>
+        <a href="{{ cart }}" class="btn btn-default btn-block">{{ text_cart }}</a>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
+</div>

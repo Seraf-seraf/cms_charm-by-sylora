@@ -1,0 +1,237 @@
+{{ header }}
+<div id="product-category" class="container">
+  <ul class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+    {% endfor %}
+  </ul>
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <header class="catalog-head">
+        <p class="sylora-eyebrow">Каталог</p>
+        <h1>{{ heading_title }}</h1>
+      </header>
+      {% if thumb or description %}
+      <div class="row"> {% if thumb %}
+        <div class="col-sm-2"><img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" /></div>
+        {% endif %}
+        {% if description %}
+        <div class="col-sm-10">{{ description }}</div>
+        {% endif %}</div>
+      <hr>
+      {% endif %}
+      {% if categories %}
+      <h2 class="catalog-subtitle">Подкатегории</h2>
+      {% if categories|length <= 5 %}
+      <div class="row">
+        <div class="col-sm-3">
+          <ul>
+            {% for category in categories %}
+            <li><a href="{{ category.href }}">{{ category.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% else %}
+      <div class="row">{% for category in categories|batch((categories|length / 4)|round(1, 'ceil')) %}
+        <div class="col-sm-3">
+          <ul>
+            {% for child in category %}
+            <li><a href="{{ child.href }}">{{ child.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}</div>
+      <br/>
+      {% endif %}
+      {% endif %}
+      {% if filter_groups or products or active_filter_count %}
+      <details class="catalog-filters" {% if active_filter_count %}open{% endif %}>
+        <summary class="catalog-filters__summary">
+          <span>Фильтры</span>
+          {% if active_filter_count %}
+          <strong>{{ active_filter_count }}</strong>
+          {% endif %}
+        </summary>
+        <form class="catalog-filters__form" action="{{ filter_action }}" method="get">
+          <input type="hidden" name="route" value="product/category" />
+          <input type="hidden" name="path" value="{{ filter_path }}" />
+          <input type="hidden" name="sort" value="{{ sort }}" />
+          <input type="hidden" name="order" value="{{ order }}" />
+          <input type="hidden" name="limit" value="{{ limit }}" />
+          <div class="catalog-filters__grid">
+            <fieldset class="catalog-filters__group">
+              <legend>Цена</legend>
+              <div class="catalog-filters__price">
+                <label>
+                  <span>от</span>
+                  <input type="number" name="price_min" value="{{ filter_price_min }}" min="0" step="1" inputmode="decimal" />
+                </label>
+                <label>
+                  <span>до</span>
+                  <input type="number" name="price_max" value="{{ filter_price_max }}" min="0" step="1" inputmode="decimal" />
+                </label>
+              </div>
+            </fieldset>
+            <fieldset class="catalog-filters__group">
+              <legend>Наличие</legend>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="" {% if not filter_availability %}checked="checked"{% endif %} />
+                <span>Любое</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="in_stock" {% if filter_availability == 'in_stock' %}checked="checked"{% endif %} />
+                <span>В наличии</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="out_of_stock" {% if filter_availability == 'out_of_stock' %}checked="checked"{% endif %} />
+                <span>Под заказ или нет в наличии</span>
+              </label>
+            </fieldset>
+            <fieldset class="catalog-filters__group">
+              <legend>Подборки</legend>
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="is_new" value="1" {% if filter_is_new %}checked="checked"{% endif %} />
+                <span>Новинки</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="is_sale" value="1" {% if filter_is_sale %}checked="checked"{% endif %} />
+                <span>Скидки</span>
+              </label>
+            </fieldset>
+            {% for filter_group in filter_groups %}
+            <fieldset class="catalog-filters__group">
+              <legend>{{ filter_group.name }}</legend>
+              {% for filter in filter_group.filter %}
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="filter[]" value="{{ filter.filter_id }}" {% if filter.filter_id in filter_category %}checked="checked"{% endif %} />
+                <span>{{ filter.name }}</span>
+              </label>
+              {% endfor %}
+            </fieldset>
+            {% endfor %}
+          </div>
+          <div class="catalog-filters__actions">
+            <button type="submit">Применить</button>
+            {% if active_filter_count %}
+            <a href="{{ filter_reset }}">Сбросить</a>
+            {% endif %}
+          </div>
+        </form>
+      </details>
+      {% endif %}
+      {% if products %}
+      <div class="catalog-toolbar">
+        <div class="catalog-toolbar__count">{{ results }}</div>
+        <div class="catalog-toolbar__controls">
+          <div class="form-group input-group input-group-sm">
+            <label class="input-group-addon" for="input-sort">Сортировка</label>
+            <select id="input-sort" class="form-control" onchange="location = this.value;">
+              {% for sorts in sorts %}
+              {% if sorts.value == '%s-%s'|format(sort, order) %}
+              <option value="{{ sorts.href }}" selected="selected">{{ sorts.text }}</option>
+              {% else %}
+              <option value="{{ sorts.href }}">{{ sorts.text }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group input-group input-group-sm">
+            <label class="input-group-addon" for="input-limit">Показать</label>
+            <select id="input-limit" class="form-control" onchange="location = this.value;">
+              {% for limits in limits %}
+              {% if limits.value == limit %}
+              <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
+              {% else %}
+              <option value="{{ limits.href }}">{{ limits.text }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="catalog-grid"> {% for product in products %}
+        <article class="product-layout product-grid catalog-card">
+          <div class="product-thumb">
+            <a class="catalog-card__image" href="{{ product.href }}">
+              {% if product.badge %}
+              <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
+              {% endif %}
+              <img class="catalog-card__image-primary" src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
+              {% if product.hover_thumb %}
+              <img class="catalog-card__image-hover" src="{{ product.hover_thumb }}" alt="{{ product.name }} - дополнительное фото" title="{{ product.name }}" loading="lazy" />
+              {% endif %}
+            </a>
+            <div class="catalog-card__body">
+              <div class="caption">
+                <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+                <h2><a href="{{ product.href }}">{{ product.name }}</a></h2>
+                <p class="catalog-card__description">{{ product.description }}</p>
+                {% if product.price %}
+                <p class="price"> {% if not product.special %}
+                  {{ product.price }}
+                  {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
+                  {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
+                {% endif %}
+                {% if product.rating %}
+                <div class="rating"> {% for i in 1..5 %}
+                  {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>{% endif %}
+                  {% endfor %} </div>
+                {% endif %} </div>
+              <div class="button-group catalog-card__actions">
+                <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+                <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
+                <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" onclick="document.getElementById('quick-view-{{ product.product_id }}').showModal();"><i class="fa fa-eye"></i></button>
+                <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+              </div>
+            </div>
+          </div>
+          <dialog class="quick-view" id="quick-view-{{ product.product_id }}">
+            <form class="quick-view__close" method="dialog">
+              <button type="submit" aria-label="Закрыть"><i class="fa fa-times"></i></button>
+            </form>
+            <div class="quick-view__grid">
+              <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="lazy" />
+              <div class="quick-view__content">
+                {% if product.badge %}
+                <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
+                {% endif %}
+                <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+                <h2>{{ product.name }}</h2>
+                <p>{{ product.quick_description }}</p>
+                {% if product.price %}
+                <p class="price"> {% if not product.special %}
+                  {{ product.price }}
+                  {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
+                  {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
+                {% endif %}
+                <div class="quick-view__actions">
+                  <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+                  <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
+                </div>
+              </div>
+            </div>
+          </dialog>
+        </article>
+        {% endfor %} </div>
+      <div class="row">
+        <div class="col-sm-6 text-left">{{ pagination }}</div>
+      </div>
+      {% endif %}
+      {% if not categories and not products %}
+      <p class="catalog-empty">{{ text_empty }}</p>
+      <div class="buttons">
+        <div class="pull-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
+      </div>
+      {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}
