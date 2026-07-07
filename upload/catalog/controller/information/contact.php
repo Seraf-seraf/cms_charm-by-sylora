@@ -7,12 +7,13 @@ class ControllerInformationContact extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 		$this->document->setDescription('Контакты Charm by Sylora: форма связи, email, телефон при наличии, регион работы и вопросы по доставке, оплате и заказам.');
+		$this->document->addLink($this->url->link('information/contact'), 'canonical');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$message = "Новое сообщение с сайта Charm by Sylora\n\n";
 			$message .= "Имя: " . $this->request->post['name'] . "\n";
 			$message .= "Email: " . $this->request->post['email'] . "\n";
-			$message .= "Телефон: " . $this->request->post['telephone'] . "\n\n";
+			$message .= "Телефон: " . (isset($this->request->post['telephone']) ? $this->request->post['telephone'] : '') . "\n\n";
 			$message .= "Сообщение:\n" . $this->request->post['enquiry'];
 
 			$mail = new Mail($this->config->get('config_mail_engine'));
@@ -60,6 +61,8 @@ class ControllerInformationContact extends Controller {
 			$data['error_email'] = '';
 		}
 
+		$data['error_email_text'] = $this->language->get('error_email');
+
 		if (isset($this->error['enquiry'])) {
 			$data['error_enquiry'] = $this->error['enquiry'];
 		} else {
@@ -83,8 +86,14 @@ class ControllerInformationContact extends Controller {
 		$data['text_region'] = $this->language->get('text_region');
 		$data['text_delivery'] = $this->language->get('text_delivery');
 		$data['text_privacy'] = $this->language->get('text_privacy');
+		$data['text_email'] = $this->language->get('text_email');
+		$data['text_messengers'] = $this->language->get('text_messengers');
+		$data['text_socials'] = $this->language->get('text_socials');
+		$data['text_legal'] = $this->language->get('text_legal');
+		$data['text_response'] = $this->language->get('text_response');
 		$data['entry_telephone'] = $this->language->get('entry_telephone');
 		$data['delivery_href'] = $this->url->link('information/information', 'information_id=6');
+		$data['privacy_href'] = $this->url->link('information/information', 'information_id=3');
 
 		$data['action'] = $this->url->link('information/contact', '', true);
 
@@ -101,9 +110,25 @@ class ControllerInformationContact extends Controller {
 		$data['geocode'] = $this->config->get('config_geocode');
 		$data['geocode_hl'] = $this->config->get('config_language');
 		$data['telephone'] = $this->config->get('config_telephone');
+		$data['telephone_href'] = $this->normalizePhoneHref($data['telephone']);
+		$data['store_email'] = $this->config->get('config_email');
 		$data['fax'] = $this->config->get('config_fax');
 		$data['open'] = nl2br($this->config->get('config_open'));
 		$data['comment'] = $this->config->get('config_comment');
+		$data['region'] = $this->getConfigValue('config_sylora_region');
+		$data['legal_info'] = nl2br($this->getConfigValue('config_sylora_legal_info'));
+		$data['response_time'] = $this->getConfigValue('config_sylora_response_time');
+		$data['messenger_links'] = $this->getContactLinks(array(
+			array('label' => 'Telegram', 'key' => 'config_sylora_telegram'),
+			array('label' => 'WhatsApp', 'key' => 'config_sylora_whatsapp'),
+			array('label' => 'VK', 'key' => 'config_sylora_vk')
+		));
+		$data['social_links'] = $this->getContactLinks(array(
+			array('label' => 'Instagram', 'key' => 'config_sylora_instagram'),
+			array('label' => 'Pinterest', 'key' => 'config_sylora_pinterest'),
+			array('label' => 'YouTube', 'key' => 'config_sylora_youtube')
+		));
+		$data['contact_schema'] = $this->getContactSchema($data);
 
 		$data['locations'] = array();
 
@@ -158,6 +183,7 @@ class ControllerInformationContact extends Controller {
 		}
 
 		$data['privacy_agree'] = !empty($this->request->post['privacy_agree']);
+		$data['form_started_at'] = time();
 
 		// Captcha
 		if ($this->config->get('captcha_' . $this->config->get('config_captcha') . '_status') && in_array('contact', (array)$this->config->get('config_captcha_page'))) {
@@ -179,6 +205,14 @@ class ControllerInformationContact extends Controller {
 	protected function validate() {
 		if (!empty($this->request->post['company'])) {
 			$this->error['spam'] = $this->language->get('error_spam');
+		}
+
+		if (!empty($this->request->post['form_started_at'])) {
+			$form_started_at = (int)$this->request->post['form_started_at'];
+
+			if ($form_started_at > time() || time() - $form_started_at < 2) {
+				$this->error['spam'] = $this->language->get('error_spam');
+			}
 		}
 
 		if (!empty($this->request->post['name'])) {
@@ -223,6 +257,76 @@ class ControllerInformationContact extends Controller {
 		}
 
 		return !$this->error;
+	}
+
+	private function getConfigValue($key) {
+		$value = $this->config->get($key);
+
+		if (is_string($value)) {
+			return trim($value);
+		}
+
+		return '';
+	}
+
+	private function normalizePhoneHref($phone) {
+		$phone = preg_replace('/[^0-9+]/', '', (string)$phone);
+
+		return $phone;
+	}
+
+	private function getContactLinks(array $items) {
+		$links = array();
+
+		foreach ($items as $item) {
+			$url = $this->getConfigValue($item['key']);
+
+			if ($url) {
+				$links[] = array(
+					'label' => $item['label'],
+					'href'  => $url
+				);
+			}
+		}
+
+		return $links;
+	}
+
+	private function getContactSchema(array $data) {
+		$is_https = !empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off';
+		$server = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
+		$url = $this->url->link('information/contact');
+		$same_as = array();
+
+		foreach (array_merge($data['messenger_links'], $data['social_links']) as $link) {
+			$same_as[] = $link['href'];
+		}
+
+		$schema = array(
+			'@context' => 'https://schema.org',
+			'@type'    => 'ContactPage',
+			'url'      => $url,
+			'name'     => $this->language->get('heading_title'),
+			'about'    => array(
+				'@type' => 'Organization',
+				'@id'   => rtrim($server, '/') . '/#organization',
+				'name'  => $data['store'] ? $data['store'] : 'Charm by Sylora'
+			)
+		);
+
+		if ($data['store_email']) {
+			$schema['about']['email'] = $data['store_email'];
+		}
+
+		if ($data['telephone']) {
+			$schema['about']['telephone'] = $data['telephone'];
+		}
+
+		if ($same_as) {
+			$schema['about']['sameAs'] = $same_as;
+		}
+
+		return json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 	}
 
 	public function success() {

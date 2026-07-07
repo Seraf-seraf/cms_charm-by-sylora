@@ -74,6 +74,15 @@ class ControllerStartupSeoUrl extends Controller {
 
 		parse_str($url_info['query'], $data);
 
+		if (isset($data['route']) && count($data) == 1) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = '" . $this->db->escape($data['route']) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+			if ($query->num_rows && $query->row['keyword']) {
+				$url .= '/' . $query->row['keyword'];
+				unset($data['route']);
+			}
+		}
+
 		foreach ($data as $key => $value) {
 			if (isset($data['route'])) {
 				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'information/information' && $key == 'information_id')) {

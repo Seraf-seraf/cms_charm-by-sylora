@@ -27,9 +27,12 @@
             {% endif %}
             <h2>{{ store }}</h2>
             <ul class="contact-list">
-              <li><span>{{ text_region }}</span></li>
+              <li><strong>{{ text_region }}</strong><span>{{ region ? region : text_region }}</span></li>
+              {% if store_email %}
+              <li><strong>{{ text_email }}</strong><a href="mailto:{{ store_email }}">{{ store_email }}</a></li>
+              {% endif %}
               {% if telephone %}
-              <li><strong>{{ text_telephone }}</strong><a href="tel:{{ telephone|replace({' ': '', '-': '', '(': '', ')': ''}) }}">{{ telephone }}</a></li>
+              <li><strong>{{ text_telephone }}</strong><a href="tel:{{ telephone_href }}">{{ telephone }}</a></li>
               {% endif %}
               {% if address %}
               <li><strong>{{ text_address }}</strong><span>{{ address }}</span></li>
@@ -37,125 +40,163 @@
               {% if open %}
               <li><strong>{{ text_open }}</strong><span>{{ open }}</span></li>
               {% endif %}
+              {% if response_time %}
+              <li><strong>{{ text_response }}</strong><span>{{ response_time }}</span></li>
+              {% endif %}
               {% if comment %}
               <li><strong>{{ text_comment }}</strong><span>{{ comment }}</span></li>
               {% endif %}
             </ul>
-            <a class="sylora-link" href="{{ delivery_href }}">{{ text_delivery }}</a>
-            {% if geocode %}
-            <a href="https://maps.google.com/maps?q={{ geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" rel="noopener" class="btn btn-default"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
+            {% if messenger_links %}
+            <div class="contact-link-group">
+              <strong>{{ text_messengers }}</strong>
+              <div>
+                {% for link in messenger_links %}
+                <a href="{{ link.href }}" target="_blank" rel="noopener">{{ link.label }}</a>
+                {% endfor %}
+              </div>
+            </div>
             {% endif %}
+            {% if social_links %}
+            <div class="contact-link-group">
+              <strong>{{ text_socials }}</strong>
+              <div>
+                {% for link in social_links %}
+                <a href="{{ link.href }}" target="_blank" rel="noopener">{{ link.label }}</a>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+            {% if legal_info %}
+            <div class="contact-legal">
+              <strong>{{ text_legal }}</strong>
+              <span>{{ legal_info }}</span>
+            </div>
+            {% endif %}
+            <div class="contact-actions">
+              <a class="sylora-link" href="{{ delivery_href }}">{{ text_delivery }}</a>
+              {% if geocode %}
+              <a href="https://maps.google.com/maps?q={{ geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" rel="noopener" class="btn btn-default"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
+              {% endif %}
+            </div>
           </aside>
           <div class="contact-form-card">
             <h2>{{ text_contact }}</h2>
             {% if error_spam %}
             <div class="alert alert-danger">{{ error_spam }}</div>
             {% endif %}
-      {% if locations %}
-      <h3>{{ text_store }}</h3>
-      <div class="panel-group" id="accordion">
-        {% for location in locations %}
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><a href="#collapse-location{{ location.location_id }}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion">{{ location.name }} <i class="fa fa-caret-down"></i></a></h4>
-          </div>
-          <div class="panel-collapse collapse" id="collapse-location{{ location.location_id }}">
-            <div class="panel-body">
-              <div class="row">
-                {% if location.image %}
-                <div class="col-sm-3"><img src="{{ location.image }}" alt="{{ location.name }}" title="{{ location.name }}" class="img-thumbnail" /></div>
-                {% endif %}
-                <div class="col-sm-3"><strong>{{ location.name }}</strong><br/>
-                  <address>
-                  {{ location.address }}
-                  </address>
-                  {% if location.geocode %}
-                  <a href="https://maps.google.com/maps?q={{ location.geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" class="btn btn-info"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
+            {% if locations %}
+            <details class="contact-locations">
+              <summary>{{ text_store }}</summary>
+              <div class="contact-locations__grid">
+                {% for location in locations %}
+                <section>
+                  <h3>{{ location.name }}</h3>
+                  {% if location.image %}
+                  <img src="{{ location.image }}" alt="{{ location.name }}" title="{{ location.name }}" class="img-thumbnail" />
                   {% endif %}
-                </div>
-                <div class="col-sm-3"> <strong>{{ text_telephone }}</strong><br/>
-                  {{ location.telephone }}<br/>
-                  <br/>
-                  {% if location.fax %}
-                  <strong>{{ text_fax }}</strong><br/>
-                  {{ location.fax }}
+                  {% if location.address %}
+                  <p>{{ location.address }}</p>
                   {% endif %}
-                </div>
-                <div class="col-sm-3">
+                  {% if location.telephone %}
+                  <p><strong>{{ text_telephone }}</strong><br>{{ location.telephone }}</p>
+                  {% endif %}
                   {% if location.open %}
-                  <strong>{{ text_open }}</strong><br/>
-                  {{ location.open }}<br/>
-                  <br/>
+                  <p><strong>{{ text_open }}</strong><br>{{ location.open }}</p>
                   {% endif %}
                   {% if location.comment %}
-                  <strong>{{ text_comment }}</strong><br/>
-                  {{ location.comment }}
+                  <p>{{ location.comment }}</p>
+                  {% endif %}
+                  {% if location.geocode %}
+                  <a href="https://maps.google.com/maps?q={{ location.geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" rel="noopener" class="btn btn-info"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
+                  {% endif %}
+                </section>
+                {% endfor %}
+              </div>
+            </details>
+            {% endif %}
+            <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal sylora-form">
+              <fieldset>
+                <div class="form-group sylora-hp" aria-hidden="true">
+                  <label for="input-company">Компания</label>
+                  <input type="text" name="company" value="" id="input-company" tabindex="-1" autocomplete="off" class="form-control" />
+                </div>
+                <input type="hidden" name="form_started_at" value="{{ form_started_at }}" />
+                <div class="form-group required">
+                  <label class="control-label" for="input-name">{{ entry_name }}</label>
+                  <input type="text" name="name" value="{{ name }}" id="input-name" class="form-control" autocomplete="name" minlength="3" maxlength="32" required />
+                  {% if error_name %}
+                  <div class="text-danger">{{ error_name }}</div>
                   {% endif %}
                 </div>
+                <div class="contact-form-grid">
+                  <div class="form-group required">
+                    <label class="control-label" for="input-email">{{ entry_email }}</label>
+                    <input type="email" name="email" value="{{ email }}" id="input-email" class="form-control" autocomplete="email" />
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label" for="input-telephone">{{ entry_telephone }}</label>
+                    <input type="tel" name="telephone" value="{{ telephone_value }}" id="input-telephone" class="form-control" autocomplete="tel" minlength="7" />
+                  </div>
+                </div>
+                {% if error_email %}
+                <div class="text-danger">{{ error_email }}</div>
+                {% endif %}
+                <div class="form-group required">
+                  <label class="control-label" for="input-enquiry">{{ entry_enquiry }}</label>
+                  <textarea name="enquiry" rows="8" id="input-enquiry" class="form-control" minlength="10" maxlength="3000" required>{{ enquiry }}</textarea>
+                  {% if error_enquiry %}
+                  <div class="text-danger">{{ error_enquiry }}</div>
+                  {% endif %}
+                </div>
+                <div class="form-group required">
+                  <label class="checkbox sylora-checkbox">
+                    <input type="checkbox" name="privacy_agree" value="1"{% if privacy_agree %} checked="checked"{% endif %} required />
+                    <span>{{ text_privacy }}{% if privacy_href %} <a href="{{ privacy_href }}" target="_blank" rel="noopener">Политика конфиденциальности</a>{% endif %}</span>
+                  </label>
+                  {% if error_privacy %}
+                  <div class="text-danger">{{ error_privacy }}</div>
+                  {% endif %}
+                </div>
+                {{ captcha }}
+              </fieldset>
+              <div class="buttons">
+                <div>
+                  <input class="btn btn-primary" type="submit" value="{{ button_submit }}" />
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
-      <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal sylora-form">
-        <fieldset>
-          <div class="form-group sylora-hp" aria-hidden="true">
-            <label for="input-company">Компания</label>
-            <input type="text" name="company" value="" id="input-company" tabindex="-1" autocomplete="off" class="form-control" />
-          </div>
-          <div class="form-group required">
-            <label class="control-label" for="input-name">{{ entry_name }}</label>
-            <div>
-              <input type="text" name="name" value="{{ name }}" id="input-name" class="form-control" />
-              {% if error_name %}
-              <div class="text-danger">{{ error_name }}</div>
-              {% endif %}
-            </div>
-          </div>
-          <div class="contact-form-grid">
-            <div class="form-group required">
-              <label class="control-label" for="input-email">{{ entry_email }}</label>
-              <input type="email" name="email" value="{{ email }}" id="input-email" class="form-control" />
-            </div>
-            <div class="form-group">
-              <label class="control-label" for="input-telephone">{{ entry_telephone }}</label>
-              <input type="tel" name="telephone" value="{{ telephone_value }}" id="input-telephone" class="form-control" />
-            </div>
-          </div>
-              {% if error_email %}
-              <div class="text-danger">{{ error_email }}</div>
-              {% endif %}
-          <div class="form-group required">
-            <label class="control-label" for="input-enquiry">{{ entry_enquiry }}</label>
-            <div>
-              <textarea name="enquiry" rows="10" id="input-enquiry" class="form-control">{{ enquiry }}</textarea>
-              {% if error_enquiry %}
-              <div class="text-danger">{{ error_enquiry }}</div>
-              {% endif %}
-            </div>
-          </div>
-          <div class="form-group required">
-            <label class="checkbox sylora-checkbox">
-              <input type="checkbox" name="privacy_agree" value="1"{% if privacy_agree %} checked="checked"{% endif %} />
-              <span>{{ text_privacy }}</span>
-            </label>
-            {% if error_privacy %}
-            <div class="text-danger">{{ error_privacy }}</div>
-            {% endif %}
-          </div>
-          {{ captcha }}
-        </fieldset>
-        <div class="buttons">
-          <div>
-            <input class="btn btn-primary" type="submit" value="{{ button_submit }}" />
-          </div>
-        </div>
-      </form>
+            </form>
           </div>
         </div>
       </section>
+      <script>
+      (function() {
+        var form = document.querySelector('.sylora-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function(event) {
+          var email = form.querySelector('#input-email');
+          var phone = form.querySelector('#input-telephone');
+          var hasContact = (email && email.value.trim()) || (phone && phone.value.trim());
+
+          if (!hasContact) {
+            event.preventDefault();
+            if (email) {
+              email.setCustomValidity('{{ error_email_text|e('js') }}');
+              email.reportValidity();
+            }
+            return;
+          }
+
+          if (email) {
+            email.setCustomValidity('');
+          }
+        });
+      })();
+      </script>
+      {% if contact_schema %}
+      <script type="application/ld+json">{{ contact_schema|raw }}</script>
+      {% endif %}
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>

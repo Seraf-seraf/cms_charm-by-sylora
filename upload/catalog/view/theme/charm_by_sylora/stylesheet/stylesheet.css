@@ -2594,6 +2594,7 @@ footer h5 {
 .about-page,
 .contact-page {
 	margin-bottom: 48px;
+	overflow-wrap: anywhere;
 }
 
 .about-hero,
@@ -2624,10 +2625,23 @@ footer h5 {
 	font-size: 16px;
 }
 
+.about-hero h1,
+.about-hero h2,
+.about-hero p,
+.about-grid h2,
+.about-grid p,
+.about-content,
+.contact-head h1,
+.contact-head p {
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
 .about-hero img,
 .contact-card__image {
 	display: block;
 	width: 100%;
+	max-width: 100%;
 	aspect-ratio: 4 / 3;
 	object-fit: cover;
 	border-radius: 8px;
@@ -2706,6 +2720,9 @@ footer h5 {
 .contact-list span,
 .contact-list a {
 	display: block;
+	min-width: 0;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .contact-list strong {
@@ -2715,6 +2732,73 @@ footer h5 {
 .contact-list a {
 	color: var(--color-text);
 	font-weight: 700;
+}
+
+.contact-link-group,
+.contact-legal {
+	display: grid;
+	gap: 8px;
+	margin-top: 18px;
+}
+
+.contact-link-group strong,
+.contact-legal strong {
+	color: var(--color-earth);
+}
+
+.contact-link-group div,
+.contact-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 14px;
+	align-items: center;
+}
+
+.contact-link-group a {
+	color: var(--color-text);
+	font-weight: 700;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+.contact-legal span {
+	color: var(--color-muted);
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+.contact-actions {
+	margin-top: 22px;
+}
+
+.contact-locations {
+	margin: 0 0 20px;
+	padding: 16px;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-surface);
+}
+
+.contact-locations summary {
+	cursor: pointer;
+	color: var(--color-earth);
+	font-weight: 700;
+}
+
+.contact-locations__grid {
+	display: grid;
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.contact-locations h3 {
+	margin: 0 0 10px;
+	font-size: 18px;
+}
+
+.contact-locations img {
+	max-width: 160px;
+	margin-bottom: 10px;
 }
 
 .sylora-form {
@@ -2741,6 +2825,11 @@ footer h5 {
 	box-shadow: none;
 }
 
+.sylora-form .form-control:invalid:not(:placeholder-shown),
+.sylora-form input[type="checkbox"]:invalid {
+	border-color: var(--color-accent);
+}
+
 .sylora-form textarea.form-control {
 	min-height: 150px;
 	resize: vertical;
@@ -2762,6 +2851,12 @@ footer h5 {
 
 .sylora-checkbox input {
 	margin-top: 4px;
+	flex: 0 0 auto;
+}
+
+.sylora-checkbox a {
+	color: var(--color-text);
+	font-weight: 700;
 }
 
 .sylora-hp {

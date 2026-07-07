@@ -30,6 +30,7 @@ class ControllerInformationInformation extends Controller {
 				$this->document->setTitle('О мастере Charm by Sylora - ручные украшения');
 				$this->document->setDescription('История Charm by Sylora: ручная работа, аккуратные материалы, ограниченные коллекции и украшения с теплым характером.');
 				$this->document->setKeywords('Charm by Sylora, о мастере, ручные украшения, авторские украшения');
+				$this->document->addLink($this->url->link('information/information', 'information_id=4'), 'canonical');
 			}
 
 			$data['breadcrumbs'][] = array(
@@ -41,6 +42,8 @@ class ControllerInformationInformation extends Controller {
 			$data['about_page'] = ($information_id == 4);
 			$data['catalog_href'] = $this->getCatalogUrl();
 			$data['contact_href'] = $this->url->link('information/contact');
+			$data['about_image'] = $this->getAboutImage();
+			$data['about_schema'] = $information_id == 4 ? $this->getAboutSchema($information_info) : '';
 
 			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
 
@@ -115,5 +118,39 @@ class ControllerInformationInformation extends Controller {
 		}
 
 		return $this->url->link('product/search');
+	}
+
+	private function getAboutImage() {
+		$image = trim((string)$this->config->get('config_sylora_about_image'));
+
+		if ($image && is_file(DIR_IMAGE . $image)) {
+			return 'image/' . $image;
+		}
+
+		if (is_file(DIR_IMAGE . 'catalog/sylora/jewelry-collection.png')) {
+			return 'image/catalog/sylora/jewelry-collection.png';
+		}
+
+		return '';
+	}
+
+	private function getAboutSchema(array $information_info) {
+		$is_https = !empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off';
+		$server = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
+
+		$schema = array(
+			'@context' => 'https://schema.org',
+			'@type'    => 'AboutPage',
+			'url'      => $this->url->link('information/information', 'information_id=4'),
+			'name'     => $information_info['title'],
+			'description' => $information_info['meta_description'],
+			'about'    => array(
+				'@type' => 'Organization',
+				'@id'   => rtrim($server, '/') . '/#organization',
+				'name'  => $this->config->get('config_name') ? $this->config->get('config_name') : 'Charm by Sylora'
+			)
+		);
+
+		return json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 	}
 }

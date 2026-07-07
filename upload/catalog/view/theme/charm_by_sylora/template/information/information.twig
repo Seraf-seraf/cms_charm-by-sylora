@@ -26,7 +26,9 @@
               <a class="sylora-link" href="{{ contact_href }}">Связаться</a>
             </div>
           </div>
-          <img src="image/catalog/sylora/jewelry-collection.png" alt="Украшения ручной работы Charm by Sylora">
+          {% if about_image %}
+          <img src="{{ about_image }}" alt="Украшения ручной работы Charm by Sylora">
+          {% endif %}
         </section>
 
         <section class="about-grid">
@@ -58,6 +60,9 @@
         <section class="about-content">
           {{ description }}
         </section>
+        {% endif %}
+        {% if about_schema %}
+        <script type="application/ld+json">{{ about_schema|raw }}</script>
         {% endif %}
       </article>
       {% else %}
