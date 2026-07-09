@@ -240,17 +240,203 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 
 	private function buildCreatePaymentBody($order_info) {
 		$total = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+		$amount_minor = (int)round((float)$total * 100);
+		$description = $this->config->get('config_name') . ' order #' . $order_info['order_id'];
+		$items = $this->buildReceiptItems($order_info, $amount_minor, $description);
 
-		return array(
+		$body = array(
 			'order_id'       => (string)$order_info['order_id'],
-			'amount_minor'   => (int)round((float)$total * 100),
+			'amount_minor'   => $amount_minor,
 			'currency'       => $order_info['currency_code'],
-			'description'    => $this->config->get('config_name') . ' order #' . $order_info['order_id'],
+			'description'    => $description,
 			'payment_method' => 'bank_card',
-			'customer'       => array(
-				'email' => $order_info['email']
+			'receipt'        => array(
+				'taxation' => 'osn',
+				'items'    => $items
 			)
 		);
+
+		if ($this->isValidEmail($order_info['email'])) {
+			$body['customer'] = array(
+				'email' => $order_info['email']
+			);
+
+			if (strlen($order_info['email']) <= 64) {
+				$body['receipt']['email'] = $order_info['email'];
+			}
+		}
+
+		if (!empty($order_info['telephone'])) {
+			$body['receipt']['phone'] = substr((string)$order_info['telephone'], 0, 64);
+		}
+
+		return $body;
+	}
+
+	private function buildReceiptItems($order_info, $amount_minor, $fallback_name) {
+		$items = array();
+		$products = $this->model_checkout_order->getOrderProducts($order_info['order_id']);
+
+		foreach ($products as $product) {
+			$quantity = isset($product['quantity']) ? (int)$product['quantity'] : 1;
+
+			if ($quantity < 1) {
+				$quantity = 1;
+			}
+
+			$product_total = (float)$product['total'] + ((float)$product['tax'] * $quantity);
+			$product_amount_minor = $this->moneyToMinor($product_total, $order_info);
+
+			if ($product_amount_minor <= 0) {
+				continue;
+			}
+
+			$items[] = $this->receiptItem($product['name'], $product_amount_minor, 'commodity', $quantity);
+		}
+
+		$totals = $this->model_checkout_order->getOrderTotals($order_info['order_id']);
+
+		foreach ($totals as $total) {
+			if (in_array($total['code'], array('sub_total', 'tax', 'total'), true) || (float)$total['value'] <= 0) {
+				continue;
+			}
+
+			$total_amount_minor = $this->moneyToMinor($total['value'], $order_info);
+
+			if ($total_amount_minor <= 0) {
+				continue;
+			}
+
+			$items[] = $this->receiptItem($total['title'], $total_amount_minor, $this->receiptObjectForTotal($total['code']));
+		}
+
+		if (!$items) {
+			$items[] = $this->receiptItem($fallback_name, $amount_minor, 'commodity');
+		}
+
+		if (count($items) > 100) {
+			$items = $this->collapseReceiptItems($items);
+		}
+
+		$this->reconcileReceiptItems($items, $amount_minor);
+
+		return $items;
+	}
+
+	private function receiptItem($name, $amount_minor, $payment_object, $quantity = 1) {
+		$quantity = (float)$quantity;
+
+		if ($quantity <= 0) {
+			$quantity = 1;
+		}
+
+		return array(
+			'name'           => $this->truncateReceiptName($name),
+			'price_minor'    => max(1, (int)round($amount_minor / $quantity)),
+			'quantity'       => $quantity,
+			'amount_minor'   => $amount_minor,
+			'payment_method' => 'full_payment',
+			'payment_object' => $payment_object,
+			'tax'            => 'none'
+		);
+	}
+
+	private function moneyToMinor($value, $order_info) {
+		$formatted = $this->currency->format($value, $order_info['currency_code'], $order_info['currency_value'], false);
+
+		return (int)round((float)$formatted * 100);
+	}
+
+	private function receiptObjectForTotal($code) {
+		if ($code == 'shipping') {
+			return 'service';
+		}
+
+		return 'payment';
+	}
+
+	private function collapseReceiptItems($items) {
+		$collapsed = array_slice($items, 0, 99);
+		$other_amount_minor = 0;
+
+		foreach (array_slice($items, 99) as $item) {
+			$other_amount_minor += (int)$item['amount_minor'];
+		}
+
+		if ($other_amount_minor > 0) {
+			$collapsed[] = $this->receiptItem('Other order items', $other_amount_minor, 'commodity');
+		}
+
+		return $collapsed;
+	}
+
+	private function reconcileReceiptItems(&$items, $amount_minor) {
+		$current_amount_minor = $this->receiptItemsAmount($items);
+		$difference = $amount_minor - $current_amount_minor;
+
+		if ($difference > 0) {
+			$last_index = count($items) - 1;
+			$items[$last_index]['amount_minor'] += $difference;
+			$items[$last_index]['price_minor'] = $this->receiptItemPrice($items[$last_index]);
+
+			return;
+		}
+
+		if ($difference < 0) {
+			$remaining_discount_minor = abs($difference);
+
+			for ($index = count($items) - 1; $index >= 0 && $remaining_discount_minor > 0; $index--) {
+				$discount_minor = min($remaining_discount_minor, $items[$index]['amount_minor'] - 1);
+
+				if ($discount_minor <= 0) {
+					continue;
+				}
+
+				$items[$index]['amount_minor'] -= $discount_minor;
+				$items[$index]['price_minor'] = $this->receiptItemPrice($items[$index]);
+				$remaining_discount_minor -= $discount_minor;
+			}
+		}
+
+		if ($this->receiptItemsAmount($items) !== $amount_minor) {
+			$items = array($this->receiptItem($this->config->get('config_name') . ' order', $amount_minor, 'commodity'));
+		}
+	}
+
+	private function receiptItemsAmount($items) {
+		$amount_minor = 0;
+
+		foreach ($items as $item) {
+			$amount_minor += (int)$item['amount_minor'];
+		}
+
+		return $amount_minor;
+	}
+
+	private function receiptItemPrice($item) {
+		$quantity = isset($item['quantity']) ? (float)$item['quantity'] : 1;
+
+		if ($quantity <= 0) {
+			$quantity = 1;
+		}
+
+		return max(1, (int)round($item['amount_minor'] / $quantity));
+	}
+
+	private function truncateReceiptName($value) {
+		if (function_exists('mb_substr')) {
+			return mb_substr($value, 0, 128, 'UTF-8');
+		}
+
+		if (preg_match_all('/./us', $value, $matches)) {
+			return implode('', array_slice($matches[0], 0, 128));
+		}
+
+		return substr($value, 0, 128);
+	}
+
+	private function isValidEmail($value) {
+		return is_string($value) && filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
 	}
 
 	private function createPayment($body) {
