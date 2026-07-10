@@ -1,56 +1,81 @@
 <?php
 class ControllerExtensionPaymentPaymentService extends Controller {
 	const MAX_CALLBACK_BODY_BYTES = 65536;
+	const MAX_API_RESPONSE_BYTES = 1048576;
 
 	public function index() {
 		$this->load->language('extension/payment/payment_service');
 
 		$data['button_confirm'] = $this->language->get('button_confirm');
 		$data['text_loading'] = $this->language->get('text_loading');
+		$data['error_payment'] = $this->language->get('error_payment');
 		$data['confirm'] = $this->url->link('extension/payment/payment_service/confirm', '', true);
 
 		return $this->load->view('extension/payment/payment_service', $data);
 	}
 
 	public function confirm() {
+		$this->load->language('extension/payment/payment_service');
+
 		$json = array();
 
 		if (!isset($this->session->data['payment_method']['code']) || $this->session->data['payment_method']['code'] != 'payment_service') {
-			$json['error'] = 'Payment method is not selected';
+			$this->logPaymentError(0, 'payment_method_not_selected');
+			$json['error'] = $this->language->get('error_payment');
 		} elseif (empty($this->session->data['order_id'])) {
-			$json['error'] = 'Order is not initialized';
+			$this->logPaymentError(0, 'order_not_initialized');
+			$json['error'] = $this->language->get('error_payment');
 		} else {
 			$this->load->model('checkout/order');
 
 			$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
 			if (!$order_info) {
-				$json['error'] = 'Order not found';
+				$this->logPaymentError($this->session->data['order_id'], 'order_not_found');
+				$json['error'] = $this->language->get('error_payment');
+			} elseif ($order_info['currency_code'] !== 'RUB' || (float)$order_info['total'] <= 0) {
+				$this->logPaymentError($order_info['order_id'], 'unsupported_order_amount_or_currency');
+				$json['error'] = $this->language->get('error_payment');
 			} elseif (!function_exists('curl_init')) {
-				$json['error'] = 'PHP cURL extension is not available';
+				$this->logPaymentError($order_info['order_id'], 'curl_not_available');
+				$json['error'] = $this->language->get('error_payment');
 			} else {
 				$body = $this->buildCreatePaymentBody($order_info);
 				$response = $this->createPayment($body);
 
-				if (!empty($response['error'])) {
-					$json['error'] = $response['error'];
-				} elseif (empty($response['payment_url'])) {
-					$json['error'] = 'Payment service returned empty payment_url';
-				} else {
-					$comment = sprintf(
-						'Payment service payment_id: %s. Status: %s.',
-						isset($response['payment_id']) ? $response['payment_id'] : '',
-						isset($response['status']) ? $response['status'] : ''
-					);
+				try {
+					if (!empty($response['error'])) {
+						$this->logPaymentError($order_info['order_id'], $response['error']);
+						$json['error'] = $this->language->get('error_payment');
+					} elseif (!$this->isValidPaymentResponse($response, $order_info)) {
+						$this->logPaymentError($order_info['order_id'], 'invalid_payment_response');
+						$json['error'] = $this->language->get('error_payment');
+					} elseif (!$this->rememberPayment($response, $order_info)) {
+						$this->logPaymentError($order_info['order_id'], 'payment_mapping_conflict');
+						$json['error'] = $this->language->get('error_payment');
+					} else {
+						$comment = sprintf(
+							'Payment service payment_id: %s. Status: %s.',
+							$response['payment_id'],
+							$response['status']
+						);
 
-					$this->model_checkout_order->addOrderHistory(
-						$order_info['order_id'],
-						$this->config->get('payment_payment_service_pending_status_id'),
-						$comment,
-						false
-					);
+						$order_status_id = $this->mapStatus($response['status']);
 
-					$json['redirect'] = $response['payment_url'];
+						if ((int)$order_info['order_status_id'] !== $order_status_id) {
+							$this->model_checkout_order->addOrderHistory(
+								$order_info['order_id'],
+								$order_status_id,
+								$comment,
+								false
+							);
+						}
+
+						$json['redirect'] = $response['status'] === 'succeeded' ? $this->url->link('checkout/success', '', true) : $response['payment_url'];
+					}
+				} catch (Throwable $exception) {
+					$this->logPaymentError($order_info['order_id'], 'confirmation_processing_failed');
+					$json['error'] = $this->language->get('error_payment');
 				}
 			}
 		}
@@ -118,6 +143,10 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			return $this->jsonResponse(array('code' => 'amount_mismatch', 'message' => 'Callback amount or currency does not match order'), 409);
 		}
 
+		if (!$this->matchesStoredPayment($payload, $order_id)) {
+			return $this->jsonResponse(array('code' => 'payment_mismatch', 'message' => 'Callback payment does not match order'), 409);
+		}
+
 		if ($this->eventExists($payload['event_id'])) {
 			return $this->jsonResponse(array('status' => 'ok'));
 		}
@@ -141,8 +170,17 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			$payload['currency']
 		);
 
-		if ((int)$order_info['order_status_id'] != (int)$order_status_id) {
-			$this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true);
+		try {
+			if ((int)$order_info['order_status_id'] != (int)$order_status_id) {
+				$this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true);
+			}
+
+			$this->updateStoredPaymentStatus($payload['payment_id'], $payload['status']);
+		} catch (Throwable $exception) {
+			$this->deleteEvent($payload['event_id']);
+			$this->logPaymentError($order_id, 'callback_processing_failed');
+
+			return $this->jsonResponse(array('code' => 'processing_failed', 'message' => 'Callback processing failed'), 500);
 		}
 
 		return $this->jsonResponse(array('status' => 'ok'));
@@ -440,7 +478,15 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 	}
 
 	private function createPayment($body) {
-		$api_url = rtrim($this->config->get('payment_payment_service_api_url'), '/');
+		$configured_api_url = $this->config->get('payment_payment_service_api_url');
+		$api_url = is_string($configured_api_url) ? rtrim($configured_api_url, '/') : '';
+		$api_key = $this->config->get('payment_payment_service_api_key');
+		$shared_secret = $this->config->get('payment_payment_service_shared_secret');
+		$api_parts = is_string($api_url) ? parse_url($api_url) : false;
+
+		if (!$this->isAllowedRedirectUrl($api_url) || !is_array($api_parts) || isset($api_parts['query']) || isset($api_parts['fragment']) || !is_string($api_key) || trim($api_key) === '' || !is_string($shared_secret) || strlen($shared_secret) < 32) {
+			return array('error' => 'invalid_configuration');
+		}
 
 		if (substr($api_url, -7) !== '/api/v1') {
 			$api_url .= '/api/v1';
@@ -448,19 +494,38 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 
 		$api_url .= '/payments';
 		$raw_body = json_encode($body);
+
+		if ($raw_body === false) {
+			return array('error' => 'request_json_encoding_failed');
+		}
+
 		$timestamp = (string)time();
-		$signature = hash_hmac('sha256', $timestamp . '.' . $raw_body, $this->config->get('payment_payment_service_shared_secret'));
+		$signature = hash_hmac('sha256', $timestamp . '.' . $raw_body, $shared_secret);
+		$response_body = '';
+		$response_too_large = false;
 
 		$ch = curl_init($api_url);
 
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $raw_body);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+		curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($handle, $chunk) use (&$response_body, &$response_too_large) {
+			if (strlen($response_body) + strlen($chunk) > self::MAX_API_RESPONSE_BYTES) {
+				$response_too_large = true;
+				return 0;
+			}
+
+			$response_body .= $chunk;
+
+			return strlen($chunk);
+		});
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'Content-Type: application/json',
-			'X-API-Key: ' . $this->config->get('payment_payment_service_api_key'),
+			'X-API-Key: ' . $api_key,
 			'X-Timestamp: ' . $timestamp,
 			'X-Signature: ' . $signature,
 			'Idempotency-Key: order-' . $body['order_id']
@@ -469,31 +534,102 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 		$response = curl_exec($ch);
 
 		if ($response === false) {
-			$error = curl_error($ch);
+			$error_number = curl_errno($ch);
 			curl_close($ch);
 
-			return array('error' => $error);
+			if ($response_too_large) {
+				return array('error' => 'response_too_large');
+			}
+
+			return array('error' => 'transport_error_' . $error_number);
 		}
 
-		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		$response_body = substr($response, $header_size);
 
 		curl_close($ch);
 
 		$data = json_decode($response_body, true);
 
 		if ($status < 200 || $status >= 300) {
-			$message = is_array($data) && isset($data['message']) ? $data['message'] : $response_body;
+			$service_code = is_array($data) && isset($data['code']) && $this->isSafeString($data['code'], 1, 64, '/^[A-Za-z0-9._:-]+$/') ? $data['code'] : 'unknown';
 
-			return array('error' => 'Payment service returned HTTP ' . $status . ': ' . $message);
+			return array('error' => 'service_http_' . $status . '_' . $service_code);
 		}
 
 		if (!is_array($data)) {
-			return array('error' => 'Payment service returned invalid JSON');
+			return array('error' => 'invalid_response_json');
 		}
 
 		return $data;
+	}
+
+	private function isValidPaymentResponse($response, $order_info) {
+		$required = array('payment_id', 'order_id', 'amount_minor', 'currency', 'status', 'payment_url');
+
+		foreach ($required as $field) {
+			if (!array_key_exists($field, $response)) {
+				return false;
+			}
+		}
+
+		if (!$this->isSafeString($response['payment_id'], 36, 36, '/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/')) {
+			return false;
+		}
+
+		if ((string)$response['order_id'] !== (string)$order_info['order_id']) {
+			return false;
+		}
+
+		if (!is_int($response['amount_minor']) || !$this->matchesOrderAmount($response, $order_info)) {
+			return false;
+		}
+
+		if (!is_string($response['status']) || !in_array($response['status'], array('pending', 'succeeded'), true)) {
+			return false;
+		}
+
+		if ($this->mapStatus($response['status']) <= 0) {
+			return false;
+		}
+
+		return $this->isAllowedRedirectUrl($response['payment_url']);
+	}
+
+	private function isAllowedRedirectUrl($url) {
+		if (!is_string($url) || strlen($url) > 2048 || filter_var($url, FILTER_VALIDATE_URL) === false) {
+			return false;
+		}
+
+		$parts = parse_url($url);
+
+		if (!is_array($parts) || empty($parts['scheme']) || empty($parts['host']) || isset($parts['user']) || isset($parts['pass'])) {
+			return false;
+		}
+
+		if (strtolower($parts['scheme']) === 'https') {
+			return true;
+		}
+
+		return strtolower($parts['scheme']) === 'http' && in_array(strtolower($parts['host']), array('localhost', '127.0.0.1', '::1'), true);
+	}
+
+	private function rememberPayment($response, $order_info) {
+		$order_id = (int)$order_info['order_id'];
+		$payment_id = $this->db->escape($response['payment_id']);
+		$status = $this->db->escape($response['status']);
+		$currency = $this->db->escape($response['currency']);
+
+		$this->db->query("INSERT IGNORE INTO `" . DB_PREFIX . "payment_service_payment` SET order_id = '" . $order_id . "', payment_id = '" . $payment_id . "', status = '" . $status . "', amount_minor = '" . (int)$response['amount_minor'] . "', currency = '" . $currency . "', date_added = NOW(), date_modified = NOW()");
+
+		$query = $this->db->query("SELECT payment_id, amount_minor, currency FROM `" . DB_PREFIX . "payment_service_payment` WHERE order_id = '" . $order_id . "' LIMIT 1");
+
+		if (!$query->num_rows || $query->row['payment_id'] !== $response['payment_id'] || (int)$query->row['amount_minor'] !== (int)$response['amount_minor'] || $query->row['currency'] !== $response['currency']) {
+			return false;
+		}
+
+		$this->db->query("UPDATE `" . DB_PREFIX . "payment_service_payment` SET status = '" . $status . "', date_modified = NOW() WHERE order_id = '" . $order_id . "'");
+
+		return true;
 	}
 
 	private function verifySignature($timestamp, $signature, $raw_body) {
@@ -501,7 +637,13 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			return false;
 		}
 
-		if (!ctype_digit((string)$timestamp)) {
+		if (!ctype_digit((string)$timestamp) || !is_string($signature) || !preg_match('/^[a-fA-F0-9]{64}$/', $signature)) {
+			return false;
+		}
+
+		$shared_secret = $this->config->get('payment_payment_service_shared_secret');
+
+		if (!is_string($shared_secret) || strlen($shared_secret) < 32) {
 			return false;
 		}
 
@@ -515,7 +657,7 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			return false;
 		}
 
-		$expected = hash_hmac('sha256', $timestamp . '.' . $raw_body, $this->config->get('payment_payment_service_shared_secret'));
+		$expected = hash_hmac('sha256', $timestamp . '.' . $raw_body, $shared_secret);
 
 		if (function_exists('hash_equals')) {
 			return hash_equals($expected, $signature);
@@ -531,6 +673,15 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 		return (int)$payload['amount_minor'] === $amount_minor && $payload['currency'] === $order_info['currency_code'];
 	}
 
+	private function matchesStoredPayment($payload, $order_id) {
+		$query = $this->db->query("SELECT payment_id, amount_minor, currency FROM `" . DB_PREFIX . "payment_service_payment` WHERE order_id = '" . (int)$order_id . "' LIMIT 1");
+
+		return $query->num_rows
+			&& $query->row['payment_id'] === $payload['payment_id']
+			&& (int)$query->row['amount_minor'] === (int)$payload['amount_minor']
+			&& $query->row['currency'] === $payload['currency'];
+	}
+
 	private function eventExists($event_id) {
 		$query = $this->db->query("SELECT payment_service_event_id FROM `" . DB_PREFIX . "payment_service_event` WHERE event_id = '" . $this->db->escape($event_id) . "' LIMIT 1");
 
@@ -541,6 +692,22 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 		$this->db->query("INSERT IGNORE INTO `" . DB_PREFIX . "payment_service_event` SET event_id = '" . $this->db->escape($payload['event_id']) . "', order_id = '" . (int)$order_id . "', payment_id = '" . $this->db->escape($payload['payment_id']) . "', event_type = '" . $this->db->escape($payload['event_type']) . "', status = '" . $this->db->escape($payload['status']) . "', payload = '" . $this->db->escape($raw_body) . "', date_added = NOW()");
 
 		return $this->db->countAffected() > 0;
+	}
+
+	private function deleteEvent($event_id) {
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "payment_service_event` WHERE event_id = '" . $this->db->escape($event_id) . "'");
+	}
+
+	private function updateStoredPaymentStatus($payment_id, $status) {
+		$this->db->query("UPDATE `" . DB_PREFIX . "payment_service_payment` SET status = '" . $this->db->escape($status) . "', date_modified = NOW() WHERE payment_id = '" . $this->db->escape($payment_id) . "'");
+
+		if ($this->db->countAffected() < 1) {
+			$query = $this->db->query("SELECT payment_service_payment_id FROM `" . DB_PREFIX . "payment_service_payment` WHERE payment_id = '" . $this->db->escape($payment_id) . "' LIMIT 1");
+
+			if (!$query->num_rows) {
+				throw new RuntimeException('Payment mapping not found');
+			}
+		}
 	}
 
 	private function mapStatus($status) {
@@ -557,6 +724,11 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 		}
 
 		return (int)$this->config->get($map[$status]);
+	}
+
+	private function logPaymentError($order_id, $code) {
+		$code = preg_replace('/[^A-Za-z0-9._:-]/', '_', (string)$code);
+		$this->log->write('Payment Service order #' . (int)$order_id . ': ' . substr($code, 0, 160));
 	}
 
 	private function jsonResponse($data, $status = 200) {
