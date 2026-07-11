@@ -8,6 +8,7 @@ class ControllerProductCategory extends Controller {
 		$this->load->model('catalog/product');
 
 		$this->load->model('tool/image');
+		$this->load->library('seo');
 
 		if (isset($this->request->get['filter'])) {
 			if (is_array($this->request->get['filter'])) {
@@ -141,8 +142,8 @@ class ControllerProductCategory extends Controller {
 		$category_info = $this->model_catalog_category->getCategory($category_id);
 
 		if ($category_info) {
-			$this->document->setTitle($category_info['meta_title']);
-			$this->document->setDescription($category_info['meta_description']);
+			$this->document->setTitle($this->seo->title($category_info['meta_title'], $category_info['name'], 'category'));
+			$this->document->setDescription($this->seo->description($category_info['meta_description'], $category_info['description'], $category_info['name'], 'category'));
 			$this->document->setKeywords($category_info['meta_keyword']);
 
 			$data['heading_title'] = $category_info['name'];

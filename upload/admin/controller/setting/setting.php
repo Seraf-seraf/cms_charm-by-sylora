@@ -180,6 +180,30 @@ class ControllerSettingSetting extends Controller {
 			$data['config_meta_keyword'] = $this->config->get('config_meta_keyword');
 		}
 
+		$data['seo_templates'] = array();
+		$seo_template_labels = array(
+			'config_seo_category_title_template' => 'Категория: Title',
+			'config_seo_category_description_template' => 'Категория: Description',
+			'config_seo_product_title_template' => 'Товар: Title',
+			'config_seo_product_description_template' => 'Товар: Description',
+			'config_seo_information_title_template' => 'Информационная страница: Title',
+			'config_seo_information_description_template' => 'Информационная страница: Description',
+			'config_seo_manufacturer_title_template' => 'Производитель: Title',
+			'config_seo_manufacturer_description_template' => 'Производитель: Description',
+			'config_seo_special_title_template' => 'Акции: Title',
+			'config_seo_special_description_template' => 'Акции: Description',
+			'config_seo_contact_title_template' => 'Контакты: Title',
+			'config_seo_contact_description_template' => 'Контакты: Description'
+		);
+
+		foreach ($seo_template_labels as $key => $label) {
+			$data['seo_templates'][] = array(
+				'key' => $key,
+				'label' => $label,
+				'value' => isset($this->request->post[$key]) ? $this->request->post[$key] : $this->config->get($key)
+			);
+		}
+
 		if (isset($this->request->post['config_theme'])) {
 			$data['config_theme'] = $this->request->post['config_theme'];
 		} else {

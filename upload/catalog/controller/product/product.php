@@ -4,6 +4,7 @@ class ControllerProductProduct extends Controller {
 
 	public function index() {
 		$this->load->language('product/product');
+		$this->load->library('seo');
 
 		$data['breadcrumbs'] = array();
 
@@ -230,24 +231,8 @@ class ControllerProductProduct extends Controller {
 				'href' => $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id'])
 			);
 
-			$store_name = trim(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
-			$product_name = trim(html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8'));
-			$product_description = trim(preg_replace('/\s+/u', ' ', strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))));
-			$meta_title = trim(html_entity_decode($product_info['meta_title'], ENT_QUOTES, 'UTF-8'));
-			$meta_description = trim(html_entity_decode($product_info['meta_description'], ENT_QUOTES, 'UTF-8'));
-
-			if ($meta_title === '') {
-				$meta_title = $product_name . ($store_name !== '' ? ' — ' . $store_name : '');
-			}
-
-			if ($meta_description === '') {
-				$meta_description = $product_description !== ''
-					? utf8_substr($product_description, 0, 170)
-					: $product_name . '. Информация, цена и условия доставки.';
-			}
-
-			$this->document->setTitle($meta_title);
-			$this->document->setDescription($meta_description);
+			$this->document->setTitle($this->seo->title($product_info['meta_title'], $product_info['name'], 'product'));
+			$this->document->setDescription($this->seo->description($product_info['meta_description'], $product_info['description'], $product_info['name'], 'product'));
 			$this->document->setKeywords($product_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
 			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');

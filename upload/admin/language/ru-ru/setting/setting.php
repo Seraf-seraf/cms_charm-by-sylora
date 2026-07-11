@@ -41,11 +41,13 @@ $_['text_general']                   = 'Общие';
 $_['text_security']                  = 'Безопасность';
 $_['text_upload']                    = 'Загрузки';
 $_['text_error']                     = 'Обработка ошибок';
+$_['text_seo_templates']             = 'Fallback-шаблоны SEO';
 
 // Entry
 $_['entry_meta_title']               = 'Meta Title';
 $_['entry_meta_description']         = 'МетаТег Description';
 $_['entry_meta_keyword']             = 'МетаТег Keywords';
+$_['help_seo_templates']             = 'Используются, только если SEO-поле сущности пустое. Доступные переменные: {name} и {store}.';
 $_['entry_layout']                   = 'Макет по умолчанию';
 $_['entry_theme']                    = 'Тема';
 $_['entry_name']                     = 'Название магазина';

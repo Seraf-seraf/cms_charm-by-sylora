@@ -60,6 +60,18 @@
                   <textarea name="config_meta_keyword" rows="5" placeholder="{{ entry_meta_keyword }}" id="input-meta-keyword" class="form-control">{{ config_meta_keyword }}</textarea>
                 </div>
               </div>
+              <fieldset>
+                <legend>{{ text_seo_templates }}</legend>
+                <p class="help-block">{{ help_seo_templates }}</p>
+                {% for seo_template in seo_templates %}
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-{{ seo_template.key }}">{{ seo_template.label }}</label>
+                  <div class="col-sm-10">
+                    <textarea name="{{ seo_template.key }}" rows="2" id="input-{{ seo_template.key }}" class="form-control">{{ seo_template.value }}</textarea>
+                  </div>
+                </div>
+                {% endfor %}
+              </fieldset>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-theme">{{ entry_theme }}</label>
                 <div class="col-sm-10">

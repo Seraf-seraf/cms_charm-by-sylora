@@ -2,10 +2,12 @@
 class ControllerProductManufacturer extends Controller {
 	public function index() {
 		$this->load->language('product/manufacturer');
+		$this->load->library('seo');
 
 		$this->load->model('catalog/manufacturer');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setTitle($this->seo->title('', $this->language->get('heading_title'), 'manufacturer'));
+		$this->document->setDescription($this->seo->description('', '', $this->language->get('heading_title'), 'manufacturer'));
 		$this->document->addLink($this->url->link('product/manufacturer'), 'canonical');
 
 		$data['breadcrumbs'] = array();
@@ -56,6 +58,7 @@ class ControllerProductManufacturer extends Controller {
 
 	public function info() {
 		$this->load->language('product/manufacturer');
+		$this->load->library('seo');
 
 		$this->load->model('catalog/manufacturer');
 
@@ -108,7 +111,8 @@ class ControllerProductManufacturer extends Controller {
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
 
 		if ($manufacturer_info) {
-			$this->document->setTitle($manufacturer_info['name']);
+			$this->document->setTitle($this->seo->title('', $manufacturer_info['name'], 'manufacturer'));
+			$this->document->setDescription($this->seo->description('', '', $manufacturer_info['name'], 'manufacturer'));
 
 			$url = '';
 

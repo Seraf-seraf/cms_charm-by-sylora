@@ -4,9 +4,10 @@ class ControllerInformationContact extends Controller {
 
 	public function index() {
 		$this->load->language('information/contact');
+		$this->load->library('seo');
 
-		$this->document->setTitle($this->language->get('heading_title'));
-		$this->document->setDescription('Контакты Charm by Sylora: форма связи, email, телефон при наличии, регион работы и вопросы по доставке, оплате и заказам.');
+		$this->document->setTitle($this->seo->title('', $this->language->get('heading_title'), 'contact'));
+		$this->document->setDescription($this->seo->description('', '', $this->language->get('heading_title'), 'contact'));
 		$this->document->addLink($this->url->link('information/contact'), 'canonical');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {

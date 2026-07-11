@@ -6,6 +6,7 @@ class ControllerProductSpecial extends Controller {
 		$this->load->model('catalog/product');
 
 		$this->load->model('tool/image');
+		$this->load->library('seo');
 
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
@@ -31,7 +32,8 @@ class ControllerProductSpecial extends Controller {
 			$limit = $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
 		}
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setTitle($this->seo->title('', $this->language->get('heading_title'), 'special'));
+		$this->document->setDescription($this->seo->description('', '', $this->language->get('heading_title'), 'special'));
 
 		$data['breadcrumbs'] = array();
 

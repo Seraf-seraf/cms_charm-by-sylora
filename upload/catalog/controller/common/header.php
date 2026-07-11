@@ -58,6 +58,13 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		$data['links'] = $this->document->getLinks();
+
+		foreach ($data['links'] as $link) {
+			if ($link['rel'] == 'canonical') {
+				$data['og_url'] = str_replace('&amp;', '&', $link['href']);
+				break;
+			}
+		}
 		$data['styles'] = $this->document->getStyles();
 		$data['scripts'] = $this->document->getScripts('header');
 		$data['lang'] = $this->language->get('code');
@@ -77,7 +84,7 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		$organization_schema = array(
-			'@type' => 'Organization',
+			'@type' => $this->config->get('config_address') ? 'LocalBusiness' : 'Organization',
 			'@id'   => rtrim($server, '/') . '/#organization',
 			'name'  => $data['name'] ? $data['name'] : 'Charm by Sylora',
 			'url'   => $server
@@ -96,6 +103,37 @@ class ControllerCommonHeader extends Controller {
 
 		if ($this->config->get('config_email')) {
 			$organization_schema['email'] = $this->config->get('config_email');
+		}
+
+		if ($this->config->get('config_address')) {
+			$organization_schema['address'] = array(
+				'@type' => 'PostalAddress',
+				'streetAddress' => trim(preg_replace('/\s+/u', ' ', strip_tags((string)$this->config->get('config_address'))))
+			);
+		}
+
+		if ($this->config->get('config_geocode')) {
+			$coordinates = array_map('trim', explode(',', $this->config->get('config_geocode')));
+
+			if (count($coordinates) == 2 && is_numeric($coordinates[0]) && is_numeric($coordinates[1])) {
+				$organization_schema['geo'] = array(
+					'@type' => 'GeoCoordinates',
+					'latitude' => (float)$coordinates[0],
+					'longitude' => (float)$coordinates[1]
+				);
+			}
+		}
+
+		$same_as = array();
+
+		foreach (array('config_sylora_vk', 'config_sylora_telegram', 'config_sylora_instagram', 'config_sylora_pinterest', 'config_sylora_youtube') as $social_key) {
+			if (filter_var($this->config->get($social_key), FILTER_VALIDATE_URL)) {
+				$same_as[] = $this->config->get($social_key);
+			}
+		}
+
+		if ($same_as) {
+			$organization_schema['sameAs'] = $same_as;
 		}
 
 		$data['site_schema'] = json_encode(array(
