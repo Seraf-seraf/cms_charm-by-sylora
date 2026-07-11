@@ -23,4 +23,4 @@ $_['text_account']      = 'Личный кабинет';
 $_['text_order']        = 'История заказов';
 $_['text_wishlist']     = 'Закладки';
 $_['text_newsletter']   = 'Рассылка';
-$_['text_powered']      = 'Работает на <a href="http://www.opencart.com">OpenCart</a><br>Перевод от <a href="https://forum.opencart.name/">OpenCart.name</a><br> %s &copy; %s';
+$_['text_powered']      = 'Charm by Sylora &copy; %s';
