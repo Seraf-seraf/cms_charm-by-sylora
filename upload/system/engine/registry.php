@@ -30,6 +30,7 @@
  * @property Log                           $log
  * @property Request                       $request
  * @property Response                      $response
+ * @property Seo                           $seo
  * @property Session                       $session
  * @property ?Squareup                     $squareup
  * @property Url                           $url
