@@ -12,10 +12,13 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-Перед включением на сервере замени:
+Шаблон зафиксирован для основного домена `charm-by-sylora.ru` и ожидает:
 
-- `server_name` на реальные домены.
-- `root` на абсолютный путь к `upload` в деплое.
-- `fastcgi_pass` на актуальный сокет или upstream PHP-FPM.
+- document root `/var/www/charm-by-sylora/upload`;
+- PHP-FPM socket `/run/php/php8.5-fpm.sock`;
+- сертификат Let's Encrypt в `/etc/letsencrypt/live/charm-by-sylora.ru/`;
+- webroot ACME challenge `/var/www/certbot`.
 
-HTTPS лучше подключать отдельным certbot/nginx-профилем после проверки HTTP.
+Если пути на production отличаются, измени только соответствующие директивы перед
+`nginx -t`. HTTP и `www` перенаправляются кодом 301 на
+`https://charm-by-sylora.ru`; основной HTTPS vhost обслуживает OpenCart.

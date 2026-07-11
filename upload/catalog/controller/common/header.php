@@ -14,7 +14,8 @@ class ControllerCommonHeader extends Controller {
 			}
 		}
 
-		$is_https = !empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off';
+		$is_https = (!empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off')
+			|| (!empty($this->request->server['HTTP_X_FORWARDED_PROTO']) && strtolower($this->request->server['HTTP_X_FORWARDED_PROTO']) == 'https');
 		$server = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
 
 		if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
@@ -26,6 +27,7 @@ class ControllerCommonHeader extends Controller {
 		$data['base'] = $server;
 		$data['description'] = $this->document->getDescription();
 		$data['keywords'] = $this->document->getKeywords();
+		$data['robots'] = $this->getRobotsDirective();
 		$data['og_title'] = $this->document->getTitle();
 		$data['og_description'] = $this->document->getDescription();
 		$data['og_type'] = 'website';
@@ -169,5 +171,22 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		return $this->url->link('product/search');
+	}
+
+	private function getRobotsDirective() {
+		$route = isset($this->request->get['route']) ? (string)$this->request->get['route'] : 'common/home';
+		$noindex_prefixes = array('account/', 'affiliate/', 'checkout/', 'error/');
+
+		foreach ($noindex_prefixes as $prefix) {
+			if (strpos($route, $prefix) === 0) {
+				return 'noindex, nofollow';
+			}
+		}
+
+		if ($route == 'product/search') {
+			return 'noindex, follow';
+		}
+
+		return 'index, follow';
 	}
 }

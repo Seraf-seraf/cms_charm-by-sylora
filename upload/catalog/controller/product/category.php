@@ -444,19 +444,7 @@ class ControllerProductCategory extends Controller {
 
 			// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
 			$canonical_path = isset($this->request->get['path']) ? $this->request->get['path'] : $category_info['category_id'];
-			$canonical_url = $filter_url;
-
-			if (isset($this->request->get['sort'])) {
-				$canonical_url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$canonical_url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$canonical_url .= '&limit=' . $this->request->get['limit'];
-			}
+			$canonical_url = '';
 
 			if ($page == 1) {
 			    $this->document->addLink($this->url->link('product/category', 'path=' . $canonical_path . $canonical_url), 'canonical');
