@@ -3,7 +3,7 @@
   "type": "library",
   "require": {
     "php": "^8.5",
-    "giggsey/libphonenumber-for-php": "^8.13"
+    "giggsey/libphonenumber-for-php": "9.0.34"
   },
   "autoload": {
     "psr-4": {
