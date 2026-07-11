@@ -34,7 +34,12 @@ class SaveSettingsAction
 
         $registry->get('load')->model('setting/setting');
 
-        $settings     = SettingsSingleton::getInstance($_POST);
+        $storedSettings = SettingsSingleton::getInstance();
+        $post = $_POST;
+        if (empty($post['cdek_official__authSecret'])) {
+            $post['cdek_official__authSecret'] = $storedSettings->authSettings->authSecret;
+        }
+        $settings = SettingsSingleton::getInstance($post);
 
         /** @var \Session $session */
         $session = $registry->get('session');
@@ -49,8 +54,8 @@ class SaveSettingsAction
                 ]);
             }
 
-            $settings->save();
             $settings->validate();
+            $settings->save();
             $session->data['success'] = $language->get('text_success');
         } catch (DecodeException | HttpServerException $exception) {
             LogHelper::write('Authorization failed: ' . $exception->getMessage());

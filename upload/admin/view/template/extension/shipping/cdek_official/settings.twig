@@ -163,10 +163,11 @@
                                             for="cdek_official__authSecret">{{ cdek_auth_secret }}</label>
                                     <div class="col-sm-4">
                                         <input
-                                                type="text" name="cdek_official__authSecret"
-                                                value="{{ cdek_official__authSecret }}"
+                                                type="password" autocomplete="new-password" name="cdek_official__authSecret"
+                                                value=""
                                                 placeholder="{{ cdek_auth_secret }}"
                                                 id="cdek_official__authSecret" class="form-control">
+                                        {% if cdek_official__authSecret_configured %}<p class="help-block">Значение сохранено. Оставьте поле пустым, чтобы не менять.</p>{% endif %}
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 5px">

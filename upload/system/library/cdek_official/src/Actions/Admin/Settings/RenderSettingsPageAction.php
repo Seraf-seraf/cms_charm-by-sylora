@@ -51,6 +51,8 @@ class RenderSettingsPageAction
 
         $settingsInstance = SettingsSingleton::getInstance();
         $settings = $settingsInstance->__serialize();
+        $settings['cdek_official__authSecret_configured'] = $settingsInstance->authSettings->authSecret !== '';
+        $settings['cdek_official__authSecret'] = '';
         $authStatus = false;
 
         if ($settingsInstance->authSettings->authTestMode ||

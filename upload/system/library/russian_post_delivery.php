@@ -17,8 +17,11 @@ class RussianPostDelivery {
 		$fallback_height = max(1, (int)$this->config->get('shipping_russian_post_default_height'));
 
 		foreach ($this->cart->getProducts() as $product) {
-			$product_weight = (float)$product['weight'] > 0 ? (int)round($this->weight->convert($product['weight'], $product['weight_class_id'], 2)) : $fallback_weight;
-			$weight += max(1, $product_weight) * (int)$product['quantity'];
+			if ((float)$product['weight'] > 0) {
+				$weight += max(1, (int)round($this->weight->convert($product['weight'], $product['weight_class_id'], 2)));
+			} else {
+				$weight += $fallback_weight * (int)$product['quantity'];
+			}
 			$length = max($length, (float)$product['length'] > 0 ? (int)ceil($this->length->convert($product['length'], $product['length_class_id'], 1)) : $fallback_length);
 			$width = max($width, (float)$product['width'] > 0 ? (int)ceil($this->length->convert($product['width'], $product['length_class_id'], 1)) : $fallback_width);
 			$height += ((float)$product['height'] > 0 ? (int)ceil($this->length->convert($product['height'], $product['length_class_id'], 1)) : $fallback_height) * (int)$product['quantity'];

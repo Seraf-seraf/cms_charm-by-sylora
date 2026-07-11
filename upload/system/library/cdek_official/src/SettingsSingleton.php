@@ -42,11 +42,10 @@ class SettingsSingleton
 
     public static function getInstance(array $data = []): self
     {
-        if ( empty(self::$instance) ) {
-            self::$instance = new self;
-        }
         if ( !empty($data) ) {
             self::$instance = new self($data);
+        } elseif ( empty(self::$instance) ) {
+            self::$instance = new self;
         }
 
         return self::$instance;
