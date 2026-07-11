@@ -230,8 +230,24 @@ class ControllerProductProduct extends Controller {
 				'href' => $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id'])
 			);
 
-			$this->document->setTitle($product_info['meta_title']);
-			$this->document->setDescription($product_info['meta_description']);
+			$store_name = trim(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+			$product_name = trim(html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8'));
+			$product_description = trim(preg_replace('/\s+/u', ' ', strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))));
+			$meta_title = trim(html_entity_decode($product_info['meta_title'], ENT_QUOTES, 'UTF-8'));
+			$meta_description = trim(html_entity_decode($product_info['meta_description'], ENT_QUOTES, 'UTF-8'));
+
+			if ($meta_title === '') {
+				$meta_title = $product_name . ($store_name !== '' ? ' — ' . $store_name : '');
+			}
+
+			if ($meta_description === '') {
+				$meta_description = $product_description !== ''
+					? utf8_substr($product_description, 0, 170)
+					: $product_name . '. Информация, цена и условия доставки.';
+			}
+
+			$this->document->setTitle($meta_title);
+			$this->document->setDescription($meta_description);
 			$this->document->setKeywords($product_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
 			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
@@ -518,6 +534,31 @@ class ControllerProductProduct extends Controller {
 					'ratingValue' => $data['rating'],
 					'reviewCount' => (int)$product_info['reviews']
 				);
+			}
+
+			$schema_reviews = $this->model_catalog_review->getReviewsByProductId((int)$this->request->get['product_id'], 0, 20);
+
+			foreach ($schema_reviews as $schema_review) {
+				$review = array(
+					'@type' => 'Review',
+					'author' => array(
+						'@type' => 'Person',
+						'name' => html_entity_decode($schema_review['author'], ENT_QUOTES, 'UTF-8')
+					),
+					'reviewRating' => array(
+						'@type' => 'Rating',
+						'ratingValue' => (int)$schema_review['rating'],
+						'bestRating' => 5,
+						'worstRating' => 1
+					),
+					'reviewBody' => trim(preg_replace('/\s+/u', ' ', strip_tags(html_entity_decode($schema_review['text'], ENT_QUOTES, 'UTF-8'))))
+				);
+
+				if (!empty($schema_review['date_added'])) {
+					$review['datePublished'] = date('Y-m-d', strtotime($schema_review['date_added']));
+				}
+
+				$product_schema['review'][] = $review;
 			}
 
 			$breadcrumb_items = array();

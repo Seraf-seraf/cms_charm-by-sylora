@@ -1,4 +1,12 @@
 User-agent: *
+Disallow: /admin/
+Disallow: /catalog/
+Disallow: /system/
+Disallow: /storage/
+Disallow: /*?route=account/
+Disallow: /*&route=account/
+Disallow: /*?route=checkout/
+Disallow: /*&route=checkout/
 Disallow: /*?page=$
 Disallow: /*&page=$
 Disallow: /*?sort=
@@ -15,3 +23,6 @@ Disallow: /*?filter_description=
 Disallow: /*&filter_description=
 Disallow: /*?route=product/search
 Disallow: /*&route=product/search
+Allow: /
+
+Sitemap: https://charm-by-sylora.ru/sitemap.xml

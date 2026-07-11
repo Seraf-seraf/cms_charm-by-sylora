@@ -4,6 +4,9 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 		if ($this->config->get('feed_google_sitemap_status')) {
 			$output  = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 			$output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . PHP_EOL;
+			$store_url = $this->config->get('config_ssl') ? $this->config->get('config_ssl') : $this->config->get('config_url');
+			$output .= $this->buildUrl(rtrim($store_url, '/') . '/', 'daily', '1.0');
+			$output .= $this->buildUrl($this->url->link('information/contact'), 'monthly', '0.6');
 
 			$this->load->model('catalog/product');
 			$this->load->model('tool/image');
@@ -12,16 +15,16 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 			foreach ($products as $product) {
 				$output .= '<url>' . PHP_EOL;
-				$output .= '  <loc>' . $this->url->link('product/product', 'product_id=' . $product['product_id']) . '</loc>' . PHP_EOL;
+				$output .= '  <loc>' . $this->escapeXml($this->url->link('product/product', 'product_id=' . $product['product_id'])) . '</loc>' . PHP_EOL;
 				$output .= '  <changefreq>weekly</changefreq>';
 				$output .= '  <lastmod>' . date('Y-m-d\TH:i:sP', strtotime($product['date_modified'])) . '</lastmod>' . PHP_EOL;
 				$output .= '  <priority>1.0</priority>' . PHP_EOL;
 
 				if ($product['image']) {
 					$output .= '<image:image>' . PHP_EOL;
-					$output .= '  <image:loc>' . $this->model_tool_image->resize($product['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height')) . '</image:loc>' . PHP_EOL;
-					$output .= '  <image:caption>' . $product['name'] . '</image:caption>' . PHP_EOL;
-					$output .= '  <image:title>' . $product['name'] . '</image:title>' . PHP_EOL;
+					$output .= '  <image:loc>' . $this->escapeXml($this->model_tool_image->resize($product['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height'))) . '</image:loc>' . PHP_EOL;
+					$output .= '  <image:caption>' . $this->escapeXml($product['name']) . '</image:caption>' . PHP_EOL;
+					$output .= '  <image:title>' . $this->escapeXml($product['name']) . '</image:title>' . PHP_EOL;
 					$output .= '</image:image>' . PHP_EOL;
 				}
 
@@ -38,7 +41,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 			foreach ($manufacturers as $manufacturer) {
 				$output .= '<url>' . PHP_EOL;
-				$output .= '  <loc>' . $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']) . '</loc>' . PHP_EOL;
+				$output .= '  <loc>' . $this->escapeXml($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id'])) . '</loc>' . PHP_EOL;
 				$output .= '  <changefreq>weekly</changefreq>' . PHP_EOL;
 				$output .= '  <priority>0.7</priority>' . PHP_EOL;
 				$output .= '</url>' . PHP_EOL;
@@ -50,7 +53,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 			foreach ($informations as $information) {
 				$output .= '<url>' . PHP_EOL;
-				$output .= '  <loc>' . $this->url->link('information/information', 'information_id=' . $information['information_id']) . '</loc>' . PHP_EOL;
+				$output .= '  <loc>' . $this->escapeXml($this->url->link('information/information', 'information_id=' . $information['information_id'])) . '</loc>' . PHP_EOL;
 				$output .= '  <changefreq>weekly</changefreq>' . PHP_EOL;
 				$output .= '  <priority>0.5</priority>' . PHP_EOL;
 				$output .= '</url>' . PHP_EOL;
@@ -70,7 +73,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
 		foreach ($results as $result) {
 			$output .= '<url>' . PHP_EOL;
-			$output .= '  <loc>' . $this->url->link('product/category', 'path=' . $result['category_id']) . '</loc>' . PHP_EOL;
+			$output .= '  <loc>' . $this->escapeXml($this->url->link('product/category', 'path=' . $result['category_id'])) . '</loc>' . PHP_EOL;
 			$output .= '  <changefreq>weekly</changefreq>' . PHP_EOL;
 			$output .= '  <priority>0.7</priority>' . PHP_EOL;
 			$output .= '</url>' . PHP_EOL;
@@ -79,5 +82,17 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 		}
 
 		return $output;
+	}
+
+	private function buildUrl($url, $changefreq, $priority) {
+		return '<url>' . PHP_EOL
+			. '  <loc>' . $this->escapeXml($url) . '</loc>' . PHP_EOL
+			. '  <changefreq>' . $changefreq . '</changefreq>' . PHP_EOL
+			. '  <priority>' . $priority . '</priority>' . PHP_EOL
+			. '</url>' . PHP_EOL;
+	}
+
+	private function escapeXml($value) {
+		return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
 	}
 }

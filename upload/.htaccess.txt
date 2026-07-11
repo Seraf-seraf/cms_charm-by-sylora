@@ -17,6 +17,28 @@ Options -Indexes
 # Deny from all
 </FilesMatch>
 
+<FilesMatch "(?i)(^|/)(config\.php|config-dist\.php)$">
+ Require all denied
+</FilesMatch>
+
+<IfModule mod_expires.c>
+ ExpiresActive On
+ ExpiresByType text/css "access plus 30 days"
+ ExpiresByType application/javascript "access plus 30 days"
+ ExpiresByType image/gif "access plus 30 days"
+ ExpiresByType image/jpeg "access plus 30 days"
+ ExpiresByType image/png "access plus 30 days"
+ ExpiresByType image/svg+xml "access plus 30 days"
+ ExpiresByType image/webp "access plus 30 days"
+ ExpiresByType font/woff2 "access plus 30 days"
+</IfModule>
+
+<IfModule mod_headers.c>
+ <FilesMatch "\.(css|js|gif|ico|jpe?g|png|svg|webp|woff2?)$">
+  Header set Cache-Control "public, max-age=2592000, no-transform"
+ </FilesMatch>
+</IfModule>
+
 # SEO URL Settings
 RewriteEngine On
 # If your opencart installation does not run in the main web folder make sure the following is set to the folder it does run in, i.e. / becomes /shop/
