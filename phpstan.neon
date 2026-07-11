@@ -6,12 +6,15 @@ services:
 parameters:
     level: 1
     bootstrapFiles:
+        - ./upload/system/engine/registry.php
+        - ./upload/system/engine/controller.php
+        - ./upload/system/engine/model.php
         - ./upload/system/library/cdek_official/vendor/autoload.php
     paths:
         - ./upload/
     excludePaths:
         - ./upload/system/storage/vendor/
-        - ./upload/system/library/cdek_official/vendor/
+        - ./upload/system/library/cdek_official/
     tmpDir: .cache
     ignoreErrors:
         - '#Class Event constructor invoked with 1 parameter, 4-5 required\.#'
