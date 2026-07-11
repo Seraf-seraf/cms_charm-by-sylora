@@ -140,6 +140,7 @@ return $config
         ->in(__DIR__ . '/upload/')
          ->exclude([
              __DIR__ . '/upload/system/storage/vendor/',
+             __DIR__ . '/upload/system/library/cdek_official/',
          ])
         // ->append([
         //     'file-to-include',
