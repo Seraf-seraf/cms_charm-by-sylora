@@ -1,0 +1,13 @@
+{
+  "name": "cdek/opencart_delivery_module_php8.5",
+  "type": "library",
+  "require": {
+    "php": "^8.5",
+    "giggsey/libphonenumber-for-php": "^8.13"
+  },
+  "autoload": {
+    "psr-4": {
+      "CDEK\\": "src"
+    }
+  }
+}
