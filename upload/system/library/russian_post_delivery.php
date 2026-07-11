@@ -1,9 +1,22 @@
 <?php
 class RussianPostDelivery {
-	private $registry;
+	/** @var Config */
+	private $config;
+	/** @var Cart\Cart */
+	private $cart;
+	/** @var Cart\Weight */
+	private $weight;
+	/** @var Cart\Length */
+	private $length;
+	/** @var Log */
+	private $log;
 
 	public function __construct($registry) {
-		$this->registry = $registry;
+		$this->config = $registry->get('config');
+		$this->cart = $registry->get('cart');
+		$this->weight = $registry->get('weight');
+		$this->length = $registry->get('length');
+		$this->log = $registry->get('log');
 	}
 
 	public function getPackage() {
@@ -93,9 +106,5 @@ class RussianPostDelivery {
 			'min_days' => isset($data['delivery-time']['min-days']) ? (int)$data['delivery-time']['min-days'] : 0,
 			'max_days' => isset($data['delivery-time']['max-days']) ? (int)$data['delivery-time']['max-days'] : 0
 		);
-	}
-
-	public function __get($name) {
-		return $this->registry->get($name);
 	}
 }
