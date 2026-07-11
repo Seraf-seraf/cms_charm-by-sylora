@@ -498,6 +498,7 @@ class ControllerProductSearch extends Controller {
 		}
 
 		$data['search'] = $search;
+		$data['search_url'] = $this->url->link('product/search');
 		$data['description'] = $description;
 		$data['category_id'] = $category_id;
 		$data['sub_category'] = $sub_category;

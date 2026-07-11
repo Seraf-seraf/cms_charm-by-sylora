@@ -15,6 +15,7 @@ class ControllerCommonHome extends Controller {
 
 		$data['home_categories'] = array();
 		$data['catalog'] = $this->getCatalogUrl();
+		$data['about'] = $this->url->link('information/information', 'information_id=4');
 
 		$categories = $this->model_catalog_category->getCategories(0);
 
