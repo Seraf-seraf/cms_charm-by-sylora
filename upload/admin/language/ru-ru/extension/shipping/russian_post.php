@@ -1,0 +1,22 @@
+<?php
+$_['heading_title'] = 'Почта России';
+$_['text_extension'] = 'Расширения';
+$_['text_success'] = 'Настройки Почты России сохранены.';
+$_['text_edit'] = 'Настройки доставки';
+$_['text_enabled'] = 'Включено';
+$_['text_disabled'] = 'Выключено';
+$_['text_home'] = 'Главная';
+$_['entry_widget_id'] = 'ID ECOM-виджета';
+$_['entry_origin_postcode'] = 'Индекс отправителя';
+$_['entry_api_url'] = 'URL API';
+$_['entry_token'] = 'AccessToken';
+$_['entry_login'] = 'Логин API';
+$_['entry_password'] = 'Пароль API';
+$_['entry_default_weight'] = 'Вес по умолчанию, г';
+$_['entry_dimensions'] = 'Габариты по умолчанию, см';
+$_['entry_timeout'] = 'Таймаут, сек.';
+$_['entry_status'] = 'Статус';
+$_['entry_sort_order'] = 'Порядок сортировки';
+$_['text_secret_saved'] = 'Значение сохранено. Оставьте пустым, чтобы не менять.';
+$_['error_permission'] = 'Нет прав на изменение настроек.';
+$_['error_required'] = 'Для включения заполните индекс отправителя и доступы к API.';
