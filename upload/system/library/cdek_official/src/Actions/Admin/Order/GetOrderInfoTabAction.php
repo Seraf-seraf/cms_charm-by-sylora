@@ -26,6 +26,10 @@ class GetOrderInfoTabAction
         $loader = $registry->get('load');
 
         $loader->model('sale/order');
+        $orderInfo = $registry->get('model_sale_order')->getOrder($orderId);
+        if (empty($orderInfo['shipping_code']) || explode('.', $orderInfo['shipping_code'])[0] !== Config::DELIVERY_NAME) {
+            return [];
+        }
         $loader->language('extension/shipping/cdek_official');
 
         /** @var Language $language */
@@ -35,7 +39,6 @@ class GetOrderInfoTabAction
         /** @var Session $session */
         $session = $registry->get('session');
 
-        $orderInfo = $registry->get('model_sale_order')->getOrder($orderId);
         $meta      = OrderMetaRepository::getOrder($orderId);
 
         $errors = $session->data['errors'] ?? [];
@@ -66,9 +69,7 @@ class GetOrderInfoTabAction
         return [
             'code'    => Config::DELIVERY_NAME,
             'title'   => $language->get('heading_title'),
-            'content' => explode('.', $orderInfo['shipping_code'])[0] !== 'cdek_official' ?
-                $loader->view('extension/shipping/cdek_official/foreign_delivery') :
-                $loader->view('extension/shipping/cdek_official/create_order', [
+            'content' => $loader->view('extension/shipping/cdek_official/create_order', [
                     'orderInfo' => $orderInfo,
                     'direction' => explode('_', explode('.', $orderInfo['shipping_code'])[1])[0],
                     'meta'      => $meta,

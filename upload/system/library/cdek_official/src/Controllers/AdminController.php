@@ -85,7 +85,15 @@ class AdminController extends ControllerContract
      */
     final public function orderInfo(string &$route, array &$data): void
     {
-        $data['tabs'][] = (new GetOrderInfoTabAction)((int)$this->registry->get('request')->get['order_id']);
+        $headingTitle = $data['heading_title'] ?? null;
+        $tab = (new GetOrderInfoTabAction)((int)$this->registry->get('request')->get['order_id']);
+        if (!empty($tab)) {
+            $data['tabs'][] = $tab;
+        }
+        $this->registry->get('load')->language('sale/order');
+        if ($headingTitle !== null) {
+            $data['heading_title'] = $headingTitle;
+        }
     }
 
     final public function install(): void

@@ -28,7 +28,7 @@ class ControllerExtensionShippingRussianPost extends Controller {
 	public function select() {
 		$this->response->addHeader('Content-Type: application/json');
 		try {
-			$data = json_decode(isset($this->request->post['selection']) ? $this->request->post['selection'] : '', true);
+			$data = json_decode(isset($this->request->post['selection']) ? htmlspecialchars_decode($this->request->post['selection'], ENT_COMPAT) : '', true);
 			if (!is_array($data) || !isset($data['indexTo']) || !preg_match('/^\d{6}$/', (string)$data['indexTo']) || (isset($data['pvzType']) && $data['pvzType'] !== 'russian_post')) {
 				throw new RuntimeException('Виджет вернул некорректное отделение.');
 			}
