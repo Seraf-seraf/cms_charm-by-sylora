@@ -1,12 +1,21 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/api/customer.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_success']       = 'You have successfully modified customers';
+$_['text_success']       = 'Вы успешно изменили клиентов';
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to access the API!';
-$_['error_customer']     = 'You must select a customer!';
-$_['error_firstname']    = 'First Name must be between 1 and 32 characters!';
-$_['error_lastname']     = 'Last Name must be between 1 and 32 characters!';
-$_['error_email']        = 'E-Mail Address does not appear to be valid!';
-$_['error_telephone']    = 'Telephone must be between 3 and 32 characters!';
-$_['error_custom_field'] = '%s required!';
+$_['error_permission']   = 'Предупреждение: У Вас нет прав доступа к API!';
+$_['error_customer']     = 'Вы должны выбрать клиента!';
+$_['error_firstname']    = 'Имя должно быть от 1 до 32 символов!';
+$_['error_lastname']     = 'Фамилия должна быть от 1 до 32 символов!';
+$_['error_email']        = 'Адрес электронной почты не является действительным!';
+$_['error_telephone']    = 'Телефон должен быть от 3 до 32 символов!';
+$_['error_custom_field'] = '%s обязателен!';

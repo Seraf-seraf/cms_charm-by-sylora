@@ -1,10 +1,19 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/mail/voucher.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_success']  = 'Success: You have modified vouchers!';
-$_['text_subject']  = 'You have been sent a gift certificate from %s';
-$_['text_greeting'] = 'Congratulations, You have received a Gift Certificate worth %s';
-$_['text_from']     = 'This Gift Certificate has been sent to you by %s';
-$_['text_message']  = 'With a message saying';
-$_['text_redeem']   = 'To redeem this Gift Certificate, write down the redemption code which is <b>%s</b> then click on the the link below and purchase the product you wish to use this gift certificate on. You can enter the gift certificate code on the shopping cart page before you click checkout.';
-$_['text_footer']   = 'Please reply to this email if you have any questions.';
-$_['text_sent']     = 'Success: Gift Voucher e-mail has been sent!';
+$_['text_success']  = 'Успешно: Вы изменили ваучеры!';
+$_['text_subject']  = 'Вам был отправлен подарочный сертификат от %s';
+$_['text_greeting'] = 'Поздравляем, Вы получили подарочный сертификат на сумму %s';
+$_['text_from']     = 'Этот подарочный сертификат был отправлен Вам от %s';
+$_['text_message']  = 'С сообщением';
+$_['text_redeem']   = 'Чтобы использовать этот подарочный сертификат, запишите данный код <b>%s</b>, затем перейдите по ссылке ниже и приобретите продукт, для которого Вы хотите использовать этот подарочный сертификат. Вы можете ввести код подарочного сертификата на странице корзины покупок, прежде чем нажать кнопку «Оформить заказ».';
+$_['text_footer']   = 'Пожалуйста, ответьте на это письмо, если у Вас есть какие-либо вопросы.';
+$_['text_sent']     = 'Успешно: Письмо с подарочным сертификатом отправлено!';

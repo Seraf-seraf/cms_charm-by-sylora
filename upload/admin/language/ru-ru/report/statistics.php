@@ -1,24 +1,33 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/report/statistics.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']         = 'Statistics';
+$_['heading_title']         = 'Статистика';
 
 // Text
-$_['text_success']          = 'Success: You have modified statistics!';
-$_['text_list']             = 'Statistics List';
-$_['text_order_sale']       = 'Order Sales';
-$_['text_order_processing'] = 'Orders Processing';
-$_['text_order_complete']   = 'Orders Complete';
-$_['text_order_other']      = 'Orders Other';
-$_['text_returns']          = 'Returns';
-$_['text_customer']         = 'Customers Waiting for Approval';
-$_['text_affiliate']        = 'Affiliates Waiting for Approval';
-$_['text_product']          = 'Out of stock products';
-$_['text_review']           = 'Pending Reviews';
+$_['text_success']          = 'Успешно: Вы изменили статистику!';
+$_['text_list']             = 'Список статистики';
+$_['text_order_sale']       = 'Заказ продажи';
+$_['text_order_processing'] = 'Заказы в обработке';
+$_['text_order_complete']   = 'Заказы выполнены';
+$_['text_order_other']      = 'Заказы остальные';
+$_['text_returns']          = 'Возвраты';
+$_['text_customer']         = 'Клиенты, ожидающие одобрения';
+$_['text_affiliate']        = 'Партнеры, ожидающие одобрения';
+$_['text_product']          = 'Товаров нет в наличии';
+$_['text_review']           = 'Ожидающие отзывы';
 
 // Column
-$_['column_name']           = 'Statistics Name';
-$_['column_value']	        = 'Value';
-$_['column_action']         = 'Action';
+$_['column_name']           = 'Название статистики';
+$_['column_value']	        = 'Значение';
+$_['column_action']         = 'Действие';
 
 // Error
-$_['error_permission']      = 'Warning: You do not have permission to modify statistics!';
+$_['error_permission']      = 'Предупреждение: У Вас нет прав на изменение статистики!';

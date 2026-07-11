@@ -1,35 +1,44 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/marketing/marketing.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Marketing Tracking';
+$_['heading_title']     = 'Отслеживание маркетинга';
 
 // Text
-$_['text_success']      = 'Success: You have modified marketing tracking!';
-$_['text_list']         = 'Marketing Tracking List';
-$_['text_add']          = 'Add Marketing Tracking';
-$_['text_edit']         = 'Edit Marketing Tracking';
-$_['text_filter']       = 'Filter';
+$_['text_success']      = 'Успешно: Вы изменили отслеживание маркетинга!';
+$_['text_list']         = 'Список отслеживания маркетинга';
+$_['text_add']          = 'Добавить отслеживание маркетинга';
+$_['text_edit']         = 'Редактировать отслеживание маркетинга';
+$_['text_filter']       = 'Фильтр';
 		
 // Column
-$_['column_name']       = 'Campaign Name';
-$_['column_code']       = 'Code';
-$_['column_clicks']     = 'Clicks';
-$_['column_orders']     = 'Orders';
-$_['column_date_added'] = 'Date Added';
-$_['column_action']     = 'Action';
+$_['column_name']       = 'Название кампании';
+$_['column_code']       = 'Код';
+$_['column_clicks']     = 'Клики';
+$_['column_orders']     = 'Заказы';
+$_['column_date_added'] = 'Дата добавления';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_name']        = 'Campaign Name';
-$_['entry_description'] = 'Campaign Description';
-$_['entry_code']        = 'Tracking Code';
-$_['entry_example']     = 'Examples';
-$_['entry_date_added']  = 'Date Added';
+$_['entry_name']        = 'Название кампании';
+$_['entry_description'] = 'Описание кампании';
+$_['entry_code']        = 'Код отслеживания';
+$_['entry_example']     = 'Примеры';
+$_['entry_date_added']  = 'Дата добавления';
 
 // Help
-$_['help_code']         = 'The tracking code that will be used to track marketing campaigns.';
-$_['help_example']      = 'So the system can track referrals you need to add the tracking code to the end of the URL linking to your site.';
+$_['help_code']         = 'Код отслеживания, который будет использоваться для отслеживания маркетинговых кампаний.';
+$_['help_example']      = 'Таким образом, система может отслеживать рефералов, Вам нужно добавить код отслеживания в конец URL-ссылки на ваш сайт.';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify marketing tracking!';
-$_['error_name']        = 'Campaign must be between 1 and 32 characters!';
-$_['error_code']        = 'Tracking Code required!';
-$_['error_exists']      = 'Tracking code is being used by another campaign!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения на изменение отслеживания маркетинга!';
+$_['error_name']        = 'Кампания должна быть от 1 до 32 символов!';
+$_['error_code']        = 'Код отслеживания обязателен!';
+$_['error_exists']      = 'Код отслеживания используется другой кампанией!';

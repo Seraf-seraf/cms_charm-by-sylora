@@ -1,27 +1,36 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/currency/fixer.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Fixer Currency Converter';
+$_['heading_title']    = 'Конвертер валют Fixer';
 
 // Text
-$_['text_extension']   = 'Extensions';
-$_['text_success']     = 'Success: You have modified Fixer Currency Converter!';
-$_['text_edit']        = 'Edit Fixer Currency Converter';
+$_['text_extension']   = 'Расширения';
+$_['text_success']     = 'Успешно: Вы изменили конвертер валют Fixer!';
+$_['text_edit']        = 'Редактировать конвертер валют Fixer';
 $_['text_edit']       .= '<br><br>';
-$_['text_edit']       .= 'Fixer.io is a currency conversion service. Before using it for the first time you must <b><a href="https://fixer.io/" target="_blank">signup here</a></b> to get an API Access Key.';
+$_['text_edit']       .= 'Fixer.io — сервис конвертации валют. Перед первым использованием необходимо <b><a href="https://fixer.io/" target="_blank">зарегистрироваться здесь</a></b> для получения ключа API доступа.';
 $_['text_edit']       .= '<br><br>';
-$_['text_edit']       .= 'When enabled, it can be chosen as the currency rate engine at <b><a href="%2">System &gt; Settings</b></a> and you can refresh the currency rates via <b><a href="%1">System &gt; Localisation &gt; Currencies</a></b>.';
+$_['text_edit']       .= 'При включении расширение можно выбрать в качестве движка курсов валют в разделе <b><a href="%2">Система &gt; Настройки</b></a>, а обновлять курсы валют можно в разделе <b><a href="%1">Система &gt; Локализация &gt; Валюты</a></b>.';
 
 // Entry
-$_['entry_api']        = 'API Access Key';
-$_['entry_ip']         = 'Server IP-address';
-$_['entry_cron']       = 'CRON command';
-$_['entry_status']     = 'Status';
+$_['entry_api']        = 'Ключ API доступа';
+$_['entry_ip']         = 'IP-адрес сервера';
+$_['entry_cron']       = 'CRON-команда';
+$_['entry_status']     = 'Статус';
 
 // Help
-$_['help_ip']          = 'Optional IP-address for server running a CRON task for refreshing the currency rates.';
-$_['help_cron']        = 'Use this command when setting up a CRON task on your server.';
+$_['help_ip']          = 'Необязательный IP-адрес сервера, на котором выполняется CRON-задача для обновления курсов валют.';
+$_['help_cron']        = 'Используйте эту команду при настройке CRON-задачи на Вашем сервере.';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify Fixer Currency Converter!';
-$_['error_ip']         = 'Invalid IP-address!';
-$_['error_api']        = 'API Access Key required!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение конвертера валют Fixer!';
+$_['error_ip']         = 'Неверный IP-адрес!';
+$_['error_api']        = 'Требуется ключ API доступа!';

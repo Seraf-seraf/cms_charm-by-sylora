@@ -1,18 +1,27 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/marketplace/install.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_success']     = 'Success: You have modified extensions!';
-$_['text_unzip']       = 'Extracting files!';
-$_['text_move']        = 'Copying files!';
-$_['text_xml']         = 'Applying modifications!';
-$_['text_remove']      = 'Removing temporary files!';
+$_['text_success']     = 'Успешно: Вы изменили расширения!';
+$_['text_unzip']       = 'Извлечение файлов!';
+$_['text_move']        = 'Копирование файлов!';
+$_['text_xml']         = 'Применение модификаций!';
+$_['text_remove']      = 'Удаление временных файлов!';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify extensions!';
-$_['error_install']    = 'Extension installation taking place please wait a few seconds before trying to install!';
-$_['error_unzip']      = 'Zip file could not be opened!';
-$_['error_file']       = 'Install file could not be found!';
-$_['error_directory']  = 'Install directory could not be found!';
-$_['error_code']       = 'Unique code is required for modification XML!';
-$_['error_xml']        = 'Modification %s is already being used!';
-$_['error_exists']     = 'The file %s already exists!';
-$_['error_allowed']    = 'The directory %s is not allowed to be written to!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение расширений!';
+$_['error_install']    = 'Выполняется установка расширения, подождите несколько секунд, прежде чем пытаться установить!';
+$_['error_unzip']      = 'Zip-файл не может быть открыт!';
+$_['error_file']       = 'Не удалось найти установочный файл!';
+$_['error_directory']  = 'Каталог установки не найден!';
+$_['error_code']       = 'Для модификации XML необходим уникальный код!';
+$_['error_xml']        = 'Модификация %s уже используется!';
+$_['error_exists']     = 'Файл %s уже существует!';
+$_['error_allowed']    = 'Каталог %s запрещен для записи!';

@@ -1,24 +1,33 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/sale/voucher_theme.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Voucher Themes';
+$_['heading_title']     = 'Темы сертификатов';
 
 // Text
-$_['text_success']      = 'Success: You have modified voucher themes!';
-$_['text_list']         = 'Voucher Theme List';
-$_['text_add']          = 'Add Voucher Theme';
-$_['text_edit']         = 'Edit Voucher Theme';
+$_['text_success']      = 'Успешно: Вы изменили темы сертификатов!';
+$_['text_list']         = 'Список тем сертификатов';
+$_['text_add']          = 'Добавить тему сертификата';
+$_['text_edit']         = 'Редактировать тему сертификата';
 
 // Column
-$_['column_name']       = 'Voucher Theme Name';
-$_['column_action']     = 'Action';
+$_['column_name']       = 'Название темы сертификата';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_name']        = 'Voucher Theme Name';
-$_['entry_description'] = 'Voucher Theme Description';
-$_['entry_image']       = 'Image';
+$_['entry_name']        = 'Название темы сертификата';
+$_['entry_description'] = 'Описание темы сертификата';
+$_['entry_image']       = 'Изображение';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify voucher themes!';
-$_['error_name']        = 'Voucher Theme Name must be between 3 and 32 characters!';
-$_['error_image']       = 'Image required!';
-$_['error_voucher']     = 'Warning: This voucher theme cannot be deleted as it is currently assigned to %s vouchers!';
+$_['error_permission']  = 'Предупреждение: У Вас нет прав на изменение тем сертификата!';
+$_['error_name']        = 'Название темы сертификата должно быть от 3 до 32 символов!';
+$_['error_image']       = 'Изображение обязательно!';
+$_['error_voucher']     = 'Предупреждение: Эту тему сертификата нельзя удалить, так как она в настоящее время назначена %s сертификатам!';

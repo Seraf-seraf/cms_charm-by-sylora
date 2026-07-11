@@ -1,32 +1,41 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/alipay_cross.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
 $_['heading_title']                  = 'Alipay Cross-border';
 
 // Text
-$_['text_extension']                 = 'Extensions';
-$_['text_success']                   = 'Success: You have modified Alipay account details!';
-$_['text_edit']                      = 'Edit Alipay Pay';
+$_['text_extension']                 = 'Расширения';
+$_['text_success']                   = 'Успешно: Вы изменили данные учетной записи Alipay!';
+$_['text_edit']                      = 'Редактировать Alipay Pay';
 $_['text_alipay_cross']              = '<a target="_BLANK" href="https://global.alipay.com"><img src="view/image/payment/alipay-cross-border.png" alt="Alipay Pay Website" title="Alipay Pay Website" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_live']                      = 'Live';
-$_['text_sandbox']                   = 'Sandbox';
+$_['text_live']                      = 'Реальный';
+$_['text_sandbox']                   = 'Песочница';
 
 // Entry
-$_['entry_app_id']                   = 'Partner ID';
-$_['entry_merchant_private_key']     = 'Key';
-$_['entry_test']                     = 'Test mode';
-$_['entry_total']                    = 'Total';
-$_['entry_currency']                 = 'Currency Code';
-$_['entry_order_status']             = 'Completed Status';
-$_['entry_geo_zone']                 = 'Geo Zone';
-$_['entry_status']                   = 'Status';
-$_['entry_sort_order']               = 'Sort Order';
+$_['entry_app_id']                   = 'Идентификатор партнера';
+$_['entry_merchant_private_key']     = 'Ключ';
+$_['entry_test']                     = 'Тестовый режим';
+$_['entry_total']                    = 'Всего';
+$_['entry_currency']                 = 'Код валюты';
+$_['entry_order_status']             = 'Завершенный статус';
+$_['entry_geo_zone']                 = 'Геозона';
+$_['entry_status']                   = 'Статус';
+$_['entry_sort_order']               = 'Порядок сортировки';
 
 // Help
-$_['help_total']                     = 'The checkout total the order must reach before this payment method becomes active';
-$_['help_currency']                  = 'The settlement currency code the merchant specifies in the contract. You can add a new currency in System-&gt;Localisation-&gt;Currency if your settlement currency is not in the list';
-$_['help_alipay_setup']              = '<a target="_blank" href="http://www.opencart.cn/docs/alipay">Click here</a> to learn how to set up Alipay account.';
+$_['help_total']                     = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным';
+$_['help_currency']                  = 'Код валюты расчета, который продавец указывает в договоре. Вы можете добавить новую валюту в Система-&gt;Локализация-&gt;Валюты, если вашей валюты расчетов нет в списке';
+$_['help_alipay_setup']              = '<a target="_blank" href="http://www.opencart.cn/docs/alipay">Нажмите здесь</a> , чтобы узнать, как настроить учетную запись Alipay.';
 
 // Error
-$_['error_permission']               = 'Warning: You do not have permission to modify pay Alipay!';
-$_['error_app_id']                   = 'Partner ID required!';
-$_['error_merchant_private_key']     = 'Key required!';
+$_['error_permission']               = 'Предупреждение: У Вас нет разрешения на изменение оплаты Alipay!';
+$_['error_app_id']                   = 'Идентификатор партнера обязателен!';
+$_['error_merchant_private_key']     = 'Ключ обязателен!';

@@ -1,22 +1,31 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/dashboard/chart.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Sales Analytics';
+$_['heading_title']    = 'Аналитика продаж';
 
 // Text
-$_['text_extension']   = 'Extensions';
-$_['text_success']     = 'Success: You have modified dashboard chart!';
-$_['text_edit']        = 'Edit Dashboard Chart';
-$_['text_order']       = 'Orders';
-$_['text_customer']    = 'Customers';
-$_['text_day']         = 'Today';
-$_['text_week']        = 'Week';
-$_['text_month']       = 'Month';
-$_['text_year']        = 'Year';
+$_['text_extension']   = 'Расширения';
+$_['text_success']     = 'Успешно: Вы изменили график панели инструментов!';
+$_['text_edit']        = 'Редактировать график панели инструментов';
+$_['text_order']       = 'Заказы';
+$_['text_customer']    = 'Клиенты';
+$_['text_day']         = 'Сегодня';
+$_['text_week']        = 'Неделя';
+$_['text_month']       = 'Месяц';
+$_['text_year']        = 'Год';
 
 // Entry
-$_['entry_status']     = 'Status';
-$_['entry_sort_order'] = 'Sort Order';
-$_['entry_width']      = 'Width';
+$_['entry_status']     = 'Статус';
+$_['entry_sort_order'] = 'Порядок сортировки';
+$_['entry_width']      = 'Ширина';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify dashboard chart!';
+$_['error_permission'] = 'Предупреждение: У Вас нет прав на изменение графика панели инструментов!';

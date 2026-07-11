@@ -1,18 +1,27 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/module/html.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'HTML Content';
+$_['heading_title']     = 'HTML-содержимое';
 
 // Text
-$_['text_extension']    = 'Extensions';
-$_['text_success']      = 'Success: You have modified HTML Content module!';
-$_['text_edit']         = 'Edit HTML Content Module';
+$_['text_extension']    = 'Расширение';
+$_['text_success']      = 'Успешно: Вы изменили модуль HTML-содержимое!';
+$_['text_edit']         = 'Редактировать модуль HTML-содержимое';
 
 // Entry
-$_['entry_name']        = 'Module Name';
-$_['entry_title']       = 'Heading Title';
-$_['entry_description'] = 'Description';
-$_['entry_status']      = 'Status';
+$_['entry_name']        = 'Наименование модуля';
+$_['entry_title']       = 'Заголовок титула';
+$_['entry_description'] = 'Описание';
+$_['entry_status']      = 'Статус';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify HTML Content module!';
-$_['error_name']        = 'Module Name must be between 3 and 64 characters!';
+$_['error_permission']  = 'Предупреждение: У Вас нет прав на изменение модуля HTML-содержимое!';
+$_['error_name']        = 'Наименование модуля должно быть от 3 до 64 символов!';

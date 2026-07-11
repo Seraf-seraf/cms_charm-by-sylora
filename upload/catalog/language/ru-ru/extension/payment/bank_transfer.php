@@ -1,6 +1,15 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/bank_transfer.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_title']       = 'Bank Transfer';
-$_['text_instruction'] = 'Bank Transfer Instructions';
-$_['text_description'] = 'Please transfer the total amount to the following bank account.';
-$_['text_payment']     = 'Your order will not ship until we receive payment.';
+$_['text_title']       = 'Банковский перевод';
+$_['text_instruction'] = 'Инструкции по банковскому переводу';
+$_['text_description'] = 'Пожалуйста, переведите общую сумму на следующий банковский счет.';
+$_['text_payment']     = 'Ваш заказ не будет отправлен до получения оплаты.';

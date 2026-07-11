@@ -1,45 +1,54 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/globalpay.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['text_title']				= 'Credit / Debit card (Globalpay)';
+$_['text_title']				= 'Кредитная / дебетовая карта (GlobalPay)';
 
 // Button
-$_['button_confirm']			= 'Confirm';
+$_['button_confirm']			= 'Подтвердить';
 
 // Entry
-$_['entry_cc_type']				= 'Card Type';
+$_['entry_cc_type']				= 'Тип карты';
 
 // Text
-$_['text_success']				= 'Your payment has been authorised.';
-$_['text_decline']				= 'Your payment was unsuccessful';
-$_['text_bank_error']			= 'There was an error processing your request with the bank.';
-$_['text_generic_error']		= 'There was an error processing your request.';
-$_['text_hash_failed']			= 'Hash check failed. Do not try your payment again as the payment status is unknown. Please contact the merchant.';
-$_['text_link']					= 'Please click <a href="%s">here</a> to continue';
-$_['text_select_card']			= 'Please select your card type';
-$_['text_result']				= 'Auth result';
-$_['text_message']				= 'Message';
-$_['text_cvn_result']			= 'CVN result';
-$_['text_avs_postcode']			= 'AVS postcode';
-$_['text_avs_address']			= 'AVS address';
-$_['text_eci']					= 'ECI (3D secure) result';
-$_['text_tss']					= 'TSS result';
-$_['text_order_ref']			= 'Order ref';
-$_['text_timestamp']			= 'Timestamp';
-$_['text_card_type']			= 'Card type';
-$_['text_card_digits']			= 'Card number';
-$_['text_card_exp']				= 'Card expire';
-$_['text_card_name']			= 'Card name';
-$_['text_3d_s1']				= 'Cardholder Not Enrolled, liability shift';
-$_['text_3d_s2']				= 'Unable To Verify Enrolment, no liability shift';
-$_['text_3d_s3']				= 'Invalid Response From Enrolment Server, no liability shift';
-$_['text_3d_s4']				= 'Enrolled, But Invalid Response From ACS (Access Control Server), no liability shift';
-$_['text_3d_s5']				= 'Successful Authentication, liability shift';
-$_['text_3d_s6']				= 'Authentication Attempt Acknowledged, liability shift';
-$_['text_3d_s7']				= 'Incorrect Password Entered, no liability shift';
-$_['text_3d_s8']				= 'Authentication Unavailable, no liability shift';
-$_['text_3d_s9']				= 'Invalid Response From ACS, no liability shift';
-$_['text_3d_s10']				= 'RealMPI Fatal Error, no liability shift';
-$_['text_3d_liability']     	= 'No Liability Shift';
+$_['text_success']				= 'Ваш платёж авторизован.';
+$_['text_decline']				= 'Платёж не прошёл';
+$_['text_bank_error']			= 'Ошибка при обработке запроса в банке.';
+$_['text_generic_error']		= 'Ошибка при обработке запроса.';
+$_['text_hash_failed']			= 'Ошибка проверки хеша. Не повторяйте платёж — статус неизвестен. Обратитесь к продавцу.';
+$_['text_link']					= 'Нажмите <a href="%s">здесь</a> для продолжения';
+$_['text_select_card']			= 'Выберите тип карты';
+$_['text_result']				= 'Результат авторизации';
+$_['text_message']				= 'Сообщение';
+$_['text_cvn_result']			= 'Результат CVN';
+$_['text_avs_postcode']			= 'AVS индекс';
+$_['text_avs_address']			= 'AVS адрес';
+$_['text_eci']					= 'Результат ECI (3D Secure)';
+$_['text_tss']					= 'Результат TSS';
+$_['text_order_ref']			= 'Номер заказа';
+$_['text_timestamp']			= 'Время';
+$_['text_card_type']			= 'Тип карты';
+$_['text_card_digits']			= 'Номер карты';
+$_['text_card_exp']				= 'Срок действия карты';
+$_['text_card_name']			= 'Имя на карте';
+$_['text_3d_s1']				= 'Держатель не подключён к 3D Secure';
+$_['text_3d_s2']				= 'Не удалось проверить подключение к 3D Secure';
+$_['text_3d_s3']				= 'Неверный ответ сервера регистрации';
+$_['text_3d_s4']				= 'Подключён, но неверный ответ ACS';
+$_['text_3d_s5']				= 'Успешная аутентификация 3D Secure';
+$_['text_3d_s6']				= 'Попытка аутентификации принята';
+$_['text_3d_s7']				= 'Неверный пароль';
+$_['text_3d_s8']				= 'Аутентификация недоступна';
+$_['text_3d_s9']				= 'Неверный ответ ACS';
+$_['text_3d_s10']				= 'Критическая ошибка RealMPI';
+$_['text_3d_liability']     	= 'Без переноса ответственности';
 $_['text_card_visa']			= 'Visa';
 $_['text_card_mc']				= 'Mastercard';
 $_['text_card_amex']			= 'American Express';

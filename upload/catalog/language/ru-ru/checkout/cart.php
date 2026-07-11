@@ -1,48 +1,49 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/checkout/cart.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']            = 'Корзина';
+$_['heading_title']                = 'Корзина';
 
 // Text
-$_['text_success']             = 'Товар <a href="%s">%s</a> добавлен в <a href="%s">корзину</a>.';
-$_['text_remove']              = 'Корзина обновлена.';
-$_['text_login']               = 'Чтобы видеть цены, нужно <a href="%s">войти</a> или <a href="%s">создать аккаунт</a>.';
-$_['text_items']               = '%s шт. - %s';
-$_['text_points']              = 'Бонусные баллы: %s';
-$_['text_next']                = 'Промокод и доставка';
-$_['text_next_choice']         = 'Здесь можно применить промокод, бонусные баллы или рассчитать доставку, если соответствующие модули включены.';
-$_['text_empty']               = 'Корзина пока пустая.';
-$_['text_cart_action']         = 'Перейти в корзину';
-$_['text_continue_action']     = 'Продолжить покупки';
-$_['text_day']                 = 'день';
-$_['text_week']                = 'неделя';
-$_['text_semi_month']          = 'полмесяца';
-$_['text_month']               = 'месяц';
-$_['text_year']                = 'год';
-$_['text_trial']               = '%s каждые %s %s, %s платежей, затем ';
-$_['text_recurring']           = '%s каждые %s %s';
-$_['text_recurring_item']      = 'Регулярный платеж';
-$_['text_payment_recurring']   = 'Профиль оплаты';
-$_['text_trial_description']   = '%s каждые %d %s, %d платежей, затем';
-$_['text_payment_description'] = '%s каждые %d %s, %d платежей';
-$_['text_payment_cancel']      = '%s каждые %d %s до отмены';
+$_['text_success']                 = 'Успешно. Вы добавили <a href="%s">%s</a> в <a href="%s">корзину</a>!';
+$_['text_remove']                  = 'Успешно: Вы изменили свою корзину!';
+$_['text_login']                   = 'Предупреждение: Вы должны <a href="%s">войти</a> или <a href="%s">создать учетную запись</a> для просмотра цен!';
+$_['text_items']                   = 'Товары: %s на сумму %s';
+$_['text_points']                  = 'Бонусные баллы: %s';
+$_['text_next']                    = 'Что бы Вы хотели сделать еще?';
+$_['text_next_choice']             = 'Выберите, если у Вас есть код скидки или бонусные баллы, которые Вы хотите использовать, или хотите оценить стоимость доставки.';
+$_['text_empty']                  = 'Ваша корзина пуста!';
+$_['text_day']                     = 'день';
+$_['text_week']                    = 'неделя';
+$_['text_semi_month']              = 'полмесяца';
+$_['text_month']                   = 'месяц';
+$_['text_year']                    = 'год';
+$_['text_trial']                   = 'Оплата %s с периодичностью %s %s в количестве %s платеж(а)(ей). Затем ';
+$_['text_recurring']               = 'Оплата %s с периодичностью %s %s';
+$_['text_recurring_item']          = 'Периодические платежи';
+$_['text_payment_recurring']       = 'Платежный профиль';
+$_['text_trial_description']       = 'Оплата %s с периодичностью %d %s(s) за %d платеж(а)(ей) Затем';
+$_['text_payment_description']     = 'Оплата %s с периодичностью %d %s(s) за %d платеж(а)(ей)';
+$_['text_payment_cancel']          = 'Оплата %s с периодичностью %d %s(s) до отмены';
 
 // Column
-$_['column_image']             = 'Фото';
-$_['column_name']              = 'Товар';
-$_['column_model']             = 'Артикул';
-$_['column_quantity']          = 'Количество';
-$_['column_price']             = 'Цена';
-$_['column_total']             = 'Сумма';
+$_['column_image']                 = 'Изображение';
+$_['column_name']                  = 'Наименование товара';
+$_['column_model']                 = 'Модель';
+$_['column_quantity']              = 'Количество';
+$_['column_price']                 = 'Цена за единицу';
+$_['column_total']                 = 'Всего';
 
 // Error
-$_['error_stock']              = 'Товары, отмеченные ***, недоступны в нужном количестве или отсутствуют на складе.';
-$_['error_minimum']            = 'Минимальное количество для товара %s: %s.';
-$_['error_required']           = 'Поле %s обязательно.';
-$_['error_product']            = 'В корзине нет товаров.';
-$_['error_recurring_required'] = 'Выберите профиль регулярной оплаты.';
-
-// Sylora
-$_['text_cart_intro']          = 'Проверьте украшения, количество и итоговую сумму перед оформлением заказа.';
-$_['text_summary']             = 'Итого к оформлению';
-$_['text_product_details']     = 'Детали товара';
-$_['text_cart_help']           = 'Стоимость доставки и способ оплаты выбираются на следующем шаге.';
+$_['error_stock']                  = 'Товары, отмеченные знаком ***, отсутствуют в необходимом количестве или отсутствуют на складе.!';
+$_['error_minimum']                = 'Минимальное количество для заказа товара %s составляет %s!';
+$_['error_required']               = '%s обязательно!';
+$_['error_product']                = 'Предупреждение: в вашей корзине нет товаров!';
+$_['error_recurring_required']     = 'Пожалуйста, выберите периодичность платежа!';

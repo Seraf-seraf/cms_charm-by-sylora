@@ -1,30 +1,39 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/localisation/weight_class.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Weight Classes';
+$_['heading_title']    = 'Единицы веса';
 
 // Text
-$_['text_success']     = 'Success: You have modified weight classes!';
-$_['text_list']        = 'Weight Class List';
-$_['text_add']         = 'Add Weight Class';
-$_['text_edit']        = 'Edit Weight Class';
+$_['text_success']     = 'Успешно: Вы изменили единицы веса!';
+$_['text_list']        = 'Список единиц веса';
+$_['text_add']         = 'Добавить единицу веса';
+$_['text_edit']        = 'Редактировать единицу веса';
 
 // Column
-$_['column_title']     = 'Weight Title';
-$_['column_unit']      = 'Weight Unit';
-$_['column_value']     = 'Value';
-$_['column_action']    = 'Action';
+$_['column_title']     = 'Название веса';
+$_['column_unit']      = 'Единица веса';
+$_['column_value']     = 'Значение';
+$_['column_action']    = 'Действие';
 
 // Entry
-$_['entry_title']      = 'Weight Title';
-$_['entry_unit']       = 'Weight Unit';
-$_['entry_value']      = 'Value';
+$_['entry_title']      = 'Название веса';
+$_['entry_unit']       = 'Единица веса';
+$_['entry_value']      = 'Значение';
 
 // Help
-$_['help_value']       = 'Set to 1.00000 if this is your default weight.';
+$_['help_value']       = 'Установите 1.00000, если это Ваша единица веса по умолчанию.';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify weight classes!';
-$_['error_title']      = 'Weight Title must be between 3 and 32 characters!';
-$_['error_unit']       = 'Weight Unit must be between 1 and 4 characters!';
-$_['error_default']    = 'Warning: This weight class cannot be deleted as it is currently assigned as the default store weight class!';
-$_['error_product']    = 'Warning: This weight class cannot be deleted as it is currently assigned to %s products!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение единицы веса!';
+$_['error_title']      = 'Название веса должно быть от 3 до 32 символов!';
+$_['error_unit']       = 'Единица веса должна быть от 1 до 4 символов!';
+$_['error_default']    = 'Предупреждение: Эта единица веса не может быть удалена, так как в настоящее время она назначена в качестве единицы веса магазина по умолчанию!';
+$_['error_product']    = 'Предупреждение: Эта единица веса не может быть удалена, так как она в настоящее время назначена %s продуктам!';

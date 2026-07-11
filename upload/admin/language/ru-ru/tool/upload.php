@@ -1,23 +1,32 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/tool/upload.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Uploads';
+$_['heading_title']     = 'Загрузки';
 
 // Text
-$_['text_success']      = 'Success: You have modified uploads!';
-$_['text_list']         = 'Upload List';
+$_['text_success']      = 'Успешно: Вы изменили загрузки!';
+$_['text_list']         = 'Список загрузок';
 
 // Column
-$_['column_name']       = 'Upload Name';
-$_['column_filename']   = 'Filename';
-$_['column_date_added'] = 'Date Added';
-$_['column_action']     = 'Action';
+$_['column_name']       = 'Имя загрузки';
+$_['column_filename']   = 'Имя файла';
+$_['column_date_added'] = 'Дата добавления';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_name']        = 'Upload Name';
-$_['entry_filename']    = 'Filename';
-$_['entry_date_added']  = 'Date Added';
+$_['entry_name']        = 'Имя загрузки';
+$_['entry_filename']    = 'Имя файла';
+$_['entry_date_added']  = 'Дата добавления';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify uploads!';
-$_['error_upload']      = 'Invalid upload!';
-$_['error_file']        = 'Upload file is not found!';
+$_['error_permission']  = 'Предупреждение: У Вас нет прав на изменение загрузок!';
+$_['error_upload']      = 'Неверная загрузка!';
+$_['error_file']        = 'Файл загрузки не найден!';

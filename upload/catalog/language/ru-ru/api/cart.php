@@ -1,10 +1,19 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/api/cart.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_success']     = 'Success: You have modified your shopping cart!';
+$_['text_success']     = 'Успешно: Вы изменили свою корзину!';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to access the API!';
-$_['error_stock']      = 'Products marked with *** are not available in the desired quantity or not in stock!';
-$_['error_minimum']    = 'Minimum order amount for %s is %s!';
-$_['error_store']      = 'Product can not be bought from the store you have choosen!';
-$_['error_required']   = '%s required!';
+$_['error_permission'] = 'Предупреждение: У Вас нет прав доступа к API!';
+$_['error_stock']      = 'Товары, отмеченные ***, отсутствуют в необходимом количестве или отсутствуют на складе!';
+$_['error_minimum']    = 'Минимальная сумма заказа %s из %s!';
+$_['error_store']      = 'Товар нельзя купить в магазине, который Вы выбрали!';
+$_['error_required']   = '%s обязательный!';

@@ -1,25 +1,34 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/cardinity.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_title']						= 'Credit Card / Debit Card (Cardinity)';
-$_['text_payment_success']				= 'Payment success, details below';
-$_['text_payment_failed']				= 'Payment failed, details below';
+$_['text_title']						= 'Кредитная карта / Дебетовая карта (Cardinity)';
+$_['text_payment_success']				= 'Оплата прошла успешно, детали ниже';
+$_['text_payment_failed']				= 'Оплата не прошла, детали ниже';
+$_['text_loading']						= 'Загрузка...';
 
 // Entry
-$_['entry_holder']						= 'Card Holder Name';
-$_['entry_pan']							= 'Card Number';
-$_['entry_expires']						= 'Expires';
-$_['entry_exp_month']					= 'Month';
-$_['entry_exp_year']					= 'Year';
+$_['entry_holder']						= 'Имя владельца карты';
+$_['entry_pan']							= 'Номер карты';
+$_['entry_expires']						= 'Срок действия';
+$_['entry_exp_month']					= 'Месяц';
+$_['entry_exp_year']					= 'Год';
 $_['entry_cvc']							= 'CVC';
 
 // Error
-$_['error_process_order']				= 'There was an error processing your order. Please contact the shop administrator for help.';
-$_['error_invalid_currency']			= 'Please use a valid currency.';
-$_['error_finalizing_payment']			= 'Error finalizing payment.';
-$_['error_unknown_order_id']			= 'Could not find cardinity payment with this order_id.';
-$_['error_invalid_hash']				= 'Invalid hash.';
-$_['error_payment_declined']			= 'Payment was declined by issuing bank.';
+$_['error_process_order']				= 'Ошибка при обработке заказа. Обратитесь к администратору магазина.';
+$_['error_invalid_currency']			= 'Пожалуйста, используйте допустимую валюту.';
+$_['error_finalizing_payment']			= 'Ошибка при завершении платежа.';
+$_['error_unknown_order_id']			= 'Платёж Cardinity для этого заказа не найден.';
+$_['error_invalid_hash']				= 'Неверный хеш.';
+$_['error_payment_declined']			= 'Платёж отклонён банком-эмитентом.';
 
 // Button
-$_['button_confirm']					= 'Pay Now';
-$_['text_loading']					= 'Loading...';
+$_['button_confirm']					= 'Оплатить сейчас';

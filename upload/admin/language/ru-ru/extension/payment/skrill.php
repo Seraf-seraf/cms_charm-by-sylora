@@ -1,29 +1,38 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/skrill.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']			  = 'Skrill';
+$_['heading_title']           = 'Skrill';
 
 // Text
-$_['text_extension']		  = 'Extensions';
-$_['text_success']			  = 'Success: You have modified the Skrill details.';
-$_['text_edit']               = 'Edit Skrill';
-$_['text_skrill']	     	  = '<a href="https://content.skrill.com/en/ecommerce-solutions/opencart/" target="_blank"><img src="view/image/payment/skrill.png" alt="Skrill" title="Skrill" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_extension']          = 'Расширения';
+$_['text_success']            = 'Успешно: Вы изменили детали Skrill.';
+$_['text_edit']               = 'Редактировать Skrill';
+$_['text_skrill']             = '<a href="https://content.skrill.com/en/ecommerce-solutions/opencart/" target="_blank"><img src="view/image/payment/skrill.png" alt="Skrill" title="Skrill" style="border: 1px solid #EEEEEE;" /></a>';
 
 // Entry
-$_['entry_email']			  = 'E-Mail';
-$_['entry_secret']		      = 'Secret';
-$_['entry_total']			  = 'Total';
-$_['entry_order_status']	  = 'Order Status';
-$_['entry_pending_status']	  = 'Pending Status ';
-$_['entry_canceled_status']	  = 'Canceled Status';
-$_['entry_failed_status']	  = 'Failed Status';
-$_['entry_chargeback_status'] = 'Chargeback Status';
-$_['entry_geo_zone']		  = 'Geo Zone';
-$_['entry_status']			  = 'Status';
-$_['entry_sort_order']		  = 'Sort Order';
+$_['entry_email']             = 'Эл. почта';
+$_['entry_secret']            = 'Секрет';
+$_['entry_total']             = 'Всего';
+$_['entry_order_status']      = 'Статус заказа';
+$_['entry_pending_status']    = 'Статус ожидания ';
+$_['entry_canceled_status']   = 'Отмененный статус';
+$_['entry_failed_status']     = 'Неудачный статус';
+$_['entry_chargeback_status'] = 'Возвращенный статус';
+$_['entry_geo_zone']          = 'Геозона';
+$_['entry_status']            = 'Статус';
+$_['entry_sort_order']        = 'Порядок сортировки';
 
 // Help
-$_['help_total']			  = 'The checkout total the order must reach before this payment method becomes active.';
+$_['help_total']              = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным.';
 
 // Error
-$_['error_permission']		  = 'Warning: You do not have permission to modify Skrill!';
-$_['error_email']			  = 'E-Mail Required!';
+$_['error_permission']        = 'Предупреждение: У Вас нет разрешения на изменение Skrill!';
+$_['error_email']             = 'Эл. почта обязательна!';

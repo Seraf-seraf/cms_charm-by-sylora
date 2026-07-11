@@ -1,32 +1,41 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/alipay.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
 $_['heading_title']                  = 'Alipay Pay';
 
 // Text
-$_['text_extension']                 = 'Extensions';
-$_['text_success']                   = 'Success: You have modified Alipay account details!';
-$_['text_edit']                      = 'Edit Alipay Pay';
-$_['text_alipay']                    = '<a target="_BLANK" href="https://open.alipay.com"><img src="view/image/payment/alipay.png" alt="Alipay Pay Website" title="Alipay Pay Website" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_live']                      = 'Live';
-$_['text_sandbox']                   = 'Sandbox';
+$_['text_extension']                 = 'Расширения';
+$_['text_success']                   = 'Успешно: Вы изменили данные учетной записи Alipay!';
+$_['text_edit']                      = 'Редактировать Alipay Pay';
+$_['text_alipay']                    = '<a target="_blank" href="https://open.alipay.com"><img src="view/image/payment/alipay.png" alt="Сайт Alipay Pay" title="Сайт Alipay Pay" style="border: 1px solid #EEEEEE;"></a>';
+$_['text_live']                      = 'Реальный';
+$_['text_sandbox']                   = 'Песочница';
 
 // Entry
-$_['entry_app_id']                   = 'App ID';
-$_['entry_merchant_private_key']     = 'Merchant Private Key';
-$_['entry_alipay_public_key']        = 'Alipay Public Key';
-$_['entry_test']                     = 'Test mode';
-$_['entry_total']                    = 'Total';
-$_['entry_order_status']             = 'Completed Status';
-$_['entry_geo_zone']                 = 'Geo Zone';
-$_['entry_status']                   = 'Status';
-$_['entry_sort_order']               = 'Sort Order';
+$_['entry_app_id']                   = 'Идентификатор приложения (app id)';
+$_['entry_merchant_private_key']     = 'Merchant приватный ключ (private key)';
+$_['entry_alipay_public_key']        = 'Alipay публичный ключ (public key)';
+$_['entry_test']                     = 'Тестовый режим';
+$_['entry_total']                    = 'Всего';
+$_['entry_order_status']             = 'Завершенный статус';
+$_['entry_geo_zone']                 = 'Геозона';
+$_['entry_status']                   = 'Статус';
+$_['entry_sort_order']               = 'Порядок сортировки';
 
 // Help
-$_['help_total']                     = 'The checkout total the order must reach before this payment method becomes active';
-$_['help_alipay_setup']              = '<a target="_blank" href="http://www.opencart.cn/docs/alipay">Click here</a> to learn how to set up Alipay account.';
+$_['help_total']                     = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным';
+$_['help_alipay_setup']              = '<a target="_blank" href="http://www.opencart.cn/docs/alipay">Нажмите здесь</a>, чтобы узнать, как настроить учетную запись Alipay.';
 
 // Error
-$_['error_permission']               = 'Warning: You do not have permission to modify payment Alipay!';
-$_['error_app_id']                   = 'App ID required!';
-$_['error_merchant_private_key']     = 'Merchant Private Key required!';
-$_['error_alipay_public_key']        = 'Alipay Public Key required!';
+$_['error_permission']               = 'Предупреждение: У Вас нет разрешения на изменение оплаты Alipay!';
+$_['error_app_id']                   = 'Идентификатор приложения обязателен!';
+$_['error_merchant_private_key']     = 'Приватный ключ продавца обязателен!';
+$_['error_alipay_public_key']        = 'Публичный ключ Alipay обязателен!';

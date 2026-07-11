@@ -1,26 +1,33 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/product/special.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Акции';
+$_['heading_title']     = 'Специальные предложения';
 
 // Text
-$_['text_empty']        = 'Сейчас нет товаров со скидкой.';
+$_['text_empty']        = 'Нет товаров по специальным предложениям.';
 $_['text_quantity']     = 'Кол-во:';
 $_['text_manufacturer'] = 'Бренд:';
-$_['text_model']        = 'Артикул:';
+$_['text_model']        = 'Модель:';
 $_['text_points']       = 'Бонусные баллы:';
 $_['text_price']        = 'Цена:';
 $_['text_tax']          = 'Без налога:';
-$_['text_compare']      = 'Сравнение товаров (%s)';
-$_['text_sort']         = 'Сортировка:';
+$_['text_compare']      = 'Сравнение (%s)';
+$_['text_sort']         = 'Сортировать по';
 $_['text_default']      = 'По умолчанию';
-$_['text_popular_desc'] = 'Популярные';
-$_['text_date_desc']    = 'Новинки';
-$_['text_name_asc']     = 'Название А-Я';
-$_['text_name_desc']    = 'Название Я-А';
-$_['text_price_asc']    = 'Цена по возрастанию';
-$_['text_price_desc']   = 'Цена по убыванию';
-$_['text_rating_asc']   = 'Рейтинг по возрастанию';
-$_['text_rating_desc']  = 'Рейтинг по убыванию';
-$_['text_model_asc']    = 'Артикул А-Я';
-$_['text_model_desc']   = 'Артикул Я-А';
-$_['text_limit']        = 'Показать:';
+$_['text_name_asc']     = 'Имя (А - Я)';
+$_['text_name_desc']    = 'Имя (Я - А)';
+$_['text_price_asc']    = 'Цена (по возрастанию)';
+$_['text_price_desc']   = 'Цена (по убыванию)';
+$_['text_rating_asc']   = 'Рейтинг (от наименьшего)';
+$_['text_rating_desc']  = 'Рейтинг (от наивысшего)';
+$_['text_model_asc']    = 'Модель (А - Я)';
+$_['text_model_desc']   = 'Модель (Я - А)';
+$_['text_limit']        = 'Показать по';

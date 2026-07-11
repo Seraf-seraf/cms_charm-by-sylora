@@ -1,17 +1,26 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/dashboard/customer.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Total Customers';
+$_['heading_title']    = 'Всего клиентов';
 
 // Text
-$_['text_extension']   = 'Extensions';
-$_['text_success']     = 'Success: You have modified dashboard customer!';
-$_['text_edit']        = 'Edit Dashboard Customer';
-$_['text_view']        = 'View more...';
+$_['text_extension']   = 'Расширения';
+$_['text_success']     = 'Успешно: Вы изменили клиента панели инструментов!';
+$_['text_edit']        = 'Редактировать клиента панели инструментов';
+$_['text_view']        = 'Посмотреть больше...';
 
 // Entry
-$_['entry_status']     = 'Status';
-$_['entry_sort_order'] = 'Sort Order';
-$_['entry_width']      = 'Width';
+$_['entry_status']     = 'Статус';
+$_['entry_sort_order'] = 'Порядок сортировки';
+$_['entry_width']      = 'Ширина';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify dashboard customer!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение клиента панели инструментов!';

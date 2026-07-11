@@ -1,33 +1,42 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/module/amazon_login.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title'] = 'Login with Amazon';
+$_['heading_title']         = 'Login with Amazon';
 
 // Text
-$_['text_module'] = 'Modules';
-$_['text_success'] = 'Success: You have modified module Login with Amazon!';
-$_['text_content_top'] = 'Content Top';
-$_['text_content_bottom'] = 'Content Bottom';
-$_['text_column_left'] = 'Column Left';
-$_['text_column_right'] = 'Column Right';
-$_['text_lwa_button'] = 'Login with Amazon';
-$_['text_login_button'] = 'Login';
-$_['text_a_button'] = 'A';
-$_['text_gold_button'] = 'Gold';
-$_['text_darkgray_button'] = 'Dark Gray';
-$_['text_lightgray_button'] = 'Light Gray';
-$_['text_small_button'] = 'Small';
-$_['text_medium_button'] = 'Medium';
-$_['text_large_button'] = 'Large';
-$_['text_x_large_button'] = 'X-Large';
+$_['text_module']           = 'Модули';
+$_['text_success']          = 'Успешно: Вы изменили модуль Login with Amazon!';
+$_['text_content_top']      = 'Content Top';
+$_['text_content_bottom']   = 'Content Bottom';
+$_['text_column_left']      = 'Column Left';
+$_['text_column_right']     = 'Column Right';
+$_['text_lwa_button']       = 'Login with Amazon';
+$_['text_login_button']     = 'Вход';
+$_['text_a_button']         = 'A';
+$_['text_gold_button']      = 'Золото';
+$_['text_darkgray_button']  = 'Темно-серый';
+$_['text_lightgray_button'] = 'Светло-серый';
+$_['text_small_button']     = 'Маленький';
+$_['text_medium_button']    = 'Средний';
+$_['text_large_button']     = 'Большой';
+$_['text_x_large_button']   = 'Очень большой';
 
 //Entry
-$_['entry_button_type'] = 'Button Type';
-$_['entry_button_colour'] = 'Button Colour';
-$_['entry_button_size'] = 'Button Size';
-$_['entry_layout'] = 'Layout';
-$_['entry_position'] = 'Position';
-$_['entry_status'] = 'Status';
-$_['entry_sort_order'] = 'Sort Order';
+$_['entry_button_type']     = 'Тип кнопки';
+$_['entry_button_colour']   = 'Цвет кнопки';
+$_['entry_button_size']     = 'Размер кнопки';
+$_['entry_layout']          = 'Layout';
+$_['entry_position']        = 'Позиция';
+$_['entry_status']          = 'Статус';
+$_['entry_sort_order']      = 'Сортировка';
 
 //Error
-$_['error_permission'] = 'Warning: You do not have permission to modify module Login with Amazon!';
+$_['error_permission']      = 'Предупреждение: у Вас нет прав на изменение модуля Login with Amazon!';

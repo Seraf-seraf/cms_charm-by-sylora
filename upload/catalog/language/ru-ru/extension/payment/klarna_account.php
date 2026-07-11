@@ -1,40 +1,48 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/klarna_account.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_title']				= 'Klarna Account - Pay from %s/month';
+$_['text_title']				= 'Klarna Account — оплата от %s/мес';
 $_['text_terms']				= '<span id="klarna_account_toc"></span><script type="text/javascript">var terms = new Klarna.Terms.Account({el: \'klarna_account_toc\', eid: \'%s\', country: \'%s\'});</script>';
-$_['text_information']			= 'Klarna Account Information';
-$_['text_additional']			= 'Klarna Account requires some additional information before they can proccess your order.';
-$_['text_male']					= 'Male';
-$_['text_female']				= 'Female';
-$_['text_year']					= 'Year';
-$_['text_month']				= 'Month';
-$_['text_day']					= 'Day';
-$_['text_payment_option']		= 'Payment options';
-$_['text_single_payment']		= 'Single Payment';
-$_['text_monthly_payment']		= '%s - %s per month';
-$_['text_comment']				= 'Klarna\'s Invoice ID: %s' . "\n" . '%s/%s: %.4f';
-$_['text_terms_description']    = 'Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts - und Bonitätsprüfung erforderlichen
-Daten an Klarna bin ich einverstanden. Meine <a href="https://online.klarna.com/consent_de.yaws" target="_blank">Einwilligung</a> kann ich jederzeit mit Wirkung für die Zukunft widerrufen.';
+$_['text_information']			= 'Информация Klarna Account';
+$_['text_additional']			= 'Для оформления заказа через Klarna Account требуется дополнительная информация.';
+$_['text_male']					= 'Мужской';
+$_['text_female']				= 'Женский';
+$_['text_year']					= 'Год';
+$_['text_month']				= 'Месяц';
+$_['text_day']					= 'День';
+$_['text_payment_option']		= 'Варианты оплаты';
+$_['text_single_payment']		= 'Единоразовая оплата';
+$_['text_monthly_payment']		= '%s — %s в месяц';
+$_['text_comment']				= 'Номер счёта Klarna: %s' . "\n" . '%s/%s: %.4f';
+$_['text_terms_description']    = 'Направляя данные, необходимые для оформления покупки в кредит и проверки личности в Klarna, я даю согласие. Своё <a href="https://www.klarna.com/privacy-policy/" target="_blank">согласие</a> я могу отозвать в любое время.';
 
 // Entry
-$_['entry_gender']				= 'Gender';
-$_['entry_pno']					= 'Personal Number';
-$_['entry_dob']					= 'Date of Birth';
-$_['entry_phone_no']			= 'Phone number';
-$_['entry_street']				= 'Street';
-$_['entry_house_no']			= 'House No.';
-$_['entry_house_ext']			= 'House Ext.';
-$_['entry_company']				= 'Company Registration Number';
+$_['entry_gender']				= 'Пол';
+$_['entry_pno']					= 'Личный номер';
+$_['entry_dob']					= 'Дата рождения';
+$_['entry_phone_no']			= 'Номер телефона';
+$_['entry_street']				= 'Улица';
+$_['entry_house_no']			= '№ дома';
+$_['entry_house_ext']			= 'Корпус';
+$_['entry_company']				= 'ИНН / регистрационный номер компании';
 
 // Help
-$_['help_pno']					= 'Please enter your Social Security number here.';
-$_['help_phone_no']				= 'Please enter your phone number.';
-$_['help_street']				= 'Please note that delivery can only take place to the registered address when paying with Klarna.';
-$_['help_house_no']				= 'Please enter your house number.';
-$_['help_house_ext']			= 'Please submit your house extension here. E.g. A, B, C, Red, Blue ect.';
-$_['help_company']				= 'Please enter your Company\'s registration number';
+$_['help_pno']					= 'Укажите Ваш идентификационный номер.';
+$_['help_phone_no']				= 'Укажите номер телефона.';
+$_['help_street']				= 'Доставка возможна только на адрес, указанный при оплате Klarna.';
+$_['help_house_no']				= 'Укажите номер дома.';
+$_['help_house_ext']			= 'Укажите корпус/строение (например: А, Б, В).';
+$_['help_company']				= 'Укажите ИНН или регистрационный номер компании.';
 
 // Error
-$_['error_deu_terms']			= 'You must agree to Klarna\'s privacy policy (Datenschutz)';
-$_['error_address_match']		= 'Billing and Shipping addresses must match if you want to use Klarna Payments';
-$_['error_network']				= 'Error occurred while connecting to Klarna. Please try again later.';
+$_['error_deu_terms']			= 'Необходимо принять политику конфиденциальности Klarna.';
+$_['error_address_match']		= 'Адрес доставки и плательщика должны совпадать для оплаты Klarna.';
+$_['error_network']				= 'Ошибка при подключении к Klarna. Попробуйте позже.';

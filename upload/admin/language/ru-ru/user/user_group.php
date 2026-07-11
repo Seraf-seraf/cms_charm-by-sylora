@@ -1,23 +1,32 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/user/user_group.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'User Groups';
+$_['heading_title']    = 'Группы пользователей';
 
 // Text
-$_['text_success']     = 'Success: You have modified user groups!';
-$_['text_list']        = 'User Group';
-$_['text_add']         = 'Add User Group';
-$_['text_edit']        = 'Edit User Group';
+$_['text_success']     = 'Успешно: Вы изменили группы пользователей!';
+$_['text_list']        = 'Список групп пользователей';
+$_['text_add']         = 'Добавить группу пользователей';
+$_['text_edit']        = 'Редактировать группу пользователей';
 
 // Column
-$_['column_name']      = 'User Group Name';
-$_['column_action']    = 'Action';
+$_['column_name']      = 'Имя группы пользователей';
+$_['column_action']    = 'Действие';
 
 // Entry
-$_['entry_name']       = 'User Group Name';
-$_['entry_access']     = 'Access Permission';
-$_['entry_modify']     = 'Modify Permission';
+$_['entry_name']       = 'Имя группы пользователей';
+$_['entry_access']     = 'Разрешение доступа';
+$_['entry_modify']     = 'Разрешение изменения';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify user groups!';
-$_['error_name']       = 'User Group Name must be between 3 and 64 characters!';
-$_['error_user']       = 'Warning: This user group cannot be deleted as it is currently assigned to %s users!';
+$_['error_permission'] = 'Предупреждение: У Вас нет прав на изменение групп пользователей!';
+$_['error_name']       = 'Имя группы пользователей должно быть от 3 до 64 символов!';
+$_['error_user']       = 'Предупреждение: Эта группа пользователей не может быть удалена, так как в настоящее время она назначена %s пользователям!';

@@ -1,22 +1,31 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/localisation/return_status.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Return Statuses';
+$_['heading_title']    = 'Статусы возврата';
 
 // Text
-$_['text_success']     = 'Success: You have modified return statuses!';
-$_['text_list']        = 'Return Status List';
-$_['text_add']         = 'Add Return Status';
-$_['text_edit']        = 'Edit Return Status';
+$_['text_success']     = 'Успешно: Вы изменили статусы возврата!';
+$_['text_list']        = 'Список статусов возврата';
+$_['text_add']         = 'Добавить статус возврата';
+$_['text_edit']        = 'Редактировать статус возврата';
 
 // Column
-$_['column_name']      = 'Return Status Name';
-$_['column_action']    = 'Action';
+$_['column_name']      = 'Название статуса возврата';
+$_['column_action']    = 'Действие';
 
 // Entry
-$_['entry_name']       = 'Return Status Name';
+$_['entry_name']       = 'Название статуса возврата';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify return statuses!';
-$_['error_name']       = 'Return Status Name must be between 3 and 32 characters!';
-$_['error_default']    = 'Warning: This return status cannot be deleted as it is currently assigned as the default return status!';
-$_['error_return']     = 'Warning: This return status cannot be deleted as it is currently assigned to %s returns!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение статуса возврата!';
+$_['error_name']       = 'Название статуса возврата должно быть от 3 до 32 символов!';
+$_['error_default']    = 'Предупреждение: Этот статус возврата не может быть удален, так как в настоящее время он назначен статусом возврата по умолчанию!';
+$_['error_return']     = 'Предупреждение: Этот статус возврата не может быть удален, так как он в настоящее время назначен %s возвратам!';

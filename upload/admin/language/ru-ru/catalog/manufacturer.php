@@ -1,29 +1,38 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/catalog/manufacturer.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Manufacturers';
+$_['heading_title']     = 'Производители';
 
 // Text
-$_['text_success']      = 'Success: You have modified manufacturers!';
-$_['text_list']         = 'Manufacturer List';
-$_['text_add']          = 'Add Manufacturer';
-$_['text_edit']         = 'Edit Manufacturer';
-$_['text_keyword']      = 'Do not use spaces, instead replace spaces with - and make sure the SEO URL is globally unique.';
+$_['text_success']      = 'Успешно: Вы изменили производителей!';
+$_['text_list']         = 'Список производителей';
+$_['text_add']          = 'Добавить производителя';
+$_['text_edit']         = 'Редактировать производителя';
+$_['text_keyword']      = 'Не используйте пробелы, вместо этого заменяйте пробелы на - и убедитесь, что Семантический URL-адрес является глобально уникальным.';
 
 // Column
-$_['column_name']       = 'Manufacturer Name';
-$_['column_sort_order'] = 'Sort Order';
-$_['column_action']     = 'Action';
+$_['column_name']       = 'Название производителя';
+$_['column_sort_order'] = 'Порядок сортировки';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_name']        = 'Manufacturer Name';
-$_['entry_store']       = 'Stores';
-$_['entry_keyword']     = 'Keyword';
-$_['entry_image']       = 'Image';
-$_['entry_sort_order']  = 'Sort Order';
+$_['entry_name']        = 'Название производителя';
+$_['entry_store']       = 'Магазины';
+$_['entry_keyword']     = 'ЧПУ';
+$_['entry_image']       = 'Изображения';
+$_['entry_sort_order']  = 'Порядок сортировки';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify manufacturers!';
-$_['error_name']        = 'Manufacturer Name must be between 1 and 64 characters!';
-$_['error_keyword']     = 'SEO URL already in use!';
-$_['error_unique']      = 'SEO URL must be unique!';
-$_['error_product']     = 'Warning: This manufacturer cannot be deleted as it is currently assigned to %s products!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения на изменение производителей!';
+$_['error_name']        = 'Название производителя должно быть от 1 до 64 символов!';
+$_['error_keyword']     = 'Семантический URL уже используется!';
+$_['error_unique']      = 'Семантический URL должен быть уникальным!';
+$_['error_product']     = 'Предупреждение: Этот производитель не может быть удален, так как он в настоящее время присвоен %s продуктам!';

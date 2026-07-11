@@ -1,27 +1,36 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/report/online.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Online Report';
+$_['heading_title']     = 'Онлайн отчет';
 
 // Text
-$_['text_extension']    = 'Extensions';
-$_['text_success']      = 'Success: You have modified customers online report!';
-$_['text_list']         = 'Online List';
-$_['text_filter']       = 'Filter';
-$_['text_guest']        = 'Guest';
+$_['text_extension']    = 'Расширения';
+$_['text_success']      = 'Успешно: Вы изменили онлайн-отчет о клиентах!';
+$_['text_list']         = 'Список онлайн';
+$_['text_filter']       = 'Фильтр';
+$_['text_guest']        = 'Гость';
 
 // Column
-$_['column_ip']         = 'IP';
-$_['column_customer']   = 'Customer';
-$_['column_url']        = 'Last Page Visited';
-$_['column_referer']    = 'Referer';
-$_['column_date_added'] = 'Last Click';
-$_['column_action']     = 'Action';
+$_['column_ip']         = 'IP-адрес';
+$_['column_customer']   = 'Клиент';
+$_['column_url']        = 'Последняя посещенная страница';
+$_['column_referer']    = 'Реферер';
+$_['column_date_added'] = 'Последний клик';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_ip']          = 'IP';
-$_['entry_customer']    = 'Customer';
-$_['entry_status']      = 'Status';
-$_['entry_sort_order']  = 'Sort Order';
+$_['entry_ip']          = 'IP-адрес';
+$_['entry_customer']    = 'Клиент';
+$_['entry_status']      = 'Статус';
+$_['entry_sort_order']  = 'Порядок сортировки';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify customers online report!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения на изменение отчета о клиентах онлайн!';

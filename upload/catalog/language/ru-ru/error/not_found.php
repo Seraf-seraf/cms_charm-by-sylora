@@ -1,9 +1,15 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/error/not_found.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title'] = 'Страница не найдена';
+$_['heading_title'] = 'Запрошенная Вами страница не найдена!';
 
 // Text
-$_['text_error']    = 'Возможно, ссылка устарела или украшение больше не доступно. Перейдите в каталог, вернитесь на главную или напишите нам, если искали конкретное изделие.';
-$_['text_catalog']  = 'Перейти в каталог';
-$_['text_home']     = 'На главную';
-$_['text_contact']  = 'Связаться';
+$_['text_error']    = 'Запрошенная Вами страница не найдена.';

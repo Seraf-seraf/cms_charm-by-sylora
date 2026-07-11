@@ -1,25 +1,34 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/common/developer.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Developer Settings';
+$_['heading_title']    = 'Настройки разработчика';
 
 // Text
-$_['text_success']     = 'Success: You have modified developer settings!';
-$_['text_theme']       = 'theme';
-$_['text_sass']        = 'SASS';
-$_['text_cache']       = 'Success: You have cleared the %s cache!';
+$_['text_success']     = 'Успешно: Вы изменили настройки разработчика!';
+$_['text_theme']       = 'тема';
+$_['text_sass']        = 'стили';
+$_['text_cache']       = 'Успешно: Вы очистили кеш: %s!';
 
 // Column
-$_['column_component'] = 'Component';
-$_['column_action']    = 'Action';
+$_['column_component'] = 'Компонент';
+$_['column_action']    = 'Действие';
 
 // Entry
-$_['entry_theme']      = 'Theme';
-$_['entry_sass']       = 'SASS';
-$_['entry_cache']      = 'Cache';
+$_['entry_theme']      = 'Тема';
+$_['entry_sass']       = 'Стили';
+$_['entry_cache']      = 'Кеш';
 
 // Button
-$_['button_on']        = 'On';
-$_['button_off']       = 'Off';
+$_['button_on']        = 'Вкл';
+$_['button_off']       = 'Выкл';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify developer settings!';
+$_['error_permission'] = 'Предупреждение: У Вас нет прав на изменение настроек разработчика!';

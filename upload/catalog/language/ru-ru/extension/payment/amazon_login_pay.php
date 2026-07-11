@@ -1,46 +1,54 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/amazon_login_pay.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
 
-$_['breadcrumb_cart'] = 'Shopping Cart';
-$_['breadcrumb_payment'] = 'Payment';
-$_['breadcrumb_shipping'] = 'Shipping';
-$_['breadcrumb_summary'] = 'Summary';
-$_['error_constraint_amount_not_set'] = 'The order failed due to a technical error, please select another payment method or contact our support.';
-$_['error_constraint_payment_method_not_allowed'] = 'The selected payment method is not available for this transaction. Please select another one or add a new payment method to the wallet widget.';
-$_['error_constraint_payment_plan_not_set'] = 'No payment instrument has been selected for this order, please try to refresh the page or add a new payment instrument in the wallet widget.';
-$_['error_decline_amazon_rejected'] = 'Your payment could not be processed. Please try to place the order again using another payment method.';
-$_['error_decline_invalid_payment_method'] = 'Your payment could not be processed, please follow the instructions in the payment method box.';
-$_['error_decline_processing_failure'] = 'Your order could not be processed due to a system error. Please try to place the order again.';
-$_['error_decline_transaction_timed_out'] = 'Your payment could not be processed. Please try to place the order again using another payment method.';
-$_['error_login'] = 'Login failed';
-$_['error_login_email'] = 'Login failed: %s account email address did not match Amazon account email address';
-$_['error_minimum'] = 'Minimum order amount for Amazon Pay and Login with Amazon is %s!';
-$_['error_no_shipping_methods'] = 'There are no shipping options to the selected address. Please select a different shipping address.';
-$_['error_order_total_zero'] = 'Unfortunately, Amazon Pay does not accept orders with <strong>%s</strong> total amount. You may use the <strong>Standard Checkout</strong> instead.';
-$_['error_payment_method'] = 'Please select a payment method';
-$_['error_process_order'] = 'There was an error processing your order. Please contact the shop administrator for help.';
-$_['error_session_expired'] = 'Your session has expired. Please sign in again by clicking on the Amazon Pay Button.';
-$_['error_shipping'] = 'Please select a shipping method';
-$_['error_shipping_address'] = 'Please select a delivery address';
-$_['error_shipping_methods'] = 'There was an error retrieving your address from Amazon. Please contact the shop administrator for help.';
-$_['heading_address'] = 'Please choose a delivery address';
-$_['heading_confirm'] = 'Order summary';
-$_['heading_payment'] = 'Please select a payment method';
-$_['heading_title'] = 'Amazon Pay and Login with Amazon';
-$_['text_amount_converted'] = 'Warning: The total paid amount will be converted into <strong>%s</strong> at a conversion rate of <strong>%s</strong>. The expected transaction amount will be <strong>%s</strong>.';
-$_['text_back'] = 'Back';
-$_['text_cart'] = 'Cart';
-$_['text_confirm'] = 'Confirm';
-$_['text_continue'] = 'Continue';
-$_['text_continue_checkout'] = 'Continue Checkout Here';
-$_['text_coupon'] = 'Coupon';
-$_['text_enter_coupon'] = 'Enter your coupon code here.';
-$_['text_lpa'] = 'Amazon Pay and Login with Amazon';
-$_['text_must_apply_coupon'] = 'Please apply your coupon.';
-$_['text_payment_success'] = 'Your order was successfully placed. Order details are below';
-$_['text_success_title'] = 'Your order has been placed!';
-$_['text_tax_other'] = 'Taxes / Other handling fees';
-$_['error_failure_mfa'] = 'There was a problem with your payment. Your order hasn\'t been placed, and you haven\'t been charged.';
-$_['error_unexpected_network_error'] = 'Unexpected network error';
-$_['error_invaild_request'] = 'Invaild request, please post your order again';
-$_['error_abandoned_mfa'] = 'Something\'s wrong with your payment method. To place your order, try another.';
-$_['text_created_by']     = 'created by iSenseLabs, OpenCart, V%s';
+$_['breadcrumb_cart'] = 'Корзина';
+$_['breadcrumb_payment'] = 'Оплата';
+$_['breadcrumb_shipping'] = 'Доставка';
+$_['breadcrumb_summary'] = 'Итого';
+$_['error_constraint_amount_not_set'] = 'Заказ не прошёл из-за технической ошибки. Выберите другой способ оплаты или свяжитесь с поддержкой.';
+$_['error_constraint_payment_method_not_allowed'] = 'Выбранный способ оплаты недоступен для этой транзакции. Выберите другой или добавьте новый способ оплаты в кошелёк.';
+$_['error_constraint_payment_plan_not_set'] = 'Платёжный инструмент не выбран для этого заказа. Обновите страницу или добавьте новый способ оплаты в кошелёк.';
+$_['error_decline_amazon_rejected'] = 'Платёж не удалось обработать. Попробуйте оформить заказ другим способом оплаты.';
+$_['error_decline_invalid_payment_method'] = 'Платёж не удалось обработать. Следуйте инструкциям в блоке способа оплаты.';
+$_['error_decline_processing_failure'] = 'Заказ не удалось обработать из-за системной ошибки. Попробуйте оформить заказ снова.';
+$_['error_decline_transaction_timed_out'] = 'Платёж не удалось обработать. Попробуйте оформить заказ другим способом оплаты.';
+$_['error_login'] = 'Ошибка входа';
+$_['error_login_email'] = 'Ошибка входа: адрес эл. почты учётной записи %s не совпадает с адресом Amazon.';
+$_['error_minimum'] = 'Минимальная сумма заказа для Amazon Pay и Login with Amazon — %s!';
+$_['error_no_shipping_methods'] = 'Нет способов доставки для выбранного адреса. Выберите другой адрес доставки.';
+$_['error_order_total_zero'] = 'К сожалению, Amazon Pay не принимает заказы на сумму <strong>%s</strong>. Используйте <strong>стандартное оформление заказа</strong>.';
+$_['error_payment_method'] = 'Пожалуйста, выберите способ оплаты';
+$_['error_process_order'] = 'Ошибка при обработке заказа. Обратитесь к администратору магазина.';
+$_['error_session_expired'] = 'Сеанс истёк. Войдите снова, нажав кнопку Amazon Pay.';
+$_['error_shipping'] = 'Пожалуйста, выберите способ доставки';
+$_['error_shipping_address'] = 'Пожалуйста, выберите адрес доставки';
+$_['error_shipping_methods'] = 'Ошибка при получении адреса из Amazon. Обратитесь к администратору магазина.';
+$_['heading_address'] = 'Выберите адрес доставки';
+$_['heading_confirm'] = 'Итоги заказа';
+$_['heading_payment'] = 'Выберите способ оплаты';
+$_['heading_title'] = 'Amazon Pay и вход через Amazon';
+$_['text_amount_converted'] = 'Предупреждение: сумма к оплате будет конвертирована в <strong>%s</strong> по курсу <strong>%s</strong>. Ожидаемая сумма транзакции — <strong>%s</strong>.';
+$_['text_back'] = 'Назад';
+$_['text_cart'] = 'Корзина';
+$_['text_confirm'] = 'Подтвердить';
+$_['text_continue'] = 'Продолжить';
+$_['text_continue_checkout'] = 'Продолжить оформление здесь';
+$_['text_coupon'] = 'Промокод';
+$_['text_enter_coupon'] = 'Введите код промокода.';
+$_['text_lpa'] = 'Amazon Pay и вход через Amazon';
+$_['text_must_apply_coupon'] = 'Пожалуйста, примените промокод.';
+$_['text_payment_success'] = 'Ваш заказ успешно оформлен. Детали заказа ниже.';
+$_['text_success_title'] = 'Ваш заказ оформлен!';
+$_['text_tax_other'] = 'Налоги / прочие сборы';
+$_['error_failure_mfa'] = 'Возникла проблема с оплатой. Заказ не создан, списание не производилось.';
+$_['error_unexpected_network_error'] = 'Неожиданная сетевая ошибка';
+$_['error_invaild_request'] = 'Неверный запрос. Попробуйте оформить заказ снова.';
+$_['error_abandoned_mfa'] = 'Проблема с Вашим способом оплаты. Оформите заказ другим способом.';
+$_['text_created_by'] = 'разработано iSenseLabs, OpenCart, V%s';

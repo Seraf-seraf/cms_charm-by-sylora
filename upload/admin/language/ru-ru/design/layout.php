@@ -1,36 +1,45 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/design/layout.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']       = 'Layouts';
+$_['heading_title']       = 'Макеты';
 
 // Text
-$_['text_success']        = 'Success: You have modified layouts!';
-$_['text_list']           = 'Layout List';
-$_['text_add']            = 'Add Layout';
-$_['text_edit']           = 'Edit Layout';
-$_['text_remove']         = 'Remove';
-$_['text_route']          = 'Choose the store and routes to be used with this layout';
-$_['text_module']         = 'Choose the position of the modules';
-$_['text_default']        = 'Default';
-$_['text_content_top']    = 'Content Top';
-$_['text_content_bottom'] = 'Content Bottom';
-$_['text_column_left']    = 'Column Left';
-$_['text_column_right']   = 'Column Right';
+$_['text_success']        = 'Успешно: Вы изменили макеты!';
+$_['text_list']           = 'Список макетов';
+$_['text_add']            = 'Добавить макет';
+$_['text_edit']           = 'Редактировать макет';
+$_['text_remove']         = 'Удалить';
+$_['text_route']          = 'Выберите магазин и маршруты, которые будут использоваться с этим макетом';
+$_['text_module']         = 'Выберите положение модулей';
+$_['text_default']        = 'По умолчанию';
+$_['text_content_top']    = 'Контент Вверху';
+$_['text_content_bottom'] = 'Контент Внизу';
+$_['text_column_left']    = 'Колонка Слева';
+$_['text_column_right']   = 'Колонка Справа';
 
 // Column
-$_['column_name']         = 'Layout Name';
-$_['column_action']       = 'Action';
+$_['column_name']         = 'Название макета';
+$_['column_action']       = 'Действие';
 
 // Entry
-$_['entry_name']          = 'Layout Name';
-$_['entry_store']         = 'Store';
-$_['entry_route']         = 'Route';
-$_['entry_module']        = 'Module';
+$_['entry_name']          = 'Название макета';
+$_['entry_store']         = 'Магазин';
+$_['entry_route']         = 'Маршрут';
+$_['entry_module']        = 'Модуль';
 
 // Error
-$_['error_permission']    = 'Warning: You do not have permission to modify layouts!';
-$_['error_name']          = 'Layout Name must be between 3 and 64 characters!';
-$_['error_default']       = 'Warning: This layout cannot be deleted as it is currently assigned as the default store layout!';
-$_['error_store']         = 'Warning: This layout cannot be deleted as it is currently assigned to %s stores!';
-$_['error_product']       = 'Warning: This layout cannot be deleted as it is currently assigned to %s products!';
-$_['error_category']      = 'Warning: This layout cannot be deleted as it is currently assigned to %s categories!';
-$_['error_information']   = 'Warning: This layout cannot be deleted as it is currently assigned to %s information pages!';
+$_['error_permission']    = 'Предупреждение: У Вас нет прав на изменение макетов!';
+$_['error_name']          = 'Название макета должно быть от 3 до 64 символов!';
+$_['error_default']       = 'Предупреждение: Этот макет не может быть удален, так как в настоящее время он назначен макетом магазина по умолчанию!';
+$_['error_store']         = 'Предупреждение: Этот макет не может быть удален, так как в настоящее время он назначен %s магазинам!';
+$_['error_product']       = 'Предупреждение: Этот макет не может быть удален, так как в настоящее время он назначен %s продуктам!';
+$_['error_category']      = 'Предупреждение: Этот макет не может быть удален, так как в настоящее время он назначен %s категориям!';
+$_['error_information']   = 'Предупреждение: Этот макет не может быть удален, так как в настоящее время он назначен %s информационным страницам!';

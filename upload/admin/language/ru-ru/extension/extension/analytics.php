@@ -1,15 +1,24 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/extension/analytics.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Analytics';
+$_['heading_title']    = 'Аналитика';
 
 // Text
-$_['text_success']     = 'Success: You have modified analytics!';
-$_['text_list']        = 'Analytics List';
+$_['text_success']     = 'Успешно: Вы изменили аналитику!';
+$_['text_list']        = 'Список аналитики';
 
 // Column
-$_['column_name']      = 'Analytics Name';
-$_['column_status']    = 'Status';
-$_['column_action']    = 'Action';
+$_['column_name']      = 'Название аналитики';
+$_['column_status']    = 'Статус';
+$_['column_action']    = 'Действие';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify analytics!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение аналитики!';

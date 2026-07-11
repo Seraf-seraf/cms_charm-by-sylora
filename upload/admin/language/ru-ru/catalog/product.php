@@ -1,110 +1,119 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/catalog/product.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']          = 'Products';
+$_['heading_title']          = 'Продукция';
 
 // Text
-$_['text_success']           = 'Success: You have modified products!';
-$_['text_list']              = 'Product List';
-$_['text_add']               = 'Add Product';
-$_['text_edit']              = 'Edit Product';
-$_['text_filter']            = 'Filter';
+$_['text_success']           = 'Успешно: Вы изменили продукцию!';
+$_['text_list']              = 'Список продукции';
+$_['text_add']               = 'Добавить продукция';
+$_['text_edit']              = 'Редактировать продукцию';
+$_['text_filter']            = 'Фильтр';
 $_['text_plus']              = '+';
 $_['text_minus']             = '-';
-$_['text_default']           = 'Default';
-$_['text_option']            = 'Option';
-$_['text_option_value']      = 'Option Value';
-$_['text_percent']           = 'Percentage';
-$_['text_amount']            = 'Fixed Amount';
-$_['text_keyword']           = 'Do not use spaces, instead replace spaces with - and make sure the SEO URL is globally unique.';
+$_['text_default']           = 'По умолчанию';
+$_['text_option']            = 'Опция';
+$_['text_option_value']      = 'Значение опции';
+$_['text_percent']           = 'Процент';
+$_['text_amount']            = 'Фиксированное значение';
+$_['text_keyword']           = 'Не используйте пробелы, вместо этого заменяйте пробелы на минус и убедитесь, что Семантический URL-адрес является глобально уникальным.';
 
 // Column
-$_['column_name']            = 'Product Name';
-$_['column_model']           = 'Model';
-$_['column_image']           = 'Image';
-$_['column_price']           = 'Price';
-$_['column_quantity']        = 'Quantity';
-$_['column_status']          = 'Status';
-$_['column_action']          = 'Action';
+$_['column_name']            = 'Название продукции';
+$_['column_model']           = 'Модель';
+$_['column_image']           = 'Изображение';
+$_['column_price']           = 'Цена';
+$_['column_quantity']        = 'Количество';
+$_['column_status']          = 'Статус';
+$_['column_action']          = 'Действие';
 
 // Entry
-$_['entry_name']             = 'Product Name';
-$_['entry_description']      = 'Description';
-$_['entry_meta_title']       = 'Meta Tag Title';
-$_['entry_meta_keyword']     = 'Meta Tag Keywords';
-$_['entry_meta_description'] = 'Meta Tag Description';
-$_['entry_store']            = 'Stores';
-$_['entry_keyword']          = 'Keyword';
-$_['entry_model']            = 'Model';
+$_['entry_name']             = 'Название продукции';
+$_['entry_description']      = 'Описание';
+$_['entry_meta_title']       = 'МетаТег Title';
+$_['entry_meta_keyword']     = 'МетаТег Keywords';
+$_['entry_meta_description'] = 'МетаТег Description';
+$_['entry_store']            = 'Магазины';
+$_['entry_keyword']          = 'Ключевое слово';
+$_['entry_model']            = 'Модель';
 $_['entry_sku']              = 'SKU';
 $_['entry_upc']              = 'UPC';
 $_['entry_ean']              = 'EAN';
 $_['entry_jan']              = 'JAN';
 $_['entry_isbn']             = 'ISBN';
 $_['entry_mpn']              = 'MPN';
-$_['entry_location']         = 'Location';
-$_['entry_shipping']         = 'Requires Shipping';
-$_['entry_manufacturer']     = 'Manufacturer';
-$_['entry_date_available']   = 'Date Available';
-$_['entry_quantity']         = 'Quantity';
-$_['entry_minimum']          = 'Minimum Quantity';
-$_['entry_stock_status']     = 'Out Of Stock Status';
-$_['entry_price']            = 'Price';
-$_['entry_tax_class']        = 'Tax Class';
-$_['entry_points']           = 'Points';
-$_['entry_option_points']    = 'Points';
-$_['entry_subtract']         = 'Subtract Stock';
-$_['entry_weight_class']     = 'Weight Class';
-$_['entry_weight']           = 'Weight';
-$_['entry_dimension']        = 'Dimensions (L x W x H)';
-$_['entry_length_class']     = 'Length Class';
-$_['entry_length']           = 'Length';
-$_['entry_width']            = 'Width';
-$_['entry_height']           = 'Height';
-$_['entry_image']            = 'Image';
-$_['entry_additional_image'] = 'Additional Images';
-$_['entry_customer_group']   = 'Customer Group';
-$_['entry_date_start']       = 'Date Start';
-$_['entry_date_end']         = 'Date End';
-$_['entry_priority']         = 'Priority';
-$_['entry_attribute']        = 'Attribute';
-$_['entry_attribute_group']  = 'Attribute Group';
-$_['entry_text']             = 'Text';
-$_['entry_option']           = 'Option';
-$_['entry_option_value']     = 'Option Value';
-$_['entry_required']         = 'Required';
-$_['entry_status']           = 'Status';
-$_['entry_sort_order']       = 'Sort Order';
-$_['entry_category']         = 'Categories';
-$_['entry_filter']           = 'Filters';
-$_['entry_download']         = 'Downloads';
-$_['entry_related']          = 'Related Products';
-$_['entry_tag']              = 'Product Tags';
-$_['entry_reward']           = 'Reward Points';
-$_['entry_layout']           = 'Layout Override';
-$_['entry_recurring']        = 'Recurring Profile';
+$_['entry_location']         = 'Расположение';
+$_['entry_shipping']         = 'Требуется доставка';
+$_['entry_manufacturer']     = 'Производитель';
+$_['entry_date_available']   = 'Дата поступления';
+$_['entry_quantity']         = 'Количество';
+$_['entry_minimum']          = 'Минимальное количество';
+$_['entry_stock_status']     = 'Статус Нет на складе';
+$_['entry_price']            = 'Цена';
+$_['entry_tax_class']        = 'Налоговый класс';
+$_['entry_points']           = 'Баллы';
+$_['entry_option_points']    = 'Баллы';
+$_['entry_subtract']         = 'Вычитать со склада';
+$_['entry_weight_class']     = 'Единица веса';
+$_['entry_weight']           = 'Вес';
+$_['entry_dimension']        = 'Размеры (Д х Ш х В)';
+$_['entry_length_class']     = 'Единица длины';
+$_['entry_length']           = 'Длина';
+$_['entry_width']            = 'Ширина';
+$_['entry_height']           = 'Высота';
+$_['entry_image']            = 'Изображение';
+$_['entry_additional_image'] = 'Дополнительные изображения';
+$_['entry_customer_group']   = 'Группа клиентов';
+$_['entry_date_start']       = 'Дата начала';
+$_['entry_date_end']         = 'Дата завершения';
+$_['entry_priority']         = 'Приоритет';
+$_['entry_attribute']        = 'Атрибут';
+$_['entry_attribute_group']  = 'Группа атрибута';
+$_['entry_text']             = 'Текст';
+$_['entry_option']           = 'Опция';
+$_['entry_option_value']     = 'Значение опции';
+$_['entry_required']         = 'Обязательный';
+$_['entry_status']           = 'Статус';
+$_['entry_sort_order']       = 'Порядок сортировки';
+$_['entry_category']         = 'Категории';
+$_['entry_filter']           = 'Фильтры';
+$_['entry_download']         = 'Загрузки';
+$_['entry_related']          = 'Сопутствующая продукция';
+$_['entry_tag']              = 'Теги продукции';
+$_['entry_reward']           = 'Бонусные баллы';
+$_['entry_layout']           = 'Переопределение макета';
+$_['entry_recurring']        = 'Регулярный профиль';
 
 // Help
-$_['help_sku']               = 'Stock Keeping Unit';
-$_['help_upc']               = 'Universal Product Code';
-$_['help_ean']               = 'European Article Number';
-$_['help_jan']               = 'Japanese Article Number';
-$_['help_isbn']              = 'International Standard Book Number';
-$_['help_mpn']               = 'Manufacturer Part Number';
-$_['help_manufacturer']      = '(Autocomplete)';
-$_['help_minimum']           = 'Force a minimum ordered amount';
-$_['help_stock_status']      = 'Status shown when a product is out of stock';
-$_['help_points']            = 'Number of points needed to buy this item. If you don\'t want this product to be purchased with points leave as 0.';
-$_['help_category']          = '(Autocomplete)';
-$_['help_filter']            = '(Autocomplete)';
-$_['help_download']          = '(Autocomplete)';
-$_['help_related']           = '(Autocomplete)';
-$_['help_tag']               = 'Comma separated';
+$_['help_sku']               = 'Складская учётная единица (артикул)';
+$_['help_upc']               = 'Универсальный код товара';
+$_['help_ean']               = 'Европейский номер товара';
+$_['help_jan']               = 'Японский номер товара';
+$_['help_isbn']              = 'Международный стандартный книжный номер';
+$_['help_mpn']               = 'Номер детали производителя';
+$_['help_manufacturer']      = '(Автодополнение)';
+$_['help_minimum']           = 'Минимальное значение заказа';
+$_['help_stock_status']      = 'Статус, когда товара нет в наличии';
+$_['help_points']            = 'Количество баллов, необходимое для покупки этой позиции. Если Вы не хотите, чтобы эта продукция приобреталась за баллы, оставьте 0.';
+$_['help_category']          = '(Автодополнение)';
+$_['help_filter']            = '(Автодополнение)';
+$_['help_download']          = '(Автодополнение)';
+$_['help_related']           = '(Автодополнение)';
+$_['help_tag']               = 'Разделенные запятой';
 
 // Error
-$_['error_warning']          = 'Warning: Please check the form carefully for errors!';
-$_['error_permission']       = 'Warning: You do not have permission to modify products!';
-$_['error_name']             = 'Product Name must be greater than 1 and less than 255 characters!';
-$_['error_meta_title']       = 'Meta Title must be greater than 1 and less than 255 characters!';
-$_['error_model']            = 'Product Model must be greater than 1 and less than 64 characters!';
-$_['error_keyword']          = 'SEO URL already in use!';
-$_['error_unique']           = 'SEO URL must be unique!';
+$_['error_warning']          = 'Предупреждение: Пожалуйста, внимательно проверьте форму на наличие ошибок!';
+$_['error_permission']       = 'Предупреждение: У Вас нет разрешения на изменение продукции!';
+$_['error_name']             = 'Название продукции должно быть больше 1 и меньше 255 символов!';
+$_['error_meta_title']       = 'МетаТег Title должен быть больше 1 и меньше 255 символов!';
+$_['error_model']            = 'Модель продукции должна содержать от 1 до 64 символов!';
+$_['error_keyword']          = 'Семантический URL уже используется!';
+$_['error_unique']           = 'Семантический URL должен быть уникальным!';

@@ -1,47 +1,56 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/catalog/category.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']          = 'Categories';
+$_['heading_title']          = 'Категории';
 
 // Text
-$_['text_success']           = 'Success: You have modified categories!';
-$_['text_list']              = 'Category List';
-$_['text_add']               = 'Add Category';
-$_['text_edit']              = 'Edit Category';
-$_['text_default']           = 'Default';
-$_['text_keyword']           = 'Do not use spaces, instead replace spaces with - and make sure the SEO URL is globally unique.';
+$_['text_success']           = 'Успешно: Вы изменили категории!';
+$_['text_list']              = 'Список категорий';
+$_['text_add']               = 'Добавить категорию';
+$_['text_edit']              = 'Редактировать категорию';
+$_['text_default']           = 'По умолчанию';
+$_['text_keyword']           = 'Не используйте пробелы, вместо этого заменяйте пробелы на - и убедитесь, что Семантический URL-адрес является глобально уникальным.';
 
 // Column
-$_['column_name']            = 'Category Name';
-$_['column_sort_order']      = 'Sort Order';
-$_['column_action']          = 'Action';
+$_['column_name']            = 'Название категории';
+$_['column_sort_order']      = 'Порядок сортировки';
+$_['column_action']          = 'Действие';
 
 // Entry
-$_['entry_name']             = 'Category Name';
-$_['entry_description']      = 'Description';
-$_['entry_meta_title'] 	     = 'Meta Tag Title';
-$_['entry_meta_keyword']     = 'Meta Tag Keywords';
-$_['entry_meta_description'] = 'Meta Tag Description';
-$_['entry_store']            = 'Stores';
-$_['entry_keyword']          = 'Keyword';
-$_['entry_parent']           = 'Parent';
-$_['entry_filter']           = 'Filters';
-$_['entry_image']            = 'Image';
-$_['entry_top']              = 'Top';
-$_['entry_column']           = 'Columns';
-$_['entry_sort_order']       = 'Sort Order';
-$_['entry_status']           = 'Status';
-$_['entry_layout']           = 'Layout Override';
+$_['entry_name']             = 'Название категории';
+$_['entry_description']      = 'Описание';
+$_['entry_meta_title'] 	     = 'МетаТег Title';
+$_['entry_meta_keyword']     = 'МетаТег Keywords';
+$_['entry_meta_description'] = 'МетаТег Description';
+$_['entry_store']            = 'Магазины';
+$_['entry_keyword']          = 'ЧПУ';
+$_['entry_parent']           = 'Родитель';
+$_['entry_filter']           = 'Фильтры';
+$_['entry_image']            = 'Изображение';
+$_['entry_top']              = 'Меню';
+$_['entry_column']           = 'Столбцы';
+$_['entry_sort_order']       = 'Порядок сортировки';
+$_['entry_status']           = 'Статус';
+$_['entry_layout']           = 'Переопределение макета';
 
 // Help
-$_['help_filter']            = '(Autocomplete)';
-$_['help_top']               = 'Display in the top menu bar. Only works for the top parent categories.';
-$_['help_column']            = 'Number of columns to use for the bottom 3 categories. Only works for the top parent categories.';
+$_['help_filter']            = '(Автодополнение)';
+$_['help_top']               = 'Отображение в главном меню. Работает только для главных родительских категорий.';
+$_['help_column']            = 'Количество столбцов в главном меню для отображения дочерних категорий. Работает только для главных родительских категорий.';
 
 // Error
-$_['error_warning']          = 'Warning: Please check the form carefully for errors!';
-$_['error_permission']       = 'Warning: You do not have permission to modify categories!';
-$_['error_name']             = 'Category Name must be between 1 and 255 characters!';
-$_['error_meta_title']       = 'Meta Title must be greater than 1 and less than 255 characters!';
-$_['error_keyword']          = 'SEO URL already in use!';
-$_['error_unique']           = 'SEO URL must be unique!';
-$_['error_parent']           = 'The parent category you have chosen is a child of the current one!';
+$_['error_warning']          = 'Предупреждение: Пожалуйста, внимательно проверьте форму на наличие ошибок!';
+$_['error_permission']       = 'Предупреждение: У Вас нет прав на изменение категорий!';
+$_['error_name']             = 'Название категории должно быть от 1 до 255 символов!';
+$_['error_meta_title']       = 'МетаТег Title должен быть больше 1 и меньше 255 символов!';
+$_['error_keyword']          = 'Семантический URL уже используется!';
+$_['error_unique']           = 'Семантический URL должен быть уникальным!';
+$_['error_parent']           = 'Выбранная Вам и родительская категория является дочерней по отношению к текущей!';

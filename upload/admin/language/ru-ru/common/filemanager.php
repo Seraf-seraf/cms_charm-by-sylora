@@ -1,23 +1,32 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/common/filemanager.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Image Manager';
+$_['heading_title']    = 'Менеджер изображений';
 
 // Text
-$_['text_uploaded']    = 'Success: Your file has been uploaded!';
-$_['text_directory']   = 'Success: Directory created!';
-$_['text_delete']      = 'Success: Your file or directory has been deleted!';
+$_['text_uploaded']    = 'Успешно: Ваш файл был загружен!';
+$_['text_directory']   = 'Успешно: Каталог создан!';
+$_['text_delete']      = 'Успешно: Ваш файл или каталог был удален!';
 
 // Entry
-$_['entry_search']     = 'Search..';
-$_['entry_folder']     = 'Folder Name';
+$_['entry_search']     = 'Поиск..';
+$_['entry_folder']     = 'Имя папки';
 
 // Error
-$_['error_permission'] = 'Warning: Permission Denied!';
-$_['error_filename']   = 'Warning: Filename must be between 3 and 255!';
-$_['error_folder']     = 'Warning: Folder name must be between 3 and 255!';
-$_['error_exists']     = 'Warning: A file or directory with the same name already exists!';
-$_['error_directory']  = 'Warning: Directory does not exist!';
-$_['error_filesize']   = 'Warning: Incorrect file size!';
-$_['error_filetype']   = 'Warning: Incorrect file type!';
-$_['error_upload']     = 'Warning: File could not be uploaded for an unknown reason!';
-$_['error_delete']     = 'Warning: You can not delete this directory!';
+$_['error_permission'] = 'Предупреждение: В доступе отказано!';
+$_['error_filename']   = 'Предупреждение: Имя файла должно быть от 3 до 255!';
+$_['error_folder']     = 'Предупреждение: Имя папки должно быть от 3 до 255!';
+$_['error_exists']     = 'Предупреждение: Файл или каталог с таким именем уже существует!';
+$_['error_directory']  = 'Предупреждение: Каталог не существует!';
+$_['error_filesize']   = 'Предупреждение: Неверный размер файла!';
+$_['error_filetype']   = 'Предупреждение: Неверный тип файла!';
+$_['error_upload']     = 'Предупреждение: Файл не может быть загружен по неизвестной причине!';
+$_['error_delete']     = 'Предупреждение: Вы не можете удалить этот каталог!';

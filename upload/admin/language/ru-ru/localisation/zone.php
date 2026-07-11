@@ -1,30 +1,39 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/localisation/zone.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']          = 'Zones';
+$_['heading_title']          = 'Зоны';
 
 // Text
-$_['text_success']           = 'Success: You have modified zones!';
-$_['text_list']              = 'Zone List';
-$_['text_add']               = 'Add Zone';
-$_['text_edit']              = 'Edit Zone';
+$_['text_success']           = 'Успешно: Вы изменили зоны!';
+$_['text_list']              = 'Список зон';
+$_['text_add']               = 'Добавить зону';
+$_['text_edit']              = 'Редактировать зону';
 
 // Column
-$_['column_name']            = 'Zone Name';
-$_['column_code']            = 'Zone Code';
-$_['column_country']         = 'Country';
-$_['column_action']          = 'Action';
+$_['column_name']            = 'Название зоны';
+$_['column_code']            = 'Код зоны';
+$_['column_country']         = 'Страна';
+$_['column_action']          = 'Действие';
 
 // Entry
-$_['entry_name']             = 'Zone Name';
-$_['entry_code']             = 'Zone Code';
-$_['entry_country']          = 'Country';
-$_['entry_status']           = 'Status';
+$_['entry_name']             = 'Название зоны';
+$_['entry_code']             = 'Код зоны';
+$_['entry_country']          = 'Страна';
+$_['entry_status']           = 'Статус';
 
 // Error
-$_['error_permission']       = 'Warning: You do not have permission to modify zones!';
-$_['error_name']             = 'Zone Name must be between 1 and 128 characters!';
-$_['error_default']          = 'Warning: This zone cannot be deleted as it is currently assigned as the default store zone!';
-$_['error_store']            = 'Warning: This zone cannot be deleted as it is currently assigned to %s stores!';
-$_['error_address']          = 'Warning: This zone cannot be deleted as it is currently assigned to %s address book entries!';
-$_['error_affiliate']        = 'Warning: This zone cannot be deleted as it is currently assigned to %s affiliates!';
-$_['error_zone_to_geo_zone'] = 'Warning: This zone cannot be deleted as it is currently assigned to %s zones to geo zones!';
+$_['error_permission']       = 'Предупреждение: У Вас нет разрешения на изменение зон!';
+$_['error_name']             = 'Название зоны должно быть от 1 до 128 символов!';
+$_['error_default']          = 'Предупреждение: Эта зона не может быть удалена, так как в настоящее время она назначена в качестве зоны магазина по умолчанию!';
+$_['error_store']            = 'Предупреждение: Эта зона не может быть удалена, так как в настоящее время она назначена %s магазинам!';
+$_['error_address']          = 'Предупреждение: Эта зона не может быть удалена, так как в настоящее время она назначена %s записям адресной книги!';
+$_['error_affiliate']        = 'Предупреждение: Эта зона не может быть удалена, так как в настоящее время она назначена %s партнерам!';
+$_['error_zone_to_geo_zone'] = 'Предупреждение: Эта зона не может быть удалена, так как в настоящее время она назначена %s зонам в геозонах!';

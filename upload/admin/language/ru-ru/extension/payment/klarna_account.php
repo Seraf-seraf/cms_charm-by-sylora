@@ -1,39 +1,48 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/klarna_account.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']			= 'Klarna Account';
+$_['heading_title']         = 'Klarna учетная запись';
 
 // Text
-$_['text_extension']		= 'Extensions';
-$_['text_success']			= 'Success: You have modified Klarna Payment module!';
-$_['text_edit']             = 'Edit Klarna Account';
-$_['text_klarna_account']	= '<a href="https://merchants.klarna.com/signup?locale=en&partner_id=d5c87110cebc383a826364769047042e777da5e8&utm_campaign=Platform&utm_medium=Partners&utm_source=Opencart" target="_blank"><img src="https://cdn.klarna.com/public/images/global/logos/v1/basic/global_basic_logo_std_blue-black.png?width=60&eid=opencart" alt="Klarna Account" title="Klarna Account" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_live']				= 'Live';
-$_['text_beta']				= 'Beta';
-$_['text_sweden']			= 'Sweden';
-$_['text_norway']			= 'Norway';
-$_['text_finland']			= 'Finland';
-$_['text_denmark']			= 'Denmark';
-$_['text_germany']			= 'Germany';
-$_['text_netherlands']		= 'The Netherlands';
+$_['text_extension']        = 'Расширения';
+$_['text_success']          = 'Успешно: Вы изменили модуль Klarna Payment!';
+$_['text_edit']             = 'Редактировать Klarna Account';
+$_['text_klarna_account']   = '<a href="https://merchants.klarna.com/signup?locale=en&partner_id=d5c87110cebc383a826364769047042e777da5e8&utm_campaign=Platform&utm_medium=Partners&utm_source=Opencart" target="_blank"><img src="https://cdn.klarna.com/public/images/global/logos/v1/basic/global_basic_logo_std_blue-black.png?width=60&eid=opencart" alt="Klarna Account" title="Klarna Account" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_live']             = 'Реальный';
+$_['text_beta']             = 'Бета';
+$_['text_sweden']           = 'Швеция';
+$_['text_norway']           = 'Норвегия';
+$_['text_finland']          = 'Финляндия';
+$_['text_denmark']          = 'Дания';
+$_['text_germany']          = 'Германия';
+$_['text_netherlands']      = 'Нидерланды';
 
 // Entry
-$_['entry_merchant']		= 'Klarna Merchant ID';
-$_['entry_secret']			= 'Klarna Secret';
-$_['entry_server']			= 'Server';
-$_['entry_total']			= 'Total';
-$_['entry_pending_status']	= 'Pending Status';
-$_['entry_accepted_status'] = 'Accepted Status';
-$_['entry_geo_zone']		= 'Geo Zone';
-$_['entry_status']			= 'Status';
-$_['entry_sort_order']		= 'Sort Order';
+$_['entry_merchant']        = 'Идентификатор продавца Klarna';
+$_['entry_secret']          = 'Секрет Klarna';
+$_['entry_server']          = 'Сервер';
+$_['entry_total']           = 'Всего';
+$_['entry_pending_status']  = 'Статус ожидания';
+$_['entry_accepted_status'] = 'Принятый статус';
+$_['entry_geo_zone']        = 'Геозона';
+$_['entry_status']          = 'Статус';
+$_['entry_sort_order']      = 'Порядок сортировки';
 
 // Help
-$_['help_merchant']			= '(estore id) to use for the Klarna service (provided by Klarna).';
-$_['help_secret']			= 'Shared secret to use with the Klarna service (provided by Klarna).';
-$_['help_total']			= 'The checkout total the order must reach before this payment method becomes active.';
+$_['help_merchant']         = '(estore id) для использования в сервисе Klarna (предоставляется Klarna).';
+$_['help_secret']           = 'Общий секрет для использования с сервисом Klarna (предоставляется Klarna).';
+$_['help_total']            = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным.';
 
 // Error
-$_['error_permission']		= 'Warning: You do not have permission to modify payment Klarna Part Payment!';
-$_['error_pclass']			= 'Could not retrieve pClass for %s. Error Code: %s; Error Message: %s';
-$_['error_curl']			= 'Curl Error - Code: %d; Message: %s';
-$_['error_log']				= 'There were errors updating the module. Please check the log file.';
+$_['error_permission']      = 'Предупреждение: У Вас нет разрешения на изменение оплаты Klarna Part!';
+$_['error_pclass']          = 'Не удалось получить pClass для %s. Код ошибки: %s; Сообщение об ошибке: %s';
+$_['error_curl']            = 'Curl ошибка - код: %d; Сообщение: %s';
+$_['error_log']             = 'При обновлении модуля произошли ошибки. Пожалуйста, проверьте файл журнала.';

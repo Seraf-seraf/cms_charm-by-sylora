@@ -1,31 +1,40 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/report/sale_shipping.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Shipping Report';
+$_['heading_title']     = 'Отчет о доставке';
 
 // Text
-$_['text_extension']    = 'Extensions';
-$_['text_edit']         = 'Edit Shipping Report';
-$_['text_success']      = 'Success: You have modified shipping report!';
-$_['text_filter']       = 'Filter';
-$_['text_year']         = 'Years';
-$_['text_month']        = 'Months';
-$_['text_week']         = 'Weeks';
-$_['text_day']          = 'Days';
-$_['text_all_status']   = 'All Statuses';
+$_['text_extension']    = 'Расширения';
+$_['text_edit']         = 'Редактировать отчет о доставке';
+$_['text_success']      = 'Успешно: Вы изменили отчет о доставке!';
+$_['text_filter']       = 'Фильтр';
+$_['text_year']         = 'Годам';
+$_['text_month']        = 'Месяцам';
+$_['text_week']         = 'Неделям';
+$_['text_day']          = 'Дням';
+$_['text_all_status']   = 'Все статусы';
 
 // Column
-$_['column_date_start'] = 'Date Start';
-$_['column_date_end']   = 'Date End';
-$_['column_title']      = 'Shipping Title';
-$_['column_orders']     = 'No. Orders';
-$_['column_total']      = 'Total';
+$_['column_date_start'] = 'Дата начала';
+$_['column_date_end']   = 'Дата окончания';
+$_['column_title']      = 'Название доставки';
+$_['column_orders']     = 'Количество заказов';
+$_['column_total']      = 'Всего';
 
 // Entry
-$_['entry_date_start']  = 'Date Start';
-$_['entry_date_end']    = 'Date End';
-$_['entry_group']       = 'Group By';
-$_['entry_status']      = 'Status';
-$_['entry_sort_order']  = 'Sort Order';
+$_['entry_date_start']  = 'Дата начала';
+$_['entry_date_end']    = 'Дата окончания';
+$_['entry_group']       = 'Группировать по';
+$_['entry_status']      = 'Статус';
+$_['entry_sort_order']  = 'Порядок сортировки';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify shipping report!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения на изменение отчета о доставке!';

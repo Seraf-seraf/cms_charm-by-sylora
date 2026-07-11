@@ -1,92 +1,101 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/firstdata_remote.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']					 = 'First Data EMEA Web Service API';
+$_['heading_title']                  = 'First Data EMEA Web Service API';
 
 // Text
-$_['text_firstdata_remote']			 = '<img src="view/image/payment/firstdata.png" alt="First Data" title="First Data" style="border: 1px solid #EEEEEE;" />';
-$_['text_extension']					 = 'Extensions';
-$_['text_success']					 = 'Success: You have modified First Data account details!';
-$_['text_edit']                      = 'Edit First Data EMEA Web Service API';
-$_['text_card_type']				 = 'Card type';
-$_['text_enabled']					 = 'Enabled';
-$_['text_merchant_id']				 = 'Store ID';
-$_['text_subaccount']				 = 'Subaccount';
-$_['text_user_id']					 = 'User ID';
-$_['text_capture_ok']				 = 'Capture was successful';
-$_['text_capture_ok_order']			 = 'Capture was successful, order status updated to success - settled';
-$_['text_refund_ok']				 = 'Refund was successful';
-$_['text_refund_ok_order']			 = 'Refund was successful, order status updated to refunded';
-$_['text_void_ok']					 = 'Void was successful, order status updated to voided';
-$_['text_settle_auto']				 = 'Sale';
-$_['text_settle_delayed']			 = 'Pre auth';
-$_['text_mastercard']				 = 'Mastercard';
-$_['text_visa']						 = 'Visa';
-$_['text_diners']					 = 'Diners';
-$_['text_amex']						 = 'American Express';
-$_['text_maestro']					 = 'Maestro';
-$_['text_payment_info']				 = 'Payment information';
-$_['text_capture_status']			 = 'Payment captured';
-$_['text_void_status']				 = 'Payment voided';
-$_['text_refund_status']			 = 'Payment refunded';
-$_['text_order_ref']				 = 'Order ref';
-$_['text_order_total']				 = 'Total authorised';
-$_['text_total_captured']			 = 'Total captured';
-$_['text_transactions']				 = 'Transactions';
-$_['text_column_amount']			 = 'Amount';
-$_['text_column_type']				 = 'Type';
-$_['text_column_date_added']		 = 'Created';
-$_['text_confirm_void']				 = 'Are you sure you want to void the payment?';
-$_['text_confirm_capture']			 = 'Are you sure you want to capture the payment?';
-$_['text_confirm_refund']			 = 'Are you sure you want to refund the payment?';
-$_['text_void']                      = 'Void';
-$_['text_payment']                   = 'Payment';
-$_['text_refund']                    = "Refund";
+$_['text_firstdata_remote']          = '<img src="view/image/payment/firstdata.png" alt="First Data" title="First Data" style="border: 1px solid #EEEEEE;" />';
+$_['text_extension']                 = 'Расширения';
+$_['text_success']                   = 'Успешно: Вы изменили данные учетной записи First Data!';
+$_['text_edit']                      = 'Редактировать First Data EMEA Web Service API';
+$_['text_card_type']                 = 'Тип карты';
+$_['text_enabled']                   = 'Включено';
+$_['text_merchant_id']               = 'Идентификатор магазина';
+$_['text_subaccount']                = 'Субсчет';
+$_['text_user_id']                   = 'Идентификатор пользователя';
+$_['text_capture_ok']                = 'Получение прошло успешно';
+$_['text_capture_ok_order']          = 'Получение прошло успешно, статус заказа обновлен до успешного - выполнено';
+$_['text_refund_ok']                 = 'Возврат прошел успешно';
+$_['text_refund_ok_order']           = 'Возврат прошел успешно, статус заказа обновлен до возвращенного';
+$_['text_void_ok']                   = 'Аннулирование выполнено успешно, статус заказа обновлен до аннулированного';
+$_['text_settle_auto']               = 'Продажа';
+$_['text_settle_delayed']            = 'Предварительная аутентификация';
+$_['text_mastercard']                = 'Mastercard';
+$_['text_visa']                      = 'Visa';
+$_['text_diners']                    = 'Diners';
+$_['text_amex']                      = 'American Express';
+$_['text_maestro']                   = 'Maestro';
+$_['text_payment_info']              = 'Платежная информация';
+$_['text_capture_status']            = 'Платеж получен';
+$_['text_void_status']               = 'Платеж аннулирован';
+$_['text_refund_status']             = 'Платеж возвращен';
+$_['text_order_ref']                 = 'Заказ ссылка';
+$_['text_order_total']               = 'Всего разрешено';
+$_['text_total_captured']            = 'Всего получено';
+$_['text_transactions']              = 'Транзакции';
+$_['text_column_amount']             = 'Количество';
+$_['text_column_type']               = 'Тип';
+$_['text_column_date_added']         = 'Создан';
+$_['text_confirm_void']              = 'Вы уверены, что хотите аннулировать платеж?';
+$_['text_confirm_capture']           = 'Вы уверены, что хотите получить платеж?';
+$_['text_confirm_refund']            = 'Вы уверены, что хотите вернуть платеж?';
+$_['text_void']                      = 'Аннулировать';
+$_['text_payment']                   = 'Оплата';
+$_['text_refund']                    = 'Возврат';
 
 // Entry
-$_['entry_certificate_path']		 = 'Certificate path';
-$_['entry_certificate_key_path']	 = 'Private key path';
-$_['entry_certificate_key_pw']		 = 'Private key password';
-$_['entry_certificate_ca_path']		 = 'CA path';
-$_['entry_merchant_id']				 = 'Store ID';
-$_['entry_user_id']					 = 'User ID';
-$_['entry_password']				 = 'Password';
-$_['entry_total']					 = 'Total';
-$_['entry_sort_order']				 = 'Sort order';
-$_['entry_geo_zone']				 = 'Geo zone';
-$_['entry_status']					 = 'Status';
-$_['entry_debug']					 = 'Debug logging';
-$_['entry_auto_settle']				 = 'Settlement type';
-$_['entry_status_success_settled']	 = 'Success - settled';
-$_['entry_status_success_unsettled'] = 'Success - not settled';
-$_['entry_status_decline']			 = 'Decline';
-$_['entry_status_void']				 = 'Voided';
-$_['entry_status_refund']			 = 'Refunded';
-$_['entry_enable_card_store']		 = 'Enable card storage tokens';
-$_['entry_cards_accepted']			 = 'Card types accepted';
+$_['entry_certificate_path']         = 'Путь сертификата';
+$_['entry_certificate_key_path']     = 'Путь к приватному ключу';
+$_['entry_certificate_key_pw']       = 'Пароль к приватному ключу';
+$_['entry_certificate_ca_path']      = 'CA путь';
+$_['entry_merchant_id']              = 'Идентификатор магазина';
+$_['entry_user_id']                  = 'Идентификатор пользователя';
+$_['entry_password']                 = 'Пароль';
+$_['entry_total']                    = 'Всего';
+$_['entry_sort_order']               = 'Порядок сортировки';
+$_['entry_geo_zone']                 = 'Геозона';
+$_['entry_status']                   = 'Статус';
+$_['entry_debug']                    = 'Журнал отладки';
+$_['entry_auto_settle']              = 'Тип расчета';
+$_['entry_status_success_settled']   = 'Успешно - решен';
+$_['entry_status_success_unsettled'] = 'Успешно - не решен';
+$_['entry_status_decline']           = 'Сниженный';
+$_['entry_status_void']              = 'Аннулированный';
+$_['entry_status_refund']            = 'Возвращенный';
+$_['entry_enable_card_store']        = 'Включить токены для хранения карт';
+$_['entry_cards_accepted']           = 'Типы карт принимаются';
 
 // Help
-$_['help_total']					 = 'The checkout total the order must reach before this payment method becomes active';
-$_['help_certificate']				 = 'Certificates and private keys should be stored outside of your public web folders';
-$_['help_card_select']				 = 'Ask the user to choose thier card type before they are redirected';
-$_['help_notification']				 = 'You need to supply this URL to First Data to get payment notifications';
-$_['help_debug']					 = 'Enabling debug will write sensitive data to a log file. You should always disable unless instructed otherwise .';
-$_['help_settle']					 = 'If you use pre-auth you must complete a post-auth action within 3-5 days otherwise your transaction will be dropped';
+$_['help_total']                     = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным';
+$_['help_certificate']               = 'Сертификаты и закрытые ключи должны храниться вне ваших общедоступных веб-папок.';
+$_['help_card_select']               = 'Попросите пользователя выбрать тип своей карты, прежде чем он будет перенаправлен';
+$_['help_notification']              = 'Вам необходимо указать этот URL для первых данных, чтобы получать уведомления о платежах';
+$_['help_debug']                     = 'Включение отладки приведет к записи конфиденциальных данных в файл журнала. Вы должны всегда отключать, если не указано иное.';
+$_['help_settle']                    = 'Если Вы используете предварительную авторизацию, Вы должны выполнить действие после авторизации в течение 3-5 дней, в противном случае Ваша транзакция будет отклонена.';
 
 // Tab
-$_['tab_account']					 = 'API info';
-$_['tab_order_status']				 = 'Order status';
-$_['tab_payment']					 = 'Payment settings';
+$_['tab_account']                    = 'API инфо';
+$_['tab_order_status']               = 'Статус заказа';
+$_['tab_payment']                    = 'Настройки оплаты';
 
 // Button
-$_['button_capture']				 = 'Capture';
-$_['button_refund']					 = 'Refund';
-$_['button_void']					 = 'Void';
+$_['button_capture']                 = 'Получить';
+$_['button_refund']                  = 'Вернуть';
+$_['button_void']                    = 'Аннулировать';
 
 // Error
-$_['error_merchant_id']				 = 'Store ID is required';
-$_['error_user_id']					 = 'User ID is required';
-$_['error_password']				 = 'Password is required';
-$_['error_certificate']				 = 'Certificate path is required';
-$_['error_key']						 = 'Certificate key is required';
-$_['error_key_pw']					 = 'Certificate key password is required';
-$_['error_ca']						 = 'Certificate Authority (CA) is required';
+$_['error_merchant_id']              = 'Идентификатор магазина обязателен';
+$_['error_user_id']                  = 'Идентификатор пользователя обязателен';
+$_['error_password']                 = 'Пароль обязателен';
+$_['error_certificate']              = 'Путь сертификата обязателен';
+$_['error_key']                      = 'Ключ сертификата обязателен';
+$_['error_key_pw']                   = 'Пароль к ключу сертификата обязателен';
+$_['error_ca']                       = 'Центр сертификации (CA) обязателен';

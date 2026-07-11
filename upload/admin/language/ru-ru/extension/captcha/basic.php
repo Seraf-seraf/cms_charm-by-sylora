@@ -1,14 +1,23 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/captcha/basic.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Basic Captcha';
+$_['heading_title']    = 'Простая капча';
 
 // Text
-$_['text_extension']   = 'Extensions';
-$_['text_success']     = 'Success: You have modified Basic Captcha!';
-$_['text_edit']        = 'Edit Basic Captcha';
+$_['text_extension']   = 'Расширения';
+$_['text_success']     = 'Успешно: Вы изменили простую капчу!';
+$_['text_edit']        = 'Редактировать простую капчу';
 
 // Entry
-$_['entry_status']     = 'Status';
+$_['entry_status']     = 'Статус';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify Basic Captcha!';
+$_['error_permission'] = 'Предупреждение: У Вас нет прав на изменение простой капчи!';

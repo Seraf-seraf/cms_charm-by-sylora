@@ -1,26 +1,35 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/catalog/filter.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Filters';
+$_['heading_title']     = 'Фильтры';
 
 // Text
-$_['text_success']      = 'Success: You have modified filters!';
-$_['text_list']         = 'Filter List';
-$_['text_add']          = 'Add Filter';
-$_['text_edit']         = 'Edit Filter';
-$_['text_group']        = 'Filter Group';
-$_['text_value']        = 'Filter Values';
+$_['text_success']      = 'Успешно: Вы изменили фильтры!';
+$_['text_list']         = 'Список фильтров';
+$_['text_add']          = 'Добавить фильтр';
+$_['text_edit']         = 'Редактировать фильтр';
+$_['text_group']        = 'Группа фильтра';
+$_['text_value']        = 'Значения фильтра';
 
 // Column
-$_['column_group']      = 'Filter Group';
-$_['column_sort_order'] = 'Sort Order';
-$_['column_action']     = 'Action';
+$_['column_group']      = 'Группа фильтра';
+$_['column_sort_order'] = 'Порядок сортировки';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_group']       = 'Filter Group Name';
-$_['entry_name']        = 'Filter Name';
-$_['entry_sort_order']  = 'Sort Order';
+$_['entry_group']       = 'Название группы фильтра';
+$_['entry_name']        = 'Название фильтра';
+$_['entry_sort_order']  = 'Порядок сортировки';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify filters!';
-$_['error_group']       = 'Filter Group Name must be between 1 and 64 characters!';
-$_['error_name']        = 'Filter Name must be between 1 and 64 characters!';
+$_['error_permission']  = 'Предупреждение: У Вас нет прав на изменение фильтров!';
+$_['error_group']       = 'Название группы фильтра должно быть от 1 до 64 символов!';
+$_['error_name']        = 'Название фильтра должно быть от 1 до 64 символов!';

@@ -1,26 +1,35 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/currency/ecb.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'European Central Bank Currency Converter';
+$_['heading_title']    = 'Конвертер валют Европейского центрального банка (ЕЦБ)';
 
 // Text
-$_['text_extension']   = 'Extensions';
-$_['text_success']     = 'Success: You have modified European Central Bank Currency Converter!';
-$_['text_edit']        = 'Edit European Central Bank Currency Converter';
+$_['text_extension']   = 'Расширения';
+$_['text_success']     = 'Успешно: Вы изменили конвертер валют Европейского центрального банка (ЕЦБ)!';
+$_['text_edit']        = 'Редактировать конвертер валют Европейского центрального банка (ЕЦБ)';
 $_['text_edit']       .= '<br><br>';
-$_['text_edit']       .= 'This extension requires the EUR currency to be an available currency.';
+$_['text_edit']       .= 'Для работы этого расширения необходимо, чтобы валюта EUR была доступна в списке валют.';
 $_['text_edit']       .= '<br><br>';
-$_['text_edit']       .= 'When enabled, it can be chosen as the currency rate engine at <b><a href="%2">System &gt; Settings</b></a> and you can refresh the currency rates via <b><a href="%1">System &gt; Localisation &gt; Currencies</a></b>.';
+$_['text_edit']       .= 'При включении расширение можно выбрать в качестве движка курсов валют в разделе <b><a href="%2">Система &gt; Настройки</b></a>, а обновлять курсы валют можно в разделе <b><a href="%1">Система &gt; Локализация &gt; Валюты</a></b>.';
 
 // Entry
-$_['entry_ip']         = 'Server IP-address';
-$_['entry_cron']       = 'CRON command';
-$_['entry_status']     = 'Status';
+$_['entry_ip']         = 'IP-адрес сервера';
+$_['entry_cron']       = 'CRON-команда';
+$_['entry_status']     = 'Статус';
 
 // Help
-$_['help_ip']          = 'Optional IP-address for server running a CRON task for refreshing the currency rates.';
-$_['help_cron']        = 'Use this command when setting up a CRON task on your server.';
+$_['help_ip']          = 'Необязательный IP-адрес сервера, на котором выполняется CRON-задача для обновления курсов валют.';
+$_['help_cron']        = 'Используйте эту команду при настройке CRON-задачи на Вашем сервере.';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify European Central Bank Currency Converter!';
-$_['error_euro']       = 'This extension requires the Euro as an available currency!';
-$_['error_ip']         = 'Invalid IP-address!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение конвертера валют Европейского центрального банка (ЕЦБ)!';
+$_['error_euro']       = 'Для работы этого расширения необходима валюта Евро в списке доступных валют!';
+$_['error_ip']         = 'Неверный IP-адрес!';

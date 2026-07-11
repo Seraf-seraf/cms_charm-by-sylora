@@ -1,30 +1,39 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/sagepay_server.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_title']				= 'Credit Card / Debit Card (SagePay)';
-$_['text_credit_card']			= 'Card Details';
-$_['text_description']			= 'Items on %s Order No: %s';
-$_['text_card_type']			= 'Card Type: ';
-$_['text_card_name']			= 'Card Name: ';
-$_['text_card_digits']			= 'Last Digits: ';
-$_['text_card_expiry']			= 'Expiry: ';
-$_['text_trial']				= '%s every %s %s for %s payments then ';
-$_['text_recurring']			= '%s every %s %s';
-$_['text_length']				= ' for %s payments';
-$_['text_success']				= 'Your payment has been authorised.';
-$_['text_decline']				= 'Your payment has been declined.';
-$_['text_bank_error']			= 'There was an error processing your request with the bank.';
-$_['text_transaction_error']	= 'There was an error processing your transaction.';
-$_['text_generic_error']		= 'There was an error processing your request.';
-$_['text_hash_failed']			= 'Hash check failed. Do not try your payment again as the payment status is unknown. Please contact the merchant.';
-$_['text_link']					= 'Please click <a href="%s">here</a> to continue';
-$_['text_confirm_delete']		= 'Are you sure you want to delete the card?';
+$_['text_title']				= 'Кредитная / дебетовая карта (SagePay)';
+$_['text_credit_card']			= 'Данные карты';
+$_['text_description']			= 'Товары заказа %s № %s';
+$_['text_card_type']			= 'Тип карты: ';
+$_['text_card_name']			= 'Имя на карте: ';
+$_['text_card_digits']			= 'Последние цифры: ';
+$_['text_card_expiry']			= 'Срок действия: ';
+$_['text_trial']				= '%s каждые %s %s за %s платежей, затем ';
+$_['text_recurring']			= '%s каждые %s %s';
+$_['text_length']				= ' за %s платежей';
+$_['text_success']				= 'Оплата успешно авторизована.';
+$_['text_decline']				= 'Оплата отклонена.';
+$_['text_bank_error']			= 'Ошибка обработки запроса в банке.';
+$_['text_transaction_error']	= 'Ошибка обработки транзакции.';
+$_['text_generic_error']		= 'Ошибка обработки запроса.';
+$_['text_hash_failed']			= 'Ошибка проверки контрольной суммы. Не повторяйте платёж — статус неизвестен. Обратитесь к продавцу.';
+$_['text_link']					= 'Нажмите <a href="%s">здесь</a> для продолжения';
+$_['text_confirm_delete']		= 'Вы уверены, что хотите удалить карту?';
 
 // Entry
-$_['entry_card']				= 'New or Existing Card: ';
-$_['entry_card_existing']		= 'Existing';
-$_['entry_card_new']			= 'New';
-$_['entry_card_save']			= 'Remember card details for future use';
-$_['entry_cc_choice']			= 'Choose an Existing Card';
+$_['entry_card']				= 'Новая или сохранённая карта: ';
+$_['entry_card_existing']		= 'Сохранённая';
+$_['entry_card_new']			= 'Новая';
+$_['entry_card_save']			= 'Сохранить данные карты для будущих платежей';
+$_['entry_cc_choice']			= 'Выберите сохранённую карту';
 
 // Button
-$_['button_delete_card']		= 'Delete selected card';
+$_['button_delete_card']		= 'Удалить выбранную карту';

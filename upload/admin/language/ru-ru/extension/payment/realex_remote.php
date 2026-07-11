@@ -1,95 +1,104 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/realex_remote.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']					 = 'Realex Remote';
+$_['heading_title']                  = 'Realex Remote';
 
 // Text
-$_['text_extension']				 = 'Extensions';
-$_['text_success']					 = 'Success: You have modified Realex account details!';
-$_['text_edit']                      = 'Edit Realex Remote';
-$_['text_card_type']				 = 'Card type';
-$_['text_enabled']					 = 'Enabled';
-$_['text_use_default']				 = 'Use default';
-$_['text_merchant_id']				 = 'Merchant ID';
-$_['text_subaccount']				 = 'Sub Account';
-$_['text_secret']					 = 'Shared secret';
-$_['text_card_visa']				 = 'Visa';
-$_['text_card_master']				 = 'Mastercard';
-$_['text_card_amex']				 = 'American Express';
-$_['text_card_switch']				 = 'Switch/Maestro';
-$_['text_card_laser']				 = 'Laser';
-$_['text_card_diners']				 = 'Diners';
-$_['text_capture_ok']				 = 'Capture was successful';
-$_['text_capture_ok_order']			 = 'Capture was successful, order status updated to success - settled';
-$_['text_rebate_ok']				 = 'Rebate was successful';
-$_['text_rebate_ok_order']			 = 'Rebate was successful, order status updated to rebated';
-$_['text_void_ok']					 = 'Void was successful, order status updated to voided';
-$_['text_settle_auto']				 = 'Auto';
-$_['text_settle_delayed']			 = 'Delayed';
-$_['text_settle_multi']				 = 'Multi';
-$_['text_ip_message']				 = 'You must supply your server IP address to your Realex account manager before going live';
-$_['text_payment_info']				 = 'Payment information';
-$_['text_capture_status']			 = 'Payment captured';
-$_['text_void_status']				 = 'Payment voided';
-$_['text_rebate_status']			 = 'Payment rebated';
-$_['text_order_ref']				 = 'Order ref';
-$_['text_order_total']				 = 'Total authorised';
-$_['text_total_captured']			 = 'Total captured';
-$_['text_transactions']				 = 'Transactions';
-$_['text_confirm_void']				 = 'Are you sure you want to void the payment?';
-$_['text_confirm_capture']			 = 'Are you sure you want to capture the payment?';
-$_['text_confirm_rebate']			 = 'Are you sure you want to rebate the payment?';
-$_['text_realex_remote']			 = '<a target="_BLANK" href="http://www.realexpayments.co.uk/partner-refer?id=opencart"><img src="view/image/payment/realex.png" alt="Realex" title="Realex" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_void']                      = 'Void';
-$_['text_payment']                   = "Payment";
-$_['text_rebate']                    = 'Rebate';
+$_['text_extension']                 = 'Расширения';
+$_['text_success']                   = 'Успешно: Вы изменили детали учетной записи Realex!';
+$_['text_edit']                      = 'Редактировать Realex Remote';
+$_['text_card_type']                 = 'Тип карты';
+$_['text_enabled']                   = 'Включено';
+$_['text_use_default']               = 'Использовать по умолчанию';
+$_['text_merchant_id']               = 'Идентификатор продавца';
+$_['text_subaccount']                = 'Субсчет';
+$_['text_secret']                    = 'Общий секрет';
+$_['text_card_visa']                 = 'Visa';
+$_['text_card_master']               = 'Mastercard';
+$_['text_card_amex']                 = 'American Express';
+$_['text_card_switch']               = 'Switch/Maestro';
+$_['text_card_laser']                = 'Laser';
+$_['text_card_diners']               = 'Diners';
+$_['text_capture_ok']                = 'Получение прошло успешно';
+$_['text_capture_ok_order']          = 'Получение прошло успешно, статус заказа обновлен до успешного - выполнено';
+$_['text_rebate_ok']                 = 'Скидка прошла успешно';
+$_['text_rebate_ok_order']           = 'Скидка прошла успешно, статус заказа обновлен до скидки';
+$_['text_void_ok']                   = 'Аннулирование выполнено успешно, статус заказа обновлен до аннулированного';
+$_['text_settle_auto']               = 'Авто';
+$_['text_settle_delayed']            = 'Задержанный';
+$_['text_settle_multi']              = 'Мульти';
+$_['text_ip_message']                = 'Вы должны предоставить IP-адрес своего сервера менеджеру своего аккаунта Realex, прежде чем начать работу';
+$_['text_payment_info']              = 'Платежная информация';
+$_['text_capture_status']            = 'Платеж получен';
+$_['text_void_status']               = 'Платеж аннулирован';
+$_['text_rebate_status']             = 'Платеж возвращен';
+$_['text_order_ref']                 = 'Заказ ссылка';
+$_['text_order_total']               = 'Всего разрешено';
+$_['text_total_captured']            = 'Всего получено';
+$_['text_transactions']              = 'Транзакции';
+$_['text_confirm_void']              = 'Вы уверены, что хотите аннулировать платеж?';
+$_['text_confirm_capture']           = 'Вы уверены, что хотите получить платеж?';
+$_['text_confirm_rebate']            = 'Вы уверены, что хотите вернуть платеж?';
+$_['text_realex_remote']             = '<a target="_BLANK" href="http://www.realexpayments.co.uk/partner-refer?id=opencart"><img src="view/image/payment/realex.png" alt="Realex" title="Realex" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_void']                      = 'Аннулировать';
+$_['text_payment']                   = 'Оплата';
+$_['text_rebate']                    = 'Возврат';
 
 // Column
-$_['text_column_amount']			 = 'Amount';
-$_['text_column_type']				 = 'Type';
-$_['text_column_date_added']		 = 'Created';
+$_['text_column_amount']             = 'Количество';
+$_['text_column_type']               = 'Тип';
+$_['text_column_date_added']         = 'Создан';
 
 // Entry
-$_['entry_merchant_id']				 = 'Merchant ID';
-$_['entry_secret']					 = 'Shared secret';
-$_['entry_rebate_password']			 = 'Rebate password';
-$_['entry_total']					 = 'Total';
-$_['entry_sort_order']				 = 'Sort order';
-$_['entry_geo_zone']				 = 'Geo zone';
-$_['entry_status']					 = 'Status';
-$_['entry_debug']					 = 'Debug logging';
-$_['entry_auto_settle']				 = 'Settlement type';
-$_['entry_tss_check']				 = 'TSS checks';
-$_['entry_card_data_status']		 = 'Card info logging';
-$_['entry_3d']						 = 'Enable 3D secure';
-$_['entry_liability_shift']			 = 'Accept non-liability shifting scenarios';
-$_['entry_status_success_settled']	 = 'Success - settled';
-$_['entry_status_success_unsettled'] = 'Success - not settled';
-$_['entry_status_decline']			 = 'Decline';
-$_['entry_status_decline_pending']	 = 'Decline - offline auth';
-$_['entry_status_decline_stolen']	 = 'Decline - lost or stolen card';
-$_['entry_status_decline_bank']		 = 'Decline - bank error';
-$_['entry_status_void']				 = 'Voided';
-$_['entry_status_rebate']			 = 'Rebated';
+$_['entry_merchant_id']              = 'Идентификатор продавца';
+$_['entry_secret']                   = 'Общий секрет';
+$_['entry_rebate_password']          = 'Восстановить пароль';
+$_['entry_total']                    = 'Всего';
+$_['entry_sort_order']               = 'Порядок сортировки';
+$_['entry_geo_zone']                 = 'Геозона';
+$_['entry_status']                   = 'Статус';
+$_['entry_debug']                    = 'Журнал отладки';
+$_['entry_auto_settle']              = 'Тип расчета';
+$_['entry_tss_check']                = 'TSS проверка';
+$_['entry_card_data_status']         = 'Регистрация информации о карте';
+$_['entry_3d']                       = 'Включить 3D secure';
+$_['entry_liability_shift']          = 'Принять сценарии перехода без обязательств';
+$_['entry_status_success_settled']   = 'Успешно - решен';
+$_['entry_status_success_unsettled'] = 'Успешно - не решен';
+$_['entry_status_decline']           = 'Сниженный';
+$_['entry_status_decline_pending']   = 'Отклонить - автономная аутентификация';
+$_['entry_status_decline_stolen']    = 'Отклонить - потерянная или украденная карта';
+$_['entry_status_decline_bank']      = 'Отклонить - ошибка банка';
+$_['entry_status_void']              = 'Аннулированный';
+$_['entry_status_rebate']            = 'Сниженный';
 
 // Help
-$_['help_total']					 = 'The checkout total the order must reach before this payment method becomes active';
-$_['help_card_select']				 = 'Ask the user to choose thier card type before they are redirected';
-$_['help_notification']				 = 'You need to supply this URL to Realex to get payment notifications';
-$_['help_debug']					 = 'Enabling debug will write sensitive data to a log file. You should always disable unless instructed otherwise.';
-$_['help_liability']				 = 'Accepting liability means you will still accept payments when a user fails 3D secure.';
-$_['help_card_data_status']			 = 'Logs last 4 cards digits, expire, name, type and issuing bank information';
+$_['help_total']                     = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным';
+$_['help_card_select']               = 'Попросите пользователя выбрать тип своей карты, прежде чем он будет перенаправлен';
+$_['help_notification']              = 'Вам нужно указать этот URL в Realex, чтобы получать уведомления о платежах';
+$_['help_debug']                     = 'Включение отладки приведет к записи конфиденциальных данных в файл журнала. Вы должны всегда отключать, если не указано иное.';
+$_['help_liability']                 = 'Принятие ответственности означает, что Вы по-прежнему будете принимать платежи, когда пользователь отказывается от 3D безопасности.';
+$_['help_card_data_status']          = 'Записывает последние 4 карты, цифры, срок действия, имя, тип и информацию о выдаче банка';
 
 // Tab
-$_['tab_api']					     = 'API Details';
-$_['tab_account']				     = 'Accounts';
-$_['tab_order_status']				 = 'Order Status';
-$_['tab_payment']					 = 'Payment Settings';
+$_['tab_api']                        = 'Детали API';
+$_['tab_account']                    = 'Счета';
+$_['tab_order_status']               = 'Статус заказа';
+$_['tab_payment']                    = 'Настройки оплаты';
 
 // Button
-$_['button_capture']				 = 'Capture';
-$_['button_rebate']					 = 'Rebate / refund';
-$_['button_void']					 = 'Void';
+$_['button_capture']                 = 'Получить';
+$_['button_rebate']                  = 'Скидка / вернуть';
+$_['button_void']                    = 'Аннулировать';
 
 // Error
-$_['error_merchant_id']				 = 'Merchant ID is required';
-$_['error_secret']					 = 'Shared secret is required';
+$_['error_merchant_id']              = 'Идентификатор продавца обязателен';
+$_['error_secret']                   = 'Общий секрет обязателен';

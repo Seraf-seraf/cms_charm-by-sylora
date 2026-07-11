@@ -1,16 +1,25 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/extension/shipping.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Shipping';
+$_['heading_title']     = 'Доставка';
 
 // Text
-$_['text_success']      = 'Success: You have modified shipping!';
-$_['text_list']         = 'Shipping List';
+$_['text_success']      = 'Успешно: Вы изменили доставку!';
+$_['text_list']         = 'Список доставки';
 
 // Column
-$_['column_name']       = 'Shipping Method';
-$_['column_status']     = 'Status';
-$_['column_sort_order'] = 'Sort Order';
-$_['column_action']     = 'Action';
+$_['column_name']       = 'Метод доставки';
+$_['column_status']     = 'Статус';
+$_['column_sort_order'] = 'Порядок сортировки';
+$_['column_action']     = 'Действие';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify shipping!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения на изменение доставок!';

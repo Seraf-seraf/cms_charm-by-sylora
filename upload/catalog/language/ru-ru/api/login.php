@@ -1,7 +1,16 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/api/login.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_success'] = 'Success: API session successfully started!';
+$_['text_success'] = 'Успешно: сессия API успешно запущена!';
 
 // Error
-$_['error_key']    = 'Warning: Incorrect API Key!';
-$_['error_ip']     = 'Warning: Your IP %s is not allowed to access this API!';
+$_['error_key']    = 'Предупреждение: Неверный ключ API!';
+$_['error_ip']     = 'Предупреждение: Ваш IP %s не имеет доступа к этому API!';

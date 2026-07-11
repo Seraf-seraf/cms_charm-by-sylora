@@ -1,16 +1,25 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/total/reward.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title'] = 'Использовать бонусные баллы (доступно %s)';
+$_['heading_title'] = 'Использовать бонусные баллы (Доступно %s)';
 
 // Text
 $_['text_reward']   = 'Бонусные баллы (%s)';
-$_['text_order_id'] = 'Заказ #%s';
-$_['text_success']  = 'Бонусные баллы применены.';
+$_['text_order_id'] = 'Номер заказа: #%s';
+$_['text_success']  = 'Успешно: Ваша скидка за бонусные баллы была применена!';
 
 // Entry
-$_['entry_reward']  = 'Сколько баллов использовать (максимум %s)';
+$_['entry_reward']  = 'Баллы для использования (Максимум %s)';
 
 // Error
-$_['error_reward']  = 'Введите количество бонусных баллов.';
-$_['error_points']  = 'У вас нет %s бонусных баллов.';
-$_['error_maximum'] = 'Можно применить не больше %s баллов.';
+$_['error_reward']  = 'Предупреждение: пожалуйста, введите количество бонусных баллов!';
+$_['error_points']  = 'Предупреждение: У Вас нет %s бонусных баллов!';
+$_['error_maximum'] = 'Предупреждение: Максимальное количество баллов, которое можно применить %s!';

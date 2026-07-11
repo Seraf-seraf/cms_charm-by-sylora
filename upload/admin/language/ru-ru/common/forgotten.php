@@ -1,19 +1,28 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/common/forgotten.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']   = 'Forgot Your Password?';
+$_['heading_title']   = 'Забыли пароль?';
 
 // Text
-$_['text_forgotten']  = 'Forgotten Password';
-$_['text_your_email'] = 'Your E-Mail Address';
-$_['text_email']      = 'Enter the e-mail address associated with your account. Click submit to have a password reset link e-mailed to you.';
-$_['text_success']    = 'An email with a confirmation link has been sent your admin email address.';
+$_['text_forgotten']  = 'Восстановить пароль';
+$_['text_your_email'] = 'Ваш адрес электронной почты';
+$_['text_email']      = 'Введите адрес электронной почты, связанный с Вашей учетной записью. Нажмите «Сбросить», чтобы получить ссылку для сброса пароля по электронной почте.';
+$_['text_success']    = 'Письмо с подтверждением было отправлено на Ваш электронный адрес администратора.';
 
 // Entry
-$_['entry_email']     = 'E-Mail Address';
-$_['entry_password']  = 'New Password';
-$_['entry_confirm']   = 'Confirm';
+$_['entry_email']     = 'Адрес электронной почты';
+$_['entry_password']  = 'Новый пароль';
+$_['entry_confirm']   = 'Подтверждение';
 
 // Error
-$_['error_email']     = 'Warning: The E-Mail Address was not found in our records, please try again!';
-$_['error_password']  = 'Password must be between 4 and 20 characters!';
-$_['error_confirm']   = 'Password and password confirmation do not match!';
+$_['error_email']     = 'Предупреждение: Адрес электронной почты не был найден в наших записях, пожалуйста, попробуйте еще раз!';
+$_['error_password']  = 'Пароль должен быть от 4 до 20 символов!';
+$_['error_confirm']   = 'Пароль и подтверждение пароля не совпадают!';

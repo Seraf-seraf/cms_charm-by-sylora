@@ -1,46 +1,55 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/sale/voucher.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Gift Vouchers';
+$_['heading_title']     = 'Подарочные сертификаты';
 
 // Text
-$_['text_success']      = 'Success: You have modified vouchers!';
-$_['text_list']         = 'Gift Voucher List';
-$_['text_add']          = 'Add Gift Voucher';
-$_['text_edit']         = 'Edit Gift Voucher';
+$_['text_success']      = 'Успешно: Вы изменили сертификаты!';
+$_['text_list']         = 'Список подарочных сертификатов';
+$_['text_add']          = 'Добавить подарочный сертификат';
+$_['text_edit']         = 'Редактировать подарочный сертификат';
 
 // Column
-$_['column_name']       = 'Voucher Name';
-$_['column_code']       = 'Code';
-$_['column_from']       = 'From';
-$_['column_to']         = 'To';
-$_['column_theme']      = 'Theme';
-$_['column_amount']     = 'Amount';
-$_['column_status']     = 'Status';
-$_['column_order_id']   = 'Order ID';
-$_['column_customer']   = 'Customer';
-$_['column_date_added'] = 'Date Added';
-$_['column_action']     = 'Action';
+$_['column_name']       = 'Название сертификата';
+$_['column_code']       = 'Код';
+$_['column_from']       = 'От';
+$_['column_to']         = 'Для';
+$_['column_theme']      = 'Темя';
+$_['column_amount']     = 'Сумма';
+$_['column_status']     = 'Статус';
+$_['column_order_id']   = 'Номер заказа';
+$_['column_customer']   = 'Клиент';
+$_['column_date_added'] = 'Дата добавления';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_code']        = 'Code';
-$_['entry_from_name']   = 'From Name';
-$_['entry_from_email']  = 'From E-Mail';
-$_['entry_to_name']     = 'To Name';
-$_['entry_to_email']    = 'To E-Mail';
-$_['entry_theme']       = 'Theme';
-$_['entry_message']     = 'Message';
-$_['entry_amount']      = 'Amount';
-$_['entry_status']      = 'Status';
+$_['entry_code']        = 'Код';
+$_['entry_from_name']   = 'Имя отправителя';
+$_['entry_from_email']  = 'Эл. почта отправителя';
+$_['entry_to_name']     = 'Имя получателя';
+$_['entry_to_email']    = 'Эл. почта получателя';
+$_['entry_theme']       = 'Тема';
+$_['entry_message']     = 'Сообщение';
+$_['entry_amount']      = 'Сумма';
+$_['entry_status']      = 'Статус';
 
 // Help
-$_['help_code']         = 'The code the customer enters to activate the voucher.';
+$_['help_code']         = 'Код, который клиент вводит для активации сертификата.';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify vouchers!';
-$_['error_exists']      = 'Warning: Voucher code is already in use!';
-$_['error_code']        = 'Code must be between 3 and 10 characters!';
-$_['error_to_name']     = 'Recipient\'s Name must be between 1 and 64 characters!';
-$_['error_from_name']   = 'Your Name must be between 1 and 64 characters!';
-$_['error_email']       = 'E-Mail Address does not appear to be valid!';
-$_['error_amount']      = 'Amount must be greater than or equal to 1!';
-$_['error_order']       = 'Warning: This voucher cannot be deleted as it is part of an <a href="%s">order</a>!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения изменять сертификаты!';
+$_['error_exists']      = 'Предупреждение: Код сертификата уже используется!';
+$_['error_code']        = 'Код должен быть от 3 до 10 символов!';
+$_['error_to_name']     = 'Имя получателя должно быть от 1 до 64 символов!';
+$_['error_from_name']   = 'Ваше имя должно быть от 1 до 64 символов!';
+$_['error_email']       = 'Адрес электронной почты не является действительным!';
+$_['error_amount']      = 'Сумма должна быть больше или равна 1!';
+$_['error_order']       = 'Предупреждение: Этот сертификат нельзя удалить, поскольку он является частью <a href="%s">заказа</a>!';

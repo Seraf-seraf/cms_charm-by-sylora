@@ -1,32 +1,41 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/localisation/tax_class.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Tax Classes';
+$_['heading_title']     = 'Налоговые классы';
 
 // Text
-$_['text_success']      = 'Success: You have modified tax classes!';
-$_['text_list']         = 'Tax Class List';
-$_['text_add']          = 'Add Tax Class';
-$_['text_edit']         = 'Edit Tax Class';
-$_['text_tax_class']    = 'Tax Class';
-$_['text_tax_rate']     = 'Tax Rates';
-$_['text_shipping']     = 'Shipping Address';
-$_['text_payment']      = 'Payment Address';
-$_['text_store']        = 'Store Address';
+$_['text_success']      = 'Успешно: Вы изменили налоговые классы!';
+$_['text_list']         = 'Список налоговых классов';
+$_['text_add']          = 'Добавить налоговый класс';
+$_['text_edit']         = 'Редактировать налоговый класс';
+$_['text_tax_class']    = 'Налоговый класс';
+$_['text_tax_rate']     = 'Налоговые ставки';
+$_['text_shipping']     = 'Адрес доставки';
+$_['text_payment']      = 'Платежный адрес';
+$_['text_store']        = 'Адрес магазина';
 
 // Column
-$_['column_title']      = 'Tax Class Title';
-$_['column_action']     = 'Action';
+$_['column_title']      = 'Название налогового класса';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_title']       = 'Tax Class Title';
-$_['entry_description'] = 'Description';
-$_['entry_rate']        = 'Tax Rate';
-$_['entry_based']       = 'Based On';
-$_['entry_geo_zone']    = 'Geo Zone';
-$_['entry_priority']    = 'Priority';
+$_['entry_title']       = 'Название налогового класса';
+$_['entry_description'] = 'Описание';
+$_['entry_rate']        = 'Налоговые ставки';
+$_['entry_based']       = 'На основе';
+$_['entry_geo_zone']    = 'Геозона';
+$_['entry_priority']    = 'Приоритет';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify tax classes!';
-$_['error_title']       = 'Tax Class Title must be between 3 and 32 characters!';
-$_['error_description'] = 'Description must be between 3 and 255 characters!';
-$_['error_product']     = 'Warning: This tax class cannot be deleted as it is currently assigned to %s products!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения на изменение налоговых классов!';
+$_['error_title']       = 'Название налогового класса должно быть от 3 до 32 символов!';
+$_['error_description'] = 'Описание должно содержать от 3 до 255 символов!';
+$_['error_product']     = 'Предупреждение: Этот класс налога не может быть удален, так как в настоящее время он назначен %s продуктам!';

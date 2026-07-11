@@ -1,22 +1,31 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/account/login.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']                = 'Вход в аккаунт';
+$_['heading_title']                = 'Авторизация';
 
 // Text
-$_['text_account']                 = 'Аккаунт';
-$_['text_login']                   = 'Вход';
+$_['text_account']                 = 'Личный кабинет';
+$_['text_login']                   = 'Авторизация';
 $_['text_new_customer']            = 'Новый покупатель';
-$_['text_register']                = 'Зарегистрироваться';
-$_['text_register_account']        = 'Аккаунт помогает быстрее оформлять заказы, отслеживать статус и смотреть историю покупок.';
-$_['text_returning_customer']      = 'Уже есть аккаунт';
-$_['text_i_am_returning_customer'] = 'Войти в аккаунт';
-$_['text_forgotten']               = 'Забыли пароль?';
+$_['text_register']                = 'Зарегистрируйтесь';
+$_['text_register_account']        = 'После регистрации Вы сможете совершать покупки быстрее, быть в курсе статуса заказа и отслеживать заказы, которые Вы уже сделали ранее.';
+$_['text_returning_customer']      = 'Зарегистрированный покупатель';
+$_['text_i_am_returning_customer'] = 'Я зарегистрированный клиент';
+$_['text_forgotten']               = 'Восстановить пароль';
 
 // Entry
-$_['entry_email']                  = 'Email';
+$_['entry_email']                  = 'Адрес электронной почты';
 $_['entry_password']               = 'Пароль';
 
 // Error
-$_['error_login']                  = 'Email или пароль указаны неверно.';
-$_['error_attempts']               = 'Превышено количество попыток входа. Попробуйте снова через 1 час.';
-$_['error_approved']               = 'Перед входом аккаунт должен быть подтвержден.';
+$_['error_login']                  = 'Предупреждение: Не совпадает адрес электронной почты и/или пароль.';
+$_['error_attempts']               = 'Предупреждение: Вами превышено допустимое количество попыток входа. Пожалуйста, повторите попытку через 1 час.';
+$_['error_approved']               = 'Предупреждение: Ваша учетная запись требует подтверждения, прежде чем Вы сможете войти.';

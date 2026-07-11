@@ -1,81 +1,90 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/fraud/fraudlabspro.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
 $_['heading_title']              = 'FraudLabs Pro';
 
 // Text
-$_['text_extension']             = 'Extensions';
-$_['text_success']               = 'Success: You have modified FraudLabs Pro Settings!';
-$_['text_edit']                  = 'Settings';
-$_['text_signup']                = 'FraudLabs Pro is a fraud detection service. You can <a href="http://www.fraudlabspro.com/plan?ref=1730" target="_blank"><u>sign up here</u></a> for a free API Key.';
-$_['text_id']                    = 'FraudLabs Pro ID';
-$_['text_ip_address']            = 'IP Address';
-$_['text_ip_net_speed']          = 'IP Net Speed';
-$_['text_ip_isp_name']           = 'IP ISP Name';
-$_['text_ip_usage_type']         = 'IP Usage Type';
-$_['text_ip_domain']             = 'IP Domain';
-$_['text_ip_time_zone']          = 'IP Time Zone';
-$_['text_ip_location']           = 'IP Location';
-$_['text_ip_distance']           = 'IP Distance';
-$_['text_ip_latitude']           = 'IP Latitude';
-$_['text_ip_longitude']          = 'IP Longitude';
-$_['text_risk_country']          = 'High Risk Country';
-$_['text_free_email']            = 'Free Email';
-$_['text_ship_forward']          = 'Ship Forward';
-$_['text_using_proxy']           = 'Using Proxy';
-$_['text_bin_found']             = 'BIN Found';
-$_['text_email_blacklist']       = 'Email Blacklist';
-$_['text_credit_card_blacklist'] = 'Credit Card Blacklist';
-$_['text_score']                 = 'FraudLabs Pro Score';
-$_['text_status']                = 'FraudLabs Pro Status';
-$_['text_message']               = 'Message';
-$_['text_transaction_id']        = 'Transaction ID';
-$_['text_credits']               = 'Balance';
-$_['text_error']                 = 'Error:';
-$_['text_flp_upgrade']           = '<a href="http://www.fraudlabspro.com/plan" target="_blank">[Upgrade]</a>';
-$_['text_flp_merchant_area']     = 'Please login to <a href="http://www.fraudlabspro.com/merchant/login" target="_blank">FraudLabs Pro Merchant Area</a> for more information about this order.';
-$_['text_rule_validation']       = 'Rules Validation';
-$_['text_testing']               = 'Testing Purpose';
+$_['text_extension']             = 'Расширения';
+$_['text_success']               = 'Успешно: Вы изменили настройки FraudLabs Pro!';
+$_['text_edit']                  = 'Настройки';
+$_['text_signup']                = 'FraudLabs Pro - это решение для обнаружения мошенничества. Это поможет Вам уменьшить потери от мошенничества или возвратные платежи, проверяя все Ваши входящие заказы на наличие моделей мошенничества. Вы можете <a href="http://www.fraudlabspro.com/pricing?ref=17295" target="_blank" class="alert-link">зарегистрироваться</a> для бесплатного Micro плана и ключа API если у Вас его нет.';
+$_['text_id']                    = 'Идентификатор FraudLabs Pro';
+$_['text_ip_address']            = 'IP-адрес';
+$_['text_ip_net_speed']          = 'IP скорость сети';
+$_['text_ip_isp_name']           = 'IP имя провайдера';
+$_['text_ip_usage_type']         = 'IP используемый тип';
+$_['text_ip_domain']             = 'IP домен';
+$_['text_ip_time_zone']          = 'IP часовой пояс';
+$_['text_ip_location']           = 'IP локация';
+$_['text_ip_distance']           = 'IP дистанция';
+$_['text_ip_latitude']           = 'IP широта';
+$_['text_ip_longitude']          = 'IP долгота';
+$_['text_risk_country']          = 'Страна высокого риска';
+$_['text_free_email']            = 'Бесплатная электронная почта';
+$_['text_ship_forward']          = 'Перенаправление';
+$_['text_using_proxy']           = 'Использовать прокси';
+$_['text_bin_found']             = 'BIN нахождения';
+$_['text_email_blacklist']       = 'Черный список адресов электронной почты';
+$_['text_credit_card_blacklist'] = 'Черный список кредитных карт';
+$_['text_score']                 = 'Счет FraudLabs Pro';
+$_['text_status']                = 'Статус FraudLabs Pro';
+$_['text_message']               = 'Сообщение';
+$_['text_transaction_id']        = 'Номер транзакции';
+$_['text_credits']               = 'Баланс';
+$_['text_error']                 = 'Ошибка:';
+$_['text_flp_upgrade']           = '<a href="http://www.fraudlabspro.com/pricing" target="_blank">[Обновить]</a>';
+$_['text_flp_merchant_area']     = 'Пожалуйста, войдите в <a href="http://www.fraudlabspro.com/merchant/login" target="_blank">торговую зону FraudLabs Pro</a> для получения дополнительной информации об этом заказе.';
+$_['text_rule_validation']       = 'Проверка правил';
+$_['text_testing']               = 'Цель тестирования';
 
 // Entry
-$_['entry_status']               = 'Status';
-$_['entry_key']                  = 'API Key';
-$_['entry_score']                = 'Risk Score';
-$_['entry_order_status']         = 'Order Status';
-$_['entry_review_status']        = 'Review Status';
-$_['entry_approve_status']       = 'Approve Status';
-$_['entry_reject_status']        = 'Reject Status';
-$_['entry_simulate_ip']          = 'Simulate IP';
+$_['entry_status']               = 'Статус';
+$_['entry_key']                  = 'API-ключ';
+$_['entry_score']                = 'Оценка риска';
+$_['entry_order_status']         = 'Статус заказа';
+$_['entry_review_status']        = 'Статус отзыва';
+$_['entry_approve_status']       = 'Статус одобрения';
+$_['entry_reject_status']        = 'Статус отказов';
+$_['entry_simulate_ip']          = 'Симуляция IP';
 
 // Help
-$_['help_order_status']          = 'Orders that have a score over your set risk score will be assigned this order status.';
-$_['help_review_status']         = 'Orders that marked as review by FraudLabs Pro will be assigned this order status.';
-$_['help_approve_status']        = 'Orders that marked as approve by FraudLabs Pro will be assigned this order status.';
-$_['help_reject_status']         = 'Orders that marked as reject by FraudLabs Pro will be assigned this order status.';
-$_['help_simulate_ip']           = 'Simulate the visitor IP address for testing. Leave blank to disable it.';
-$_['help_fraudlabspro_id']       = 'Unique identifier for a transaction screened by FraudLabs Pro system.';
-$_['help_ip_address']            = 'IP Address.';
-$_['help_ip_net_speed']          = 'Connection speed.';
-$_['help_ip_isp_name']           = 'ISP of the IP address.';
-$_['help_ip_usage_type']         = 'Usage type of the IP address. E.g, ISP, Commercial, Residential.';
-$_['help_ip_domain']             = 'Domain name of the IP address.';
-$_['help_ip_time_zone']          = 'Time zone of the IP address.';
-$_['help_ip_location']           = 'Location of the IP address.';
-$_['help_ip_distance']           = 'Distance from IP address to Billing Location.';
-$_['help_ip_latitude']           = 'Latitude of the IP address.';
-$_['help_ip_longitude']          = 'Longitude of the IP address.';
-$_['help_risk_country']          = 'Whether IP address country is in the latest high risk country list.';
-$_['help_free_email']            = 'Whether e-mail is from free e-mail provider.';
-$_['help_ship_forward']          = 'Whether shipping address is a freight forwarder address.';
-$_['help_using_proxy']           = 'Whether IP address is from Anonymous Proxy Server.';
-$_['help_bin_found']             = 'Whether the BIN information matches our BIN list.';
-$_['help_email_blacklist']       = 'Whether the email address is in our blacklist database.';
-$_['help_credit_card_blacklist'] = 'Whether the credit card is in our blacklist database.';
-$_['help_score']                 = 'Risk score, 0 (low risk) - 100 (high risk).';
-$_['help_status']                = 'FraudLabs Pro status.';
-$_['help_message']               = 'FraudLabs Pro error message description.';
-$_['help_transaction_id']        = 'Unique identifier for a transaction screened by FraudLabs Pro system.';
-$_['help_credits']               = 'Balance of the credits available after this transaction.';
+$_['help_order_status']          = 'Заказам, которые имеют оценку выше установленного показателя риска, будет присвоен этот статус заказа.';
+$_['help_review_status']         = 'Заказам, которые отмечены FraudLabs Pro как отзыв, будет присвоен статус этого заказа.';
+$_['help_approve_status']        = 'Заказам, которые отмечены FraudLabs Pro как одобренные, будет присвоен статус этого заказа.';
+$_['help_reject_status']         = 'Заказам, которые отмечены FraudLabs Pro как отклоненные, будет присвоен статус этого заказа.';
+$_['help_simulate_ip']           = 'Симулировать IP-адрес посетителя для тестирования. Оставьте пустым, чтобы отключить его.';
+$_['help_fraudlabspro_id']       = 'Уникальный идентификатор транзакции, проверяемый системой FraudLabs Pro.';
+$_['help_ip_address']            = 'IP-адрес.';
+$_['help_ip_net_speed']          = 'Скорость соединения.';
+$_['help_ip_isp_name']           = 'Интернет-провайдер IP-адреса.';
+$_['help_ip_usage_type']         = 'Тип использования IP-адреса. Например: интернет-провайдер, коммерческий, бытовой.';
+$_['help_ip_domain']             = 'Доменное имя IP-адреса.';
+$_['help_ip_time_zone']          = 'Часовой пояс IP-адреса.';
+$_['help_ip_location']           = 'Расположение IP-адреса.';
+$_['help_ip_distance']           = 'Расстояние от IP-адреса до места выставления счета.';
+$_['help_ip_latitude']           = 'Широта IP-адреса.';
+$_['help_ip_longitude']          = 'Долгота IP-адреса.';
+$_['help_risk_country']          = 'Находится ли страна IP-адреса в последнем списке стран с высоким риском.';
+$_['help_free_email']            = 'Является ли электронная почта от бесплатного провайдера электронной почты.';
+$_['help_ship_forward']          = 'Является ли адрес доставки адресом экспедитора.';
+$_['help_using_proxy']           = 'IP-адрес от анонимного прокси-сервера.';
+$_['help_bin_found']             = 'Соответствует ли информация BIN нашему списку BIN.';
+$_['help_email_blacklist']       = 'Находится ли адрес электронной почты в нашей базе данных черного списка.';
+$_['help_credit_card_blacklist'] = 'Есть ли кредитная карта в нашей базе данных черного списка.';
+$_['help_score']                 = 'Оценка риска, 0 (низкий риск) - 100 (высокий риск).';
+$_['help_status']                = 'Статус FraudLabs Pro.';
+$_['help_message']               = 'FraudLabs Pro описание сообщения об ошибке.';
+$_['help_transaction_id']        = 'Уникальный идентификатор транзакции, проверяемый системой FraudLabs Pro.';
+$_['help_credits']               = 'Баланс кредитов, доступных после этой транзакции.';
 
 // Error
-$_['error_permission']           = 'Warning: You do not have permission to modify FraudLabs Pro settings!';
-$_['error_key']                  = 'API Key Required!';
+$_['error_permission']           = 'Предупреждение: У Вас нет прав на изменение настроек FraudLabs Pro';
+$_['error_key']                  = 'API-ключ обязателен!';

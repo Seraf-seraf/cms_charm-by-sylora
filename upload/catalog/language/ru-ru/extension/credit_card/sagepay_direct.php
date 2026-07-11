@@ -1,31 +1,37 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/credit_card/sagepay_direct.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
 $_['heading_title']         = 'Sagepay Direct Cards';
 
 // Text
-$_['text_empty']		    = 'You have no saved cards';
-$_['text_account']          = 'Account';
-$_['text_card']			    = 'SagePay Direct Card Management';
-$_['text_fail_card']	    = 'There was an issue removing your SagePay card, Please contact the shop administrator for help.';
-$_['text_success_card']     = 'SagePay card successfully removed';
-$_['text_success_add_card'] = 'SagePay card successfully added';
+$_['text_empty']            = 'У Вас нет сохранённых карт';
+$_['text_account']          = 'Личный кабинет';
+$_['text_card']             = 'SagePay Direct Card Management';
+$_['text_fail_card']	    = 'Возникла проблема с удалением вашей карты SagePay. Обратитесь за помощью к администратору магазина.';
+$_['text_success_card']     = 'Карта SagePay успешно удалена';
+$_['text_success_add_card'] = 'Карта SagePay успешно добавлена';
 
 // Column
-$_['column_type']		    = 'Card Type';
-$_['column_digits']	        = 'Last Digits';
-$_['column_expiry']		    = 'Expiry';
+$_['column_type']           = 'Тип карты';
+$_['column_digits']         = 'Последние цифры';
+$_['column_expiry']         = 'Истекает';
 
 // Entry
-$_['entry_cc_owner']        = 'Card Owner';
-$_['entry_cc_type']         = 'Card Type';
-$_['entry_cc_number']       = 'Card Number';
-$_['entry_cc_expire_date']  = 'Card Expiry Date';
-$_['entry_cc_cvv2']         = 'Card Security Code (CVV2)';
-$_['entry_cc_choice']       = 'Choose an Existing Card';
+$_['entry_cc_owner']        = 'Владелец карты';
+$_['entry_cc_type']         = 'Тип карты';
+$_['entry_cc_number']       = 'Номер карты';
+$_['entry_cc_expire_date']  = 'Дата истечения срока действия карты';
+$_['entry_cc_cvv2']         = 'Код безопасности карты (CVV2)';
+$_['entry_cc_choice']       = 'Выберите существующую карту';
 
 // Button
-$_['button_add_card']       = 'Add Card';
-$_['button_new_card']       = 'Add New Card';
-
-
-
+$_['button_add_card']       = 'Добавить карту';
+$_['button_new_card']       = 'Добавить новую карту';

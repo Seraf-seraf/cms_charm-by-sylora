@@ -1,24 +1,33 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/shipping/auspost.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
 $_['heading_title']      = 'Australia Post';
 
 // Text
-$_['text_extension']     = 'Extensions';
-$_['text_success']       = 'Success: You have modified Australia Post shipping!';
-$_['text_edit']          = 'Edit Australia Post Shipping';
+$_['text_extension']     = 'Расширения';
+$_['text_success']       = 'Успешно: Вы изменили доставку Australia Post!';
+$_['text_edit']          = 'Редактировать доставку Australia Post';
 
 // Entry
-$_['entry_api']          = 'API Key';
-$_['entry_postcode']     = 'Post Code';
-$_['entry_weight_class'] = 'Weight Class';
-$_['entry_tax_class']    = 'Tax Class';
-$_['entry_geo_zone']     = 'Geo Zone';
-$_['entry_status']       = 'Status';
-$_['entry_sort_order']   = 'Sort Order';
+$_['entry_api']          = 'API ключ';
+$_['entry_postcode']     = 'Почтовый индекс';
+$_['entry_weight_class'] = 'Весовая категория';
+$_['entry_tax_class']    = 'Налоговый класс';
+$_['entry_geo_zone']     = 'Геозона';
+$_['entry_status']       = 'Статус';
+$_['entry_sort_order']   = 'Порядок сортировки';
 
 // Help
-$_['help_weight_class']  = 'Set to kilograms.';
+$_['help_weight_class']  = 'Установить в килограммах.';
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify Australia Post shipping!';
-$_['error_postcode']     = 'Post Code must be 4 digits!';
+$_['error_permission']   = 'Предупреждение: У Вас нет разрешения на изменение доставки Australia Post!';
+$_['error_postcode']     = 'Почтовый индекс должен быть из 4-х цифр!';

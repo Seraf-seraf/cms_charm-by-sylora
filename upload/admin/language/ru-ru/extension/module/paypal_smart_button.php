@@ -1,67 +1,76 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/module/paypal_smart_button.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    					= 'PayPal Smart Button';
+$_['heading_title']    					= 'Умная кнопка PayPal';
 
 // Text
-$_['text_extensions']   				= 'Extensions';
-$_['text_edit']        					= 'Edit PayPal Smart Button Module';
-$_['text_general']				 	 	= 'General';
-$_['text_product_page']					= 'Product Page';
-$_['text_cart_page']					= 'Cart Page';
-$_['text_insert_prepend']				= 'Insert Into Begin';
-$_['text_insert_append']				= 'Insert Into End';
-$_['text_insert_before']				= 'Insert Before';
-$_['text_insert_after']					= 'Insert After';
-$_['text_align_left']					= 'Align Left';
-$_['text_align_center']					= 'Align Center';
-$_['text_align_right']					= 'Align Right';
-$_['text_small']			 			= 'Small';
-$_['text_medium']			 	 		= 'Medium';
-$_['text_large']			 	 		= 'Large';
-$_['text_responsive']			 	 	= 'Responsive';
-$_['text_gold']			 	 			= 'Gold';
-$_['text_blue']			 	 			= 'Blue';
-$_['text_silver']			 	 		= 'Silver';
-$_['text_white']			 	 		= 'White';
-$_['text_black']			 	 		= 'Black';
-$_['text_pill']			 	 			= 'Pill';
-$_['text_rect']			 	 			= 'Rect';
-$_['text_checkout']			 	 		= 'Checkout';
-$_['text_pay']			 	 			= 'Pay';
-$_['text_buy_now']			 	 		= 'Buy Now';
+$_['text_extensions']   				= 'Расширения';
+$_['text_edit']        					= 'Редактировать модуль умной кнопки PayPal';
+$_['text_general']				 	 	= 'Общие';
+$_['text_product_page']					= 'Страница товара';
+$_['text_cart_page']					= 'Страница корзины';
+$_['text_insert_prepend']				= 'В начало';
+$_['text_insert_append']				= 'В конец';
+$_['text_insert_before']				= 'Перед';
+$_['text_insert_after']					= 'После';
+$_['text_align_left']					= 'По левому краю';
+$_['text_align_center']					= 'По центру';
+$_['text_align_right']					= 'По правому краю';
+$_['text_small']			 			= 'Маленький';
+$_['text_medium']			 	 		= 'Средний';
+$_['text_large']			 	 		= 'Большой';
+$_['text_responsive']			 	 	= 'Адаптивный';
+$_['text_gold']			 	 			= 'Золотой';
+$_['text_blue']			 	 			= 'Синий';
+$_['text_silver']			 	 		= 'Серебристый';
+$_['text_white']			 	 		= 'Белый';
+$_['text_black']			 	 		= 'Чёрный';
+$_['text_pill']			 	 			= 'Скруглённая';
+$_['text_rect']			 	 			= 'Прямоугольная';
+$_['text_checkout']			 	 		= 'Оформить заказ';
+$_['text_pay']			 	 			= 'Оплатить';
+$_['text_buy_now']			 	 		= 'Купить сейчас';
 $_['text_pay_pal']			 	 		= 'PayPal';
-$_['text_installment']			 	 	= 'Installment';
-$_['text_text']							= 'Text Message';
-$_['text_flex']							= 'Flexible Banner';
-$_['text_yes']			 	 			= 'Yes';
-$_['text_no']			 	 			= 'No';
+$_['text_installment']			 	 	= 'Рассрочка';
+$_['text_text']							= 'Текстовое сообщение';
+$_['text_flex']							= 'Гибкий баннер';
+$_['text_yes']			 	 			= 'Да';
+$_['text_no']			 	 			= 'Нет';
 
 // Entry
-$_['entry_status']     					= 'Status';
-$_['entry_product_page_status']     	= 'Product Page Status';
-$_['entry_cart_page_status']     		= 'Cart Page Status';
-$_['entry_insert_tag']     				= 'Insert Tag';
-$_['entry_insert_type']     			= 'Insert Type';
-$_['entry_button_align']     			= 'Button Align';
-$_['entry_button_size'] 				= 'Button Size';
-$_['entry_button_color'] 				= 'Button Color';
-$_['entry_button_shape'] 				= 'Button Shape';
-$_['entry_button_label'] 				= 'Button Label';
-$_['entry_button_tagline'] 				= 'Button Tagline';
-$_['entry_message_status']     			= 'Pay Later Message';
-$_['entry_message_align']     			= 'Message Align';
-$_['entry_message_size'] 				= 'Message Size';
-$_['entry_message_layout'] 				= 'Message Layout';
-$_['entry_message_text_color'] 			= 'Message Text Color';
-$_['entry_message_text_size'] 			= 'Message Text Size';
-$_['entry_message_flex_color'] 			= 'Message Banner Color';
-$_['entry_message_flex_ratio'] 			= 'Message Banner Ratio';
+$_['entry_status']     					= 'Статус';
+$_['entry_product_page_status']     	= 'Статус на странице товара';
+$_['entry_cart_page_status']     		= 'Статус на странице корзины';
+$_['entry_insert_tag']     				= 'Тег вставки';
+$_['entry_insert_type']     			= 'Тип вставки';
+$_['entry_button_align']     			= 'Выравнивание кнопки';
+$_['entry_button_size'] 				= 'Размер кнопки';
+$_['entry_button_color'] 				= 'Цвет кнопки';
+$_['entry_button_shape'] 				= 'Форма кнопки';
+$_['entry_button_label'] 				= 'Подпись кнопки';
+$_['entry_button_tagline'] 				= 'Слоган кнопки';
+$_['entry_message_status']     			= 'Сообщение «Оплатить позже»';
+$_['entry_message_align']     			= 'Выравнивание сообщения';
+$_['entry_message_size'] 				= 'Размер сообщения';
+$_['entry_message_layout'] 				= 'Макет сообщения';
+$_['entry_message_text_color'] 			= 'Цвет текста сообщения';
+$_['entry_message_text_size'] 			= 'Размер текста сообщения';
+$_['entry_message_flex_color'] 			= 'Цвет баннера сообщения';
+$_['entry_message_flex_ratio'] 			= 'Соотношение баннера сообщения';
 
 // Help
-$_['help_message_status']				= 'Add pay later messaging to your site.';
+$_['help_message_status']				= 'Добавьте сообщения «Оплатить позже» на Ваш сайт.';
 
 // Success
-$_['success_save']						= 'Success: You have modified PayPal Smart Button module!';
+$_['success_save']						= 'Успешно: Вы изменили модуль умной кнопки PayPal!';
 
 // Error
-$_['error_permission'] 					= 'Warning: You do not have permission to modify PayPal Express Checkout Button module!';
+$_['error_permission'] 					= 'Предупреждение: У Вас нет разрешения на изменение модуля умной кнопки PayPal!';

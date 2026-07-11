@@ -1,22 +1,31 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/module/bestseller.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Bestsellers';
+$_['heading_title']    = 'Бестселлеры';
 
 // Text
-$_['text_extension']   = 'Extensions';
-$_['text_success']     = 'Success: You have modified bestsellers module!';
-$_['text_edit']        = 'Edit Bestsellers Module';
+$_['text_extension']   = 'Расширения';
+$_['text_success']     = 'Успешно: Вы изменили модуль бестселлеров!';
+$_['text_edit']        = 'Редактировать модуль бестселлеров';
 
 // Entry
-$_['entry_name']       = 'Module Name';
-$_['entry_limit']      = 'Limit';
-$_['entry_image']      = 'Image (W x H) and Resize Type';
-$_['entry_width']      = 'Width';
-$_['entry_height']     = 'Height';
-$_['entry_status']     = 'Status';
+$_['entry_name']       = 'Наименование модуля';
+$_['entry_limit']      = 'Лимит';
+$_['entry_image']      = 'Изображение (Ш х В) и тип изменения размера';
+$_['entry_width']      = 'Ширина';
+$_['entry_height']     = 'Высота';
+$_['entry_status']     = 'Статус';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify bestsellers module!';
-$_['error_name']       = 'Module Name must be between 3 and 64 characters!';
-$_['error_width']      = 'Width required!';
-$_['error_height']     = 'Height required!';
+$_['error_permission'] = 'Предупреждение: У Вас нет прав на изменение модуля бестселлеров!';
+$_['error_name']       = 'Наименование модуля должно быть от 3 до 64 символов!';
+$_['error_width']      = 'Ширина обязательна!';
+$_['error_height']     = 'Высота обязательна!';

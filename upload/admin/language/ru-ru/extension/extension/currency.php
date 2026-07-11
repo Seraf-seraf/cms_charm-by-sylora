@@ -1,15 +1,24 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/extension/currency.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Currency Rates';
+$_['heading_title']    = 'Курсы валют';
 
 // Text
-$_['text_success']     = 'Success: You have modified currency rates!';
-$_['text_list']        = 'Currency Rates List';
+$_['text_success']     = 'Успешно: Вы изменили курсы валют!';
+$_['text_list']        = 'Список курсов валют';
 
 // Column
-$_['column_name']      = 'Currency Rate Name';
-$_['column_status']    = 'Status';
-$_['column_action']    = 'Action';
+$_['column_name']      = 'Название курса валюты';
+$_['column_status']    = 'Статус';
+$_['column_action']    = 'Действие';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify currency rates!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение курсов валют!';

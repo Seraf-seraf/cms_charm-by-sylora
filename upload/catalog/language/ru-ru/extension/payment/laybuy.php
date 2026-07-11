@@ -1,29 +1,38 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/laybuy.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']			= 'Please Choose Your Payment Plan';
+$_['heading_title']			= 'Выберите схему оплаты';
 
 // Text
-$_['text_title']			= 'PUT IT ON LAY-BUY powered by PayPal';
-$_['text_plan_preview']		= 'Plan Preview';
-$_['text_payment']			= 'Payment';
-$_['text_due_date']			= 'Due Date';
-$_['text_amount']			= 'Amount';
-$_['text_downpayment']		= 'Down Payment';
-$_['text_today']			= 'Today';
-$_['text_delivery_msg']		= 'Your goods/services will be delivered once your final payment has been received.';
-$_['text_fee_msg']			= 'A 0.9% admin fee is payable to Lay-Buys.com.';
-$_['text_month']			= 'Month';
-$_['text_months']			= 'Months';
-$_['text_status_1']			= 'Pending';
-$_['text_status_5']			= 'Completed';
-$_['text_status_7']			= 'Canceled';
-$_['text_status_50']		= 'Revise Requested';
-$_['text_status_51']		= 'Revised';
-$_['text_comment']			= 'Updated by Lay-Buy';
+$_['text_title']			= 'Lay-Buy от PayPal';
+$_['text_plan_preview']		= 'План выплат';
+$_['text_payment']			= 'Платёж';
+$_['text_due_date']			= 'Срок';
+$_['text_amount']			= 'Сумма';
+$_['text_downpayment']		= 'Первоначальный взнос';
+$_['text_today']			= 'Сегодня';
+$_['text_delivery_msg']		= 'Товары будут доставлены после получения последнего платежа.';
+$_['text_fee_msg']			= 'Комиссия Lay-Buys.com — 0.9%.';
+$_['text_month']			= 'Месяц';
+$_['text_months']			= 'мес.';
+$_['text_status_1']			= 'Ожидание';
+$_['text_status_5']			= 'Оплачено';
+$_['text_status_7']			= 'Отменено';
+$_['text_status_50']		= 'Запрос изменений';
+$_['text_status_51']		= 'Изменено';
+$_['text_comment']			= 'Обновлено Lay-Buy';
 
 // Entry
-$_['entry_initial']			= 'Initial Payment';
-$_['entry_months']			= 'Months';
+$_['entry_initial']			= 'Первоначальный взнос';
+$_['entry_months']			= 'Срок (мес.)';
 
 // Button
-$_['button_confirm']		= 'Confirm Order';
+$_['button_confirm']		= 'Подтвердить заказ';

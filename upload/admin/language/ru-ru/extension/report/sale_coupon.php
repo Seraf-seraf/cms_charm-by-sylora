@@ -1,25 +1,34 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/report/sale_coupon.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Coupons Report';
+$_['heading_title']    = 'Отчет о купонах';
 
 // Text
-$_['text_extension']   = 'Extensions';
-$_['text_edit']        = 'Edit Coupons Report';
-$_['text_success']     = 'Success: You have modified coupon report!';
-$_['text_filter']      = 'Filter';
+$_['text_extension']   = 'Расширения';
+$_['text_edit']        = 'Редактировать отчет о купонах';
+$_['text_success']     = 'Успешно: Вы изменили отчет о купонах!';
+$_['text_filter']      = 'Фильтр';
 
 // Column
-$_['column_name']      = 'Coupon Name';
-$_['column_code']      = 'Code';
-$_['column_orders']    = 'Orders';
-$_['column_total']     = 'Total';
-$_['column_action']    = 'Action';
+$_['column_name']      = 'Наименование купона';
+$_['column_code']      = 'Код';
+$_['column_orders']    = 'Заказы';
+$_['column_total']     = 'Всего';
+$_['column_action']    = 'Действие';
 
 // Entry
-$_['entry_date_start'] = 'Date Start';
-$_['entry_date_end']   = 'Date End';
-$_['entry_status']     = 'Status';
-$_['entry_sort_order'] = 'Sort Order';
+$_['entry_date_start'] = 'Дата начала';
+$_['entry_date_end']   = 'Дата окончания';
+$_['entry_status']     = 'Статус';
+$_['entry_sort_order'] = 'Порядок сортировки';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify coupon report!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения на изменение отчета о купонах!';

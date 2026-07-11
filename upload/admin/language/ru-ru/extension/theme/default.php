@@ -1,48 +1,57 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/theme/default.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']                    = 'Default Store Theme';
+$_['heading_title']                    = 'Тема магазина по умолчанию';
 
 // Text
-$_['text_extension']                   = 'Extensions';
-$_['text_success']                     = 'Success: You have modified the default store theme!';
-$_['text_edit']                        = 'Edit Default Store Theme';
-$_['text_general']                     = 'General';
-$_['text_product']                     = 'Products';
-$_['text_image']                       = 'Images';
+$_['text_extension']                   = 'Расширения';
+$_['text_success']                     = 'Успешно: Вы изменили тему магазина по умолчанию!';
+$_['text_edit']                        = 'Редактировать тему магазина по умолчанию';
+$_['text_general']                     = 'Общие';
+$_['text_product']                     = 'Продукция';
+$_['text_image']                       = 'Изображения';
 
 // Entry
-$_['entry_directory']                  = 'Theme Directory';
-$_['entry_status']                     = 'Status';
-$_['entry_product_limit']              = 'Default Items Per Page';
-$_['entry_product_description_length'] = 'List Description Limit';
-$_['entry_image_category']             = 'Category Image Size (W x H)';
-$_['entry_image_thumb']                = 'Product Image Thumb Size (W x H)';
-$_['entry_image_popup']                = 'Product Image Popup Size (W x H)';
-$_['entry_image_product']              = 'Product Image List Size (W x H)';
-$_['entry_image_additional']           = 'Additional Product Image Size (W x H)';
-$_['entry_image_related']              = 'Related Product Image Size (W x H)';
-$_['entry_image_compare']              = 'Compare Image Size (W x H)';
-$_['entry_image_wishlist']             = 'Wish List Image Size (W x H)';
-$_['entry_image_cart']                 = 'Cart Image Size (W x H)';
-$_['entry_image_location']             = 'Store Image Size (W x H)';
-$_['entry_width']                      = 'Width';
-$_['entry_height']                     = 'Height';
+$_['entry_directory']                  = 'Каталог темы';
+$_['entry_status']                     = 'Статус';
+$_['entry_product_limit']              = 'Элементов по умолчанию на странице';
+$_['entry_product_description_length'] = 'Ограничения списка описания';
+$_['entry_image_category']             = 'Размер изображения категории (Ш х В)';
+$_['entry_image_thumb']                = 'Размер большого изображения продукции (Ш х В)';
+$_['entry_image_popup']                = 'Размер всплывающего изображения продукции (Ш х В)';
+$_['entry_image_product']              = 'Размер изображения в списке продукции (Ш х В)';
+$_['entry_image_additional']           = 'Размер дополнительных изображений продукции (Ш х В)';
+$_['entry_image_related']              = 'Размер изображения связанной продукции (Ш х В)';
+$_['entry_image_compare']              = 'Размер изображения сравнения (Ш х В)';
+$_['entry_image_wishlist']             = 'Размер изображения списка желаний (Ш х В)';
+$_['entry_image_cart']                 = 'Размер изображения в корзине (Ш х В)';
+$_['entry_image_location']             = 'Размер изображения магазина (Ш х В)';
+$_['entry_width']                      = 'Ширина';
+$_['entry_height']                     = 'Высота';
 
 // Help
-$_['help_directory']                   = 'This field is only to enable older themes to be compatible with the new theme system. You can set the theme directory to use on the image size settings defined here.';
-$_['help_product_limit']               = 'Determines how many catalog items are shown per page (products, categories, etc)';
-$_['help_product_description_length']  = 'In the list view, short description character limit (categories, special etc)';
+$_['help_directory']                   = 'Это поле предназначено только для того, чтобы старые темы были совместимы с новой системой тем. Вы можете установить каталог темы для использования в настройках размера изображения, определенных здесь.';
+$_['help_product_limit']               = 'Определяет, сколько элементов каталога показано на странице (продукция, категории и т.д.)';
+$_['help_product_description_length']  = 'В представлении списка ограничение по количеству символов (категории, акции и т.д.)';
 
 // Error
-$_['error_permission']                 = 'Warning: You do not have permission to modify the default store theme!';
-$_['error_limit']                      = 'Product Limit required!';
-$_['error_image_thumb']                = 'Product Image Thumb Size dimensions required!';
-$_['error_image_popup']                = 'Product Image Popup Size dimensions required!';
-$_['error_image_product']              = 'Product List Size dimensions required!';
-$_['error_image_category']             = 'Category List Size dimensions required!';
-$_['error_image_additional']           = 'Additional Product Image Size dimensions required!';
-$_['error_image_related']              = 'Related Product Image Size dimensions required!';
-$_['error_image_compare']              = 'Compare Image Size dimensions required!';
-$_['error_image_wishlist']             = 'Wish List Image Size dimensions required!';
-$_['error_image_cart']                 = 'Cart Image Size dimensions required!';
-$_['error_image_location']             = 'Store Image Size dimensions required!';
+$_['error_permission']                 = 'Предупреждение: У Вас нет прав на изменение темы магазина по умолчанию!';
+$_['error_limit']                      = 'Лимит продукции обязателен!';
+$_['error_image_thumb']                = 'Размер большого изображения продукции необходимы размеры!';
+$_['error_image_popup']                = 'Размер всплывающего изображения продукции необходимы размеры!';
+$_['error_image_product']              = 'Размер списка товаров необходимы размеры!';
+$_['error_image_category']             = 'Размер списка категорий необходимы размеры!';
+$_['error_image_additional']           = 'Размер дополнительных изображений продукции необходимы размеры!';
+$_['error_image_related']              = 'Размер изображения связанной продукции необходимы размеры!';
+$_['error_image_compare']              = 'Размер изображения сравнения необходимы размеры!';
+$_['error_image_wishlist']             = 'Размер изображения списка желаний необходимы размеры!';
+$_['error_image_cart']                 = 'Размер изображения в корзине необходимы размеры!';
+$_['error_image_location']             = 'Размер изображения магазина необходимы размеры!';

@@ -1,20 +1,29 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/account/wishlist.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title'] = 'Избранное';
+$_['heading_title']   = 'Закладки';
 
 // Text
-$_['text_account']  = 'Аккаунт';
-$_['text_instock']  = 'В наличии';
-$_['text_wishlist'] = 'Избранное (%s)';
-$_['text_login']    = 'Чтобы сохранить <a href="%3$s">%4$s</a> в <a href="%5$s">избранное</a>, нужно <a href="%1$s">войти</a> или <a href="%2$s">создать аккаунт</a>.';
-$_['text_success']  = 'Товар <a href="%s">%s</a> добавлен в <a href="%s">избранное</a>.';
-$_['text_remove']   = 'Избранное обновлено.';
-$_['text_empty']    = 'В избранном пока нет товаров.';
+$_['text_account']    = 'Личный кабинет';
+$_['text_instock']    = 'В наличии';
+$_['text_wishlist']   = 'Закладки (%s)';
+$_['text_login']      = 'Вы должны <a href="%s">авторизоваться</a> или <a href="%s">зарегистрироваться</a> чтобы добавить <a href="%s">%s</a> в <a href="%s">закладки</a>!';
+$_['text_success']    = 'Успешно. Вы добавили <a href="%s">%s</a> в <a href="%s">закладки</a>!';
+$_['text_remove']     = 'Успешно: Вы изменили свой список закладок!';
+$_['text_empty']       = 'Ваш список закладок пуст.';
 
 // Column
-$_['column_image']  = 'Фото';
-$_['column_name']   = 'Товар';
-$_['column_model']  = 'Артикул';
-$_['column_stock']  = 'Наличие';
-$_['column_price']  = 'Цена';
-$_['column_action'] = 'Действие';
+$_['column_image']    = 'Изображение';
+$_['column_name']     = 'Наименование товара';
+$_['column_model']    = 'Модель';
+$_['column_stock']    = 'Наличие';
+$_['column_price']    = 'Цена за единицу';
+$_['column_action']   = 'Действия';

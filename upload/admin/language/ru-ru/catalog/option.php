@@ -1,41 +1,50 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/catalog/option.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']      = 'Options';
+$_['heading_title']      = 'Опции';
 
 // Text
-$_['text_success']       = 'Success: You have modified options!';
-$_['text_list']          = 'Option List';
-$_['text_add']           = 'Add Option';
-$_['text_edit']          = 'Edit Option';
-$_['text_choose']        = 'Choose';
-$_['text_select']        = 'Select';
-$_['text_radio']         = 'Radio';
-$_['text_checkbox']      = 'Checkbox';
-$_['text_input']         = 'Input';
-$_['text_text']          = 'Text';
-$_['text_textarea']      = 'Textarea';
-$_['text_file']          = 'File';
-$_['text_date']          = 'Date';
-$_['text_datetime']      = 'Date &amp; Time';
-$_['text_time']          = 'Time';
-$_['text_option']        = 'Option';
-$_['text_value']         = 'Option Values';
+$_['text_success']       = 'Успешно: Вы изменили опции!';
+$_['text_list']          = 'Список опций';
+$_['text_add']           = 'Добавить опцию';
+$_['text_edit']          = 'Редактировать опцию';
+$_['text_choose']        = 'Элементы выбора';
+$_['text_select']        = 'Раскрывающийся список';
+$_['text_radio']         = 'Переключатели. Позволяют выбрать один вариант из нескольких предложенных.';
+$_['text_checkbox']      = 'Флажки. Позволяют выбрать более одного варианта из предложенных.';
+$_['text_input']         = 'Элементы ввода';
+$_['text_text']          = 'Текстовое поле';
+$_['text_textarea']      = 'Многострочный текст';
+$_['text_file']          = 'Файл';
+$_['text_date']          = 'Дата';
+$_['text_datetime']      = 'Дата &amp; Время';
+$_['text_time']          = 'Время';
+$_['text_option']        = 'Опция';
+$_['text_value']         = 'Значения опции';
 
 // Column
-$_['column_name']        = 'Option Name';
-$_['column_sort_order']  = 'Sort Order';
-$_['column_action']      = 'Action';
+$_['column_name']        = 'Название опции';
+$_['column_sort_order']  = 'Порядок сортировки';
+$_['column_action']      = 'Действие';
 
 // Entry
-$_['entry_name']         = 'Option Name';
-$_['entry_type']         = 'Type';
-$_['entry_option_value'] = 'Option Value Name';
-$_['entry_image']        = 'Image';
-$_['entry_sort_order']   = 'Sort Order';
+$_['entry_name']         = 'Название опции';
+$_['entry_type']         = 'Тип';
+$_['entry_option_value'] = 'Название значения опции';
+$_['entry_image']        = 'Изображение';
+$_['entry_sort_order']   = 'Порядок сортировки';
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify options!';
-$_['error_name']         = 'Option Name must be between 1 and 128 characters!';
-$_['error_type']         = 'Warning: Option Values required!';
-$_['error_option_value'] = 'Option Value Name must be between 1 and 128 characters!';
-$_['error_product']      = 'Warning: This option cannot be deleted as it is currently assigned to %s products!';
+$_['error_permission']   = 'Предупреждение: У Вас нет прав на изменение опций!';
+$_['error_name']         = 'Название опции должно быть от 1 до 128 символов!';
+$_['error_type']         = 'Предупреждение: Значение опции обязательно!';
+$_['error_option_value'] = 'Название значения опции должно быть от 1 до 128 символов!';
+$_['error_product']      = 'Предупреждение: Эту опцию нельзя удалить, поскольку в настоящее время она назначена %s продуктам!';

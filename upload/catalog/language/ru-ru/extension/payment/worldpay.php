@@ -1,28 +1,37 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/worldpay.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_title']			 = 'Credit Card / Debit Card (Worldpay)';
-$_['text_credit_card']		 = 'Card Details';
-$_['text_card_type']		 = 'Card Type: ';
-$_['text_card_name']		 = 'Card Name: ';
-$_['text_card_digits']		 = 'Last Digits: ';
-$_['text_card_expiry']		 = 'Expiry: ';
-$_['text_trial']			 = '%s every %s %s for %s payments then ';
-$_['text_recurring']		 = '%s every %s %s';
-$_['text_length']			 = ' for %s payments';
-$_['text_confirm_delete']	 = 'Are you sure you wish to delete this card';
-$_['text_card_success']		 = 'Card has been successfully removed';
-$_['text_card_error']		 = 'There are an error removing your card. Please contact the shop administrator for help.';
+$_['text_title']			 = 'Кредитная / дебетовая карта (Worldpay)';
+$_['text_credit_card']		 = 'Данные карты';
+$_['text_card_type']		 = 'Тип карты: ';
+$_['text_card_name']		 = 'Имя на карте: ';
+$_['text_card_digits']		 = 'Последние цифры: ';
+$_['text_card_expiry']		 = 'Срок действия: ';
+$_['text_trial']			 = '%s каждые %s %s за %s платежей, затем ';
+$_['text_recurring']		 = '%s каждые %s %s';
+$_['text_length']			 = ' за %s платежей';
+$_['text_confirm_delete']	 = 'Вы уверены, что хотите удалить эту карту?';
+$_['text_card_success']		 = 'Карта успешно удалена';
+$_['text_card_error']		 = 'Не удалось удалить карту. Обратитесь к администратору магазина.';
 
 // Entry
-$_['entry_card']			 = 'New or Existing Card: ';
-$_['entry_card_existing']	 = 'Existing';
-$_['entry_card_new']		 = 'New';
-$_['entry_card_save']		 = 'Remember Card Details';
-$_['entry_cc_cvc']			 = 'Card Verification Code (CVC)';
-$_['entry_cc_choice']		 = 'Choose an Existing Card';
+$_['entry_card']			 = 'Новая или сохранённая карта: ';
+$_['entry_card_existing']	 = 'Сохранённая';
+$_['entry_card_new']		 = 'Новая';
+$_['entry_card_save']		 = 'Сохранить данные карты';
+$_['entry_cc_cvc']			 = 'Код CVC';
+$_['entry_cc_choice']		 = 'Выберите сохранённую карту';
 
 // Button
-$_['button_delete_card']	 = 'Delete Card';
+$_['button_delete_card']	 = 'Удалить карту';
 
 // Error
-$_['error_process_order']	 = 'There are an error processing your order. Please contact the shop administrator for help.';
+$_['error_process_order']	 = 'Ошибка обработки заказа. Обратитесь к администратору магазина.';

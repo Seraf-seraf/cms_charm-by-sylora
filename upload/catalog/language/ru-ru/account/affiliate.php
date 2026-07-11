@@ -1,35 +1,44 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/account/affiliate.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']             = 'Партнерская информация';
+$_['heading_title']             = 'Информация партнера';
 
 // Text
-$_['text_account']              = 'Аккаунт';
-$_['text_affiliate']            = 'Партнерская программа';
-$_['text_my_affiliate']         = 'Партнерский аккаунт';
-$_['text_payment']              = 'Информация о выплатах';
+$_['text_account']              = 'Личный кабинет';
+$_['text_affiliate']            = 'Кабинет партнера';
+$_['text_my_affiliate']         = 'Информация партнера';
+$_['text_payment']              = 'Платежная информация';
 $_['text_cheque']               = 'Чек';
 $_['text_paypal']               = 'PayPal';
 $_['text_bank']                 = 'Банковский перевод';
-$_['text_success']              = 'Аккаунт успешно обновлен.';
-$_['text_agree']                = 'Я прочитал(а) и принимаю <a href="%s" class="agree"><b>%s</b></a>';
+$_['text_success']              = 'Успешно: Ваша учетная запись была успешно обновлена.';
+$_['text_agree']                = 'Я прочитал и согласен с <a href="%s" class="agree"><b>%s</b></a>';
 
 // Entry
 $_['entry_company']             = 'Компания';
-$_['entry_website']             = 'Сайт';
-$_['entry_tax']                 = 'Tax ID';
-$_['entry_payment']             = 'Способ выплаты';
+$_['entry_website']             = 'Веб-сайт';
+$_['entry_tax']                 = 'ИНН';
+$_['entry_payment']             = 'Метод оплаты';
 $_['entry_cheque']              = 'Получатель чека';
-$_['entry_paypal']              = 'Email аккаунта PayPal';
-$_['entry_bank_name']           = 'Название банка';
-$_['entry_bank_branch_number']  = 'Номер отделения банка';
-$_['entry_bank_swift_code']     = 'SWIFT Code';
-$_['entry_bank_account_name']   = 'Имя владельца счета';
-$_['entry_bank_account_number'] = 'Номер счета';
+$_['entry_paypal']              = 'Аккаунт PayPal';
+$_['entry_bank_name']           = 'Банк';
+$_['entry_bank_branch_number']  = 'Номер отделения';
+$_['entry_bank_swift_code']     = 'БИК';
+$_['entry_bank_account_name']   = 'Корр. счет';
+$_['entry_bank_account_number'] = 'Расчетный счет';
 
 // Error
-$_['error_agree']               = 'Нужно принять условия: %s.';
-$_['error_cheque']              = 'Укажите получателя чека.';
-$_['error_paypal']              = 'Укажите корректный email PayPal.';
-$_['error_bank_account_name']   = 'Укажите имя владельца счета.';
-$_['error_bank_account_number'] = 'Укажите номер счета.';
-$_['error_custom_field']        = 'Поле %s обязательно.';
+$_['error_agree']               = 'Предупреждение: Вы должны согласиться с %s!';
+$_['error_cheque']              = 'Имя получателя чека обязательно!';
+$_['error_paypal']              = 'Адрес электронной почты PayPal не является действительным!';
+$_['error_bank_account_name']   = 'Корреспондентский счет обязателен!';
+$_['error_bank_account_number'] = 'Расчетный счет обязателен!';
+$_['error_custom_field']        = '%s обязателен!';

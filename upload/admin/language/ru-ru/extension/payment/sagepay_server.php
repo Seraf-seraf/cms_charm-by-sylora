@@ -1,66 +1,75 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/sagepay_server.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']			  = 'SagePay Server';
+$_['heading_title']           = 'SagePay Server';
 
 // Text
-$_['text_extension']		  = 'Extensions';
-$_['text_success']			  = 'Success: You have modified SagePay account details!';
-$_['text_edit']               = 'Edit SagePay Server';
-$_['text_test']				  = 'Test';
-$_['text_live']				  = 'Live';
-$_['text_defered']			  = 'Defered';
-$_['text_authenticate']		  = 'Authenticate';
-$_['text_payment']			  = 'Payment';
-$_['text_release_ok']		  = 'Release was successful';
-$_['text_release_ok_order']	  = 'Release was successful, order status updated to success - settled';
-$_['text_rebate_ok']		  = 'Rebate was successful';
-$_['text_rebate_ok_order']	  = 'Rebate was successful, order status updated to rebated';
-$_['text_void_ok']			  = 'Void was successful, order status updated to voided';
-$_['text_payment_info']		  = 'Payment information';
-$_['text_release_status']	  = 'Payment released';
-$_['text_void_status']		  = 'Payment voided';
-$_['text_rebate_status']	  = 'Payment rebated';
-$_['text_order_ref']		  = 'Order ref';
-$_['text_order_total']		  = 'Total authorised';
-$_['text_total_released']	  = 'Total released';
-$_['text_transactions']		  = 'Transactions';
-$_['text_column_amount']	  = 'Amount';
-$_['text_column_type']		  = 'Type';
-$_['text_column_date_added']  = 'Created';
-$_['text_confirm_void']		  = 'Are you sure you want to void the payment?';
-$_['text_confirm_release']	  = 'Are you sure you want to release the payment?';
-$_['text_confirm_rebate']	  = 'Are you sure you want to rebate the payment?';
-$_['text_void']               = 'Void';
-$_['text_payment']            = "Payment";
-$_['text_rebate']             = 'Rebate';
+$_['text_extension']          = 'Расширения';
+$_['text_success']            = 'Успешно: Вы изменили детали учетной записи SagePay!';
+$_['text_edit']               = 'Редактировать SagePay Server';
+$_['text_test']               = 'Тестовый';
+$_['text_live']               = 'Реальный';
+$_['text_defered']            = 'Отложенный';
+$_['text_authenticate']       = 'Удостоверяющий';
+$_['text_payment']            = 'Оплата';
+$_['text_release_ok']         = 'Выпуск был успешным';
+$_['text_release_ok_order']   = 'Выпуск был успешным, статус заказа обновлен до успешного - выполнено';
+$_['text_rebate_ok']          = 'Скидка прошла успешно';
+$_['text_rebate_ok_order']    = 'Скидка прошла успешно, статус заказа обновлен до скидки';
+$_['text_void_ok']            = 'Аннулирование выполнено успешно, статус заказа обновлен до аннулированного';
+$_['text_payment_info']       = 'Платежная информация';
+$_['text_release_status']     = 'Платеж выпущен';
+$_['text_void_status']        = 'Платеж аннулирован';
+$_['text_rebate_status']      = 'Платеж возвращен';
+$_['text_order_ref']          = 'Заказ ссылка';
+$_['text_order_total']        = 'Всего разрешено';
+$_['text_total_released']     = 'Всего выпущено';
+$_['text_transactions']       = 'Транзакции';
+$_['text_column_amount']      = 'Количество';
+$_['text_column_type']        = 'Тип';
+$_['text_column_date_added']  = 'Создан';
+$_['text_confirm_void']       = 'Вы уверены, что хотите аннулировать платеж?';
+$_['text_confirm_release']    = 'Вы уверены, что хотите разблокировать платеж?';
+$_['text_confirm_rebate']     = 'Вы уверены, что хотите вернуть платеж?';
+$_['text_void']               = 'Аннулировать';
+$_['text_payment']            = 'Оплата';
+$_['text_rebate']             = 'Возврат';
 
 // Entry
-$_['entry_vendor']			  = 'Vendor';
-$_['entry_test']			  = 'Test Mode';
-$_['entry_transaction']		  = 'Transaction Method';
-$_['entry_total']			  = 'Total';
-$_['entry_order_status']	  = 'Order Status';
-$_['entry_geo_zone']		  = 'Geo Zone';
-$_['entry_status']			  = 'Status';
-$_['entry_sort_order']		  = 'Sort Order';
-$_['entry_debug']			  = 'Debug logging';
-$_['entry_card']			  = 'Store Cards';
-$_['entry_cron_job_token']	  = 'Secret Token';
-$_['entry_cron_job_url']	  = 'Cron Job\'s URL:';
-$_['entry_last_cron_job_run'] = 'Last cron job\'s run time:';
+$_['entry_vendor']            = 'Продавец';
+$_['entry_test']              = 'Тестовый режим';
+$_['entry_transaction']       = 'Метод транзакции';
+$_['entry_total']             = 'Всего';
+$_['entry_order_status']      = 'Статус заказа';
+$_['entry_geo_zone']          = 'Геозона';
+$_['entry_status']            = 'Статус';
+$_['entry_sort_order']        = 'Порядок сортировки';
+$_['entry_debug']             = 'Журнал отладки';
+$_['entry_card']              = 'Карты магазина';
+$_['entry_cron_job_token']    = 'Секретный токен';
+$_['entry_cron_job_url']      = 'URL заданий cron';
+$_['entry_last_cron_job_run'] = 'Время выполнения последнего задания cron:';
 
 // Help
-$_['help_total']			  = 'The checkout total the order must reach before this payment method becomes active.';
-$_['help_debug']			  = 'Enabling debug will write sensitive data to a log file. You should always disable unless instructed otherwise';
-$_['help_transaction']		  = 'Transaction method MUST be set to Payment to allow subscription payments';
-$_['help_cron_job_token']	  = 'Make this long and hard to guess';
-$_['help_cron_job_url']		  = 'Set a cron job to call this URL';
+$_['help_total']              = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным.';
+$_['help_debug']              = 'Включение отладки приведет к записи конфиденциальных данных в файл журнала. Вы должны всегда отключать, если не указано иное';
+$_['help_transaction']        = 'Метод транзакции ДОЛЖЕН быть установлен на Платеж, чтобы разрешить платежи по подписке';
+$_['help_cron_job_token']     = 'Сделать это долго и трудно угадать';
+$_['help_cron_job_url']       = 'Установите задание cron для вызова этого URL';
 
 // Button
-$_['button_release']		  = 'Release';
-$_['button_rebate']			  = 'Rebate / refund';
-$_['button_void']			  = 'Void';
+$_['button_release']          = 'Выпустить';
+$_['button_rebate']           = 'Скидка / вернуть';
+$_['button_void']             = 'Аннулировать';
 
 // Error
-$_['error_permission']		  = 'Warning: You do not have permission to modify payment SagePay!';
-$_['error_vendor']			  = 'Vendor ID Required!';
+$_['error_permission']        = 'Предупреждение: У Вас нет разрешения на изменение оплаты SagePay!';
+$_['error_vendor']            = 'Идентификатор поставщика обязателен!';

@@ -1,31 +1,40 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/nochex.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']		 = 'NOCHEX';
+$_['heading_title']      = 'NOCHEX';
 
 // Text
-$_['text_extension']	 = 'Extensions';
-$_['text_success']		 = 'Success: You have modified NOCHEX account details!';
-$_['text_edit']          = 'Edit NOCHEX';
-$_['text_nochex']		 = '<a href="https://secure.nochex.com/apply/merchant_info.aspx?partner_id=172198798" target="_blank"><img src="view/image/payment/nochex.png" alt="NOCHEX" title="NOCHEX" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_seller']		 = 'Seller / Personal Account';
-$_['text_merchant']		 = 'Merchant Account';
+$_['text_extension']     = 'Расширения';
+$_['text_success']       = 'Успешно: Вы изменили NOCHEX account details!';
+$_['text_edit']          = 'Редактировать NOCHEX';
+$_['text_nochex']        = '<a href="https://secure.nochex.com/apply/merchant_info.aspx?partner_id=172198798" target="_blank"><img src="view/image/payment/nochex.png" alt="NOCHEX" title="NOCHEX" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_seller']        = 'Продавец / Личный кабинет';
+$_['text_merchant']      = 'Учетная запись продавца';
 
 // Entry
-$_['entry_email']		 = 'E-Mail';
-$_['entry_account']		 = 'Account Type';
-$_['entry_merchant']	 = 'Merchant ID';
-$_['entry_template']	 = 'Pass Template';
-$_['entry_test']		 = 'Test';
-$_['entry_total']		 = 'Total';
-$_['entry_order_status'] = 'Order Status';
-$_['entry_geo_zone']     = 'Geo Zone';
-$_['entry_status']	     = 'Status';
-$_['entry_sort_order']   = 'Sort Order';
+$_['entry_email']        = 'Эл. почта';
+$_['entry_account']      = 'Тип учетной записи';
+$_['entry_merchant']     = 'Идентификатор продавца';
+$_['entry_template']     = 'Пасс шаблона';
+$_['entry_test']         = 'Тестовый';
+$_['entry_total']        = 'Всего';
+$_['entry_order_status'] = 'Статус заказа';
+$_['entry_geo_zone']     = 'Геозона';
+$_['entry_status']       = 'Статус';
+$_['entry_sort_order']   = 'Порядок сортировки';
 
 // Help
-$_['help_total']	     = 'The checkout total the order must reach before this payment method becomes active.';
+$_['help_total']         = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным.';
 
 // Error
-$_['error_permission']   = 'Warning: You do not have permission to modify payment NOCHEX!';
-$_['error_email']	     = 'E-Mail Required!';
-$_['error_merchant']     = 'Merchant ID Required!';
+$_['error_permission']   = 'Предупреждение: У Вас нет разрешения на изменение оплаты NOCHEX!';
+$_['error_email']        = 'Эл. почта обязательна!';
+$_['error_merchant']     = 'Идентификатор продавца обязателен!';

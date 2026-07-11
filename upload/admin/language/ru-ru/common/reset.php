@@ -1,15 +1,24 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/common/reset.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']  = 'Reset your password';
+$_['heading_title']  = 'Сбросить пароль';
 
 // Text
-$_['text_password']  = 'Enter the new password you wish to use.';
-$_['text_success']   = 'Success: Your password has been successfully updated.';
+$_['text_password']  = 'Введите новый пароль, который Вы хотите использовать.';
+$_['text_success']   = 'Успешно: Ваш пароль был успешно обновлен.';
 
 // Entry
-$_['entry_password'] = 'Password';
-$_['entry_confirm']  = 'Confirm';
+$_['entry_password'] = 'Пароль';
+$_['entry_confirm']  = 'Подтверждение';
 
 // Error
-$_['error_password'] = 'Password must be between 4 and 20 characters!';
-$_['error_confirm']  = 'Password and password confirmation do not match!';
+$_['error_password'] = 'Пароль должен быть от 4 до 20 символов!';
+$_['error_confirm']  = 'Пароль и подтверждение пароля не совпадают!';

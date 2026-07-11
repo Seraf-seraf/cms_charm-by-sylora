@@ -1,78 +1,85 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/worldpay.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']				         = 'Worldpay Online Payments';
+$_['heading_title']                      = 'Worldpay Online Payments';
 
 // Text
-$_['text_extension']				     = 'Extensions';
-$_['text_success']				         = 'Success: You have modified Worldpay account details!';
-$_['text_worldpay']				         = '<a href="https://online.worldpay.com/signup/ee48b6e6-d3e3-42aa-a80e-cbee3f4f8b09" target="_blank"><img src="view/image/payment/worldpay.png" alt="Worldpay" title="Worldpay" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_test']					         = 'Test';
-$_['text_live']					         = 'Live';
-$_['text_authenticate']			         = 'Authenticate';
-$_['text_release_ok']		 	         = 'Release was successful';
-$_['text_release_ok_order']		         = 'Release was successful, order status updated to success - settled';
-$_['text_refund_ok']			         = 'Rebate was successful';
-$_['text_refund_ok_order']		         = 'Rebate was successful, order status updated to refund';
-$_['text_void_ok']				         = 'Void was successful, order status updated to voided';
-$_['text_refund']                        = 'Refund';
-$_['text_edit']                          = 'Edit Worldpay Online Payments';
-
-// Entry
-$_['entry_service_key']			         = 'Service Key';
-$_['entry_client_key']			         = 'Client Key';
-$_['entry_total']				         = 'Total';
-$_['entry_order_status']		         = 'Order Status';
-$_['entry_geo_zone']			         = 'Geo Zone';
-$_['entry_status']				         = 'Status';
-$_['entry_sort_order']			         = 'Sort Order';
-$_['entry_debug']				         = 'Debug logging';
-$_['entry_card']				         = 'Store Cards';
-$_['entry_secret_token']		         = 'Secret Token';
-$_['entry_webhook_url']			         = 'Webhook URL:';
-$_['entry_cron_job_url']		         = 'Cron Job URL:';
-$_['entry_last_cron_job_run']	         = 'Last cron job\'s run time:';
-$_['entry_success_status']		         = 'Success Status:';
-$_['entry_failed_status']		         = 'Failed Status:';
-$_['entry_settled_status']			     = 'Settled Status:';
-$_['entry_refunded_status']			     = 'Refunded Status:';
-$_['entry_partially_refunded_status']	 = 'Partially Refunded Status:';
-$_['entry_charged_back_status']			 = 'Charged Back:';
-$_['entry_information_requested_status'] = 'Information Requested Status:';
-$_['entry_information_supplied_status']	 = 'Information Supplied Status:';
-$_['entry_chargeback_reversed_status']	 = 'Chargeback Reversed Status:';
-
-
-$_['entry_reversed_status']			     = 'Reversed Status:';
-$_['entry_voided_status']			     = 'Voided Status:';
-
-// Help
-$_['help_total']				         = 'The checkout total the order must reach before this payment method becomes active.';
-$_['help_debug']				         = 'Enabling debug will write sensitive data to a log file. You should always disable unless instructed otherwise';
-$_['help_secret_token']			         = 'Make this long and hard to guess';
-$_['help_webhook_url']			         = 'Set Worldpay webhooks to call this URL';
-$_['help_cron_job_url']			         = 'Set a cron job to call this URL';
-
-// Tab
-$_['tab_settings']				         = 'Settings';
-$_['tab_order_status']			         = 'Order Status';
-
-// Error
-$_['error_permission']			         = 'Warning: You do not have permission to modify payment Worldpay!';
-$_['error_service_key']			         = 'Service Key Required!';
-$_['error_client_key']			         = 'Client Key Required!';
+$_['text_extension']                     = 'Расширения';
+$_['text_success']                       = 'Успешно: Вы изменили детали учетной записи Worldpay!';
+$_['text_edit']                          = 'Редактировать Worldpay Online Payments';
+$_['text_worldpay']                      = '<a href="https://online.worldpay.com/signup/ee48b6e6-d3e3-42aa-a80e-cbee3f4f8b09" target="_blank"><img src="view/image/payment/worldpay.png" alt="Worldpay" title="Worldpay" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_test']                          = 'Тестовый';
+$_['text_live']                          = 'Реальный';
+$_['text_authenticate']                  = 'Удостоверяющий';
+$_['text_release_ok']                    = 'Выпуск был успешным';
+$_['text_release_ok_order']              = 'Выпуск был успешным, статус заказа обновлен до успешного - выполнено';
+$_['text_refund_ok']                     = 'Скидка прошла успешно';
+$_['text_refund_ok_order']               = 'Скидка прошла успешно, статус заказа обновлен для возврата';
+$_['text_void_ok']                       = 'Аннулирование выполнено успешно, статус заказа обновлен до аннулированного';
+$_['text_refund']                        = 'Возврат';
+$_['text_edit']                          = 'Редактировать Worldpay Online Payments';
 
 // Order page - payment tab
-$_['text_payment_info']			         = 'Payment information';
-$_['text_refund_status']		         = 'Payment refund';
-$_['text_order_ref']			         = 'Order ref';
-$_['text_order_total']			         = 'Total authorised';
-$_['text_total_released']		         = 'Total released';
-$_['text_transactions']			         = 'Transactions';
-$_['text_column_amount']		         = 'Amount';
-$_['text_column_type']			         = 'Type';
-$_['text_column_date_added']	         = 'Added';
+$_['text_payment_info']                  = 'Платежная информация';
+$_['text_refund_status']                 = 'Возврат платежа';
+$_['text_order_ref']                     = 'Заказ ссылка';
+$_['text_order_total']                   = 'Всего разрешено';
+$_['text_total_released']                = 'Всего выпущено';
+$_['text_transactions']                  = 'Транзакции';
+$_['text_column_amount']                 = 'Количество';
+$_['text_column_type']                   = 'Тип';
+$_['text_column_date_added']             = 'Добавлено';
+$_['text_confirm_refund']                = 'Вы уверены, что хотите вернуть платеж?';
 
-$_['text_confirm_refund']		         = 'Are you sure you want to refund the payment?';
+// Entry
+$_['entry_service_key']                  = 'Сервисный ключ';
+$_['entry_client_key']                   = 'Клиентский ключ';
+$_['entry_total']                        = 'Всего';
+$_['entry_order_status']                 = 'Статус заказа';
+$_['entry_geo_zone']                     = 'Геозона';
+$_['entry_status']                       = 'Статус';
+$_['entry_sort_order']                   = 'Порядок сортировки';
+$_['entry_debug']                        = 'Журнал отладки';
+$_['entry_card']                         = 'Карты магазина';
+$_['entry_secret_token']                 = 'Секретный токен';
+$_['entry_webhook_url']                  = 'Webhook URL';
+$_['entry_cron_job_url']                 = 'URL заданий cron';
+$_['entry_last_cron_job_run']            = 'Время выполнения последнего задания cron:';
+$_['entry_success_status']               = 'Успешный статус';
+$_['entry_failed_status']                = 'Неудачный статус';
+$_['entry_settled_status']               = 'Рассчетный статус';
+$_['entry_refunded_status']              = 'Возвращенный статус';
+$_['entry_partially_refunded_status']    = 'Частично возвращенный статус';
+$_['entry_charged_back_status']          = 'Возвращенный';
+$_['entry_information_requested_status'] = 'Информация запрошена статус';
+$_['entry_information_supplied_status']  = 'Информация предоставлена статус';
+$_['entry_chargeback_reversed_status']   = 'Возвращенный реверсный статус';
+$_['entry_reversed_status']              = 'Реверсный статус';
+$_['entry_voided_status']                = 'Аннулированный статус';
 
-$_['button_refund']				         = 'Rebate / refund';
+// Help
+$_['help_total']                         = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным.';
+$_['help_debug']                         = 'Включение отладки приведет к записи конфиденциальных данных в файл журнала. Вы должны всегда отключать, если не указано иное';
+$_['help_secret_token']                  = 'Сделать это долго и трудно угадать';
+$_['help_webhook_url']                   = 'Настройте веб-порталы Worldpay для вызова этого URL';
+$_['help_cron_job_url']                  = 'Установите задание cron для вызова этого URL';
 
+// Tab
+$_['tab_settings']                       = 'Настройки';
+$_['tab_order_status']                   = 'Статус заказа';
+
+// Button
+$_['button_refund']                      = 'Скидка / вернуть';
+
+// Error
+$_['error_permission']                   = 'Предупреждение: У Вас нет разрешения на изменение payment Worldpay!';
+$_['error_service_key']                  = 'Сервисный ключ обязателен!';
+$_['error_client_key']                   = 'Клиентский ключ обязателен!';

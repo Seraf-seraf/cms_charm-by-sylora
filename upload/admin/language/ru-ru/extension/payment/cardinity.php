@@ -1,76 +1,76 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/extension/payment/cardinity.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']			= 'Cardinity';
+$_['heading_title']         = 'Cardinity';
 
 // Text
-$_['text_editing_shop']     = 'Select the shop you want to assign the API keys to';
-$_['text_extension']		= 'Extensions';
-$_['text_success']			= 'Success: You have modified Cardinity payment module!';
-$_['text_edit']             = 'Edit Cardinity';
-$_['text_cardinity']		= '<a href="http://cardinity.com/?crdp=opencart" target="_blank"><img src="view/image/payment/cardinity.png" alt="Cardinity" title="Cardinity" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_production']		= 'Production';
-$_['text_sandbox']			= 'Sandbox';
-$_['text_payment_info']		= 'Refund information';
-$_['text_no_refund']		= 'No refund history';
-$_['text_confirm_refund']	= 'Are you sure you want to refund';
-$_['text_na']				= 'N/A';
-$_['text_success_action']	= 'Success';
-$_['text_error_generic']	= 'Error: There was an error with your request. Please check the logs.';
+$_['text_editing_shop']     = 'Выберите магазин, которому вы хотите назначить ключи API';
+$_['text_extension']        = 'Расширения';
+$_['text_success']          = 'Успешно: Вы изменили модуль оплаты Cardinity!';
+$_['text_edit']             = 'Редактировать Cardinity';
+$_['text_cardinity']        = '<a href="http://cardinity.com/?crdp=opencart" target="_blank"><img src="view/image/payment/cardinity.png" alt="Cardinity" title="Cardinity" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_production']       = 'Производство';
+$_['text_sandbox']          = 'Песочница';
+$_['text_payment_info']     = 'Информация о возврате';
+$_['text_no_refund']        = 'Нет истории возврата';
+$_['text_confirm_refund']   = 'Вы уверены, что хотите вернуть деньги?';
+$_['text_na']               = 'Н/Д';
+$_['text_success_action']   = 'Успешно';
+$_['text_error_generic']    = 'Ошибка: Произошла ошибка с Вашим запросом. Пожалуйста, проверьте журналы.';
 
 // Column
-$_['column_refund']			= 'Refund';
-$_['column_date']			= 'Date';
-$_['column_refund_history'] = 'Refund History';
-$_['column_action']			= 'Action';
-$_['column_status']			= 'Status';
-$_['column_amount']			= 'Amount';
-$_['column_description']	= 'Description';
+$_['column_refund']         = 'Возврат';
+$_['column_date']           = 'Дата';
+$_['column_refund_history'] = 'История возврата';
+$_['column_action']         = 'Действие';
+$_['column_status']         = 'Статус';
+$_['column_amount']         = 'Количество';
+$_['column_description']    = 'Описание';
 
 // Entry
-$_['entry_editing_shop']	= 'Shop';
-$_['entry_total']			= 'Total';
-$_['entry_order_status']	= 'Order Status';
-$_['entry_geo_zone']		= 'Geo Zone';
-$_['entry_status']			= 'Status';
-$_['entry_sort_order']		= 'Sort Order';
-$_['entry_key']				= 'Consumer Key';
-$_['entry_secret']			= 'Consumer Secret';
-$_['entry_debug']			= 'Debug';
-$_['project_key']			= 'Project ID';
-$_['project_secret']		= 'Project Secret';
-$_['entry_external']		= 'External checkout';
-
-$_['entry_log']		        = 'Transaction Log';
-
+$_['entry_editing_shop']	= 'Магазин';
+$_['entry_total']           = 'Всего';
+$_['entry_order_status']    = 'Статус заказа';
+$_['entry_geo_zone']        = 'Геозона';
+$_['entry_status']          = 'Статус';
+$_['entry_sort_order']      = 'Порядок сортировки';
+$_['entry_key']				= 'Ключ потребителя';
+$_['entry_secret']			= 'Секрет потребителя';
+$_['entry_debug']			= 'Отладка';
+$_['project_key']			= 'Идентификатор проекта';
+$_['project_secret']		= 'Секрет проекта';
+$_['entry_external']		= 'Внешняя оплата';
+$_['entry_log']		        = 'Журнал транзакций';
 
 // Help
-$_['help_debug']			= 'Enabling debug will write sensitive data to a log file. You should always disable unless instructed otherwise.';
-$_['help_total']			= 'The checkout total the order must reach before this payment method becomes active.';
-$_['help_external']			= 'Enabling external checkout will perform the payment in our secured hosted server, instead of internally.';
-
-
-$_['help_consumer_cred']	= 'Consumer Key and Consumer Secret can be found in your cardinity dashboard > Integration > API settings. Only required if using internal method.';
-$_['help_project_cred']		= 'Project ID and Project Secret can be found in your cardinity dashboard > Integration > API settings. Only required if using external hosted method.';
-
-
+$_['help_debug']            = 'Включение отладки приведет к записи конфиденциальных данных в файл журнала. Вы должны всегда отключать, если не указано иное.';
+$_['help_total']            = 'Общая сумма, которую должен достичь заказ, прежде чем этот метод оплаты станет активным.';
+$_['help_external']			= 'Включение внешней оплаты приведет к выполнению оплаты на нашем защищенном хостинг-сервере, вместо внутреннего.';
+$_['help_consumer_cred']	= 'Ключ потребителя и секрет потребителя можно найти в панели управления Cardinity > Интеграция > Настройки API. Требуется только при использовании внутреннего метода.';
+$_['help_project_cred']		= 'Идентификатор проекта и секрет проекта можно найти в панели управления Cardinity > Интеграция > Настройки API. Требуется только при использовании внешнего хостинг-сервера.';
 
 
 // Button
-$_['button_refund']			= 'Refund';
+$_['button_refund']         = 'Вернуть';
 
 // Error
-$_['error_key']				= 'Key Required!';
-$_['error_secret']			= 'Secret Required!';
-
-$_['error_project_key']		= 'Project Key Required!';
-$_['error_project_secret']	= 'Project Secret Required!';
-
-$_['error_composer']		= 'Unable to load Cardinity SDK. Please download a compiled vendor folder or run composer.';
-$_['error_php_version']		= 'Minimum version of PHP 5.4.0 is required!';
-$_['error_permission']		= 'Warning: You do not have permission to modify payment Cardinity!';
-$_['error_connection']		= 'There was a problem establishing a connection to the Cardinity API. Please check your Key and Secret settings.';
-$_['error_warning']			= 'Warning: Please check the form carefully for errors!';
-
-$_['refund_approved']	= 'Refund Approved';
-$_['refund_declined']	= 'Refund Declined';
-$_['refund_processing']	= 'Refund Processing, check back later';
+$_['error_key']             = 'Ключ обязателен!';
+$_['error_secret']          = 'Секрет обязателен!';
+$_['error_project_key']		= 'Ключ проекта обязателен!';
+$_['error_project_secret']	= 'Секрет проекта обязателен!';
+$_['error_composer']        = 'Невозможно загрузить Cardinity SDK. Пожалуйста, скачайте скомпилированную папку продавца или запустите composer.';
+$_['error_php_version']     = 'Минимальная версия PHP 5.4.0 обязательна!';
+$_['error_permission']      = 'Предупреждение: У Вас нет разрешения на изменение оплаты Cardinity!';
+$_['error_connection']      = 'Возникла проблема с установлением соединения с API Cardinity. Пожалуйста, проверьте настройки: Ваш ключ и секрет.';
+$_['error_warning']         = 'Предупреждение: Пожалуйста, внимательно проверьте форму на наличие ошибок!';
+$_['refund_approved']	    = 'Возврат одобрен';
+$_['refund_declined']	    = 'Возврат отклонен';
+$_['refund_processing']	    = 'Возврат обрабатывается, проверьте позже';

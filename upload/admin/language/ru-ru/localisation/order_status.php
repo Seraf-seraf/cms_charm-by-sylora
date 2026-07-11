@@ -1,24 +1,33 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/localisation/order_status.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']    = 'Order Statuses';
+$_['heading_title']    = 'Статусы заказа';
 
 // Text
-$_['text_success']     = 'Success: You have modified order statuses!';
-$_['text_list']        = 'Order Status List';
-$_['text_add']         = 'Add Order Status';
-$_['text_edit']        = 'Edit Order Status';
+$_['text_success']     = 'Успешно: Вы изменили статусы заказа!';
+$_['text_list']        = 'Список статусов заказа';
+$_['text_add']         = 'Добавить статус заказа';
+$_['text_edit']        = 'Редактировать статус заказа';
 
 // Column
-$_['column_name']      = 'Order Status Name';
-$_['column_action']    = 'Action';
+$_['column_name']      = 'Название статуса заказа';
+$_['column_action']    = 'Действия';
 
 // Entry
-$_['entry_name']       = 'Order Status Name';
+$_['entry_name']       = 'Название статуса заказа';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify order statuses!';
-$_['error_name']       = 'Order Status Name must be between 3 and 32 characters!';
-$_['error_default']    = 'Warning: This order status cannot be deleted as it is currently assigned as the default store order status!';
-$_['error_download']   = 'Warning: This order status cannot be deleted as it is currently assigned as the default download status!';
-$_['error_store']      = 'Warning: This order status cannot be deleted as it is currently assigned to %s stores!';
-$_['error_order']      = 'Warning: This order status cannot be deleted as it is currently assigned to %s orders!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на изменение статуса заказа!';
+$_['error_name']       = 'Название статуса заказа должно быть от 3 до 32 символов!';
+$_['error_default']    = 'Предупреждение: Этот статус заказа не может быть удален, так как он в настоящее время назначен как статус заказа магазина по умолчанию!';
+$_['error_download']   = 'Предупреждение: Этот статус заказа не может быть удален, так как в настоящее время он назначен статусом загрузки по умолчанию!';
+$_['error_store']      = 'Предупреждение: Этот статус заказа не может быть удален, так как он назначен %s магазинам!';
+$_['error_order']      = 'Предупреждение: Этот статус заказа не может быть удален, так как он назначен %s заказам!';

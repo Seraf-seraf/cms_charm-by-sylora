@@ -1,28 +1,37 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/customer/customer_approval.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']         = 'Customer Approvals';
+$_['heading_title']         = 'Одобрение клиентов';
 
 // Text
-$_['text_success']          = 'Success: You have modified customer approvals!';
-$_['text_list']             = 'Customer Approval List';
-$_['text_default']          = 'Default';
-$_['text_customer']         = 'Customer';
-$_['text_affiliate']        = 'Affiliate';
+$_['text_success']          = 'Успешно: Вы изменили одобрения клиентов!';
+$_['text_list']             = 'Список одобрения клиентов';
+$_['text_default']          = 'По умолчанию';
+$_['text_customer']         = 'Клиент';
+$_['text_affiliate']        = 'Партнер';
 
 // Column
-$_['column_name']           = 'Customer Name';
-$_['column_email']          = 'E-Mail';
-$_['column_customer_group'] = 'Customer Group';
-$_['column_type']           = 'Type';
-$_['column_date_added']     = 'Date Added';
-$_['column_action']         = 'Action';
+$_['column_name']           = 'Имя клиента';
+$_['column_email']          = 'Эл. почта';
+$_['column_customer_group'] = 'Группа клиента';
+$_['column_type']           = 'Тип';
+$_['column_date_added']     = 'Дата добавления';
+$_['column_action']         = 'Действие';
 
 // Entry
-$_['entry_name']            = 'Customer Name';
-$_['entry_email']           = 'E-Mail';
-$_['entry_customer_group']  = 'Customer Group';
-$_['entry_type']            = 'Type';
-$_['entry_date_added']      = 'Date Added';
+$_['entry_name']            = 'Клиент';
+$_['entry_email']           = 'Эл. почта';
+$_['entry_customer_group']  = 'Группа клиента';
+$_['entry_type']            = 'Тип';
+$_['entry_date_added']      = 'Дата добавления';
 
 // Error
-$_['error_permission']      = 'Warning: You do not have permission to modify customer approvals!';
+$_['error_permission']      = 'Предупреждение: У Вас нет прав на изменение одобрения клиентов!';

@@ -1,32 +1,41 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/user/api.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
 $_['heading_title']        = 'APIs';
 
 // Text
-$_['text_success']         = 'Success: You have modified APIs!';
-$_['text_list']            = 'API List';
-$_['text_add']             = 'Add API';
-$_['text_edit']            = 'Edit API';
-$_['text_ip']              = 'Below you can create a list of IP\'s allowed to access the API. Your current IP is %s';
+$_['text_success']         = 'Успешно: Вы изменили APIs!';
+$_['text_list']            = 'Список API';
+$_['text_add']             = 'Добавить API';
+$_['text_edit']            = 'Редактировать API';
+$_['text_ip']              = 'Ниже Вы можете создать список IP-адресов, которым разрешен доступ к API. Ваш текущий IP-адрес %s';
 
 // Column
-$_['column_username']      = 'API Username';
-$_['column_status']        = 'Status';
-$_['column_token']         = 'Token';
-$_['column_ip']            = 'IP';
-$_['column_date_added']    = 'Date Added';
-$_['column_date_modified'] = 'Date Modified';
+$_['column_username']      = 'Пользователь API';
+$_['column_status']        = 'Статус';
+$_['column_token']         = 'Токен';
+$_['column_ip']            = 'IP-адрес';
+$_['column_date_added']    = 'Дата добавления';
+$_['column_date_modified'] = 'Дата изменения';
 
-$_['column_action']        = 'Action';
+$_['column_action']        = 'Действие';
 
 // Entry
-$_['entry_username']       = 'API Username';
-$_['entry_key']            = 'API Key';
-$_['entry_status']         = 'Status';
-$_['entry_ip']             = 'IP';
+$_['entry_username']       = 'Пользователь API';
+$_['entry_key']            = 'API ключ';
+$_['entry_status']         = 'Статус';
+$_['entry_ip']             = 'IP-адрес';
 
 // Error
-$_['error_permission']     = 'Warning: You do not have permission to modified APIs!';
-$_['error_username']       = 'API USername must be between 3 and 20 characters!';
-$_['error_key']            = 'API Key must be between 64 and 256 characters!';
-$_['error_ip']             = 'You must have at least one IP added to the allowed list!';
+$_['error_permission']     = 'Предупреждение: У Вас нет разрешения на изменение APIs!';
+$_['error_username']       = 'Пользователь API должно быть от 3 до 20 символов!';
+$_['error_key']            = 'API ключ должен содержать от 64 до 256 символов!';
+$_['error_ip']             = 'Вы должны добавить хотя бы один IP-адрес в список разрешенных!';

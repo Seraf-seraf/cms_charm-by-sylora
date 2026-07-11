@@ -1,20 +1,29 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/marketplace/event.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']     = 'Events';
+$_['heading_title']     = 'События';
 
 // Text
-$_['text_success']      = 'Success: You have modified events!';
-$_['text_list']         = 'Event List';
-$_['text_event']        = 'Events are used by extensions to override the default functionality of your store. If you have issues you can disable or enable the events here.';
-$_['text_info']         = 'Event Information';
-$_['text_trigger']      = 'Trigger';
-$_['text_action']       = 'Action';
+$_['text_success']      = 'Успешно: Вы изменили события!';
+$_['text_list']         = 'Список событий';
+$_['text_event']        = 'События используются расширениями для переопределения стандартных функций Вашего магазина. Если у Вас есть проблемы, Вы можете отключить или включить события здесь.';
+$_['text_info']         = 'Информация о событии';
+$_['text_trigger']      = 'Триггер';
+$_['text_action']       = 'Действие';
 
 // Column
-$_['column_code']       = 'Event Code';
-$_['column_status']     = 'Status';
-$_['column_sort_order'] = 'Sort Order';
-$_['column_action']     = 'Action';
+$_['column_code']       = 'Код события';
+$_['column_status']     = 'Статус';
+$_['column_sort_order'] = 'Порядок сортировки';
+$_['column_action']     = 'Действие';
 
 // Error
-$_['error_permission']  = 'Warning: You do not have permission to modify extensions!';
+$_['error_permission']  = 'Предупреждение: У Вас нет разрешения на изменение расширений!';

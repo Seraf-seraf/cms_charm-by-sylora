@@ -1,11 +1,20 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/extension/payment/paypoint.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Heading
-$_['heading_title']				= 'Thank you for shopping with %s .... ';
+$_['heading_title']				= 'Благодарим за покупки в %s!';
 
 // Text
-$_['text_title']				= 'Credit Card / Debit Card (PayPoint)';
-$_['text_response']				= 'Response from PayPoint:';
-$_['text_success']				= '... your payment was successfully received.';
-$_['text_success_wait']			= '<b><span style="color: #FF0000">Please wait...</span></b> whilst we finish processing your order.<br>If you are not automatically re-directed in 10 seconds, please click <a href="%s">here</a>.';
-$_['text_failure']				= '... Your payment has been cancelled!';
-$_['text_failure_wait']			= '<b><span style="color: #FF0000">Please wait...</span></b><br>If you are not automatically re-directed in 10 seconds, please click <a href="%s">here</a>.';
+$_['text_title']				= 'Кредитная карта / дебетовая карта (PayPoint)';
+$_['text_response']				= 'Ответ PayPoint:';
+$_['text_success']				= 'Платёж получен.';
+$_['text_success_wait']			= '<b><span style="color: #FF0000">Пожалуйста, подождите...</span></b> Обрабатываем Ваш заказ.<br>Если перенаправление не произошло в течение 10 секунд, нажмите <a href="%s">здесь</a>.';
+$_['text_failure']				= 'Платёж отменён.';
+$_['text_failure_wait']			= '<b><span style="color: #FF0000">Пожалуйста, подождите...</span></b><br>Если перенаправление не произошло в течение 10 секунд, нажмите <a href="%s">здесь</a>.';

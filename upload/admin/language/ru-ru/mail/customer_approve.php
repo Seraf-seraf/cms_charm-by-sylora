@@ -1,7 +1,16 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       admin/language/ru-ru/mail/customer_approve.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_subject'] = '%s - Your Account has been activated!';
-$_['text_welcome'] = 'Welcome and thank you for registering at %s!';
-$_['text_login']   = 'Your account has now been created and you can log in by using your email address and password by visiting our website or at the following URL:';
-$_['text_service'] = 'Upon logging in, you will be able to access other services including reviewing past orders, printing invoices and editing your account information.';
-$_['text_thanks']  = 'Thanks,';
+$_['text_subject'] = '%s - Ваша учетная запись была активирована!';
+$_['text_welcome'] = 'Добро пожаловать и спасибо за регистрацию в %s!';
+$_['text_login']   = 'Ваша учетная запись была создана, и Вы можете войти, используя свой адрес электронной почты и пароль, посетив наш веб-сайт или по следующему URL:';
+$_['text_service'] = 'После входа в систему Вы сможете получить доступ к другим услугам, включая просмотр прошлых заказов, печать счетов и редактирование информации о Вашей учетной записи.';
+$_['text_thanks']  = 'Спасибо,';

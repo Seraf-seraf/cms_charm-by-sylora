@@ -1,7 +1,16 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/api/coupon.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_success']     = 'Success: Your coupon discount has been applied!';
+$_['text_success']     = 'Успешно: Ваша купон на скидку был применен!';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to access the API!';
-$_['error_coupon']     = 'Warning: Coupon is either invalid, expired or reached it\'s usage limit!';
+$_['error_permission'] = 'Предупреждение: У Вас нет прав доступа к API!';
+$_['error_coupon']     = 'Предупреждение: Купон недействителен, просрочен или использован!';

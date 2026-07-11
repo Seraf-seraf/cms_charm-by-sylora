@@ -1,9 +1,18 @@
 <?php
+/**
+ * @package    Русский язык для OpenCart 3.x
+ * @file       catalog/language/ru-ru/api/reward.php
+ * @author     Hkr32
+ * @copyright  © OCN, (https://opencart.name)
+ * @license    https://opensource.org/licenses/GPL-3.0
+ * @link       https://forum.opencart.name
+ */
+
 // Text
-$_['text_success']     = 'Success: Your reward points discount has been applied!';
+$_['text_success']     = 'Успешно: Ваша скидка за бонусные баллы была применена!';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to access the API!';
-$_['error_reward']     = 'Warning: Please enter the amount of reward points to use!';
-$_['error_points']     = 'Warning: You don\'t have %s reward points!';
-$_['error_maximum']    = 'Warning: The maximum number of points that can be applied is %s!';
+$_['error_permission'] = 'Предупреждение: У Вас нет разрешения на доступ к API!';
+$_['error_reward']     = 'Предупреждение: Пожалуйста, введите количество бонусных баллов, для использования!';
+$_['error_points']     = 'Предупреждение: у Вас нет %s бонусных баллов!';
+$_['error_maximum']    = 'Предупреждение: Максимальное количество баллов, которое можно применить %s!';
