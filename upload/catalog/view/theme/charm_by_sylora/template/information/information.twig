@@ -66,8 +66,14 @@
         {% endif %}
       </article>
       {% else %}
-      <h1>{{ heading_title }}</h1>
-      {{ description }}
+      <article class="content-page">
+        <header class="content-page__header">
+          <h1>{{ heading_title }}</h1>
+        </header>
+        <div class="content-page__body">
+          {{ description }}
+        </div>
+      </article>
       {% endif %}
       {{ content_bottom }}</div>
     {{ column_right }}</div>

@@ -22,11 +22,13 @@ class ControllerCommonFooter extends Controller {
 		$data['catalog'] = $this->getCatalogUrl();
 		$data['cart'] = $this->url->link('checkout/cart');
 		$data['about'] = $this->url->link('information/information', 'information_id=4');
-		$data['delivery'] = $this->url->link('information/information', 'information_id=6');
-		$data['privacy'] = $this->url->link('information/information', 'information_id=3');
-		$data['terms'] = $this->url->link('information/information', 'information_id=5');
-		$data['care'] = $this->url->link('information/information', 'information_id=7');
-		$data['return'] = $this->url->link('account/return/add', '', true);
+		$data['delivery'] = $this->getInformationUrl('delivery-payment');
+		$data['privacy'] = $this->getInformationUrl('privacy-policy');
+		$data['terms'] = $this->getInformationUrl('offer');
+		$data['care'] = $this->getInformationUrl('jewelry-care');
+		$data['return'] = $this->getInformationUrl('returns');
+		$data['sizes_materials'] = $this->getInformationUrl('sizes-materials');
+		$data['gift_packaging'] = $this->getInformationUrl('gift-packaging');
 		$data['sitemap'] = $this->url->link('information/sitemap');
 		$data['tracking'] = $this->url->link('information/tracking');
 		$data['manufacturer'] = $this->url->link('product/manufacturer');
@@ -86,5 +88,11 @@ class ControllerCommonFooter extends Controller {
 		}
 
 		return $this->url->link('product/search');
+	}
+
+	private function getInformationUrl($keyword) {
+		$information = $this->model_catalog_information->getInformationBySeoKeyword($keyword);
+
+		return $information ? $this->url->link('information/information', 'information_id=' . (int)$information['information_id']) : $this->url->link('information/contact');
 	}
 }

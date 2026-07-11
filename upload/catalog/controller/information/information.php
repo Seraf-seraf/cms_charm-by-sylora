@@ -35,6 +35,7 @@ class ControllerInformationInformation extends Controller {
 
 			$data['heading_title'] = $information_info['title'];
 			$data['about_page'] = ($information_id == 4);
+			$data['content_page'] = ($information_id != 4);
 			$data['catalog_href'] = $this->getCatalogUrl();
 			$data['contact_href'] = $this->url->link('information/contact');
 			$data['about_image'] = $this->getAboutImage();
