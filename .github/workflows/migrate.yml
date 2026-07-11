@@ -8,22 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     steps:
-      - name: Run migrations over SSH
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run migrations
+        uses: ./.github/actions/migrate
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          user: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT || 22 }}
-          debug: true
-          script: |
-            set -eux
-
-            export PATH="$HOME/bin:$PATH"
-
-            cd "${{ secrets.DEPLOY_PATH }}"
-
-            git fetch origin main
-            git reset --hard origin/main
-
-            php database/migrate.php
+          deploy-path: ${{ secrets.DEPLOY_PATH }}

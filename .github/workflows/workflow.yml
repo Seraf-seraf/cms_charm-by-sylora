@@ -15,8 +15,22 @@ jobs:
   lint:
     uses: ./.github/workflows/Lint.yml
 
-  migrate:
+  payment-health:
     needs: lint
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check payment-service
+        uses: ./.github/actions/payment-health
+        with:
+          host: ${{ vars.PAY_SERVICE_HOST }}
+
+  migrate:
+    needs: payment-health
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     uses: ./.github/workflows/migrate.yml
     secrets: inherit

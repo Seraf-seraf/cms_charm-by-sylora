@@ -1,0 +1,57 @@
+name: lint
+description: Set up PHP and run syntax, static analysis, and code-style checks.
+
+inputs:
+  php-version:
+    description: PHP version used by checks.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs['php-version'] }}
+        tools: composer:v2, cs2pr
+        extensions: mbstring
+
+    - name: PHP syntax
+      shell: bash
+      run: |
+        error=0
+        while IFS= read -r -d '' file; do
+          php -l -n "$file" | grep -v "No syntax errors detected" && error=1
+        done < <(find upload -type f -name '*.php' \
+          ! -path 'upload/system/storage/vendor/*' \
+          ! -path 'upload/system/library/cdek_official/vendor/*' -print0)
+
+        if [ "$error" -eq 1 ]; then
+          echo "Syntax errors were found."
+          exit 1
+        fi
+
+        echo "No syntax errors were detected."
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/composer/files
+          ./.cache
+          ./.php-cs-fixer.cache
+        key: OC3.0-PHP${{ inputs['php-version'] }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: OC3.0-PHP${{ inputs['php-version'] }}-
+
+    - name: PHPStan
+      shell: bash
+      run: |
+        composer require --dev --no-interaction --no-progress phpstan/phpstan:2.1.17
+        ./upload/system/storage/vendor/bin/phpstan analyze --no-progress
+
+    - name: Code style
+      shell: bash
+      run: |
+        composer require --dev --no-interaction --no-progress -W friendsofphp/php-cs-fixer:v3.41.1
+        ./upload/system/storage/vendor/bin/php-cs-fixer fix --dry-run --diff --ansi || true
+        ./upload/system/storage/vendor/bin/php-cs-fixer fix --dry-run --format=checkstyle | cs2pr

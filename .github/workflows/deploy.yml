@@ -8,24 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     steps:
-      - name: Deploy over SSH
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy
+        uses: ./.github/actions/deploy
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          user: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          debug: true
-          script: |
-            set -eux
-
-            export PATH="$HOME/bin:$PATH"
-
-            cd "${{ secrets.DEPLOY_PATH }}"
-
-            git fetch origin main
-            git reset --hard origin/main
-
-            composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
-
-            find upload/system/storage/cache storage/cache upload/image/cache -type f ! -name .gitkeep -delete 2>/dev/null || true
+          deploy-path: ${{ secrets.DEPLOY_PATH }}
