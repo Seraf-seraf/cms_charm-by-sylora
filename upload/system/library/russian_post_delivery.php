@@ -1,14 +1,29 @@
 <?php
 class RussianPostDelivery {
-	/** @var Config */
+	
+	/** 
+	 * @var Config 
+	 */
 	private $config;
-	/** @var Cart\Cart */
+
+	/** 
+	 * @var Cart\Cart 
+	 */
 	private $cart;
-	/** @var Cart\Weight */
+
+	/** 
+	 * @var Cart\Weight 
+	 */
 	private $weight;
-	/** @var Cart\Length */
+
+	/** 
+	 * @var Cart\Length 
+	 */
 	private $length;
-	/** @var Log */
+
+	/** 
+	 * @var Log 
+	 */
 	private $log;
 
 	public function __construct($registry) {
