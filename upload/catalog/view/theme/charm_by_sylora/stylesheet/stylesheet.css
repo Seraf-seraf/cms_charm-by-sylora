@@ -931,6 +931,20 @@ a:focus {
 	min-height: 76px;
 }
 
+/* Bootstrap generates table pseudo-elements for .container. They must not
+   participate as anonymous items when the same node becomes flex or grid. */
+.site-header__inner::before,
+.site-header__inner::after,
+.sylora-hero__grid::before,
+.sylora-hero__grid::after,
+.sylora-benefits__grid::before,
+.sylora-benefits__grid::after,
+.sylora-about-teaser::before,
+.sylora-about-teaser::after {
+	display: none;
+	content: none;
+}
+
 .site-brand {
 	display: inline-flex;
 	align-items: center;
@@ -1072,13 +1086,6 @@ a:focus {
 	min-height: 520px;
 	padding-top: 44px;
 	padding-bottom: 44px;
-}
-
-.sylora-hero__grid:before,
-.sylora-hero__grid:after,
-.sylora-about-teaser:before,
-.sylora-about-teaser:after {
-	display: none;
 }
 
 .sylora-eyebrow {
