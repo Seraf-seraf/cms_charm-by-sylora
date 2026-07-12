@@ -22,11 +22,25 @@
         <div class="{{ class }}"> {% if thumb or images %}
           <ul class="thumbnails">
             {% if thumb %}
-            <li class="product-gallery__main"><a class="thumbnail" href="{{ popup }}" title="{{ main_image_alt }}"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ main_image_alt }}" /></a></li>
+            <li class="product-gallery__main"><a class="thumbnail" href="{{ popup }}" title="{{ main_image_alt }}">
+              <picture>
+                {% for source in image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img src="{{ image.src }}" title="{{ heading_title }}" alt="{{ main_image_alt }}" width="{{ image.width }}" height="{{ image.height }}" loading="eager" decoding="async" />
+              </picture>
+            </a></li>
             {% endif %}
             {% if images %}
             {% for image in images %}
-            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ image.alt }}"> <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ image.alt }}" loading="lazy" /></a></li>
+            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ image.alt }}">
+              <picture>
+                {% for source in image.image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img src="{{ image.image.src }}" title="{{ heading_title }}" alt="{{ image.alt }}" width="{{ image.image.width }}" height="{{ image.image.height }}" loading="lazy" decoding="async" />
+              </picture>
+            </a></li>
             {% endfor %}
             {% endif %}
           </ul>
@@ -193,7 +207,7 @@
                 <div class="radio">
                   <label>
                     <input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" />
-                    {% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" /> {% endif %}
+                    {% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" width="50" height="50" loading="lazy" decoding="async" /> {% endif %}
                     {{ option_value.name }}
                     {% if option_value.price %}
                     ({{ option_value.price_prefix }}{{ option_value.price }})
@@ -209,7 +223,7 @@
                 <div class="checkbox">
                   <label>
                     <input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" />
-                    {% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" /> {% endif %}
+                    {% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" width="50" height="50" loading="lazy" decoding="async" /> {% endif %}
                     {{ option_value.name }}
                     {% if option_value.price %}
                     ({{ option_value.price_prefix }}{{ option_value.price }})
@@ -336,7 +350,12 @@
               {% if product.special %}
               <span class="catalog-card__badge">Скидка</span>
               {% endif %}
-              <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
+              <picture>
+                {% for source in product.image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+              </picture>
             </a>
             <div class="catalog-card__body">
             <div class="caption">

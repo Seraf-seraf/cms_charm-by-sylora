@@ -13,7 +13,7 @@
         {% else %}
         <input type="radio" name="code" value="{{ payment_option.code }}" />
         {% endif %}
-        {% if iso_code_3 == 'NLD' %} <img src="catalog/view/theme/charm_by_sylora/image/klarna_nld_banner.png" /> {% endif %}
+        {% if iso_code_3 == 'NLD' %} <img src="catalog/view/theme/charm_by_sylora/image/klarna_nld_banner.png" width="550" height="250" loading="lazy" decoding="async" /> {% endif %}
         {{ payment_option.title }}</label>
     </div>
     {% endfor %}

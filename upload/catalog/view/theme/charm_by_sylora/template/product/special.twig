@@ -55,9 +55,19 @@
               {% if product.badge %}
               <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
               {% endif %}
-              <img class="catalog-card__image-primary" src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
-              {% if product.hover_thumb %}
-              <img class="catalog-card__image-hover" src="{{ product.hover_thumb }}" alt="{{ product.name }} - дополнительное фото" title="{{ product.name }}" loading="lazy" />
+              <picture>
+                {% for source in product.image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img class="catalog-card__image-primary" src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+              </picture>
+              {% if product.hover_image.src %}
+              <picture>
+                {% for source in product.hover_image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img class="catalog-card__image-hover" src="{{ product.hover_image.src }}" alt="{{ product.name }} - дополнительное фото" title="{{ product.name }}" width="{{ product.hover_image.width }}" height="{{ product.hover_image.height }}" loading="lazy" decoding="async" />
+              </picture>
               {% endif %}
             </a>
             <div class="catalog-card__body">

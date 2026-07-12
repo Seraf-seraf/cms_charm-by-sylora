@@ -17,13 +17,23 @@
           <div class="sylora-product-slider__track">
             {% for product in hero_products %}
             <a class="sylora-product-slide" href="{{ product.href }}">
-              <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+              <picture>
+                {% for source in product.image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img src="{{ product.image.src }}" alt="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="{% if loop.first %}eager{% else %}lazy{% endif %}" decoding="async">
+              </picture>
               <span>{{ product.name }}</span>
             </a>
             {% endfor %}
             {% for product in hero_products %}
             <a class="sylora-product-slide" href="{{ product.href }}" aria-hidden="true" tabindex="-1">
-              <img src="{{ product.thumb }}" alt="" loading="lazy">
+              <picture>
+                {% for source in product.image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img src="{{ product.image.src }}" alt="" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async">
+              </picture>
               <span>{{ product.name }}</span>
             </a>
             {% endfor %}
@@ -32,10 +42,10 @@
         {% else %}
         <div class="sylora-product-slider sylora-product-slider--fallback">
           <div class="sylora-product-slider__track">
-            <img src="image/catalog/sylora/jewelry-collection.png" alt="Коллекция украшений ручной работы Charm by Sylora">
-            <img src="image/catalog/sylora/jewelry-collection.png" alt="Детали авторских украшений в розовых и зеленых оттенках">
-            <img src="image/catalog/sylora/jewelry-collection.png" alt="" aria-hidden="true">
-            <img src="image/catalog/sylora/jewelry-collection.png" alt="" aria-hidden="true">
+            <img src="image/catalog/sylora/jewelry-collection.png" alt="Коллекция украшений ручной работы Charm by Sylora" width="420" height="315" loading="eager" decoding="async">
+            <img src="image/catalog/sylora/jewelry-collection.png" alt="Детали авторских украшений в розовых и зеленых оттенках" width="420" height="315" loading="lazy" decoding="async">
+            <img src="image/catalog/sylora/jewelry-collection.png" alt="" width="420" height="315" loading="lazy" decoding="async" aria-hidden="true">
+            <img src="image/catalog/sylora/jewelry-collection.png" alt="" width="420" height="315" loading="lazy" decoding="async" aria-hidden="true">
           </div>
         </div>
         {% endif %}
@@ -72,7 +82,12 @@
       {% for product in featured_products %}
       <article>
         <a class="sylora-product-preview__image" href="{{ product.href }}">
-          <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="lazy">
+          <picture>
+            {% for source in product.image.sources %}
+            <source srcset="{{ source.src }}" type="{{ source.type }}">
+            {% endfor %}
+            <img src="{{ product.image.src }}" alt="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async">
+          </picture>
         </a>
         <div>
           <p class="sylora-badge {{ product.badge_class }}">{{ product.badge }}</p>
@@ -114,7 +129,7 @@
       <p>Charm by Sylora вырос из любви к аккуратным деталям, спокойным природным оттенкам и вещам, которые приятно носить каждый день. В работе важны баланс формы, качество материалов и ощущение личного выбора.</p>
       <a class="sylora-link" href="{{ about }}">Читать историю</a>
     </div>
-    <img src="image/catalog/sylora/jewelry-collection.png" alt="Украшения ручной работы на рабочем столе мастера">
+    <img src="image/catalog/sylora/jewelry-collection.png" alt="Украшения ручной работы на рабочем столе мастера" width="420" height="315" loading="lazy" decoding="async">
   </section>
 
   <section class="container sylora-seo">

@@ -83,17 +83,25 @@ class ControllerProductSpecial extends Controller {
 		$results = $this->model_catalog_product->getProductSpecials($filter_data);
 
 		foreach ($results as $result) {
+			$image_width = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
+			$image_height = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
+
 			if ($result['image']) {
-				$image = $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
+				$image = $this->model_tool_image->resizeWithSources($result['image'], $image_width, $image_height);
 			} else {
-				$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
+				$image = $this->model_tool_image->resizeWithSources('placeholder.png', $image_width, $image_height);
 			}
 
-			$hover_image = '';
+			$hover_image = array(
+				'src'     => '',
+				'sources' => array(),
+				'width'   => $image_width,
+				'height'  => $image_height
+			);
 			$product_images = $this->model_catalog_product->getProductImages($result['product_id']);
 
 			if (!empty($product_images[0]['image'])) {
-				$hover_image = $this->model_tool_image->resize($product_images[0]['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
+				$hover_image = $this->model_tool_image->resizeWithSources($product_images[0]['image'], $image_width, $image_height);
 			}
 
 			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -159,8 +167,10 @@ class ControllerProductSpecial extends Controller {
 
 			$data['products'][] = array(
 				'product_id'  => $result['product_id'],
-				'thumb'       => $image,
-				'hover_thumb' => $hover_image,
+				'thumb'       => $image['src'],
+				'hover_thumb' => $hover_image['src'],
+				'image'       => $image,
+				'hover_image' => $hover_image,
 				'name'        => $result['name'],
 				'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 				'price'       => $price,

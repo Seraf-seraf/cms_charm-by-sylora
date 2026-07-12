@@ -22,8 +22,13 @@
         </header>
         <div class="contact-layout">
           <aside class="contact-card" aria-label="{{ text_location }}">
-            {% if image %}
-            <img src="{{ image }}" alt="{{ store }}" title="{{ store }}" class="contact-card__image" />
+            {% if image.src %}
+            <picture>
+              {% for source in image.sources %}
+              <source srcset="{{ source.src }}" type="{{ source.type }}">
+              {% endfor %}
+              <img src="{{ image.src }}" alt="{{ store }}" title="{{ store }}" class="contact-card__image" width="{{ image.width }}" height="{{ image.height }}" loading="lazy" decoding="async" />
+            </picture>
             {% endif %}
             <h2>{{ store }}</h2>
             <ul class="contact-list">
@@ -93,7 +98,7 @@
                 <section>
                   <h3>{{ location.name }}</h3>
                   {% if location.image %}
-                  <img src="{{ location.image }}" alt="{{ location.name }}" title="{{ location.name }}" class="img-thumbnail" />
+                  <img src="{{ location.image }}" alt="{{ location.name }}" title="{{ location.name }}" class="img-thumbnail" width="268" height="50" loading="lazy" decoding="async" />
                   {% endif %}
                   {% if location.address %}
                   <p>{{ location.address }}</p>

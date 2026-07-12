@@ -288,9 +288,11 @@ class ControllerProductProduct extends Controller {
 			}
 
 			if ($product_info['image']) {
-				$data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_thumb_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_thumb_height'));
+				$data['image'] = $this->model_tool_image->resizeWithSources($product_info['image'], (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_thumb_width'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_thumb_height'));
+				$data['thumb'] = $data['image']['src'];
 			} else {
 				$data['thumb'] = '';
+				$data['image'] = array();
 			}
 
 			$data['images'] = array();
@@ -299,9 +301,12 @@ class ControllerProductProduct extends Controller {
 			$results = $this->model_catalog_product->getProductImages($this->request->get['product_id']);
 
 			foreach ($results as $image_index => $result) {
+				$additional_image = $this->model_tool_image->resizeWithSources($result['image'], (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_width'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_height'));
+
 				$data['images'][] = array(
 					'popup' => $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height')),
-					'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_additional_height')),
+					'thumb' => $additional_image['src'],
+					'image' => $additional_image,
 					'alt'   => $product_info['name'] . ' - фото ' . ($image_index + 2)
 				);
 			}
@@ -570,10 +575,13 @@ class ControllerProductProduct extends Controller {
 			$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
 
 			foreach ($results as $result) {
+				$image_width = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_width');
+				$image_height = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_height');
+
 				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_height'));
+					$image = $this->model_tool_image->resizeWithSources($result['image'], $image_width, $image_height);
 				} else {
-					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_height'));
+					$image = $this->model_tool_image->resizeWithSources('placeholder.png', $image_width, $image_height);
 				}
 
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -621,7 +629,8 @@ class ControllerProductProduct extends Controller {
 
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
-					'thumb'       => $image,
+					'thumb'       => $image['src'],
+					'image'       => $image,
 					'name'        => $result['name'],
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 					'price'       => $price,

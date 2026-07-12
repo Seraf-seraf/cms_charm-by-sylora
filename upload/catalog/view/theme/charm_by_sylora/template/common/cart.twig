@@ -7,7 +7,7 @@
         {% for product in products %}
         <article class="mini-cart__item mini-cart__item--voucher">
           {% if product.thumb %}
-          <a class="mini-cart__image" href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" /></a>
+          <a class="mini-cart__image" href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" width="47" height="47" loading="lazy" decoding="async" /></a>
           {% endif %}
           <div>
             <a class="mini-cart__name" href="{{ product.href }}">{{ product.name }}</a>

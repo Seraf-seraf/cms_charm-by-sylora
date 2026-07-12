@@ -51,9 +51,9 @@ class ControllerCommonHome extends Controller {
 
 		foreach ($featured_products as $product) {
 			if ($product['image']) {
-				$image = $this->model_tool_image->resize($product['image'], 420, 315);
+				$image = $this->model_tool_image->resizeWithSources($product['image'], 420, 315);
 			} else {
-				$image = $this->model_tool_image->resize('placeholder.png', 420, 315);
+				$image = $this->model_tool_image->resizeWithSources('placeholder.png', 420, 315);
 			}
 
 			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -89,7 +89,8 @@ class ControllerCommonHome extends Controller {
 
 			$product_data = array(
 				'product_id'  => $product['product_id'],
-				'thumb'       => $image,
+				'thumb'       => $image['src'],
+				'image'       => $image,
 				'name'        => $product['name'],
 				'price'       => $price,
 				'special'     => $special,

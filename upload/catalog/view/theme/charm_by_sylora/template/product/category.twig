@@ -20,7 +20,7 @@
       </header>
       {% if thumb or description %}
       <div class="row"> {% if thumb %}
-        <div class="col-sm-2"><img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" /></div>
+        <div class="col-sm-2"><img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" width="80" height="80" loading="lazy" decoding="async" /></div>
         {% endif %}
         {% if description %}
         <div class="col-sm-10">{{ description }}</div>
@@ -164,9 +164,19 @@
               {% if product.badge %}
               <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
               {% endif %}
-              <img class="catalog-card__image-primary" src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
-              {% if product.hover_thumb %}
-              <img class="catalog-card__image-hover" src="{{ product.hover_thumb }}" alt="{{ product.name }} - дополнительное фото" title="{{ product.name }}" loading="lazy" />
+              <picture>
+                {% for source in product.image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img class="catalog-card__image-primary" src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+              </picture>
+              {% if product.hover_image.src %}
+              <picture>
+                {% for source in product.hover_image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img class="catalog-card__image-hover" src="{{ product.hover_image.src }}" alt="{{ product.name }} - дополнительное фото" title="{{ product.name }}" width="{{ product.hover_image.width }}" height="{{ product.hover_image.height }}" loading="lazy" decoding="async" />
+              </picture>
               {% endif %}
             </a>
             <div class="catalog-card__body">
@@ -198,7 +208,12 @@
               <button type="submit" aria-label="Закрыть"><i class="fa fa-times"></i></button>
             </form>
             <div class="quick-view__grid">
-              <img src="{{ product.thumb }}" alt="{{ product.name }}" loading="lazy" />
+              <picture>
+                {% for source in product.image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img src="{{ product.image.src }}" alt="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+              </picture>
               <div class="quick-view__content">
                 {% if product.badge %}
                 <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>

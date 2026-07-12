@@ -43,7 +43,7 @@
                 <article class="cart-item">
                   <a class="cart-item__image" href="{{ product.href }}">
                     {% if product.thumb %}
-                    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
+                    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" width="47" height="47" loading="lazy" decoding="async" />
                     {% endif %}
                   </a>
                   <div class="cart-item__body">
