@@ -13,17 +13,17 @@
         <ul>
           {% if payment_type.visa == 1 or payment_type.mastercard == 1 or payment_type.diners == 1 or payment_type.jcb == 1 or payment_type.amex == 1 %}
             <label> <input type="radio" name="EWAY_PAYMENTTYPE" id="eway-radio-cc" value="creditcard" checked="checked" onchange="javascript:select_eWAYPaymentOption('creditcard')"/>
-              {% if payment_type.visa == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_visa.png" height="30" alt="Visa"/> {% endif %}
-              {% if payment_type.mastercard == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_master.png" height="30" alt="MasterCard"/> {% endif %}
-              {% if payment_type.diners == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_diners.png" height="30" alt="Diners Club"/> {% endif %}
-              {% if payment_type.jcb == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_jcb.png" height="30" alt="JCB"/> {% endif %}
-              {% if payment_type.amex == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_amex.png" height="30" alt="AMEX"/> {% endif %} </label>
+              {% if payment_type.visa == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_visa.png" width="45" height="30" alt="Visa" loading="lazy" decoding="async"/> {% endif %}
+              {% if payment_type.mastercard == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_master.png" width="45" height="30" alt="MasterCard" loading="lazy" decoding="async"/> {% endif %}
+              {% if payment_type.diners == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_diners.png" width="45" height="30" alt="Diners Club" loading="lazy" decoding="async"/> {% endif %}
+              {% if payment_type.jcb == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_jcb.png" width="45" height="30" alt="JCB" loading="lazy" decoding="async"/> {% endif %}
+              {% if payment_type.amex == 1 %} <img src="catalog/view/theme/charm_by_sylora/image/eway_creditcard_amex.png" width="45" height="30" alt="AMEX" loading="lazy" decoding="async"/> {% endif %} </label>
           {% endif %}
           {% if payment_type.paypal == 1 %}
-            <label> <input type="radio" name="EWAY_PAYMENTTYPE" value="paypal" onchange="javascript:select_eWAYPaymentOption(paypal)"/> <img src="catalog/view/theme/charm_by_sylora/image/eway_paypal.png" height="30" alt="{{ text_card_type_pp }}"/></label>
+            <label> <input type="radio" name="EWAY_PAYMENTTYPE" value="paypal" onchange="javascript:select_eWAYPaymentOption(paypal)"/> <img src="catalog/view/theme/charm_by_sylora/image/eway_paypal.png" width="110" height="30" alt="{{ text_card_type_pp }}" loading="lazy" decoding="async"/></label>
           {% endif %}
           {% if payment_type.masterpass == 1 %}
-            <label> <input type="radio" name="EWAY_PAYMENTTYPE" value="masterpass" onchange="javascript:select_eWAYPaymentOption(masterpass)"/> <img src="catalog/view/theme/charm_by_sylora/image/eway_masterpass.png" height="30" alt="{{ text_card_type_mp }}"/></label>
+            <label> <input type="radio" name="EWAY_PAYMENTTYPE" value="masterpass" onchange="javascript:select_eWAYPaymentOption(masterpass)"/> <img src="catalog/view/theme/charm_by_sylora/image/eway_masterpass.png" width="131" height="30" alt="{{ text_card_type_mp }}" loading="lazy" decoding="async"/></label>
           {% endif %}
         </ul>
       </div>
