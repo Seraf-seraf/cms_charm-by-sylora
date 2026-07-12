@@ -4,6 +4,20 @@ class ControllerCheckoutSuccess extends Controller {
 		$this->load->language('checkout/success');
 
 		if (isset($this->session->data['order_id'])) {
+			$this->load->model('checkout/order');
+			$order_id = (int)$this->session->data['order_id'];
+			$order_info = $this->model_checkout_order->getOrder($order_id);
+			$order_products = $this->model_checkout_order->getOrderProducts($order_id);
+			$products = array();
+
+			foreach ($order_products as $product) {
+				$products[] = array('id' => (string)$product['product_id'], 'name' => $product['name'], 'price' => (float)$product['price'], 'quantity' => (int)$product['quantity']);
+			}
+
+			if ($order_info && $products) {
+				$this->session->data['analytics_purchase'] = array('ecommerce' => array('currencyCode' => $order_info['currency_code'], 'purchase' => array('actionField' => array('id' => (string)$order_id, 'revenue' => (float)$order_info['total']), 'products' => $products)));
+			}
+
 			$this->cart->clear();
 
 			unset($this->session->data['shipping_method']);

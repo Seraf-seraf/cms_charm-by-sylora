@@ -52,7 +52,7 @@
                         <h2><a href="{{ product.href }}">{{ product.name }}</a>{% if not product.stock %} <span class="text-danger">***</span>{% endif %}</h2>
                         <p class="cart-item__model">{{ column_model }}: {{ product.model }}</p>
                       </div>
-                      <button type="button" class="cart-item__remove" data-toggle="tooltip" title="{{ button_remove }}" aria-label="{{ button_remove }}" onclick="cart.remove('{{ product.cart_id }}');"><i class="fa fa-times"></i></button>
+                      <button type="button" class="cart-item__remove" data-toggle="tooltip" title="{{ button_remove }}" aria-label="{{ button_remove }}" onclick="cart.remove('{{ product.cart_id }}', '{{ product.product_id }}', '{{ product.quantity }}');"><i class="fa fa-times"></i></button>
                     </div>
                     {% if product.option or product.reward or product.recurring %}
                     <div class="cart-item__meta" aria-label="{{ text_product_details }}">

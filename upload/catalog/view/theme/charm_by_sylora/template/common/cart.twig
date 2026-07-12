@@ -21,7 +21,7 @@
             {% endif %}
             <span class="mini-cart__line">x {{ product.quantity }} · {{ product.total }}</span>
           </div>
-          <button type="button" onclick="cart.remove('{{ product.cart_id }}');" title="{{ button_remove }}" class="mini-cart__remove"><i class="fa fa-times"></i></button>
+          <button type="button" onclick="cart.remove('{{ product.cart_id }}', '{{ product.product_id }}', '{{ product.quantity }}');" title="{{ button_remove }}" class="mini-cart__remove"><i class="fa fa-times"></i></button>
         </article>
         {% endfor %}
         {% for voucher in vouchers %}

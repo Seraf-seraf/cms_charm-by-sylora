@@ -157,6 +157,7 @@ var cart = {
 				}
 
 				if (json['success']) {
+					document.dispatchEvent(new CustomEvent('sylora:cart-add', {detail: {product_id: product_id, quantity: (typeof(quantity) != 'undefined' ? quantity : 1)}}));
 					var cartUrl = json['cart_url'] || 'index.php?route=checkout/cart';
 					var continueUrl = json['continue_url'] || 'index.php?route=product/search';
 					var cartText = json['text_cart_action'] || 'Перейти в корзину';
@@ -216,7 +217,7 @@ var cart = {
 			}
 		});
 	},
-	'remove': function(key) {
+	'remove': function(key, product_id, quantity) {
 		$.ajax({
 			url: 'index.php?route=checkout/cart/remove',
 			type: 'post',
@@ -229,6 +230,7 @@ var cart = {
 				$('#cart > button').button('reset');
 			},
 			success: function(json) {
+				document.dispatchEvent(new CustomEvent('sylora:cart-remove', {detail: {key: key, product_id: product_id, quantity: quantity}}));
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
 					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
