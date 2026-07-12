@@ -49,6 +49,10 @@ runs:
         composer require --dev --no-interaction --no-progress phpstan/phpstan:2.1.17
         ./upload/system/storage/vendor/bin/phpstan analyze --no-progress
 
+    - name: Production assets
+      shell: bash
+      run: php tools/build-assets.php --check
+
     - name: Code style
       shell: bash
       run: |

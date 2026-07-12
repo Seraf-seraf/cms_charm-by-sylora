@@ -2,8 +2,8 @@
 
 Проект использует GitHub Actions:
 
-- CI: PHP lint, PHPStan и проверка code style на ветке `main`.
-- CD: после успешного CI отдельным SSH-этапом применяются миграции, затем выполняется деплой.
+- CI: PHP lint, PHPStan, проверка production-assets и code style на ветке `main`.
+- CD: после успешного CI отдельным SSH-этапом применяются миграции, собираются production-assets, затем выполняется деплой.
 
 ## GitHub Secrets
 
@@ -26,6 +26,7 @@ cd /path/to
 git clone git@github.com:Seraf-seraf/cms_charm-by-sylora.git site
 cd site
 composer install --no-dev --prefer-dist --optimize-autoloader
+php tools/build-assets.php
 ```
 
 Сервер должен уметь получать код из GitHub:
@@ -49,3 +50,14 @@ php database/migrate.php
 
 Выполненные файлы записываются в таблицу `migrations`, повторный запуск
 пропускает уже примененные миграции.
+
+## Production-assets
+
+CSS/JS темы минифицируются PHP-сборщиком:
+
+```bash
+php tools/build-assets.php
+```
+
+CI запускает `php tools/build-assets.php --check` и падает, если
+`stylesheet.min.css` или `common.min.js` не соответствуют исходникам.

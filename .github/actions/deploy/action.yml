@@ -42,4 +42,6 @@ runs:
 
           composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
+          php tools/build-assets.php
+
           find upload/system/storage/cache storage/cache upload/image/cache -type f ! -name .gitkeep -delete 2>/dev/null || true
