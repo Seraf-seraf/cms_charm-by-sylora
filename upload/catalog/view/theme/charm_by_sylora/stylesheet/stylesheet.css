@@ -896,6 +896,20 @@ a:focus {
 	text-shadow: none;
 }
 
+.btn-default {
+	background: var(--color-surface);
+	border-color: var(--color-border);
+	color: var(--color-earth);
+	text-shadow: none;
+}
+
+.btn-default:hover,
+.btn-default:focus {
+	background: var(--color-bg);
+	border-color: var(--color-brand);
+	color: var(--color-earth);
+}
+
 .btn-primary,
 .btn-inverse,
 #cart > .btn {
@@ -914,6 +928,84 @@ a:focus {
 	background: var(--color-earth);
 	border-color: var(--color-earth);
 	color: #ffffff;
+}
+
+.btn-success,
+.btn-info {
+	background: var(--color-leaf);
+	border-color: var(--color-leaf);
+	color: #ffffff;
+	text-shadow: none;
+}
+
+.btn-warning {
+	background: var(--color-earth);
+	border-color: var(--color-earth);
+	color: #ffffff;
+	text-shadow: none;
+}
+
+.btn-danger {
+	background: var(--color-danger);
+	border-color: var(--color-danger);
+	color: #ffffff;
+	text-shadow: none;
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-info:hover,
+.btn-info:focus,
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-danger:hover,
+.btn-danger:focus {
+	filter: brightness(0.94);
+	color: #ffffff;
+}
+
+.form-control,
+.input-group-addon {
+	border-color: var(--color-border);
+	border-radius: 8px;
+	background: var(--color-bg);
+	color: var(--color-text);
+	box-shadow: none;
+}
+
+.form-control:focus {
+	border-color: var(--color-brand);
+	box-shadow: 0 0 0 3px rgba(209, 146, 178, 0.22);
+}
+
+.panel,
+.well,
+.thumbnail,
+.list-group-item,
+.dropdown-menu {
+	border-color: var(--color-border);
+	background: var(--color-bg);
+	box-shadow: none;
+}
+
+.panel-heading,
+.panel-footer,
+.well {
+	background: var(--color-surface);
+}
+
+.breadcrumb {
+	border-color: var(--color-border);
+	background: var(--color-surface);
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+	border-color: var(--color-border);
 }
 
 .site-header {
