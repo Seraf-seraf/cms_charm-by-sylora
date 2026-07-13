@@ -480,8 +480,10 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 	private function createPayment($body) {
 		$configured_api_url = $this->config->get('payment_payment_service_api_url');
 		$api_url = is_string($configured_api_url) ? rtrim($configured_api_url, '/') : '';
-		$api_key = $this->config->get('payment_payment_service_api_key');
-		$shared_secret = $this->config->get('payment_payment_service_shared_secret');
+		require_once DIR_SYSTEM . 'library/sylora_secret.php';
+
+		$api_key = SyloraSecret::resolve($this->config->get('payment_payment_service_api_key'));
+		$shared_secret = SyloraSecret::resolve($this->config->get('payment_payment_service_shared_secret'));
 		$api_parts = is_string($api_url) ? parse_url($api_url) : false;
 
 		if (!$this->isAllowedRedirectUrl($api_url) || !is_array($api_parts) || isset($api_parts['query']) || isset($api_parts['fragment']) || !is_string($api_key) || trim($api_key) === '' || !is_string($shared_secret) || strlen($shared_secret) < 32) {
@@ -641,7 +643,9 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			return false;
 		}
 
-		$shared_secret = $this->config->get('payment_payment_service_shared_secret');
+		require_once DIR_SYSTEM . 'library/sylora_secret.php';
+
+		$shared_secret = SyloraSecret::resolve($this->config->get('payment_payment_service_shared_secret'));
 
 		if (!is_string($shared_secret) || strlen($shared_secret) < 32) {
 			return false;

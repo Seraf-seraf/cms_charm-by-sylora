@@ -33,12 +33,12 @@ $_['help_api_url']                = 'Production: https://pay.charm-by-sylora.ru.
 $_['help_callback_url']           = 'Этот URL нужно указать в merchants.callback_url сервиса payment.';
 $_['help_success_url']            = 'Этот URL нужно указать в merchants.success_url сервиса payment.';
 $_['help_fail_url']               = 'Этот URL нужно указать в merchants.fail_url сервиса payment.';
-$_['help_shared_secret']           = 'Не менее 32 символов. Оставьте поле пустым, чтобы сохранить текущий secret.';
+$_['help_shared_secret']           = 'Укажите ссылку на переменную окружения, например env:PAYMENT_SERVICE_SHARED_SECRET. Оставьте поле пустым, чтобы сохранить текущую ссылку.';
 $_['help_total']                  = 'Минимальная сумма заказа, при которой способ оплаты доступен.';
 $_['help_timestamp_skew']         = 'Максимальное расхождение времени при проверке подписи callback.';
 
 // Error
 $_['error_permission']            = 'У вас нет прав для изменения Payment Service!';
 $_['error_api_url']               = 'Укажите корректный HTTPS URL payment-service. HTTP разрешен только для localhost.';
-$_['error_api_key']               = 'Укажите API key мерчанта.';
-$_['error_shared_secret']         = 'Shared secret мерчанта должен содержать не менее 32 символов.';
+$_['error_api_key']               = 'Укажите API key мерчанта как ссылку на переменную окружения, например env:PAYMENT_SERVICE_API_KEY.';
+$_['error_shared_secret']         = 'Укажите shared secret как ссылку на переменную окружения, например env:PAYMENT_SERVICE_SHARED_SECRET.';

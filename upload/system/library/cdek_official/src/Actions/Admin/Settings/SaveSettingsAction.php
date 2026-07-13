@@ -36,9 +36,11 @@ class SaveSettingsAction
 
         $storedSettings = SettingsSingleton::getInstance();
         $post = $_POST;
+
         if (empty($post['cdek_official__authSecret'])) {
             $post['cdek_official__authSecret'] = $storedSettings->authSettings->authSecret;
         }
+
         $settings = SettingsSingleton::getInstance($post);
 
         /** @var \Session $session */

@@ -9,8 +9,14 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST' && empty($this->request->post['payment_payment_service_shared_secret']) && $this->config->get('payment_payment_service_shared_secret')) {
-			$this->request->post['payment_payment_service_shared_secret'] = $this->config->get('payment_payment_service_shared_secret');
+		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+			foreach (array('api_key', 'shared_secret') as $secret) {
+				$key = 'payment_payment_service_' . $secret;
+
+				if (empty($this->request->post[$key]) && $this->config->get($key)) {
+					$this->request->post[$key] = $this->config->get($key);
+				}
+			}
 		}
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -148,11 +154,13 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			$this->error['api_url'] = $this->language->get('error_api_url');
 		}
 
-		if (!isset($this->request->post['payment_payment_service_api_key']) || !is_string($this->request->post['payment_payment_service_api_key']) || trim($this->request->post['payment_payment_service_api_key']) === '') {
+		require_once DIR_SYSTEM . 'library/sylora_secret.php';
+
+		if (!isset($this->request->post['payment_payment_service_api_key']) || !SyloraSecret::isReference($this->request->post['payment_payment_service_api_key'])) {
 			$this->error['api_key'] = $this->language->get('error_api_key');
 		}
 
-		if (!isset($this->request->post['payment_payment_service_shared_secret']) || !is_string($this->request->post['payment_payment_service_shared_secret']) || strlen($this->request->post['payment_payment_service_shared_secret']) < 32) {
+		if (!isset($this->request->post['payment_payment_service_shared_secret']) || !SyloraSecret::isReference($this->request->post['payment_payment_service_shared_secret'])) {
 			$this->error['shared_secret'] = $this->language->get('error_shared_secret');
 		}
 

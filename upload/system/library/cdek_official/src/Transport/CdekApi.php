@@ -64,6 +64,8 @@ class CdekApi
 
     private static function getAuthData(): array
     {
+        require_once DIR_SYSTEM . 'library/sylora_secret.php';
+
         return self::testModeActive() ? [
             'grant_type'    => 'client_credentials',
             'client_id'     => Config::TEST_ACCOUNT,
@@ -71,7 +73,7 @@ class CdekApi
         ] : [
             'grant_type'    => 'client_credentials',
             'client_id'     => SettingsSingleton::getInstance()->authSettings->authId,
-            'client_secret' => SettingsSingleton::getInstance()->authSettings->authSecret,
+            'client_secret' => \SyloraSecret::resolve(SettingsSingleton::getInstance()->authSettings->authSecret),
         ];
     }
 

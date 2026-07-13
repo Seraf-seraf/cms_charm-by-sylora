@@ -1,4 +1,6 @@
 <?php
+define('DIR_SYSTEM', __DIR__ . '/../upload/system/');
+
 require_once __DIR__ . '/../upload/system/engine/registry.php';
 require_once __DIR__ . '/../upload/system/library/config.php';
 require_once __DIR__ . '/../upload/system/library/russian_post_delivery.php';

@@ -1,6 +1,7 @@
 <?php
 
 define('DB_PREFIX', '');
+define('DIR_SYSTEM', __DIR__ . '/../upload/system/');
 
 require_once __DIR__ . '/../upload/system/engine/registry.php';
 require_once __DIR__ . '/../upload/system/engine/controller.php';
@@ -79,8 +80,9 @@ $config = new Config();
 $config->set('config_name', 'Charm by Sylora');
 $config->set('payment_payment_service_pending_status_id', 21);
 $config->set('payment_payment_service_success_status_id', 22);
-$config->set('payment_payment_service_shared_secret', str_repeat('s', 32));
+$config->set('payment_payment_service_shared_secret', 'env:PAYMENT_SERVICE_TEST_SHARED_SECRET');
 $config->set('payment_payment_service_timestamp_skew', 300);
+putenv('PAYMENT_SERVICE_TEST_SHARED_SECRET=' . str_repeat('s', 32));
 
 $registry->set('config', $config);
 $registry->set('currency', new PaymentServiceCurrencyStub());

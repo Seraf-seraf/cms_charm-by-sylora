@@ -119,6 +119,7 @@ $_['error_permission']                                   = 'Ошибка: ';
 $_['cdek_error_auth_unconnected']                        = 'Ошибка авторизации. Проверьте ключи интеграции.';
 $_['cdek_error_auth_id_empty']                           = 'ID авторизации не указан';
 $_['cdek_error_auth_secret_empty']                       = 'Секрет авторизации не указан';
+$_['cdek_error_auth_secret_reference']                   = 'Секрет авторизации CDEK указывается только ссылкой на переменную окружения вида env:CDEK_AUTH_SECRET';
 $_['cdek_error_price_extra_price_invalid']               = 'Дополнительная стоимость должна быть числом';
 $_['cdek_error_price_percentage_increase_invalid']       = 'Увеличение в процентах должно быть числом';
 $_['cdek_error_price_fix_invalid']                       = 'Фиксированная цена должна быть числом';
