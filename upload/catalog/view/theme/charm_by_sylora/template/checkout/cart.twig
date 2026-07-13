@@ -30,6 +30,13 @@
           <h1>{{ heading_title }}{% if weight %} <span>{{ weight }}</span>{% endif %}</h1>
           <p>{{ text_cart_intro }}</p>
         </header>
+        {% if not products and not vouchers %}
+        <div class="cart-empty">
+          <h2>{{ text_empty }}</h2>
+          <p>{{ text_cart_empty_help }}</p>
+          <a href="{{ continue }}" class="btn btn-primary">{{ button_shopping }}</a>
+        </div>
+        {% else %}
         <div class="cart-layout">
           <div class="cart-main">
             <form action="{{ action }}" method="post" enctype="multipart/form-data">
@@ -131,6 +138,7 @@
             </div>
           </aside>
         </div>
+        {% endif %}
       </section>
       {{ content_bottom }}</div>
     {{ column_right }}</div>

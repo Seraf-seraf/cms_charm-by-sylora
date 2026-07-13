@@ -3112,6 +3112,24 @@ footer h5 {
 	align-items: start;
 }
 
+.cart-empty {
+	max-width: 680px;
+	padding: 28px;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-surface);
+}
+
+.cart-empty h2 {
+	margin: 0 0 10px;
+	font-size: 24px;
+}
+
+.cart-empty p {
+	margin: 0 0 18px;
+	color: var(--color-muted);
+}
+
 .cart-items {
 	display: grid;
 	gap: 16px;

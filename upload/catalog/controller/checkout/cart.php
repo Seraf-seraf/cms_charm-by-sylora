@@ -235,11 +235,19 @@ class ControllerCheckoutCart extends Controller {
 
 			$this->response->setOutput($this->load->view('checkout/cart', $data));
 		} else {
-			$data['text_error'] = $this->language->get('text_empty');
-			
-			$data['continue'] = $this->getCatalogUrl();
-
 			unset($this->session->data['success']);
+
+			$data['error_warning'] = '';
+			$data['attention'] = '';
+			$data['success'] = '';
+			$data['action'] = $this->url->link('checkout/cart/edit', '', true);
+			$data['weight'] = '';
+			$data['products'] = array();
+			$data['vouchers'] = array();
+			$data['totals'] = array();
+			$data['continue'] = $this->getCatalogUrl();
+			$data['checkout'] = $this->url->link('checkout/checkout', '', true);
+			$data['modules'] = array();
 
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');
@@ -248,7 +256,7 @@ class ControllerCheckoutCart extends Controller {
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
 
-			$this->response->setOutput($this->load->view('error/not_found', $data));
+			$this->response->setOutput($this->load->view('checkout/cart', $data));
 		}
 	}
 
