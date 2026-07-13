@@ -990,14 +990,19 @@ a:focus {
 .site-nav {
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
+	flex-wrap: wrap;
 	gap: 22px;
 	margin-left: auto;
+	min-width: 0;
+	row-gap: 8px;
 }
 
 .site-nav a {
 	color: var(--color-text);
 	font-size: 14px;
 	font-weight: 600;
+	overflow-wrap: anywhere;
 	text-decoration: none;
 	white-space: nowrap;
 }
@@ -1490,6 +1495,10 @@ footer h5 {
 		gap: 14px;
 	}
 
+	.site-brand {
+		min-width: 180px;
+	}
+
 	.site-search {
 		width: 170px;
 	}
@@ -1546,6 +1555,7 @@ footer h5 {
 	}
 
 	.site-header__inner {
+		gap: 12px;
 		min-height: 66px;
 	}
 
@@ -1561,11 +1571,24 @@ footer h5 {
 	}
 
 	.site-brand__mark {
+		display: block;
+		overflow: hidden;
 		font-size: 20px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	.site-brand__sub {
 		display: none;
+	}
+
+	.site-brand__text {
+		max-width: 160px;
+	}
+
+	.site-actions {
+		gap: 8px;
+		margin-left: auto;
 	}
 
 	.mobile-nav-toggle {
@@ -1637,6 +1660,34 @@ footer h5 {
 	.sylora-product-preview,
 	.sylora-benefits__grid {
 		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 414px) {
+	.site-header__inner {
+		gap: 8px;
+	}
+
+	.site-brand {
+		gap: 6px;
+	}
+
+	.site-brand__logo {
+		flex-basis: 36px;
+		width: 36px;
+		height: 36px;
+	}
+
+	.site-brand__text {
+		max-width: 96px;
+	}
+
+	.site-brand__mark {
+		font-size: 16px;
+	}
+
+	.site-actions {
+		gap: 4px;
 	}
 }
 
