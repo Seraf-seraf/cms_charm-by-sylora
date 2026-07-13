@@ -65,13 +65,13 @@
             <fieldset class="catalog-filters__group">
               <legend>Цена</legend>
               <div class="catalog-filters__price">
-                <label>
+                <label for="input-price-min">
                   <span>от</span>
-                  <input type="number" name="price_min" value="{{ filter_price_min }}" min="0" step="1" inputmode="decimal" />
+                  <input type="number" name="price_min" value="{{ filter_price_min }}" min="0" step="1" inputmode="decimal" id="input-price-min" />
                 </label>
-                <label>
+                <label for="input-price-max">
                   <span>до</span>
-                  <input type="number" name="price_max" value="{{ filter_price_max }}" min="0" step="1" inputmode="decimal" />
+                  <input type="number" name="price_max" value="{{ filter_price_max }}" min="0" step="1" inputmode="decimal" id="input-price-max" />
                 </label>
               </div>
             </fieldset>
@@ -193,12 +193,12 @@
               <div class="button-group catalog-card__actions">
                 <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
                 <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
-                <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" onclick="document.getElementById('quick-view-{{ product.product_id }}').showModal();"><i class="fa fa-eye"></i></button>
+                <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" aria-haspopup="dialog"><i class="fa fa-eye"></i></button>
                 <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
               </div>
             </div>
           </div>
-          <dialog class="quick-view" id="quick-view-{{ product.product_id }}">
+          <dialog class="quick-view" id="quick-view-{{ product.product_id }}" aria-labelledby="quick-view-title-{{ product.product_id }}">
             <form class="quick-view__close" method="dialog">
               <button type="submit" aria-label="Закрыть"><i class="fa fa-times"></i></button>
             </form>
@@ -214,7 +214,7 @@
                 <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
                 {% endif %}
                 <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
-                <h2>{{ product.name }}</h2>
+                <h2 id="quick-view-title-{{ product.product_id }}">{{ product.name }}</h2>
                 <p>{{ product.quick_description }}</p>
                 {% if product.price %}
                 <p class="price"> {% if not product.special %}
@@ -244,4 +244,60 @@
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
+<script>
+(function() {
+  var lastQuickViewTrigger = null;
+  var focusableSelector = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  function getFocusable(container) {
+    return Array.prototype.slice.call(container.querySelectorAll(focusableSelector)).filter(function(element) {
+      return element.offsetParent !== null || element === document.activeElement;
+    });
+  }
+
+  document.addEventListener('click', function(event) {
+    var trigger = event.target.closest ? event.target.closest('.js-quick-view-open') : null;
+    if (!trigger) return;
+
+    var dialog = document.getElementById(trigger.getAttribute('data-dialog-id'));
+    if (!dialog || typeof dialog.showModal !== 'function') return;
+
+    lastQuickViewTrigger = trigger;
+    dialog.showModal();
+
+    var focusable = getFocusable(dialog);
+    if (focusable.length) {
+      focusable[0].focus();
+    }
+  });
+
+  document.addEventListener('keydown', function(event) {
+    var dialog = document.querySelector('.quick-view[open]');
+    if (!dialog || event.key !== 'Tab') return;
+
+    var focusable = getFocusable(dialog);
+    if (!focusable.length) return;
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  document.addEventListener('close', function(event) {
+    if (!event.target.classList || !event.target.classList.contains('quick-view')) return;
+
+    if (lastQuickViewTrigger) {
+      lastQuickViewTrigger.focus();
+      lastQuickViewTrigger = null;
+    }
+  }, true);
+})();
+</script>
 {{ footer }}

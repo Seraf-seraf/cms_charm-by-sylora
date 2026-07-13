@@ -139,6 +139,12 @@
     backdrop.hidden = true;
   }
 
+  function getNavFocusable() {
+    if (!nav || !navButton) return [];
+
+    return Array.prototype.slice.call(nav.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')).concat(navButton);
+  }
+
   if (themeButton) {
     syncThemeButton();
     themeButton.addEventListener('click', function() {
@@ -161,6 +167,21 @@
     });
     document.addEventListener('keydown', function(event) {
       if (event.key === 'Escape') closeNav();
+      if (event.key !== 'Tab' || !nav.classList.contains('is-open')) return;
+
+      var focusable = getNavFocusable();
+      if (!focusable.length) return;
+
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     });
   }
 })();

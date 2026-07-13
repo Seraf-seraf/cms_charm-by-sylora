@@ -890,6 +890,17 @@ a:focus {
 	color: var(--color-brand);
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+	outline: 3px solid var(--color-brand);
+	outline-offset: 3px;
+}
+
 .btn {
 	border-radius: 8px;
 	box-shadow: none;
@@ -976,6 +987,10 @@ a:focus {
 .form-control:focus {
 	border-color: var(--color-brand);
 	box-shadow: 0 0 0 3px rgba(209, 146, 178, 0.22);
+}
+
+.form-control[aria-invalid="true"] {
+	border-color: var(--color-danger);
 }
 
 .panel,
