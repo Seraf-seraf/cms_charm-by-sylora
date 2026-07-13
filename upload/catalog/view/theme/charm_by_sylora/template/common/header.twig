@@ -63,8 +63,13 @@
 <header class="site-header">
   <div class="container site-header__inner">
     <a class="site-brand" href="{{ home }}" aria-label="Charm by Sylora">
-      {% if brand_logo %}
-      <img class="site-brand__logo" src="{{ brand_logo }}" alt="" width="54" height="54" loading="eager" decoding="async">
+      {% if brand_logo_image.src %}
+      <picture>
+        {% for source in brand_logo_image.sources %}
+        <source srcset="{{ source.src }}" type="{{ source.type }}">
+        {% endfor %}
+        <img class="site-brand__logo" src="{{ brand_logo_image.src }}" alt="" width="54" height="54" loading="eager" decoding="async">
+      </picture>
       {% endif %}
       <span class="site-brand__text">
         <span class="site-brand__mark">Charm by Sylora</span>

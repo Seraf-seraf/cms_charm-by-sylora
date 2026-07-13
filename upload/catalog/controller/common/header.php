@@ -72,9 +72,13 @@ class ControllerCommonHeader extends Controller {
 
 		$data['name'] = $this->config->get('config_name');
 		$data['brand_logo'] = '';
+		$data['brand_logo_image'] = array();
 
 		if (is_file(DIR_IMAGE . 'catalog/sylora/charm-by-sylora.png')) {
-			$data['brand_logo'] = $server . 'image/catalog/sylora/charm-by-sylora.png';
+			$this->load->model('tool/image');
+
+			$data['brand_logo_image'] = $this->model_tool_image->resizeWithSources('catalog/sylora/charm-by-sylora.png', 108, 108);
+			$data['brand_logo'] = $data['brand_logo_image']['src'];
 		}
 
 		if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {

@@ -11,19 +11,34 @@
 
 ## Результат локальной проверки
 
-Локальный PHP-сервер стартует, но витрина возвращает HTTP 500, потому что
-локальная БД из `upload/config.php` недоступна. Поэтому PageSpeed Insights и
-Lighthouse по фактическим страницам нужно запускать на production/staging URL
-или после восстановления локальной БД.
+Локальная проверка выполнена через PHP-сервер и Docker MySQL с базой OpenCart.
+Тестовый товар: `product_id=28`.
 
-Проверка доступности:
+Проверка доступности страниц:
 
 ```bash
 php -S 127.0.0.1:8080 -t upload
 curl -sS -L -o /tmp/sylora-home.html -w '%{http_code} %{size_download} %{time_total}\n' http://127.0.0.1:8080/
 ```
 
-Фактический результат локально: `500 0`.
+Фактические HTML-размеры на `http://127.0.0.1:8000`:
+
+| Страница | HTTP | HTML |
+| --- | ---: | ---: |
+| Главная | 200 | 29.7 KB |
+| Каталог/поиск | 200 | 59.8 KB |
+| Товар `product_id=28` | 200 | 29.8 KB |
+
+Lighthouse mobile, performance category:
+
+| Страница | Score | FCP | LCP | TBT | CLS | Transfer |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Главная | 76 | 3.5 s | 3.8 s | 220 ms | 0 | 488 KB |
+| Каталог/поиск | 72 | 3.8 s | 4.2 s | 190 ms | 0 | 520 KB |
+| Товар `product_id=28` | 79 | 3.7 s | 4.0 s | 60 ms | 0.01 | 501 KB |
+
+PageSpeed Insights не запускался на локальном `127.0.0.1`, потому что сервис
+Google не может открыть локальный URL. Для PSI нужен production/staging URL.
 
 ## Воспроизводимые команды
 
@@ -37,6 +52,14 @@ php tools/performance-audit.php
 
 ```bash
 PERFORMANCE_BASE_URL=https://example.com php tools/performance-audit.php
+```
+
+Если в тестовой базе нет `product_id=1`, передайте существующий путь товара:
+
+```bash
+PERFORMANCE_BASE_URL=https://example.com \
+PERFORMANCE_PRODUCT_PATH="/index.php?route=product/product&product_id=28" \
+php tools/performance-audit.php
 ```
 
 Lighthouse для мобильной скорости, CLS и размера страниц:

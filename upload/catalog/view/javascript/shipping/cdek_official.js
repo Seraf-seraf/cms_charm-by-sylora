@@ -116,5 +116,4 @@ $(() => {
 
     $(document).on('ajaxComplete', checkShippingMethods);
     checkShippingMethods();
-    updateGlobalData();
 });

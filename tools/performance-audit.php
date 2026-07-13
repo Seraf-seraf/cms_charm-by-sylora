@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__);
 $baseUrl = rtrim((string)getenv('PERFORMANCE_BASE_URL'), '/');
+$productPath = (string)getenv('PERFORMANCE_PRODUCT_PATH');
 $checks = [];
 
 $checks[] = checkFileSize($root . '/upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.min.css', 120 * 1024, 'Минифицированный CSS темы');
@@ -14,7 +15,7 @@ $checks[] = checkModernImageSources($root . '/upload/catalog/model/tool/image.ph
 if ($baseUrl !== '') {
 	$checks[] = checkPageSize($baseUrl . '/', 160 * 1024, 'Главная страница');
 	$checks[] = checkPageSize($baseUrl . '/index.php?route=product/search', 180 * 1024, 'Страница каталога/поиска');
-	$checks[] = checkPageSize($baseUrl . '/index.php?route=product/product&product_id=1', 220 * 1024, 'Страница товара');
+	$checks[] = checkPageSize($baseUrl . ($productPath !== '' ? $productPath : '/index.php?route=product/product&product_id=1'), 220 * 1024, 'Страница товара');
 } else {
 	$checks[] = array(
 		'name' => 'HTML-размер страниц',
@@ -125,6 +126,7 @@ function checkModernImageSources(string $modelPath, string $templateRoot): array
 }
 
 function checkPageSize(string $url, int $limit, string $name): array {
+	$http_response_header = array();
 	$context = stream_context_create(array(
 		'http' => array(
 			'timeout' => 15,
@@ -141,6 +143,16 @@ function checkPageSize(string $url, int $limit, string $name): array {
 		);
 	}
 
+	$status = getHttpStatusCode($http_response_header);
+
+	if ($status !== 200) {
+		return array(
+			'name' => $name,
+			'ok' => false,
+			'message' => 'HTTP ' . $status . ': ' . $url
+		);
+	}
+
 	$size = strlen($content);
 
 	return array(
@@ -148,6 +160,16 @@ function checkPageSize(string $url, int $limit, string $name): array {
 		'ok' => $size <= $limit,
 		'message' => formatBytes($size) . ' / лимит ' . formatBytes($limit)
 	);
+}
+
+function getHttpStatusCode(array $headers): int {
+	foreach ($headers as $header) {
+		if (preg_match('/^HTTP\/\S+\s+(\d{3})\b/', $header, $matches)) {
+			return (int)$matches[1];
+		}
+	}
+
+	return 0;
 }
 
 function getTwigFiles(string $directory): array {
