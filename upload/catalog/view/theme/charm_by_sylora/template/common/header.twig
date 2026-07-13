@@ -53,7 +53,15 @@
 {% endfor %}
 <script>
 (function() {
-  var storedTheme = localStorage.getItem('sylora-theme');
+  function getStoredTheme() {
+    try {
+      return window.localStorage ? window.localStorage.getItem('sylora-theme') : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  var storedTheme = getStoredTheme();
   var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   document.documentElement.setAttribute('data-theme', storedTheme || (systemDark ? 'dark' : 'light'));
 })();
@@ -106,6 +114,16 @@
   var navButton = document.querySelector('.mobile-nav-toggle');
   var backdrop = document.querySelector('.site-nav-backdrop');
 
+  function setStoredTheme(theme) {
+    try {
+      if (window.localStorage) {
+        window.localStorage.setItem('sylora-theme', theme);
+      }
+    } catch (error) {
+      // Safari/iOS private mode can block localStorage. Theme still changes for the current page.
+    }
+  }
+
   function syncThemeButton() {
     var dark = root.getAttribute('data-theme') === 'dark';
     if (themeButton) {
@@ -126,7 +144,7 @@
     themeButton.addEventListener('click', function() {
       var nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', nextTheme);
-      localStorage.setItem('sylora-theme', nextTheme);
+      setStoredTheme(nextTheme);
       syncThemeButton();
     });
   }
