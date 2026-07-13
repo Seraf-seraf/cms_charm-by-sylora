@@ -1,10 +1,5 @@
 {{ header }}
 <div class="container">
-  <ul class="breadcrumb">
-    {% for breadcrumb in breadcrumbs %}
-    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
-    {% endfor %}
-  </ul>
   {% if success %}
   <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}</div>
   {% endif %}
@@ -83,14 +78,14 @@ $('#button-add-card').bind('click', function () {
 
 				html += '</form>';
 
-				$('.breadcrumb').after(html);
+				$('#content').prepend(html);
 
 				$('#redirect').submit();
 			}
 
 			// if error
 			if (json['error']) {
-				$('.breadcrumb').after('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
+				$('#content').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
 			}
 		}
 	});

@@ -995,6 +995,7 @@ a:focus {
 }
 
 .breadcrumb {
+	display: none;
 	border-color: var(--color-border);
 	background: var(--color-surface);
 }
