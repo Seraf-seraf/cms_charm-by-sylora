@@ -51,29 +51,6 @@ class ControllerAccountAffiliate extends Controller {
 	}
 		
 	public function getForm() {
-		$data['breadcrumbs'] = array();
-
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
-
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_account'),
-			'href' => $this->url->link('account/account', '', true)
-		);
-
-		if ($this->request->get['route'] == 'account/affiliate/add') {
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_affiliate'),
-				'href' => $this->url->link('account/affiliate/add', '', true)
-			);
-		} else {
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_affiliate'),
-				'href' => $this->url->link('account/affiliate/edit', '', true)
-			);		
-		}
 	
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];

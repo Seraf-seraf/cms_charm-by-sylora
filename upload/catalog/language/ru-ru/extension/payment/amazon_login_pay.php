@@ -8,10 +8,6 @@
  * @link       https://forum.opencart.name
  */
 
-$_['breadcrumb_cart'] = 'Корзина';
-$_['breadcrumb_payment'] = 'Оплата';
-$_['breadcrumb_shipping'] = 'Доставка';
-$_['breadcrumb_summary'] = 'Итого';
 $_['error_constraint_amount_not_set'] = 'Заказ не прошёл из-за технической ошибки. Выберите другой способ оплаты или свяжитесь с поддержкой.';
 $_['error_constraint_payment_method_not_allowed'] = 'Выбранный способ оплаты недоступен для этой транзакции. Выберите другой или добавьте новый способ оплаты в кошелёк.';
 $_['error_constraint_payment_plan_not_set'] = 'Платёжный инструмент не выбран для этого заказа. Обновите страницу или добавьте новый способ оплаты в кошелёк.';

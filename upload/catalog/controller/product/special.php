@@ -35,12 +35,7 @@ class ControllerProductSpecial extends Controller {
 		$this->document->setTitle($this->seo->title('', $this->language->get('heading_title'), 'special'));
 		$this->document->setDescription($this->seo->description('', '', $this->language->get('heading_title'), 'special'));
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
 
 		$url = '';
 
@@ -60,10 +55,6 @@ class ControllerProductSpecial extends Controller {
 			$url .= '&limit=' . $this->request->get['limit'];
 		}
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('product/special', $url)
-		);
 
 		$data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
 

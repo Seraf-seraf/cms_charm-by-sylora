@@ -7,12 +7,7 @@ class ControllerInformationInformation extends Controller {
 		$this->load->model('catalog/category');
 		$this->load->library('seo');
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
 
 		if (isset($this->request->get['information_id'])) {
 			$information_id = (int)$this->request->get['information_id'];
@@ -28,10 +23,6 @@ class ControllerInformationInformation extends Controller {
 			$this->document->setKeywords($information_info['meta_keyword']);
 			$this->document->addLink($this->url->link('information/information', 'information_id=' . $information_id), 'canonical');
 
-			$data['breadcrumbs'][] = array(
-				'text' => $information_info['title'],
-				'href' => $this->url->link('information/information', 'information_id=' .  $information_id)
-			);
 
 			$data['heading_title'] = $information_info['title'];
 			$data['about_page'] = ($information_id == 4);
@@ -54,10 +45,6 @@ class ControllerInformationInformation extends Controller {
 
 			$this->response->setOutput($this->load->view('information/information', $data));
 		} else {
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_error'),
-				'href' => $this->url->link('information/information', 'information_id=' . $information_id)
-			);
 
 			$this->document->setTitle($this->language->get('text_error'));
 

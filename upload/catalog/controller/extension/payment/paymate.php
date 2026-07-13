@@ -66,27 +66,10 @@ class ControllerExtensionPaymentPaymate extends Controller {
 		}
 
 		if ($error) {
-			$data['breadcrumbs'] = array();
 
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_home'),
-				'href' => $this->url->link('common/home')
-			);
 
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_basket'),
-				'href' => $this->url->link('checkout/cart')
-			);
 
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_checkout'),
-				'href' => $this->url->link('checkout/checkout', '', true)
-			);
 
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_failed'),
-				'href' => $this->url->link('checkout/success')
-			);
 
 			$data['text_message'] = sprintf($this->language->get('text_failed_message'), $error, $this->url->link('information/contact'));
 

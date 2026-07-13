@@ -2303,22 +2303,9 @@ class ControllerExtensionPaymentPayPal extends Controller {
 
 		$data['heading_title'] = $text_title;
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', '', true)
-		);
 		
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_cart'),
-			'href' => $this->url->link('checkout/cart', '', true)
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $text_title,
-			'href' => $this->url->link('extension/payment/paypal/confirmOrder', '', true)
-		);
 		
 		$points_total = 0;
 
@@ -5143,22 +5130,9 @@ class ControllerExtensionPaymentPayPal extends Controller {
 			
 				$this->document->setTitle($this->language->get('text_failure_page_title'));
 						
-				$data['breadcrumbs'] = array();
 
-				$data['breadcrumbs'][] = array(
-					'text' => $this->language->get('text_home'),
-					'href' => $this->url->link('common/home', '', true)
-				);
 		
-				$data['breadcrumbs'][] = array(
-					'text' => $this->language->get('text_cart'),
-					'href' => $this->url->link('checkout/cart', '', true)
-				);
 
-				$data['breadcrumbs'][] = array(
-					'text' => $this->language->get('text_paypal'),
-					'href' => $this->url->link('extension/payment/paypal/callback', '', true)
-				);
 		
 				$data['text_title'] = $this->language->get('text_failure_page_title');
 				$data['text_message'] = sprintf($this->language->get('text_failure_page_message'), $this->url->link('information/contact', '', true));

@@ -52,33 +52,11 @@ class ControllerExtensionPaymentAmazonLoginPay extends Controller {
         $amazon_payment_js = $this->model_extension_payment_amazon_login_pay->getWidgetJs();
         $this->document->addScript($amazon_payment_js);
 
-        $data['breadcrumbs'] = array();
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('common/home', '', true),
-            'text' => $this->language->get('text_home')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('checkout/cart'),
-            'text' => $this->language->get('breadcrumb_cart')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('extension/payment/amazon_login_pay/address'),
-            'current' => true,
-            'text' => $this->language->get('breadcrumb_shipping')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => null,
-            'text' => $this->language->get('breadcrumb_payment')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => null,
-            'text' => $this->language->get('breadcrumb_summary')
-        );
 
         $data['content_main'] = $this->load->view('extension/payment/amazon_login_pay_address', $data);
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -265,33 +243,11 @@ class ControllerExtensionPaymentAmazonLoginPay extends Controller {
         $amazon_payment_js = $this->model_extension_payment_amazon_login_pay->getWidgetJs();
         $this->document->addScript($amazon_payment_js);
 
-        $data['breadcrumbs'] = array();
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('common/home', '', true),
-            'text' => $this->language->get('text_home')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('checkout/cart'),
-            'text' => $this->language->get('breadcrumb_cart')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('extension/payment/amazon_login_pay/address'),
-            'text' => $this->language->get('breadcrumb_shipping')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('extension/payment/amazon_login_pay/payment'),
-            'current' => true,
-            'text' => $this->language->get('breadcrumb_payment')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => null,
-            'text' => $this->language->get('breadcrumb_summary')
-        );
 
         $data['content_main'] = $this->load->view('extension/payment/amazon_login_pay_payment', $data);
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -428,33 +384,11 @@ class ControllerExtensionPaymentAmazonLoginPay extends Controller {
         $data['persist_comment'] = html_entity_decode($this->url->link('extension/payment/amazon_login_pay/persist_comment', '', true), ENT_COMPAT, "UTF-8");
         $data['is_coupon_change_allowed'] = $this->model_extension_payment_amazon_login_pay->isOrderInState($this->session->data['apalwa']['pay']['order_reference_id'], array('Draft'));
         $data['error_unexpected_network_error'] = $this->language->get('error_unexpected_network_error');
-        $data['breadcrumbs'] = array();
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('common/home', '', true),
-            'text' => $this->language->get('text_home')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('checkout/cart'),
-            'text' => $this->language->get('breadcrumb_cart')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('extension/payment/amazon_login_pay/address'),
-            'text' => $this->language->get('breadcrumb_shipping')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('extension/payment/amazon_login_pay/payment'),
-            'text' => $this->language->get('breadcrumb_payment')
-        );
 
-        $data['breadcrumbs'][] = array(
-            'href' => $this->url->link('extension/payment/amazon_login_pay/confirm'),
-            'current' => true,
-            'text' => $this->language->get('breadcrumb_summary')
-        );
 
         //enable mfa only for UK and Europe regions
         $data['psd_enabled'] = "false";

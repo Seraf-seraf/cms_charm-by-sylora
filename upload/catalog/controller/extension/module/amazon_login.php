@@ -151,18 +151,8 @@ class ControllerExtensionModuleAmazonLogin extends Controller {
 
             unset($this->session->data['apalwa']);
 
-            $data['breadcrumbs'] = array();
 
-            $data['breadcrumbs'][] = array(
-                'href' => $this->url->link('common/home', '', true),
-                'text' => $this->language->get('text_home')
-            );
 
-            $data['breadcrumbs'][] = array(
-                'href' => null,
-                'current' => true,
-                'text' => $this->language->get('error_login')
-            );
 
             $data['content_main'] = $this->load->view('extension/module/amazon_login_error', $data);
             $data['column_left'] = $this->load->controller('common/column_left');
