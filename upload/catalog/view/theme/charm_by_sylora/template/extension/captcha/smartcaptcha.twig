@@ -1,0 +1,36 @@
+<script src="https://smartcaptcha.cloud.yandex.ru/captcha.js?render=onload&onload=syloraSmartCaptchaOnload" defer></script>
+<fieldset>
+  <legend>{{ text_captcha }}</legend>
+  <div class="form-group required{% if route|slice(0, 9) != 'checkout/' %} smartcaptcha-field{% endif %}">
+    {% if route|slice(0, 9) == 'checkout/' %}
+    <label class="control-label" for="{{ container_id }}">{{ entry_captcha }}</label>
+    <div id="{{ container_id }}" class="smart-captcha" data-sitekey="{{ site_key }}" style="height: 100px"></div>
+    {% if error_captcha %}
+    <div class="text-danger">{{ error_captcha }}</div>
+    {% endif %}
+    {% else %}
+    <label class="col-sm-2 control-label" for="{{ container_id }}">{{ entry_captcha }}</label>
+    <div class="col-sm-10">
+      <div id="{{ container_id }}" class="smart-captcha" data-sitekey="{{ site_key }}" style="height: 100px"></div>
+      {% if error_captcha %}
+      <div class="text-danger">{{ error_captcha }}</div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</fieldset>
+<script>
+window.syloraSmartCaptchaOnload = function() {
+  if (!window.smartCaptcha) return;
+
+  var nodes = document.querySelectorAll('.smart-captcha[data-sitekey]:not([data-rendered])');
+
+  for (var i = 0; i < nodes.length; i++) {
+    window.smartCaptcha.render(nodes[i], {
+      sitekey: nodes[i].getAttribute('data-sitekey'),
+      hl: 'ru'
+    });
+    nodes[i].setAttribute('data-rendered', '1');
+  }
+};
+</script>

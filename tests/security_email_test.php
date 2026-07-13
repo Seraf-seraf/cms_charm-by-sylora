@@ -17,6 +17,7 @@ $secretKeys = array(
 	'shipping_russian_post_login',
 	'shipping_russian_post_password',
 	'cdek_official__authSecret',
+	'captcha_smartcaptcha_secret',
 );
 
 foreach ($secretKeys as $key) {
