@@ -283,12 +283,18 @@ class ControllerMailOrder extends Controller {
 		$data['text_order_id'] = $language->get('text_order_id');
 		$data['text_date_added'] = $language->get('text_date_added');
 		$data['text_order_status'] = $language->get('text_order_status');
+		$data['text_payment_method'] = $language->get('text_payment_method');
+		$data['text_shipping_method'] = $language->get('text_shipping_method');
+		$data['text_product'] = $language->get('text_product');
+		$data['text_total'] = $language->get('text_total');
 		$data['text_link'] = $language->get('text_link');
 		$data['text_comment'] = $language->get('text_comment');
 		$data['text_footer'] = $language->get('text_footer');
 
 		$data['order_id'] = $order_info['order_id'];
 		$data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));
+		$data['payment_method'] = $order_info['payment_method'];
+		$data['shipping_method'] = $order_info['shipping_method'];
 		
 		$order_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
 	
@@ -305,6 +311,58 @@ class ControllerMailOrder extends Controller {
 		}
 
 		$data['comment'] = strip_tags($comment);
+
+		$this->load->model('tool/upload');
+
+		$data['products'] = array();
+		$order_products = $this->model_checkout_order->getOrderProducts($order_info['order_id']);
+
+		foreach ($order_products as $order_product) {
+			$option_data = array();
+			$order_options = $this->model_checkout_order->getOrderOptions($order_info['order_id'], $order_product['order_product_id']);
+
+			foreach ($order_options as $order_option) {
+				if ($order_option['type'] != 'file') {
+					$value = $order_option['value'];
+				} else {
+					$upload_info = $this->model_tool_upload->getUploadByCode($order_option['value']);
+					$value = $upload_info ? $upload_info['name'] : '';
+				}
+
+				$option_data[] = array(
+					'name'  => $order_option['name'],
+					'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
+				);
+			}
+
+			$data['products'][] = array(
+				'name'     => $order_product['name'],
+				'model'    => $order_product['model'],
+				'quantity' => $order_product['quantity'],
+				'option'   => $option_data,
+				'total'    => html_entity_decode($this->currency->format($order_product['total'] + ($this->config->get('config_tax') ? ($order_product['tax'] * $order_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')
+			);
+		}
+
+		$data['vouchers'] = array();
+		$order_vouchers = $this->model_checkout_order->getOrderVouchers($order_info['order_id']);
+
+		foreach ($order_vouchers as $order_voucher) {
+			$data['vouchers'][] = array(
+				'description' => $order_voucher['description'],
+				'amount'      => html_entity_decode($this->currency->format($order_voucher['amount'], $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')
+			);
+		}
+
+		$data['totals'] = array();
+		$order_totals = $this->model_checkout_order->getOrderTotals($order_info['order_id']);
+
+		foreach ($order_totals as $order_total) {
+			$data['totals'][] = array(
+				'title' => $order_total['title'],
+				'value' => html_entity_decode($this->currency->format($order_total['value'], $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')
+			);
+		}
 
 		$this->load->model('setting/setting');
 		
@@ -366,12 +424,16 @@ class ControllerMailOrder extends Controller {
 			$data['text_order_id'] = $this->language->get('text_order_id');
 			$data['text_date_added'] = $this->language->get('text_date_added');
 			$data['text_order_status'] = $this->language->get('text_order_status');
+			$data['text_payment_method'] = $this->language->get('text_payment_method');
+			$data['text_shipping_method'] = $this->language->get('text_shipping_method');
 			$data['text_product'] = $this->language->get('text_product');
 			$data['text_total'] = $this->language->get('text_total');
 			$data['text_comment'] = $this->language->get('text_comment');
 			
 			$data['order_id'] = $order_info['order_id'];
 			$data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
+			$data['payment_method'] = $order_info['payment_method'];
+			$data['shipping_method'] = $order_info['shipping_method'];
 
 			$order_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
