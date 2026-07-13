@@ -1253,8 +1253,11 @@ summary:focus-visible,
 
 .sylora-product-slider {
 	position: relative;
-	overflow: hidden;
+	overflow-x: auto;
+	overflow-y: hidden;
 	padding: 8px 0;
+	scroll-snap-type: x proximity;
+	scrollbar-width: thin;
 }
 
 .sylora-product-slider:before,
@@ -1283,7 +1286,6 @@ summary:focus-visible,
 	align-items: stretch;
 	gap: 18px;
 	width: max-content;
-	animation: sylora-product-scroll 34s linear infinite;
 }
 
 .sylora-product-slide {
@@ -1297,6 +1299,7 @@ summary:focus-visible,
 	color: var(--color-text);
 	text-decoration: none;
 	box-shadow: var(--shadow-soft);
+	scroll-snap-align: start;
 }
 
 .sylora-product-slide:hover,
@@ -1331,16 +1334,6 @@ summary:focus-visible,
 	flex: 0 0 260px;
 	border-radius: 8px;
 	box-shadow: var(--shadow-soft);
-}
-
-@keyframes sylora-product-scroll {
-	from {
-		transform: translateX(0);
-	}
-
-	to {
-		transform: translateX(calc(-50% - 9px));
-	}
 }
 
 .sylora-section {
@@ -2384,10 +2377,6 @@ footer h5 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.sylora-product-slider__track {
-		animation: none;
-	}
-
 	.sylora-product-preview__image img {
 		transition: none;
 	}
@@ -2398,6 +2387,14 @@ footer h5 {
 
 	.catalog-card__image img {
 		transition: none;
+	}
+
+	.content-card {
+		transition: none;
+	}
+
+	.content-card:hover {
+		transform: none;
 	}
 }
 
