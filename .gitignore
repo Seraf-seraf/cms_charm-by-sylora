@@ -74,6 +74,10 @@
 # Test Config File
 /tests/phpunit/bootstrap.php
 
+# Local legal document drafts. These files can contain seller requisites and
+# must be reviewed by a lawyer before publication.
+/legal-pages/*.txt
+
 # IDE Project files
 /.idea
 /upload/.idea

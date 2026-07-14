@@ -22,6 +22,7 @@ $pages = array(
 	array('slug' => 'sizes-materials', 'title' => 'Размеры и материалы', 'sort' => 40),
 	array('slug' => 'gift-packaging', 'title' => 'Подарочная упаковка', 'sort' => 50),
 	array('slug' => 'privacy-policy', 'title' => 'Политика обработки персональных данных', 'sort' => 90),
+	array('slug' => 'personal-data-consent', 'title' => 'Согласие на обработку персональных данных', 'sort' => 95),
 	array('slug' => 'offer', 'title' => 'Публичная оферта', 'sort' => 100)
 );
 

@@ -1,6 +1,6 @@
 <?php
 $migration = file_get_contents(__DIR__ . '/../database/migrations/2026_07_12_000007_content_pages.php');
-$required_slugs = array('delivery-payment', 'returns', 'jewelry-care', 'sizes-materials', 'gift-packaging', 'privacy-policy', 'offer');
+$required_slugs = array('delivery-payment', 'returns', 'jewelry-care', 'sizes-materials', 'gift-packaging', 'privacy-policy', 'personal-data-consent', 'offer');
 
 foreach ($required_slugs as $slug) {
 	if (strpos($migration, "'slug' => '" . $slug . "'") === false) {
