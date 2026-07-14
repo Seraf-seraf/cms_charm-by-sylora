@@ -154,7 +154,34 @@
                 <div class="col-sm-10">
                   <input type="text" name="config_fax" value="{{ config_fax }}" placeholder="{{ entry_fax }}" id="input-fax" class="form-control" />
                 </div>
-              </div>              
+              </div>
+              <fieldset>
+                <legend>Footer</legend>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-footer-social-telegram">{{ entry_footer_social_telegram }}</label>
+                  <div class="col-sm-10">
+                    <input type="url" name="config_footer_social_telegram" value="{{ config_footer_social_telegram }}" placeholder="https://t.me/..." id="input-footer-social-telegram" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-footer-social-vk">{{ entry_footer_social_vk }}</label>
+                  <div class="col-sm-10">
+                    <input type="url" name="config_footer_social_vk" value="{{ config_footer_social_vk }}" placeholder="https://vk.com/..." id="input-footer-social-vk" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-footer-social-instagram">{{ entry_footer_social_instagram }}</label>
+                  <div class="col-sm-10">
+                    <input type="url" name="config_footer_social_instagram" value="{{ config_footer_social_instagram }}" placeholder="https://instagram.com/..." id="input-footer-social-instagram" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-footer-payment-methods">{{ entry_footer_payment_methods }}</label>
+                  <div class="col-sm-10">
+                    <textarea name="config_footer_payment_methods" rows="3" placeholder="Банковские карты, СБП" id="input-footer-payment-methods" class="form-control">{{ config_footer_payment_methods }}</textarea>
+                  </div>
+                </div>
+              </fieldset>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-image">{{ entry_image }}</label>
                 <div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>

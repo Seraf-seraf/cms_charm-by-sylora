@@ -282,6 +282,17 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$data['config_fax'] = $this->config->get('config_fax');
 		}
+
+		foreach (array('telegram', 'vk', 'instagram') as $social) {
+			$key = 'config_footer_social_' . $social;
+			$data[$key] = isset($this->request->post[$key]) ? $this->request->post[$key] : $this->config->get($key);
+		}
+
+		if (isset($this->request->post['config_footer_payment_methods'])) {
+			$data['config_footer_payment_methods'] = $this->request->post['config_footer_payment_methods'];
+		} else {
+			$data['config_footer_payment_methods'] = $this->config->get('config_footer_payment_methods');
+		}
 		
 		if (isset($this->request->post['config_image'])) {
 			$data['config_image'] = $this->request->post['config_image'];

@@ -905,6 +905,7 @@ summary:focus-visible,
 	border-radius: 8px;
 	box-shadow: none;
 	text-shadow: none;
+	transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease, opacity 180ms ease;
 }
 
 .btn-default {
@@ -915,7 +916,9 @@ summary:focus-visible,
 }
 
 .btn-default:hover,
-.btn-default:focus {
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active {
 	background: var(--color-bg);
 	border-color: var(--color-brand);
 	color: var(--color-earth);
@@ -932,10 +935,15 @@ summary:focus-visible,
 
 .btn-primary:hover,
 .btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
 .btn-inverse:hover,
 .btn-inverse:focus,
+.btn-inverse:active,
+.btn-inverse.active,
 #cart > .btn:hover,
-#cart > .btn:focus {
+#cart > .btn:focus,
+#cart > .btn:active {
 	background: var(--color-earth);
 	border-color: var(--color-earth);
 	color: #ffffff;
@@ -965,14 +973,69 @@ summary:focus-visible,
 
 .btn-success:hover,
 .btn-success:focus,
+.btn-success:active,
+.btn-success.active,
 .btn-info:hover,
 .btn-info:focus,
+.btn-info:active,
+.btn-info.active,
 .btn-warning:hover,
 .btn-warning:focus,
+.btn-warning:active,
+.btn-warning.active,
 .btn-danger:hover,
-.btn-danger:focus {
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active {
 	filter: brightness(0.94);
 	color: #ffffff;
+}
+
+.btn:active,
+.btn.active {
+	transform: translateY(1px);
+	box-shadow: none;
+}
+
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn,
+.btn.is-loading,
+.btn[data-loading-text].disabled,
+.btn[data-loading-text][disabled] {
+	cursor: not-allowed;
+	opacity: 0.62;
+	transform: none;
+}
+
+.btn.is-loading,
+.btn[data-loading-text].disabled,
+.btn[data-loading-text][disabled] {
+	position: relative;
+	color: transparent !important;
+}
+
+.btn.is-loading::after,
+.btn[data-loading-text].disabled::after,
+.btn[data-loading-text][disabled]::after {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 16px;
+	height: 16px;
+	margin-top: -8px;
+	margin-left: -8px;
+	border: 2px solid rgba(255, 255, 255, 0.55);
+	border-top-color: #ffffff;
+	border-radius: 50%;
+	content: "";
+	animation: sylora-spin 0.8s linear infinite;
+}
+
+@keyframes sylora-spin {
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .form-control,
@@ -991,6 +1054,81 @@ summary:focus-visible,
 
 .form-control[aria-invalid="true"] {
 	border-color: var(--color-danger);
+}
+
+.form-horizontal .control-label,
+.account-form .control-label,
+.service-form .control-label,
+.account-page .control-label,
+.service-page .control-label,
+[id^="account-"] .control-label,
+[id^="affiliate-"] .control-label {
+	color: var(--color-earth);
+	font-weight: 700;
+}
+
+.form-horizontal .form-group,
+.account-form .form-group,
+.service-form .form-group,
+.account-page .form-group,
+.service-page .form-group,
+[id^="account-"] .form-group,
+[id^="affiliate-"] .form-group {
+	margin-bottom: 16px;
+}
+
+.account-page #content,
+.service-page #content,
+.account-form,
+.service-form,
+[id^="account-"] #content,
+[id^="affiliate-"] #content {
+	overflow: hidden;
+	border: 1px solid var(--color-border);
+	border-radius: 12px;
+	background: var(--color-bg);
+	box-shadow: var(--shadow-soft);
+}
+
+.account-page #content,
+.service-page #content,
+[id^="account-"] #content,
+[id^="affiliate-"] #content {
+	padding: 22px;
+}
+
+.account-page #content h1,
+.service-page #content h1,
+.account-form legend,
+.service-form legend,
+[id^="account-"] #content h1,
+[id^="affiliate-"] #content h1 {
+	margin-top: 0;
+	color: var(--color-text);
+}
+
+.account-page .well,
+.service-page .well,
+.account-page fieldset,
+.service-page fieldset,
+[id^="account-"] .well,
+[id^="affiliate-"] .well,
+[id^="account-"] fieldset,
+[id^="affiliate-"] fieldset {
+	border-color: var(--color-border);
+	border-radius: 12px;
+	background: var(--color-surface);
+	box-shadow: none;
+}
+
+.account-page .text-danger,
+.service-page .text-danger,
+.sylora-form .text-danger,
+[id^="account-"] .text-danger,
+[id^="affiliate-"] .text-danger {
+	margin-top: 6px;
+	color: var(--color-danger);
+	font-size: 13px;
 }
 
 .panel,
@@ -3063,6 +3201,15 @@ footer h5 {
 
 .site-footer__bottom p {
 	margin: 0;
+}
+
+.site-footer__socials,
+.site-footer__payments {
+	margin-top: 8px;
+}
+
+.site-footer__payments {
+	color: rgba(255, 255, 255, 0.82);
 }
 
 @media (max-width: 991px) {

@@ -42,6 +42,9 @@ class ControllerCommonFooter extends Controller {
 		$data['store'] = $this->config->get('config_name');
 		$data['telephone'] = $this->config->get('config_telephone');
 		$data['email'] = $this->config->get('config_email');
+		$data['address'] = $this->config->get('config_address');
+		$data['payment_methods'] = trim((string)$this->config->get('config_footer_payment_methods'));
+		$data['social_links'] = $this->getSocialLinks();
 
 		$data['powered'] = sprintf($this->language->get('text_powered'), date('Y', time()));
 
@@ -94,5 +97,17 @@ class ControllerCommonFooter extends Controller {
 		$information = $this->model_catalog_information->getInformationBySeoKeyword($keyword);
 
 		return $information ? $this->url->link('information/information', 'information_id=' . (int)$information['information_id']) : $this->url->link('information/contact');
+	}
+
+	private function getSocialLinks() {
+		$links = array(
+			array('name' => 'Telegram', 'href' => trim((string)$this->config->get('config_footer_social_telegram'))),
+			array('name' => 'VK', 'href' => trim((string)$this->config->get('config_footer_social_vk'))),
+			array('name' => 'Instagram', 'href' => trim((string)$this->config->get('config_footer_social_instagram'))),
+		);
+
+		return array_values(array_filter($links, static function ($link) {
+			return $link['href'] !== '';
+		}));
 	}
 }

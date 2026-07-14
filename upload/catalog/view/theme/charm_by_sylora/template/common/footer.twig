@@ -43,7 +43,22 @@
           {% if email %}
           <li><a href="mailto:{{ email }}">{{ email }}</a></li>
           {% endif %}
+          {% if address %}
+          <li>{{ address|nl2br }}</li>
+          {% endif %}
         </ul>
+        {% if social_links %}
+        <h5>{{ text_social }}</h5>
+        <ul class="list-unstyled site-footer__socials">
+          {% for social in social_links %}
+          <li><a href="{{ social.href }}" target="_blank" rel="noopener nofollow">{{ social.name }}</a></li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% if payment_methods %}
+        <h5>{{ text_payment_methods }}</h5>
+        <p class="site-footer__payments">{{ payment_methods }}</p>
+        {% endif %}
       </div>
     </div>
     <div class="site-footer__bottom">
