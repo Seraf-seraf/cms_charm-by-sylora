@@ -40,27 +40,7 @@ Lighthouse mobile, performance category:
 PageSpeed Insights не запускался на локальном `127.0.0.1`, потому что сервис
 Google не может открыть локальный URL. Для PSI нужен production/staging URL.
 
-## Воспроизводимые команды
-
-Статический performance-аудит без БД:
-
-```bash
-php tools/performance-audit.php
-```
-
-Аудит размеров HTML на рабочей витрине:
-
-```bash
-PERFORMANCE_BASE_URL=https://example.com php tools/performance-audit.php
-```
-
-Если в тестовой базе нет `product_id=1`, передайте существующий путь товара:
-
-```bash
-PERFORMANCE_BASE_URL=https://example.com \
-PERFORMANCE_PRODUCT_PATH="/index.php?route=product/product&product_id=28" \
-php tools/performance-audit.php
-```
+## Команды ручной проверки
 
 Lighthouse для мобильной скорости, CLS и размера страниц:
 

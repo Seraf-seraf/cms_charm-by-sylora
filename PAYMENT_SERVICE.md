@@ -36,7 +36,6 @@ https://pay.charm-by-sylora.ru
 
 ```bash
 curl -fsS https://pay.charm-by-sylora.ru/api/v1/health
-php tests/payment_service_extension_test.php
 ```
 
 Перед production-приемкой отдельно выполняются успешная и отмененная оплаты,

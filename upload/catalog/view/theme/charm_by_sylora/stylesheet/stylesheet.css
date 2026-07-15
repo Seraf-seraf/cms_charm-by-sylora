@@ -2515,6 +2515,12 @@ footer h5 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.btn.is-loading::after,
+	.btn[data-loading-text].disabled::after,
+	.btn[data-loading-text][disabled]::after {
+		animation: none;
+	}
+
 	.sylora-product-preview__image img {
 		transition: none;
 	}
