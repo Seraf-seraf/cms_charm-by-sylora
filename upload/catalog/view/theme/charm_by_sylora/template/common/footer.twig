@@ -1,65 +1,26 @@
 <footer>
   <div class="container site-footer">
-    <div class="site-footer__grid">
-      <div class="site-footer__brand">
-        <h5>Charm by Sylora</h5>
-        <p>{{ text_description }}</p>
-        <p class="site-footer__note">{{ text_payment_note }}</p>
-      </div>
-      <nav aria-label="Навигация в подвале">
-        <h5>{{ text_extra }}</h5>
+    <div class="site-footer__grid site-footer__grid--{{ footer_column_count }}">
+      {% for column in footer_columns %}
+      <div class="site-footer__column">
+        {% if column.title %}
+        <h5>{{ column.title }}</h5>
+        {% endif %}
+        {% if column.items %}
         <ul class="list-unstyled">
-          <li><a href="{{ home }}">Главная</a></li>
-          <li><a href="{{ catalog }}">{{ text_catalog }}</a></li>
-          <li><a href="{{ about }}">{{ text_about }}</a></li>
-          <li><a href="{{ cart }}">{{ text_cart }}</a></li>
-        </ul>
-      </nav>
-      <nav aria-label="Информация для покупателей">
-        <h5>{{ text_service }}</h5>
-        <ul class="list-unstyled">
-          <li><a href="{{ delivery }}">{{ text_delivery }}</a></li>
-          <li><a href="{{ return }}">{{ text_return }}</a></li>
-          <li><a href="{{ care }}">{{ text_care }}</a></li>
-          <li><a href="{{ sizes_materials }}">Размеры и материалы</a></li>
-          <li><a href="{{ gift_packaging }}">Подарочная упаковка</a></li>
-          <li><a href="{{ contact }}">{{ text_contact }}</a></li>
-        </ul>
-      </nav>
-      <nav aria-label="Юридическая информация">
-        <h5>{{ text_information }}</h5>
-        <ul class="list-unstyled">
-          <li><a href="{{ privacy }}">{{ text_privacy }}</a></li>
-          <li><a href="{{ terms }}">{{ text_terms }}</a></li>
-          <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
-        </ul>
-      </nav>
-      <div>
-        <h5>{{ text_contact }}</h5>
-        <ul class="list-unstyled">
-          {% if telephone %}
-          <li><a href="tel:{{ telephone|replace({' ': '', '-': '', '(': '', ')': ''}) }}">{{ telephone }}</a></li>
-          {% endif %}
-          {% if email %}
-          <li><a href="mailto:{{ email }}">{{ email }}</a></li>
-          {% endif %}
-          {% if address %}
-          <li>{{ address|nl2br }}</li>
-          {% endif %}
-        </ul>
-        {% if social_links %}
-        <h5>{{ text_social }}</h5>
-        <ul class="list-unstyled site-footer__socials">
-          {% for social in social_links %}
-          <li><a href="{{ social.href }}" target="_blank" rel="noopener nofollow">{{ social.name }}</a></li>
+          {% for item in column.items %}
+          <li>
+            {% if item.href %}
+            <a href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>{{ item.text }}</a>
+            {% else %}
+            <span>{{ item.text|nl2br }}</span>
+            {% endif %}
+          </li>
           {% endfor %}
         </ul>
         {% endif %}
-        {% if payment_methods %}
-        <h5>{{ text_payment_methods }}</h5>
-        <p class="site-footer__payments">{{ payment_methods }}</p>
-        {% endif %}
       </div>
+      {% endfor %}
     </div>
     <div class="site-footer__bottom">
       <p>{{ powered }}</p>
@@ -73,8 +34,4 @@
 {% for script in scripts %}
 <script src="{{ script }}" type="text/javascript"></script>
 {% endfor %}
-<!--
-OpenCart is open source software and you are free to remove the powered by OpenCart if you want, but its generally accepted practise to make a small donation.
-Please donate via PayPal to donate@opencart.com
-//-->
 </body></html>

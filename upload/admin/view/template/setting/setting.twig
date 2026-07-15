@@ -32,6 +32,7 @@
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
             <li><a href="#tab-store" data-toggle="tab">{{ tab_store }}</a></li>
+            <li><a href="#tab-footer-settings" data-toggle="tab">{{ text_footer_settings }}</a></li>
             <li><a href="#tab-local" data-toggle="tab">{{ tab_local }}</a></li>
             <li><a href="#tab-option" data-toggle="tab">{{ tab_option }}</a></li>
             <li><a href="#tab-image" data-toggle="tab">{{ tab_image }}</a></li>
@@ -155,33 +156,6 @@
                   <input type="text" name="config_fax" value="{{ config_fax }}" placeholder="{{ entry_fax }}" id="input-fax" class="form-control" />
                 </div>
               </div>
-              <fieldset>
-                <legend>Footer</legend>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label" for="input-footer-social-telegram">{{ entry_footer_social_telegram }}</label>
-                  <div class="col-sm-10">
-                    <input type="url" name="config_footer_social_telegram" value="{{ config_footer_social_telegram }}" placeholder="https://t.me/..." id="input-footer-social-telegram" class="form-control" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label" for="input-footer-social-vk">{{ entry_footer_social_vk }}</label>
-                  <div class="col-sm-10">
-                    <input type="url" name="config_footer_social_vk" value="{{ config_footer_social_vk }}" placeholder="https://vk.com/..." id="input-footer-social-vk" class="form-control" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label" for="input-footer-social-instagram">{{ entry_footer_social_instagram }}</label>
-                  <div class="col-sm-10">
-                    <input type="url" name="config_footer_social_instagram" value="{{ config_footer_social_instagram }}" placeholder="https://instagram.com/..." id="input-footer-social-instagram" class="form-control" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-2 control-label" for="input-footer-payment-methods">{{ entry_footer_payment_methods }}</label>
-                  <div class="col-sm-10">
-                    <textarea name="config_footer_payment_methods" rows="3" placeholder="Банковские карты, СБП" id="input-footer-payment-methods" class="form-control">{{ config_footer_payment_methods }}</textarea>
-                  </div>
-                </div>
-              </fieldset>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-image">{{ entry_image }}</label>
                 <div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
@@ -216,6 +190,52 @@
                   {% endfor %} </div>
               </div>
               {% endif %} </div>
+            <div class="tab-pane" id="tab-footer-settings">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-footer-column-count">{{ entry_footer_column_count }}</label>
+                <div class="col-sm-10">
+                  <select name="config_footer_column_count" id="input-footer-column-count" class="form-control">
+                    {% for column_count in 1..5 %}
+                    <option value="{{ column_count }}"{% if column_count == config_footer_column_count %} selected="selected"{% endif %}>{{ column_count }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              {% for column in config_footer_columns %}
+              {% set column_index = loop.index0 %}
+              <fieldset class="footer-column-setting" data-column-index="{{ column_index }}">
+                <legend>{{ text_footer_column }} {{ loop.index }}</legend>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-footer-column-title-{{ column_index }}">{{ entry_footer_column_title }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="config_footer_columns[{{ column_index }}][title]" value="{{ column.title }}" id="input-footer-column-title-{{ column_index }}" class="form-control" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-footer-item-count-{{ column_index }}">{{ entry_footer_item_count }}</label>
+                  <div class="col-sm-10">
+                    <select name="config_footer_columns[{{ column_index }}][item_count]" id="input-footer-item-count-{{ column_index }}" class="form-control footer-item-count" data-column-index="{{ column_index }}">
+                      {% for item_count in 1..5 %}
+                      <option value="{{ item_count }}"{% if item_count == column.item_count %} selected="selected"{% endif %}>{{ item_count }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                {% for item in column.items %}
+                {% set item_index = loop.index0 %}
+                <div class="form-group footer-column-item" data-column-index="{{ column_index }}" data-item-index="{{ item_index }}">
+                  <label class="col-sm-2 control-label" for="input-footer-item-text-{{ column_index }}-{{ item_index }}">{{ entry_footer_item }} {{ loop.index }}</label>
+                  <div class="col-sm-5">
+                    <textarea name="config_footer_columns[{{ column_index }}][items][{{ item_index }}][text]" rows="2" placeholder="{{ entry_footer_item_text }}" id="input-footer-item-text-{{ column_index }}-{{ item_index }}" class="form-control">{{ item.text }}</textarea>
+                  </div>
+                  <div class="col-sm-5">
+                    <input type="text" name="config_footer_columns[{{ column_index }}][items][{{ item_index }}][url]" value="{{ item.url }}" placeholder="{{ entry_footer_item_url }}" class="form-control" />
+                  </div>
+                </div>
+                {% endfor %}
+              </fieldset>
+              {% endfor %}
+            </div>
             <div class="tab-pane" id="tab-local">
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-country">{{ entry_country }}</label>
@@ -1342,6 +1362,29 @@ $('select[name=\'config_theme\']').on('change', function() {
 
 $('select[name=\'config_theme\']').trigger('change');
 //--></script> 
+  <script type="text/javascript"><!--
+function updateFooterSettings() {
+	var columnCount = parseInt($('#input-footer-column-count').val(), 10) || 1;
+
+	$('.footer-column-setting').each(function() {
+		var columnIndex = parseInt($(this).data('column-index'), 10);
+		$(this).toggle(columnIndex < columnCount);
+	});
+
+	$('.footer-item-count').each(function() {
+		var columnIndex = parseInt($(this).data('column-index'), 10);
+		var itemCount = parseInt($(this).val(), 10) || 1;
+
+		$('.footer-column-item[data-column-index="' + columnIndex + '"]').each(function() {
+			var itemIndex = parseInt($(this).data('item-index'), 10);
+			$(this).toggle(itemIndex < itemCount);
+		});
+	});
+}
+
+$('#input-footer-column-count, .footer-item-count').on('change', updateFooterSettings);
+updateFooterSettings();
+//--></script>
   <script type="text/javascript"><!--
 $('select[name=\'config_country_id\']').on('change', function() {
 	$.ajax({

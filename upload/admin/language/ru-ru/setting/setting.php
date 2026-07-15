@@ -42,6 +42,8 @@ $_['text_security']                  = 'Безопасность';
 $_['text_upload']                    = 'Загрузки';
 $_['text_error']                     = 'Обработка ошибок';
 $_['text_seo_templates']             = 'Fallback-шаблоны SEO';
+$_['text_footer_settings']            = 'Footer';
+$_['text_footer_column']              = 'Колонка';
 
 // Entry
 $_['entry_meta_title']               = 'Meta Title';
@@ -57,10 +59,12 @@ $_['entry_geocode']                  = 'Геокод';
 $_['entry_email']                    = 'Эл. почта';
 $_['entry_telephone']                = 'Телефон';
 $_['entry_fax']                      = 'Факс';
-$_['entry_footer_social_telegram']   = 'Telegram в footer';
-$_['entry_footer_social_vk']         = 'VK в footer';
-$_['entry_footer_social_instagram']  = 'Instagram в footer';
-$_['entry_footer_payment_methods']   = 'Способы оплаты в footer';
+$_['entry_footer_column_count']       = 'Количество колонок';
+$_['entry_footer_column_title']       = 'Заголовок';
+$_['entry_footer_item_count']         = 'Количество строк';
+$_['entry_footer_item']               = 'Строка';
+$_['entry_footer_item_text']          = 'Текст';
+$_['entry_footer_item_url']           = 'Ссылка (необязательно)';
 $_['entry_image']                    = 'Изображение';
 $_['entry_open']                     = 'Время работы';
 $_['entry_comment']                  = 'Комментарий';
