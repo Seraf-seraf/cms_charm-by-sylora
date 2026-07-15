@@ -40,10 +40,12 @@ sudo systemctl reload nginx
 curl -I http://charm-by-sylora.ru/
 curl -I https://www.charm-by-sylora.ru/
 curl -I https://charm-by-sylora.ru/
+curl -I 'https://charm-by-sylora.ru/index.php?route=common/home'
 curl -I https://charm-by-sylora.ru/robots.txt
 curl -I https://charm-by-sylora.ru/sitemap.xml
 curl -I https://charm-by-sylora.ru/config.php
 ```
 
-Ожидаются соответственно 301, 301, 200, 200, 200 и 403. Для несуществующего
-публичного URL ожидается 404 со страницей OpenCart.
+Ожидаются соответственно 301, 301, 200, 301 на `https://charm-by-sylora.ru/`,
+200, 200 и 403. Для несуществующего публичного URL ожидается 404 со страницей
+OpenCart.
