@@ -121,9 +121,7 @@
             </a>
             <div class="catalog-card__body">
               <div class="caption">
-                <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
-                <h2><a href="{{ product.href }}">{{ product.name }}</a></h2>
-                <p class="catalog-card__description">{{ product.description }}</p>
+                <h2 class="catalog-card__title"><a href="{{ product.href }}">{{ product.name }}</a></h2>
                 {% if product.price %}
                 <p class="price">
                   {% if  not product.special %}
@@ -136,6 +134,8 @@
                   {% endif %}
                 </p>
                 {% endif %}
+                <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+                <p class="catalog-card__description">{{ product.description }}</p>
                 {% if product.rating %}
                 <div class="rating">
                   {% for i in 1..5 %}

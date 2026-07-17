@@ -95,10 +95,13 @@
           </a>
           <div class="catalog-card__body">
             <div class="caption">
-              <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
-              <h3><a href="{{ product.href }}">{{ product.name }}</a></h3>
+              <h3 class="catalog-card__title"><a href="{{ product.href }}">{{ product.name }}</a></h3>
               {% if product.price %}
               <p class="price">{% if product.special %}<span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>{% else %}{{ product.price }}{% endif %}</p>
+              {% endif %}
+              <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+              {% if product.description %}
+              <p class="catalog-card__description">{{ product.description }}</p>
               {% endif %}
             </div>
             <div class="button-group catalog-card__actions">

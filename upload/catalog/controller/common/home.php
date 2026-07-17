@@ -89,11 +89,15 @@ class ControllerCommonHome extends Controller {
 				$stock_class = 'is-in';
 			}
 
+			$description = trim(strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')));
+			$description_suffix = utf8_strlen($description) > 120 ? '..' : '';
+
 			$product_data = array(
 				'product_id'  => $product['product_id'],
 				'thumb'       => $image['src'],
 				'image'       => $image,
 				'name'        => $product['name'],
+				'description' => utf8_substr($description, 0, 120) . $description_suffix,
 				'price'       => $price,
 				'special'     => $special,
 				'badge'       => $badge,

@@ -2116,36 +2116,38 @@ footer h5 {
 	padding: 16px 16px 12px;
 }
 
-.catalog-card .caption h2,
-.catalog-card .caption h3 {
+.catalog-card__title {
+	display: -webkit-box;
 	margin: 0 0 10px;
+	overflow: hidden;
 	line-height: 1.3;
+	overflow-wrap: anywhere;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 }
 
-.catalog-card .caption h2 a,
-.catalog-card .caption h3 a {
+.catalog-card__title a {
 	color: var(--color-text);
 	text-decoration: none;
 }
 
-.catalog-card .caption h2 a:hover,
-.catalog-card .caption h2 a:focus,
-.catalog-card .caption h3 a:hover,
-.catalog-card .caption h3 a:focus {
+.catalog-card__title a:hover,
+.catalog-card__title a:focus {
 	color: var(--color-brand);
 }
 
 .catalog-card__description {
 	display: -webkit-box;
-	margin-bottom: 14px;
+	min-height: 3.1em;
+	margin: 0 0 12px;
 	overflow: hidden;
 	color: var(--color-muted);
 	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 3;
+	-webkit-line-clamp: 2;
 }
 
 .catalog-card__stock {
-	margin: 0 0 8px;
+	margin: 0 0 10px;
 	font-weight: 700;
 }
 
@@ -2162,8 +2164,7 @@ footer h5 {
 }
 
 .catalog-card .price {
-	margin-top: auto;
-	margin-bottom: 0;
+	margin: 0 0 8px;
 	color: var(--color-text);
 	font-weight: 700;
 }
@@ -4136,8 +4137,7 @@ button .fa {
 
 .sylora-category-card span,
 .sylora-benefits__grid strong,
-.catalog-card .caption h2,
-.catalog-card .caption h3,
+.catalog-card__title,
 .catalog-card .price,
 .about-grid h2,
 .quick-view .price,
