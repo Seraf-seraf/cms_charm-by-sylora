@@ -302,7 +302,7 @@ class ControllerInformationContact extends Controller {
 			'about'    => array(
 				'@type' => 'Organization',
 				'@id'   => rtrim($server, '/') . '/#organization',
-				'name'  => $data['store'] ? $data['store'] : 'Charm by Sylora'
+				'name'  => $data['store']
 			)
 		);
 

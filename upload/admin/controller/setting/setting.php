@@ -182,6 +182,7 @@ class ControllerSettingSetting extends Controller {
 
 		$data['seo_templates'] = array();
 		$seo_template_labels = array(
+			'config_seo_home_h1_template' => 'Главная: H1',
 			'config_seo_category_title_template' => 'Категория: Title',
 			'config_seo_category_description_template' => 'Категория: Description',
 			'config_seo_product_title_template' => 'Товар: Title',

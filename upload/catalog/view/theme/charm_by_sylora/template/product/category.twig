@@ -1,5 +1,5 @@
 {{ header }}
-<div id="product-category" class="container">
+<main id="product-category" class="container">
   <div class="row">{{ column_left }}
     {% if column_left and column_right %}
     {% set class = 'col-sm-6' %}
@@ -243,7 +243,7 @@
       {% endif %}
       {{ content_bottom }}</div>
     {{ column_right }}</div>
-</div>
+</main>
 <script>
 (function() {
   var lastQuickViewTrigger = null;

@@ -1,5 +1,5 @@
 {{ header }}
-<div id="checkout-checkout" class="container">
+<main id="checkout-checkout" class="container">
   {% if error_warning %}
   <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
     <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -86,7 +86,7 @@
       </section>
       {{ content_bottom }}</div>
     {{ column_right }}</div>
-</div>
+</main>
 <script type="text/javascript"><!--
 $(document).on('change', 'input[name=\'account\']', function() {
 	if ($('#collapse-payment-address').parent().find('.panel-heading .panel-title > *').is('a')) {

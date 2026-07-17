@@ -342,15 +342,16 @@ class ControllerProductProduct extends Controller {
 				$schema_availability = 'https://schema.org/LimitedAvailability';
 			}
 
+			$manufacturer = trim((string)$product_info['manufacturer']);
+			$brand_name = $manufacturer !== '' ? $manufacturer : trim((string)$this->config->get('config_name'));
 			$product_schema = array(
 				'@context' => 'https://schema.org',
 				'@type' => 'Product',
 				'name' => $product_info['name'],
 				'description' => utf8_substr(trim(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'))), 0, 300),
-				'sku' => $product_info['model'],
 				'brand' => array(
 					'@type' => 'Brand',
-					'name' => $product_info['manufacturer'] ? $product_info['manufacturer'] : 'Charm by Sylora'
+					'name' => $brand_name
 				),
 				'offers' => array(
 					'@type' => 'Offer',
@@ -361,6 +362,10 @@ class ControllerProductProduct extends Controller {
 					'itemCondition' => 'https://schema.org/NewCondition'
 				)
 			);
+
+			if (trim((string)$product_info['model']) !== '') {
+				$product_schema['sku'] = trim((string)$product_info['model']);
+			}
 
 			if ($image_url) {
 				$product_schema['image'] = array($image_url);
@@ -600,10 +605,11 @@ class ControllerProductProduct extends Controller {
 
 		foreach ($results as $result) {
 			$data['reviews'][] = array(
-				'author'     => $result['author'],
-				'text'       => nl2br($result['text']),
-				'rating'     => (int)$result['rating'],
-				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+				'author'         => $result['author'],
+				'text'           => nl2br($result['text']),
+				'rating'         => (int)$result['rating'],
+				'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+				'date_added_iso' => date('Y-m-d', strtotime($result['date_added']))
 			);
 		}
 

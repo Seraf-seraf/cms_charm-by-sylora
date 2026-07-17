@@ -2647,6 +2647,41 @@ footer h5 {
 	background: var(--color-bg);
 }
 
+.product-review {
+	margin-bottom: 16px;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-bg);
+}
+
+.product-review__header {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 12px 16px;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.product-review__header time {
+	color: var(--color-muted);
+}
+
+.product-review__body {
+	padding: 16px;
+}
+
+.product-review__body p {
+	margin: 0 0 12px;
+}
+
+@media (max-width: 478px) {
+	.product-review__header {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 4px;
+	}
+}
+
 .product-summary__tools {
 	display: flex;
 	justify-content: flex-end;

@@ -1,5 +1,5 @@
 {{ header }}
-<div id="information-information" class="container">
+<main id="information-information" class="container">
   <div class="row">{{ column_left }}
     {% if column_left and column_right %}
     {% set class = 'col-sm-6' %}
@@ -14,7 +14,7 @@
         <section class="about-hero">
           <div>
             <p class="sylora-eyebrow">О мастере</p>
-            <h1>Charm by Sylora</h1>
+            <h1>{{ heading_title }}</h1>
             <p>Ручные украшения с мягким характером, созданные небольшими партиями для повседневных образов, подарков и личных деталей.</p>
             <div class="sylora-actions">
               <a class="btn btn-primary" href="{{ catalog_href }}">Смотреть каталог</a>
@@ -72,5 +72,5 @@
       {% endif %}
       {{ content_bottom }}</div>
     {{ column_right }}</div>
-</div>
+</main>
 {{ footer }}

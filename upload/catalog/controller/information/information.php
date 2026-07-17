@@ -130,7 +130,7 @@ class ControllerInformationInformation extends Controller {
 			'about'    => array(
 				'@type' => 'Organization',
 				'@id'   => rtrim($server, '/') . '/#organization',
-				'name'  => $this->config->get('config_name') ? $this->config->get('config_name') : 'Charm by Sylora'
+				'name'  => $this->config->get('config_name')
 			)
 		);
 

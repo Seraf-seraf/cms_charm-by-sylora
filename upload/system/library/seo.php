@@ -30,6 +30,12 @@ class Seo {
 		return $this->render($this->template($type, 'description', $defaults[$type]), $name);
 	}
 
+	public function heading($name, $type) {
+		$defaults = array('home' => 'Ручные украшения {store}');
+
+		return $this->render($this->template($type, 'h1', $defaults[$type]), $name);
+	}
+
 	private function template($type, $field, $default) {
 		$value = $this->clean($this->config->get('config_seo_' . $type . '_' . $field . '_template'));
 		return $value !== '' ? $value : $default;

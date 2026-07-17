@@ -8,6 +8,7 @@ class ControllerCommonHome extends Controller {
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
+		$this->load->library('seo');
 
 		$is_https = (!empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off')
 			|| (!empty($this->request->server['HTTP_X_FORWARDED_PROTO']) && strtolower($this->request->server['HTTP_X_FORWARDED_PROTO']) == 'https');
@@ -16,6 +17,7 @@ class ControllerCommonHome extends Controller {
 		$this->document->addLink($canonical, 'canonical');
 
 		$data['home_categories'] = array();
+		$data['heading_title'] = $this->seo->heading($this->config->get('config_name'), 'home');
 		$data['catalog'] = $this->getCatalogUrl();
 		$data['about'] = $this->url->link('information/information', 'information_id=4');
 

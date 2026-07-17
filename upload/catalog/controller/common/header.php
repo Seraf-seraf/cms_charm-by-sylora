@@ -90,7 +90,7 @@ class ControllerCommonHeader extends Controller {
 		$organization_schema = array(
 			'@type' => $this->config->get('config_address') ? 'LocalBusiness' : 'Organization',
 			'@id'   => rtrim($server, '/') . '/#organization',
-			'name'  => $data['name'] ? $data['name'] : 'Charm by Sylora',
+			'name'  => $data['name'],
 			'url'   => $server
 		);
 
@@ -148,7 +148,7 @@ class ControllerCommonHeader extends Controller {
 					'@type' => 'WebSite',
 					'@id'   => rtrim($server, '/') . '/#website',
 					'url'   => $server,
-					'name'  => $data['name'] ? $data['name'] : 'Charm by Sylora',
+						'name'  => $data['name'],
 					'publisher' => array(
 						'@id' => rtrim($server, '/') . '/#organization'
 					),
