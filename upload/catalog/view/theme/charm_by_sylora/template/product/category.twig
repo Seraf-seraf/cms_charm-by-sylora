@@ -190,15 +190,17 @@
                   {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>{% endif %}
                   {% endfor %} </div>
                 {% endif %} </div>
-              <div class="button-group catalog-card__actions">
+              <div class="catalog-card__actions">
                 {% if product.can_buy %}
                 <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
                 {% else %}
                 <button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban"></i> <span>Нет в наличии</span></button>
                 {% endif %}
                 <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
-                <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" aria-haspopup="dialog" aria-expanded="false"><i class="fa fa-eye"></i></button>
-                <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" aria-pressed="false" onclick="wishlist.add('{{ product.product_id }}', this);"><i class="fa fa-heart"></i></button>
+                <div class="catalog-card__tools">
+                  <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" aria-haspopup="dialog" aria-expanded="false"><i class="fa fa-eye"></i></button>
+                  <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" aria-pressed="false" onclick="wishlist.add('{{ product.product_id }}', this);"><i class="fa fa-heart"></i></button>
+                </div>
               </div>
             </div>
           </div>

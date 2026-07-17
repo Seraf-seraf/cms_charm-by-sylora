@@ -2210,6 +2210,7 @@ footer a:focus {
 	float: none;
 	width: auto;
 	min-width: 0;
+	container-type: inline-size;
 }
 
 .catalog-card .product-thumb {
@@ -2394,8 +2395,9 @@ footer a:focus {
 }
 
 .catalog-card__actions {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+	align-items: stretch;
 	gap: 8px;
 	padding: 0 16px 16px;
 	border: 0;
@@ -2421,16 +2423,7 @@ footer a:focus {
 
 .catalog-card__cart,
 .catalog-card__more {
-	flex: 1 1 calc(50% - 4px);
-}
-
-.catalog-card .catalog-card__actions button,
-.catalog-card .catalog-card__actions button + button {
-	float: none;
-	width: auto;
-	border-left: 1px solid var(--color-border);
-	line-height: 1.2;
-	text-transform: none;
+	width: 100%;
 }
 
 .catalog-card__cart {
@@ -2471,8 +2464,21 @@ footer a:focus {
 	line-height: 1;
 }
 
-.catalog-card__more + .catalog-card__icon {
-	margin-left: auto;
+.catalog-card__tools {
+	display: flex;
+	align-items: stretch;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+@container (max-width: 300px) {
+	.catalog-card__actions {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.catalog-card__tools {
+		grid-column: 1 / -1;
+	}
 }
 
 .catalog-card__icon.is-selected,
@@ -3553,17 +3559,12 @@ footer a:focus {
 }
 
 .sylora-form .form-control {
-	min-height: 42px;
+	min-height: 44px;
 	border-color: var(--color-border);
 	border-radius: 8px;
 	background: var(--color-bg);
 	color: var(--color-text);
 	box-shadow: none;
-}
-
-.sylora-form .form-control:invalid:not(:placeholder-shown),
-.sylora-form input[type="checkbox"]:invalid {
-	border-color: var(--color-danger);
 }
 
 .sylora-form textarea.form-control {
@@ -3573,7 +3574,7 @@ footer a:focus {
 
 .contact-form-grid {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-columns: minmax(0, 1fr);
 	gap: 14px;
 }
 
@@ -3585,14 +3586,45 @@ footer a:focus {
 	color: var(--color-muted);
 }
 
-.sylora-checkbox input {
-	margin-top: 4px;
+.sylora-form .sylora-checkbox input[type="checkbox"] {
+	position: static;
 	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	margin: 3px 0 0;
 }
 
 .sylora-checkbox a {
 	color: var(--color-text);
 	font-weight: 700;
+}
+
+.captcha-section {
+	min-width: 0;
+	padding-top: 4px;
+	border-top: 1px solid var(--color-border);
+}
+
+.captcha-section__title {
+	margin: 12px 0 14px;
+	color: var(--color-text);
+	font-family: var(--font-display);
+	font-weight: 700;
+}
+
+.smartcaptcha-field {
+	display: grid;
+	min-width: 0;
+	gap: 8px;
+}
+
+.smartcaptcha-field .control-label {
+	margin: 0;
+}
+
+.smart-captcha {
+	width: 100%;
+	max-width: 100%;
 }
 
 .sylora-hp {

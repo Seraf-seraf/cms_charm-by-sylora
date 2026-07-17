@@ -133,15 +133,15 @@
                   <div class="form-group required">
                     <label class="control-label" for="input-email">{{ entry_email }}</label>
                     <input type="email" name="email" value="{{ email }}" id="input-email" class="form-control" autocomplete="email"{% if error_email %} aria-invalid="true" aria-describedby="error-email"{% endif %} />
+                    {% if error_email %}
+                    <div class="text-danger" id="error-email">{{ error_email }}</div>
+                    {% endif %}
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="input-telephone">{{ entry_telephone }}</label>
                     <input type="tel" name="telephone" value="{{ telephone_value }}" id="input-telephone" class="form-control" autocomplete="tel" minlength="7" />
                   </div>
                 </div>
-                {% if error_email %}
-                <div class="text-danger" id="error-email">{{ error_email }}</div>
-                {% endif %}
                 <div class="form-group required">
                   <label class="control-label" for="input-enquiry">{{ entry_enquiry }}</label>
                   <textarea name="enquiry" rows="8" id="input-enquiry" class="form-control" minlength="10" maxlength="3000" required{% if error_enquiry %} aria-invalid="true" aria-describedby="error-enquiry"{% endif %}>{{ enquiry }}</textarea>
@@ -152,7 +152,7 @@
                 <div class="form-group required">
                   <label class="checkbox sylora-checkbox">
                     <input type="checkbox" name="privacy_agree" value="1"{% if privacy_agree %} checked="checked"{% endif %} required{% if error_privacy %} aria-invalid="true" aria-describedby="error-privacy"{% endif %} />
-                    <span>{{ text_privacy }}{% if privacy_href %} <a href="{{ privacy_href }}" target="_blank" rel="noopener">Политика конфиденциальности</a>{% endif %}</span>
+                    <span>{{ text_privacy }}{% if privacy_href %} <a href="{{ privacy_href }}" target="_blank" rel="noopener">Политику конфиденциальности</a>{% endif %}</span>
                   </label>
                   {% if error_privacy %}
                   <div class="text-danger" id="error-privacy">{{ error_privacy }}</div>
