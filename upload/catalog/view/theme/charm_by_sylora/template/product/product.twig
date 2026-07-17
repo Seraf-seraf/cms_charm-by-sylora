@@ -40,84 +40,6 @@
             {% endif %}
           </ul>
           {% endif %}
-          {% if attribute_groups or review_status %}
-          <ul class="nav nav-tabs product-tabs">
-            {% if attribute_groups %}
-            <li class="active"><a href="#tab-specification" data-toggle="tab">Характеристики</a></li>
-            {% endif %}
-            {% if review_status %}
-            <li{% if not attribute_groups %} class="active"{% endif %}><a href="#tab-review" data-toggle="tab">Отзывы</a></li>
-            {% endif %}
-          </ul>
-          <div class="tab-content product-tabs__content">
-            {% if attribute_groups %}
-            <div class="tab-pane active" id="tab-specification">
-              <table class="table table-bordered">
-                {% for attribute_group in attribute_groups %}
-                <thead>
-                  <tr>
-                    <th colspan="2" scope="colgroup">{{ attribute_group.name }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {% for attribute in attribute_group.attribute %}
-                <tr>
-                  <th scope="row">{{ attribute.name }}</th>
-                  <td>{{ attribute.text }}</td>
-                </tr>
-                {% endfor %}
-                  </tbody>
-                {% endfor %}
-              </table>
-            </div>
-            {% endif %}
-            {% if review_status %}
-            <div class="tab-pane{% if not attribute_groups %} active{% endif %}" id="tab-review">
-              <form class="form-horizontal" id="form-review">
-                <div id="review"></div>
-                <h2>{{ text_write }}</h2>
-                {% if review_guest %}
-                <div class="form-group required">
-                  <div class="col-sm-12">
-                    <label class="control-label" for="input-name">{{ entry_name }}</label>
-                    <input type="text" name="name" value="{{ customer_name }}" id="input-name" class="form-control" />
-                  </div>
-                </div>
-                <div class="form-group required">
-                  <div class="col-sm-12">
-                    <label class="control-label" for="input-review">{{ entry_review }}</label>
-                    <textarea name="text" rows="5" id="input-review" class="form-control"></textarea>
-                    <div class="help-block">{{ text_note }}</div>
-                  </div>
-                </div>
-                <div class="form-group required">
-                  <div class="col-sm-12">
-                    <label class="control-label">{{ entry_rating }}</label>
-                    &nbsp;&nbsp;&nbsp; {{ entry_bad }}&nbsp;
-                    <input type="radio" name="rating" value="1" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="2" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="3" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="4" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="5" />
-                    &nbsp;{{ entry_good }}</div>
-                </div>
-                {{ captcha }}
-                <div class="buttons clearfix">
-                  <div class="pull-right">
-                    <button type="button" id="button-review" data-loading-text="{{ text_loading }}" class="btn btn-primary">{{ button_continue }}</button>
-                  </div>
-                </div>
-                {% else %}
-                {{ text_login }}
-                {% endif %}
-              </form>
-            </div>
-            {% endif %}</div>
-          {% endif %}
         </div>
         {% if column_left or column_right %}
         {% set class = 'col-sm-6' %}
@@ -328,10 +250,83 @@
           <div class="rating">
             <p>{% for i in 1..5 %}
               {% if rating < i %}<span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>{% else %}<span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>{% endif %}
-              {% endfor %} <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;">{{ reviews }}</a> / <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;">{{ text_write }}</a></p>
+              {% endfor %} <a href="#product-reviews">{{ reviews }}</a> / <a href="#form-review">{{ text_write }}</a></p>
           </div>
           {% endif %} </div>
       </div>
+      {% if attribute_groups or review_status %}
+      <div class="product-sections">
+        {% if attribute_groups %}
+        <section class="product-section" id="product-specifications" aria-labelledby="product-specifications-title">
+          <h2 id="product-specifications-title">Характеристики</h2>
+          <div class="product-section__table">
+            <table class="table table-bordered">
+              {% for attribute_group in attribute_groups %}
+              <tbody>
+                <tr>
+                  <th colspan="2" scope="rowgroup">{{ attribute_group.name }}</th>
+                </tr>
+              {% for attribute in attribute_group.attribute %}
+              <tr>
+                <th scope="row">{{ attribute.name }}</th>
+                <td>{{ attribute.text }}</td>
+              </tr>
+              {% endfor %}
+                </tbody>
+              {% endfor %}
+            </table>
+          </div>
+        </section>
+        {% endif %}
+        {% if review_status %}
+        <section class="product-section" id="product-reviews" aria-labelledby="product-reviews-title">
+          <h2 id="product-reviews-title">Отзывы</h2>
+          <div id="review"></div>
+          <form class="form-horizontal" id="form-review" aria-labelledby="product-review-form-title">
+            <h3 id="product-review-form-title">{{ text_write }}</h3>
+            {% if review_guest %}
+            <div class="form-group required">
+              <div class="col-sm-12">
+                <label class="control-label" for="input-name">{{ entry_name }}</label>
+                <input type="text" name="name" value="{{ customer_name }}" id="input-name" class="form-control" />
+              </div>
+            </div>
+            <div class="form-group required">
+              <div class="col-sm-12">
+                <label class="control-label" for="input-review">{{ entry_review }}</label>
+                <textarea name="text" rows="5" id="input-review" class="form-control"></textarea>
+                <div class="help-block">{{ text_note }}</div>
+              </div>
+            </div>
+            <div class="form-group required">
+              <div class="col-sm-12">
+                <label class="control-label">{{ entry_rating }}</label>
+                &nbsp;&nbsp;&nbsp; {{ entry_bad }}&nbsp;
+                <input type="radio" name="rating" value="1" />
+                &nbsp;
+                <input type="radio" name="rating" value="2" />
+                &nbsp;
+                <input type="radio" name="rating" value="3" />
+                &nbsp;
+                <input type="radio" name="rating" value="4" />
+                &nbsp;
+                <input type="radio" name="rating" value="5" />
+                &nbsp;{{ entry_good }}</div>
+            </div>
+            {{ captcha }}
+            <div class="buttons clearfix">
+              <div class="pull-right">
+                <button type="button" id="button-review" data-loading-text="{{ text_loading }}" class="btn btn-primary">{{ button_continue }}</button>
+              </div>
+            </div>
+            {% else %}
+            {{ text_login }}
+            {% endif %}
+          </form>
+        </section>
+        {% endif %}
+      </div>
+      {% endif %}
       {% if products %}
       <section class="related-products">
       <div class="sylora-section__head">
@@ -580,7 +575,15 @@ $('#review').delegate('.pagination a', 'click', function(e) {
     $('#review').fadeIn('slow');
 });
 
-$('#review').load('index.php?route=product/product/review&product_id={{ product_id }}');
+$('#review').load('index.php?route=product/product/review&product_id={{ product_id }}', function() {
+	if (window.location.hash === '#form-review') {
+		var reviewForm = document.getElementById('form-review');
+
+		if (reviewForm) {
+			reviewForm.scrollIntoView({ block: 'start' });
+		}
+	}
+});
 
 $('#button-review').on('click', function() {
 	$.ajax({
