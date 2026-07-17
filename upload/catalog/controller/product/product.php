@@ -107,16 +107,20 @@ class ControllerProductProduct extends Controller {
 			$data['reward'] = $product_info['reward'];
 			$data['points'] = $product_info['points'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+			$stock_status_id = (int)$product_info['stock_status_id'];
+			$is_preorder = $product_info['quantity'] <= 0 && in_array($stock_status_id, array(6, 8), true);
 
 			if ($product_info['quantity'] <= 0) {
-				if ($product_info['stock_status'] == 'Pre-Order' || $product_info['stock_status'] == '2-3 Days') {
+				if ($is_preorder) {
 					$data['stock'] = 'Под заказ';
-				} elseif ($product_info['stock_status'] == 'Out Of Stock') {
+					$data['stock_class'] = 'is-preorder';
+				} elseif ($stock_status_id === 5) {
 					$data['stock'] = 'Нет в наличии';
+					$data['stock_class'] = 'is-out';
 				} else {
 					$data['stock'] = $product_info['stock_status'];
+					$data['stock_class'] = 'is-out';
 				}
-				$data['stock_class'] = 'is-out';
 			} elseif ($product_info['quantity'] <= 2) {
 				$data['stock'] = 'Осталось мало';
 				$data['stock_class'] = 'is-low';
@@ -127,6 +131,8 @@ class ControllerProductProduct extends Controller {
 				$data['stock'] = 'В наличии';
 				$data['stock_class'] = 'is-in';
 			}
+
+			$data['can_buy'] = $product_info['quantity'] > 0 || $is_preorder;
 
 			$this->load->model('tool/image');
 
@@ -160,19 +166,42 @@ class ControllerProductProduct extends Controller {
 				);
 			}
 
+			$regular_price = (float)$product_info['price'];
+			$special_price = (float)$product_info['special'];
+			$has_special = !is_null($product_info['special']) && $special_price >= 0;
+			$has_discount = $has_special && $special_price < $regular_price;
+			$regular_price_with_tax = $this->tax->calculate($regular_price, $product_info['tax_class_id'], $this->config->get('config_tax'));
+			$current_price = $has_special ? $special_price : $regular_price;
+			$current_price_with_tax = $this->tax->calculate($current_price, $product_info['tax_class_id'], $this->config->get('config_tax'));
+
 			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
-				$data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+				$data['price'] = $this->currency->format($regular_price_with_tax, $this->session->data['currency']);
+
+				if ($has_special) {
+					$data['special'] = $this->currency->format($current_price_with_tax, $this->session->data['currency']);
+				} else {
+					$data['special'] = false;
+				}
+
+				if ($has_discount) {
+					$data['compare_price'] = $data['price'];
+					$data['saving'] = $this->currency->format($regular_price_with_tax - $current_price_with_tax, $this->session->data['currency']);
+					$saving_percent = $regular_price > 0 ? (int)round((($regular_price - $special_price) / $regular_price) * 100) : 0;
+					$data['saving_percent'] = $saving_percent > 0 ? $saving_percent : false;
+				} else {
+					$data['compare_price'] = false;
+					$data['saving'] = false;
+					$data['saving_percent'] = false;
+				}
 			} else {
 				$data['price'] = false;
+				$data['special'] = false;
+				$data['compare_price'] = false;
+				$data['saving'] = false;
+				$data['saving_percent'] = false;
 			}
 
-			if (!is_null($product_info['special']) && (float)$product_info['special'] >= 0) {
-				$data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-				$tax_price = (float)$product_info['special'];
-			} else {
-				$data['special'] = false;
-				$tax_price = (float)$product_info['price'];
-			}
+			$tax_price = $current_price;
 
 			if ($this->config->get('config_tax')) {
 				$data['tax'] = $this->currency->format($tax_price, $this->session->data['currency']);

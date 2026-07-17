@@ -130,55 +130,22 @@
           </div>
           <p class="sylora-eyebrow">Украшение ручной работы</p>
           <h1>{{ heading_title }}</h1>
-          <ul class="list-unstyled product-meta">
-            {% if manufacturer %}
-            <li><span>Бренд</span> <a href="{{ manufacturers }}">{{ manufacturer }}</a></li>
-            {% endif %}
-            <li><span>Артикул</span> {{ model }}</li>
-            {% if reward %}
-            <li><span>Бонусные баллы</span> {{ reward }}</li>
-            {% endif %}
-            {% if product_details.materials %}
-            <li><span>Материалы</span> {{ product_details.materials }}</li>
-            {% endif %}
-            {% if product_details.size %}
-            <li><span>Размер</span> {{ product_details.size }}</li>
-            {% endif %}
-            {% if product_details.color %}
-            <li><span>Цвет</span> {{ product_details.color }}</li>
-            {% endif %}
-            <li><span>Наличие</span> <strong class="product-stock {{ stock_class }}">{{ stock }}</strong></li>
-          </ul>
           {% if price %}
-          <ul class="list-unstyled product-price">
-            {% if not special %}
-            <li>
-              <h2>{{ price }}</h2>
-            </li>
-            {% else %}
-            <li><span class="product-price__old">{{ price }}</span></li>
-            <li>
-              <h2>{{ special }}</h2>
-            </li>
+          <div class="product-price">
+            <div class="product-price__primary">
+              <strong class="product-price__current">{{ special ? special : price }}</strong>
+              {% if compare_price %}<span class="product-price__old">{{ compare_price }}</span>{% endif %}
+            </div>
+            {% if saving %}
+            <p class="product-price__saving">Экономия {{ saving }}{% if saving_percent %} ({{ saving_percent }}%){% endif %}</p>
             {% endif %}
             {% if tax %}
-            <li class="product-price__tax">{{ text_tax }} {{ tax }}</li>
+            <p class="product-price__tax">{{ text_tax }} {{ tax }}</p>
             {% endif %}
-            {% if points %}
-            <li class="product-price__tax">{{ text_points }} {{ points }}</li>
-            {% endif %}
-            {% if discounts %}
-            <li>
-              <hr>
-            </li>
-            {% for discount in discounts %}
-            <li>{{ discount.quantity }}{{ text_discount }}{{ discount.price }}</li>
-            {% endfor %}
-            {% endif %}
-          </ul>
+          </div>
           {% endif %}
+          <p class="product-availability"><span>Наличие</span> <strong class="product-stock {{ stock_class }}">{{ stock }}</strong></p>
           <div id="product" class="product-purchase"> {% if options %}
-            <hr>
             <h2>Выберите вариант</h2>
             {% for option in options %}
             {% if option.type == 'select' %}
@@ -291,16 +258,49 @@
               <div class="help-block" id="recurring-description"></div>
             </div>
             {% endif %}
-            <div class="form-group">
-              <label class="control-label" for="input-quantity">Количество</label>
-              <input type="text" name="quantity" value="{{ minimum }}" size="2" id="input-quantity" class="form-control" />
-              <input type="hidden" name="product_id" value="{{ product_id }}" />
-              <br/>
+            <div class="form-group product-purchase__submit">
+              <div class="product-purchase__quantity">
+                <label class="control-label" for="input-quantity">Количество</label>
+                <input type="number" name="quantity" value="{{ minimum }}" min="{{ minimum }}" step="1" inputmode="numeric" id="input-quantity" class="form-control" required />
+                <input type="hidden" name="product_id" value="{{ product_id }}" />
+              </div>
+              {% if can_buy %}
               <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block">В корзину</button>
+              {% else %}
+              <button type="button" id="button-cart" class="btn btn-primary btn-lg btn-block" disabled aria-disabled="true">Нет в наличии</button>
+              {% endif %}
             </div>
             {% if minimum > 1 %}
             <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_minimum }}</div>
             {% endif %}</div>
+          {% if points or discounts %}
+          <ul class="list-unstyled product-price__details">
+            {% if points %}
+            <li>{{ text_points }} {{ points }}</li>
+            {% endif %}
+            {% for discount in discounts %}
+            <li>{{ discount.quantity }}{{ text_discount }}{{ discount.price }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <ul class="list-unstyled product-meta product-meta--secondary">
+            {% if manufacturer %}
+            <li><span>Бренд</span> <a href="{{ manufacturers }}">{{ manufacturer }}</a></li>
+            {% endif %}
+            <li><span>Артикул</span> {{ model }}</li>
+            {% if reward %}
+            <li><span>Бонусные баллы</span> {{ reward }}</li>
+            {% endif %}
+            {% if product_details.materials %}
+            <li><span>Материалы</span> {{ product_details.materials }}</li>
+            {% endif %}
+            {% if product_details.size %}
+            <li><span>Размер</span> {{ product_details.size }}</li>
+            {% endif %}
+            {% if product_details.color %}
+            <li><span>Цвет</span> {{ product_details.color }}</li>
+            {% endif %}
+          </ul>
           <div class="product-trust">
             <div><strong>Бережная упаковка</strong><span>Подходит для подарка без дополнительной подготовки.</span></div>
             <div><strong>Доставка по России</strong><span>Сроки и стоимость уточняются при оформлении заказа.</span></div>
@@ -427,10 +427,18 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 //--></script>
 <script type="text/javascript"><!--
 $('#button-cart').on('click', function() {
+	var quantity = document.getElementById('input-quantity');
+
+	if (quantity && !quantity.checkValidity()) {
+		quantity.reportValidity();
+		quantity.focus();
+		return;
+	}
+
 	$.ajax({
 		url: 'index.php?route=checkout/cart/add',
 		type: 'post',
-		data: $('#product input[type=\'text\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
+		data: $('#product input[type=\'text\'], #product input[type=\'number\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
 		dataType: 'json',
 		beforeSend: function() {
 			$('#button-cart').button('loading');
