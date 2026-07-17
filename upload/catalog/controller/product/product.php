@@ -432,6 +432,21 @@ class ControllerProductProduct extends Controller {
 					$image = $this->model_tool_image->resizeWithSources('placeholder.png', $image_width, $image_height);
 				}
 
+				$hover_image = array(
+					'src'     => '',
+					'sources' => array(),
+					'width'   => $image_width,
+					'height'  => $image_height
+				);
+				$product_images = $this->model_catalog_product->getProductImages($result['product_id']);
+
+				foreach ($product_images as $product_image) {
+					if (!empty($product_image['image']) && $product_image['image'] !== $result['image']) {
+						$hover_image = $this->model_tool_image->resizeWithSources($product_image['image'], $image_width, $image_height);
+						break;
+					}
+				}
+
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
 					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
 				} else {
@@ -459,14 +474,16 @@ class ControllerProductProduct extends Controller {
 				}
 
 				if ($result['quantity'] <= 0) {
-					if ($result['stock_status'] == 'Pre-Order' || $result['stock_status'] == '2-3 Days') {
+					if ((int)$result['stock_status_id'] === 6 || (int)$result['stock_status_id'] === 8) {
 						$stock = 'Под заказ';
-					} elseif ($result['stock_status'] == 'Out Of Stock') {
+						$stock_class = 'is-preorder';
+					} elseif ((int)$result['stock_status_id'] === 5) {
 						$stock = 'Нет в наличии';
+						$stock_class = 'is-out';
 					} else {
 						$stock = $result['stock_status'];
+						$stock_class = 'is-out';
 					}
-					$stock_class = 'is-out';
 				} elseif ($result['quantity'] <= 2) {
 					$stock = 'Осталось мало';
 					$stock_class = 'is-low';
@@ -475,16 +492,38 @@ class ControllerProductProduct extends Controller {
 					$stock_class = 'is-in';
 				}
 
+				$is_new = !empty($result['date_added']) && strtotime($result['date_added']) >= strtotime('-30 days');
+				$badge = '';
+				$badge_class = '';
+
+				if ($stock === 'Нет в наличии') {
+					$badge = 'Нет в наличии';
+					$badge_class = 'is-out';
+				} elseif ($stock === 'Под заказ') {
+					$badge = 'Под заказ';
+					$badge_class = 'is-preorder';
+				} elseif ($special) {
+					$badge = 'Скидка';
+					$badge_class = 'is-sale';
+				} elseif ($is_new) {
+					$badge = 'Новинка';
+					$badge_class = 'is-new';
+				}
+
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image['src'],
 					'image'       => $image,
+					'hover_image' => $hover_image,
 					'name'        => $result['name'],
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 					'price'       => $price,
 					'special'     => $special,
+					'badge'       => $badge,
+					'badge_class' => $badge_class,
 					'stock'       => $stock,
 					'stock_class' => $stock_class,
+					'can_buy'     => $stock !== 'Нет в наличии',
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $rating,

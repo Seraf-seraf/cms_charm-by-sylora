@@ -92,6 +92,14 @@
               {% endfor %}
               <img class="catalog-card__image-primary" src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
             </picture>
+            {% if product.hover_image.src %}
+            <picture>
+              {% for source in product.hover_image.sources %}
+              <source srcset="{{ source.src }}" type="{{ source.type }}">
+              {% endfor %}
+              <img class="catalog-card__image-hover" src="{{ product.hover_image.src }}" alt="{{ product.name }} — дополнительное фото" title="{{ product.name }}" width="{{ product.hover_image.width }}" height="{{ product.hover_image.height }}" loading="lazy" decoding="async" />
+            </picture>
+            {% endif %}
           </a>
           <div class="catalog-card__body">
             <div class="caption">
@@ -105,7 +113,11 @@
               {% endif %}
             </div>
             <div class="button-group catalog-card__actions">
+              {% if product.can_buy %}
               <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+              {% else %}
+              <button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban"></i> <span>Нет в наличии</span></button>
+              {% endif %}
               <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
               <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" aria-pressed="false" onclick="wishlist.add('{{ product.product_id }}', this);"><i class="fa fa-heart"></i></button>
             </div>

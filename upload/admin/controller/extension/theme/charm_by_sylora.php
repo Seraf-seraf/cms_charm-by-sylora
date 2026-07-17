@@ -16,12 +16,12 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 			'theme_charm_by_sylora_image_thumb_height' => 228,
 			'theme_charm_by_sylora_image_popup_width' => 500,
 			'theme_charm_by_sylora_image_popup_height' => 500,
-			'theme_charm_by_sylora_image_product_width' => 228,
-			'theme_charm_by_sylora_image_product_height' => 228,
+			'theme_charm_by_sylora_image_product_width' => 480,
+			'theme_charm_by_sylora_image_product_height' => 600,
 			'theme_charm_by_sylora_image_additional_width' => 74,
 			'theme_charm_by_sylora_image_additional_height' => 74,
-			'theme_charm_by_sylora_image_related_width' => 80,
-			'theme_charm_by_sylora_image_related_height' => 80,
+			'theme_charm_by_sylora_image_related_width' => 480,
+			'theme_charm_by_sylora_image_related_height' => 600,
 			'theme_charm_by_sylora_image_compare_width' => 90,
 			'theme_charm_by_sylora_image_compare_height' => 90,
 			'theme_charm_by_sylora_image_wishlist_width' => 47,
@@ -250,7 +250,7 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 		} elseif (isset($setting_info['theme_charm_by_sylora_image_product_width'])) {
 			$data['theme_charm_by_sylora_image_product_width'] = $setting_info['theme_charm_by_sylora_image_product_width'];
 		} else {
-			$data['theme_charm_by_sylora_image_product_width'] = 228;
+			$data['theme_charm_by_sylora_image_product_width'] = 480;
 		}
 
 		if (isset($this->request->post['theme_charm_by_sylora_image_product_height'])) {
@@ -258,7 +258,7 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 		} elseif (isset($setting_info['theme_charm_by_sylora_image_product_height'])) {
 			$data['theme_charm_by_sylora_image_product_height'] = $setting_info['theme_charm_by_sylora_image_product_height'];
 		} else {
-			$data['theme_charm_by_sylora_image_product_height'] = 228;
+			$data['theme_charm_by_sylora_image_product_height'] = 600;
 		}
 
 		if (isset($this->request->post['theme_charm_by_sylora_image_additional_width'])) {
@@ -282,7 +282,7 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 		} elseif (isset($setting_info['theme_charm_by_sylora_image_related_width'])) {
 			$data['theme_charm_by_sylora_image_related_width'] = $setting_info['theme_charm_by_sylora_image_related_width'];
 		} else {
-			$data['theme_charm_by_sylora_image_related_width'] = 80;
+			$data['theme_charm_by_sylora_image_related_width'] = 480;
 		}
 
 		if (isset($this->request->post['theme_charm_by_sylora_image_related_height'])) {
@@ -290,7 +290,7 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 		} elseif (isset($setting_info['theme_charm_by_sylora_image_related_height'])) {
 			$data['theme_charm_by_sylora_image_related_height'] = $setting_info['theme_charm_by_sylora_image_related_height'];
 		} else {
-			$data['theme_charm_by_sylora_image_related_height'] = 80;
+			$data['theme_charm_by_sylora_image_related_height'] = 600;
 		}
 
 		if (isset($this->request->post['theme_charm_by_sylora_image_compare_width'])) {

@@ -38,6 +38,8 @@ class ControllerCommonHome extends Controller {
 		$data['featured_products'] = array();
 		$data['hero_products'] = array();
 		$featured_products = array();
+		$image_width = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
+		$image_height = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
 
 		foreach ($this->model_catalog_product->getProductSpecials(array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => 6)) as $product) {
 			$featured_products[$product['product_id']] = $product;
@@ -53,9 +55,24 @@ class ControllerCommonHome extends Controller {
 
 		foreach ($featured_products as $product) {
 			if ($product['image']) {
-				$image = $this->model_tool_image->resizeWithSources($product['image'], 420, 315);
+				$image = $this->model_tool_image->resizeWithSources($product['image'], $image_width, $image_height);
 			} else {
-				$image = $this->model_tool_image->resizeWithSources('placeholder.png', 420, 315);
+				$image = $this->model_tool_image->resizeWithSources('placeholder.png', $image_width, $image_height);
+			}
+
+			$hover_image = array(
+				'src'     => '',
+				'sources' => array(),
+				'width'   => $image_width,
+				'height'  => $image_height
+			);
+			$product_images = $this->model_catalog_product->getProductImages($product['product_id']);
+
+			foreach ($product_images as $product_image) {
+				if (!empty($product_image['image']) && $product_image['image'] !== $product['image']) {
+					$hover_image = $this->model_tool_image->resizeWithSources($product_image['image'], $image_width, $image_height);
+					break;
+				}
 			}
 
 			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -66,27 +83,46 @@ class ControllerCommonHome extends Controller {
 
 			if (!is_null($product['special']) && (float)$product['special'] >= 0) {
 				$special = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-				$badge = 'Скидка';
-				$badge_class = 'is-sale';
-			} elseif (!empty($product['date_added']) && strtotime($product['date_added']) >= strtotime('-30 days')) {
-				$special = false;
-				$badge = 'Новинка';
-				$badge_class = 'is-new';
 			} else {
 				$special = false;
-				$badge = 'Популярное';
-				$badge_class = 'is-popular';
 			}
 
 			if ($product['quantity'] <= 0) {
-				$stock = 'Под заказ';
-				$stock_class = 'is-out';
+				if ((int)$product['stock_status_id'] === 5) {
+					$stock = 'Нет в наличии';
+					$stock_class = 'is-out';
+				} elseif ((int)$product['stock_status_id'] === 6 || (int)$product['stock_status_id'] === 8) {
+					$stock = 'Под заказ';
+					$stock_class = 'is-preorder';
+				} else {
+					$stock = $product['stock_status'];
+					$stock_class = 'is-out';
+				}
 			} elseif ($product['quantity'] <= 2) {
 				$stock = 'Осталось мало';
 				$stock_class = 'is-low';
 			} else {
 				$stock = 'В наличии';
 				$stock_class = 'is-in';
+			}
+
+			$is_new = !empty($product['date_added']) && strtotime($product['date_added']) >= strtotime('-30 days');
+
+			if ($stock === 'Нет в наличии') {
+				$badge = 'Нет в наличии';
+				$badge_class = 'is-out';
+			} elseif ($stock === 'Под заказ') {
+				$badge = 'Под заказ';
+				$badge_class = 'is-preorder';
+			} elseif ($special) {
+				$badge = 'Скидка';
+				$badge_class = 'is-sale';
+			} elseif ($is_new) {
+				$badge = 'Новинка';
+				$badge_class = 'is-new';
+			} else {
+				$badge = 'Популярное';
+				$badge_class = 'is-popular';
 			}
 
 			$description = trim(strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')));
@@ -96,6 +132,7 @@ class ControllerCommonHome extends Controller {
 				'product_id'  => $product['product_id'],
 				'thumb'       => $image['src'],
 				'image'       => $image,
+				'hover_image' => $hover_image,
 				'name'        => $product['name'],
 				'description' => utf8_substr($description, 0, 120) . $description_suffix,
 				'price'       => $price,
@@ -104,6 +141,7 @@ class ControllerCommonHome extends Controller {
 				'badge_class' => $badge_class,
 				'stock'       => $stock,
 				'stock_class' => $stock_class,
+				'can_buy'     => $stock !== 'Нет в наличии',
 				'minimum'     => $product['minimum'] > 0 ? $product['minimum'] : 1,
 				'href'        => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 			);
