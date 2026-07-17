@@ -868,7 +868,6 @@ input[type="reset"],
 .sylora-hero,
 .sylora-product-slide,
 .sylora-category-card,
-.sylora-product-preview article,
 .sylora-benefits__grid > div,
 .about-hero,
 .about-grid > *,
@@ -1378,8 +1377,7 @@ fieldset[disabled] .btn,
 	overflow: hidden;
 }
 
-.sylora-about-teaser img,
-.sylora-product-preview img {
+.sylora-about-teaser img {
 	display: block;
 	width: 100%;
 	object-fit: cover;
@@ -1515,125 +1513,6 @@ fieldset[disabled] .btn,
 
 .sylora-category-card small {
 	color: var(--color-muted);
-}
-
-.sylora-product-preview {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 18px;
-}
-
-.sylora-product-preview article {
-	display: flex;
-	flex-direction: column;
-	min-height: 100%;
-	overflow: hidden;
-	border: 1px solid var(--color-border);
-	border-radius: 8px;
-	background: var(--color-bg);
-}
-
-.sylora-product-preview img {
-	aspect-ratio: 4 / 3;
-}
-
-.sylora-product-preview__image {
-	display: block;
-	overflow: hidden;
-	background: var(--color-surface);
-}
-
-.sylora-product-preview__image:hover,
-.sylora-product-preview__image:focus {
-	opacity: 1;
-}
-
-.sylora-product-preview__image img {
-	transition: transform 180ms ease;
-}
-
-.sylora-product-preview__image:hover img,
-.sylora-product-preview__image:focus img {
-	transform: scale(1.03);
-}
-
-.sylora-product-preview article > div {
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	padding: 18px;
-}
-
-.sylora-product-preview h3 {
-	display: -webkit-box;
-	margin: 4px 0 12px;
-	overflow: hidden;
-	line-height: 1.3;
-	overflow-wrap: anywhere;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 2;
-}
-
-.sylora-product-preview h3 a {
-	color: var(--color-text);
-	text-decoration: none;
-}
-
-.sylora-product-preview h3 a:hover,
-.sylora-product-preview h3 a:focus {
-	color: var(--color-brand);
-}
-
-.sylora-product-preview .btn {
-	margin-top: auto;
-	align-self: flex-start;
-}
-
-.sylora-badge {
-	align-self: flex-start;
-	margin: 0;
-	padding: 4px 8px;
-	border-radius: 999px;
-	background: rgba(209, 146, 178, 0.22);
-	color: var(--color-earth);
-	font-weight: 700;
-}
-
-.sylora-badge--leaf {
-	background: rgba(109, 161, 110, 0.22);
-	color: var(--color-success);
-}
-
-.sylora-badge--earth {
-	background: rgba(120, 91, 68, 0.16);
-	color: var(--color-earth);
-}
-
-.sylora-stock {
-	color: var(--color-success);
-	font-weight: 700;
-}
-
-.sylora-stock.is-low {
-	color: var(--color-earth);
-}
-
-.sylora-stock.is-out {
-	color: var(--color-danger);
-}
-
-.sylora-product-preview__price {
-	display: flex;
-	align-items: baseline;
-	gap: 8px;
-	margin: 0 0 16px;
-	color: var(--color-text);
-	font-weight: 700;
-}
-
-.sylora-product-preview__price s {
-	color: var(--color-muted);
-	font-weight: 400;
 }
 
 .sylora-empty {
@@ -1872,7 +1751,6 @@ footer h5 {
 	}
 
 	.sylora-category-grid,
-	.sylora-product-preview,
 	.sylora-benefits__grid {
 		grid-template-columns: 1fr;
 	}
@@ -2131,6 +2009,10 @@ footer h5 {
 	margin-bottom: 28px;
 }
 
+.catalog-grid--home {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .catalog-card {
 	float: none;
 	width: auto;
@@ -2207,6 +2089,10 @@ footer h5 {
 	background: var(--color-success);
 }
 
+.catalog-card__badge.is-popular {
+	background: var(--color-earth);
+}
+
 .catalog-card__badge.is-preorder {
 	background: var(--color-earth);
 }
@@ -2230,18 +2116,22 @@ footer h5 {
 	padding: 16px 16px 12px;
 }
 
-.catalog-card .caption h2 {
+.catalog-card .caption h2,
+.catalog-card .caption h3 {
 	margin: 0 0 10px;
 	line-height: 1.3;
 }
 
-.catalog-card .caption h2 a {
+.catalog-card .caption h2 a,
+.catalog-card .caption h3 a {
 	color: var(--color-text);
 	text-decoration: none;
 }
 
 .catalog-card .caption h2 a:hover,
-.catalog-card .caption h2 a:focus {
+.catalog-card .caption h2 a:focus,
+.catalog-card .caption h3 a:hover,
+.catalog-card .caption h3 a:focus {
 	color: var(--color-brand);
 }
 
@@ -2477,10 +2367,6 @@ footer h5 {
 	.btn[data-loading-text].disabled::after,
 	.btn[data-loading-text][disabled]::after {
 		animation: none;
-	}
-
-	.sylora-product-preview__image img {
-		transition: none;
 	}
 
 	.catalog-filters__summary::after {
@@ -4221,7 +4107,6 @@ button .fa {
 
 .sylora-product-slide span,
 .sylora-category-card small,
-.sylora-product-preview article,
 .sylora-benefits__grid span,
 .catalog-card__description,
 .catalog-filters__summary,
@@ -4239,7 +4124,6 @@ button .fa {
 	font-size: var(--font-size-ui);
 }
 
-.sylora-product-preview__price,
 .cart-item__price strong,
 .cart-item__total strong,
 .content-page__body > blockquote {
@@ -4251,9 +4135,9 @@ button .fa {
 }
 
 .sylora-category-card span,
-.sylora-product-preview h3,
 .sylora-benefits__grid strong,
 .catalog-card .caption h2,
+.catalog-card .caption h3,
 .catalog-card .price,
 .about-grid h2,
 .quick-view .price,
@@ -4273,14 +4157,12 @@ button .fa {
 }
 
 .sylora-eyebrow,
-.sylora-badge,
 .site-brand__sub,
 .catalog-card__badge,
 .catalog-card__stock,
 .catalog-card .price-old,
 .catalog-card .price-tax,
 .product-thumb .price-tax,
-.sylora-product-preview__price s,
 .product-price__tax,
 .catalog-toolbar__count,
 .catalog-filters__summary strong,

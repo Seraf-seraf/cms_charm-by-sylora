@@ -78,32 +78,35 @@
       <a href="{{ catalog }}">Перейти в каталог</a>
     </div>
     {% if featured_products %}
-    <div class="sylora-product-preview">
+    <div class="catalog-grid catalog-grid--home">
       {% for product in featured_products %}
-      <article>
-        <a class="sylora-product-preview__image" href="{{ product.href }}">
-          <picture>
-            {% for source in product.image.sources %}
-            <source srcset="{{ source.src }}" type="{{ source.type }}">
-            {% endfor %}
-            <img src="{{ product.image.src }}" alt="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async">
-          </picture>
-        </a>
-        <div>
-          <p class="sylora-badge {{ product.badge_class }}">{{ product.badge }}</p>
-          <h3><a href="{{ product.href }}">{{ product.name }}</a></h3>
-          <p class="sylora-stock {{ product.stock_class }}">{{ product.stock }}</p>
-          {% if product.price %}
-          <p class="sylora-product-preview__price">
-            {% if product.special %}
-            <span>{{ product.special }}</span>
-            <s>{{ product.price }}</s>
-            {% else %}
-            <span>{{ product.price }}</span>
+      <article class="product-layout product-grid catalog-card">
+        <div class="product-thumb">
+          <a class="catalog-card__image" href="{{ product.href }}">
+            {% if product.badge %}
+            <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
             {% endif %}
-          </p>
-          {% endif %}
-          <a class="btn btn-primary" href="{{ product.href }}">Смотреть</a>
+            <picture>
+              {% for source in product.image.sources %}
+              <source srcset="{{ source.src }}" type="{{ source.type }}">
+              {% endfor %}
+              <img class="catalog-card__image-primary" src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+            </picture>
+          </a>
+          <div class="catalog-card__body">
+            <div class="caption">
+              <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+              <h3><a href="{{ product.href }}">{{ product.name }}</a></h3>
+              {% if product.price %}
+              <p class="price">{% if product.special %}<span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>{% else %}{{ product.price }}{% endif %}</p>
+              {% endif %}
+            </div>
+            <div class="button-group catalog-card__actions">
+              <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+              <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
+              <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+            </div>
+          </div>
         </div>
       </article>
       {% endfor %}

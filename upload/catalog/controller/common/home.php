@@ -67,15 +67,15 @@ class ControllerCommonHome extends Controller {
 			if (!is_null($product['special']) && (float)$product['special'] >= 0) {
 				$special = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
 				$badge = 'Скидка';
-				$badge_class = '';
+				$badge_class = 'is-sale';
 			} elseif (!empty($product['date_added']) && strtotime($product['date_added']) >= strtotime('-30 days')) {
 				$special = false;
 				$badge = 'Новинка';
-				$badge_class = 'sylora-badge--leaf';
+				$badge_class = 'is-new';
 			} else {
 				$special = false;
 				$badge = 'Популярное';
-				$badge_class = 'sylora-badge--earth';
+				$badge_class = 'is-popular';
 			}
 
 			if ($product['quantity'] <= 0) {
