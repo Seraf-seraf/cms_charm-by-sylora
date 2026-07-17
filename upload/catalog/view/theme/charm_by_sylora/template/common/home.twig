@@ -105,9 +105,9 @@
               {% endif %}
             </div>
             <div class="button-group catalog-card__actions">
-              <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+              <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
               <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
-              <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+              <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" aria-pressed="false" onclick="wishlist.add('{{ product.product_id }}', this);"><i class="fa fa-heart"></i></button>
             </div>
           </div>
         </div>

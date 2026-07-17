@@ -104,6 +104,7 @@ class ControllerCommonHome extends Controller {
 				'badge_class' => $badge_class,
 				'stock'       => $stock,
 				'stock_class' => $stock_class,
+				'minimum'     => $product['minimum'] > 0 ? $product['minimum'] : 1,
 				'href'        => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 			);
 

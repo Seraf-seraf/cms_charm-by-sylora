@@ -135,9 +135,57 @@ $(document).ready(function() {
 	});
 });
 
+function showSiteNotification(notification) {
+	var host = $('#site-notifications');
+
+	if (!host.length) {
+		host = $('<div id="site-notifications" class="site-notifications container" aria-live="polite" aria-atomic="true"></div>');
+		$('body').prepend(host);
+	}
+
+	host.html(notification);
+}
+
+function setProductActionLoading(trigger, loading) {
+	if (!trigger) {
+		return;
+	}
+
+	var element = $(trigger);
+
+	if (loading) {
+		element.data('was-disabled', element.prop('disabled'));
+		element.prop('disabled', true).attr('aria-busy', 'true').addClass('is-loading');
+	} else {
+		element.prop('disabled', Boolean(element.data('was-disabled'))).removeAttr('aria-busy').removeClass('is-loading');
+	}
+}
+
+function confirmProductAction(trigger, action) {
+	if (!trigger) {
+		return;
+	}
+
+	var element = $(trigger);
+
+	if (action === 'wishlist') {
+		element.attr({
+			'aria-label': 'Товар в избранном',
+			'aria-pressed': 'true',
+			'data-original-title': 'В избранном',
+			'title': 'В избранном'
+		}).addClass('is-selected');
+	} else {
+		element.addClass('is-confirmed');
+		window.setTimeout(function() {
+			element.removeClass('is-confirmed');
+		}, 1400);
+	}
+}
+
 // Cart add remove functions
 var cart = {
-	'add': function(product_id, quantity) {
+	'add': function(product_id, quantity, trigger) {
 		$.ajax({
 			url: 'index.php?route=checkout/cart/add',
 			type: 'post',
@@ -145,9 +193,11 @@ var cart = {
 			dataType: 'json',
 			beforeSend: function() {
 				$('#cart > button').button('loading');
+				setProductActionLoading(trigger, true);
 			},
 			complete: function() {
 				$('#cart > button').button('reset');
+				setProductActionLoading(trigger, false);
 			},
 			success: function(json) {
 				$('.alert-dismissible, .text-danger').remove();
@@ -171,14 +221,13 @@ var cart = {
 					notification += '</div>';
 					notification += '<button type="button" class="close" data-dismiss="alert">&times;</button></div>';
 
-					$('#content').parent().before(notification);
+					showSiteNotification(notification);
+					confirmProductAction(trigger, 'cart');
 
 					// Need to set timeout otherwise it wont update the total
 					setTimeout(function () {
 						$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
 					}, 100);
-
-					$('html, body').animate({ scrollTop: 0 }, 'slow');
 
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
 				}
@@ -285,12 +334,18 @@ var voucher = {
 }
 
 var wishlist = {
-	'add': function(product_id) {
+	'add': function(product_id, trigger) {
 		$.ajax({
 			url: 'index.php?route=account/wishlist/add',
 			type: 'post',
 			data: 'product_id=' + product_id,
 			dataType: 'json',
+			beforeSend: function() {
+				setProductActionLoading(trigger, true);
+			},
+			complete: function() {
+				setProductActionLoading(trigger, false);
+			},
 			success: function(json) {
 				$('.alert-dismissible').remove();
 
@@ -299,13 +354,14 @@ var wishlist = {
 				}
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					showSiteNotification('<div class="alert alert-success alert-dismissible" role="status"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					confirmProductAction(trigger, 'wishlist');
+					document.dispatchEvent(new CustomEvent('sylora:wishlist-add', {detail: {product_id: product_id}}));
 				}
 
 				$('#wishlist-total span').html(json['total']);
 				$('#wishlist-total').attr('title', json['total']);
 
-				$('html, body').animate({ scrollTop: 0 }, 'slow');
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);

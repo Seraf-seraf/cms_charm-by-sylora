@@ -191,10 +191,10 @@
                   {% endfor %} </div>
                 {% endif %} </div>
               <div class="button-group catalog-card__actions">
-                <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+                <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
                 <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
-                <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" aria-haspopup="dialog"><i class="fa fa-eye"></i></button>
-                <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+                <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" aria-haspopup="dialog" aria-expanded="false"><i class="fa fa-eye"></i></button>
+                <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" aria-pressed="false" onclick="wishlist.add('{{ product.product_id }}', this);"><i class="fa fa-heart"></i></button>
               </div>
             </div>
           </div>
@@ -223,7 +223,7 @@
                 <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
                 <p>{{ product.quick_description }}</p>
                 <div class="quick-view__actions">
-                  <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+                  <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
                   <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
                 </div>
               </div>
@@ -263,6 +263,7 @@
     if (!dialog || typeof dialog.showModal !== 'function') return;
 
     lastQuickViewTrigger = trigger;
+    trigger.setAttribute('aria-expanded', 'true');
     dialog.showModal();
 
     var focusable = getFocusable(dialog);
@@ -294,6 +295,7 @@
     if (!event.target.classList || !event.target.classList.contains('quick-view')) return;
 
     if (lastQuickViewTrigger) {
+      lastQuickViewTrigger.setAttribute('aria-expanded', 'false');
       lastQuickViewTrigger.focus();
       lastQuickViewTrigger = null;
     }
