@@ -9,12 +9,8 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-      <div class="product-page"> {% if column_left or column_right %}
-        {% set class = 'col-sm-6' %}
-        {% else %}
-        {% set class = 'product-page__media' %}
-        {% endif %}
-        <div class="{{ class }}"> {% if thumb or images %}
+      <div class="product-page">
+        <div class="product-page__media"> {% if thumb or images %}
           <ul class="thumbnails">
             {% if thumb %}
             <li class="product-gallery__main"><a class="thumbnail" href="{{ popup }}" title="{{ main_image_alt }}">
@@ -41,12 +37,7 @@
           </ul>
           {% endif %}
         </div>
-        {% if column_left or column_right %}
-        {% set class = 'col-sm-6' %}
-        {% else %}
-        {% set class = 'product-page__summary' %}
-        {% endif %}
-        <div class="{{ class }}">
+        <div class="product-page__summary">
           <div class="product-summary__tools">
             <button type="button" data-toggle="tooltip" class="btn btn-default" title="В избранное" aria-label="В избранное" aria-pressed="false" onclick="wishlist.add('{{ product_id }}', this);"><i class="fa fa-heart"></i></button>
           </div>
@@ -248,9 +239,9 @@
           </div>
           {% if review_status %}
           <div class="rating">
-            <p>{% for i in 1..5 %}
-              {% if rating < i %}<span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>{% else %}<span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>{% endif %}
-              {% endfor %} <a href="#product-reviews">{{ reviews }}</a> / <a href="#form-review">{{ text_write }}</a></p>
+            <p class="product-review__links"><span class="product-review__stars" role="img" aria-label="Оценка: {{ rating }} из 5">{% for i in 1..5 %}
+              {% if rating < i %}<span class="fa fa-stack" aria-hidden="true"><i class="fa fa-star-o fa-stack-1x"></i></span>{% else %}<span class="fa fa-stack" aria-hidden="true"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>{% endif %}
+              {% endfor %}</span> <a href="#product-reviews">{{ reviews }}</a> <span aria-hidden="true">/</span> <a href="#form-review">{{ text_write }}</a></p>
           </div>
           {% endif %} </div>
       </div>
@@ -299,19 +290,19 @@
               </div>
             </div>
             <div class="form-group required">
-              <div class="col-sm-12">
-                <label class="control-label">{{ entry_rating }}</label>
-                &nbsp;&nbsp;&nbsp; {{ entry_bad }}&nbsp;
-                <input type="radio" name="rating" value="1" />
-                &nbsp;
-                <input type="radio" name="rating" value="2" />
-                &nbsp;
-                <input type="radio" name="rating" value="3" />
-                &nbsp;
-                <input type="radio" name="rating" value="4" />
-                &nbsp;
-                <input type="radio" name="rating" value="5" />
-                &nbsp;{{ entry_good }}</div>
+              <fieldset class="col-sm-12 product-review__rating-fieldset">
+                <legend class="control-label" id="product-review-rating-label">{{ entry_rating }}</legend>
+                <div class="product-review__rating" role="radiogroup" aria-labelledby="product-review-rating-label">
+                  <span class="product-review__rating-edge">{{ entry_bad }}</span>
+                  {% for score in 1..5 %}
+                  <label class="product-review__rating-option">
+                    <input type="radio" name="rating" value="{{ score }}" />
+                    <span>{{ score }}</span>
+                  </label>
+                  {% endfor %}
+                  <span class="product-review__rating-edge">{{ entry_good }}</span>
+                </div>
+              </fieldset>
             </div>
             {{ captcha }}
             <div class="buttons clearfix">
