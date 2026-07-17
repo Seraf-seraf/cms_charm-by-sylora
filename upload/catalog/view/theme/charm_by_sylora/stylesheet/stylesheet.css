@@ -814,6 +814,7 @@ html[dir=rtl] #cart .dropdown-menu {
 	--font-size-page-title: clamp(2rem, 3.6vw, 2.75rem);
 	--font-size-hero-title: clamp(2.375rem, 5vw, 3.5rem);
 	--color-brand: #d192b2;
+	--color-accent: #a7507d;
 	--color-earth: #785b44;
 	--color-leaf: #6da16e;
 	--color-bg: #ffffff;
@@ -822,13 +823,22 @@ html[dir=rtl] #cart .dropdown-menu {
 	--color-text: #2a2421;
 	--color-muted: #6f625c;
 	--color-border: #e7ddd8;
-	--color-success: #6da16e;
+	--color-success: #417a49;
+	--color-warning: #785b44;
 	--color-danger: #b84a5a;
+	--color-on-accent: #ffffff;
+	--color-on-earth: #ffffff;
+	--color-on-earth-border: rgba(255, 255, 255, 0.32);
+	--color-on-success: #ffffff;
+	--color-on-warning: #ffffff;
+	--color-on-danger: #ffffff;
+	--color-focus-ring: rgba(167, 80, 125, 0.24);
 	--shadow-soft: 0 14px 34px rgba(120, 91, 68, 0.12);
 }
 
 [data-theme="dark"] {
 	--color-brand: #d192b2;
+	--color-accent: #d192b2;
 	--color-earth: #c7aa94;
 	--color-leaf: #83bd84;
 	--color-bg: #171312;
@@ -838,7 +848,15 @@ html[dir=rtl] #cart .dropdown-menu {
 	--color-muted: #c8b9b0;
 	--color-border: #3a302c;
 	--color-success: #83bd84;
+	--color-warning: #c7aa94;
 	--color-danger: #e17888;
+	--color-on-accent: #171312;
+	--color-on-earth: #171312;
+	--color-on-earth-border: rgba(23, 19, 18, 0.32);
+	--color-on-success: #171312;
+	--color-on-warning: #171312;
+	--color-on-danger: #171312;
+	--color-focus-ring: rgba(209, 146, 178, 0.3);
 	--shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.28);
 }
 
@@ -892,7 +910,7 @@ a {
 
 a:hover,
 a:focus {
-	color: var(--color-brand);
+	color: var(--color-accent);
 }
 
 a:focus-visible,
@@ -902,11 +920,12 @@ select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
 [tabindex]:focus-visible {
-	outline: 3px solid var(--color-brand);
+	outline: 3px solid var(--color-accent);
 	outline-offset: 3px;
 }
 
 .btn {
+	--button-foreground: var(--color-earth);
 	border-radius: 8px;
 	box-shadow: none;
 	text-shadow: none;
@@ -925,16 +944,18 @@ summary:focus-visible,
 .btn-default:active,
 .btn-default.active {
 	background: var(--color-bg);
-	border-color: var(--color-brand);
+	border-color: var(--color-accent);
 	color: var(--color-earth);
 }
 
 .btn-primary,
 .btn-inverse,
-#cart > .btn {
-	background: var(--color-brand);
-	border-color: var(--color-brand);
-	color: #ffffff;
+#cart > .btn,
+#cart.open > .btn {
+	--button-foreground: var(--color-on-accent);
+	background: var(--color-accent);
+	border-color: var(--color-accent);
+	color: var(--color-on-accent);
 	text-shadow: none;
 }
 
@@ -948,52 +969,141 @@ summary:focus-visible,
 .btn-inverse.active,
 #cart > .btn:hover,
 #cart > .btn:focus,
-#cart > .btn:active {
+#cart > .btn:active,
+#cart.open > .btn:hover,
+#cart.open > .btn:focus,
+#cart.open > .btn:active {
+	--button-foreground: var(--color-on-earth);
 	background: var(--color-earth);
 	border-color: var(--color-earth);
-	color: #ffffff;
+	color: var(--color-on-earth);
 }
 
-.btn-success,
-.btn-info {
-	background: var(--color-leaf);
-	border-color: var(--color-leaf);
-	color: #ffffff;
+.btn-success {
+	--button-foreground: var(--color-on-success);
+	background: var(--color-success);
+	border-color: var(--color-success);
+	color: var(--color-on-success);
 	text-shadow: none;
 }
 
 .btn-warning {
-	background: var(--color-earth);
-	border-color: var(--color-earth);
-	color: #ffffff;
+	--button-foreground: var(--color-on-warning);
+	background: var(--color-warning);
+	border-color: var(--color-warning);
+	color: var(--color-on-warning);
 	text-shadow: none;
 }
 
 .btn-danger {
+	--button-foreground: var(--color-on-danger);
 	background: var(--color-danger);
 	border-color: var(--color-danger);
-	color: #ffffff;
+	color: var(--color-on-danger);
+	text-shadow: none;
+}
+
+.btn-info {
+	background: var(--color-surface);
+	border-color: var(--color-earth);
+	color: var(--color-earth);
 	text-shadow: none;
 }
 
 .btn-success:hover,
 .btn-success:focus,
 .btn-success:active,
-.btn-success.active,
-.btn-info:hover,
-.btn-info:focus,
-.btn-info:active,
-.btn-info.active,
+.btn-success.active {
+	background: var(--color-success);
+	border-color: var(--color-success);
+	color: var(--color-on-success);
+	filter: brightness(0.94);
+}
+
 .btn-warning:hover,
 .btn-warning:focus,
 .btn-warning:active,
-.btn-warning.active,
+.btn-warning.active {
+	background: var(--color-warning);
+	border-color: var(--color-warning);
+	color: var(--color-on-warning);
+	filter: brightness(0.94);
+}
+
 .btn-danger:hover,
 .btn-danger:focus,
 .btn-danger:active,
 .btn-danger.active {
+	background: var(--color-danger);
+	border-color: var(--color-danger);
+	color: var(--color-on-danger);
 	filter: brightness(0.94);
-	color: #ffffff;
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active,
+.btn-info.active {
+	--button-foreground: var(--color-on-earth);
+	background: var(--color-earth);
+	border-color: var(--color-earth);
+	color: var(--color-on-earth);
+}
+
+.btn-link {
+	color: var(--color-earth);
+}
+
+.btn-link:hover,
+.btn-link:focus {
+	color: var(--color-accent);
+}
+
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-inverse.disabled,
+.btn-inverse[disabled],
+fieldset[disabled] .btn-inverse {
+	--button-foreground: var(--color-on-accent);
+	background: var(--color-accent);
+	border-color: var(--color-accent);
+	color: var(--color-on-accent);
+}
+
+.btn-success.disabled,
+.btn-success[disabled],
+fieldset[disabled] .btn-success {
+	--button-foreground: var(--color-on-success);
+	background: var(--color-success);
+	border-color: var(--color-success);
+	color: var(--color-on-success);
+}
+
+.btn-warning.disabled,
+.btn-warning[disabled],
+fieldset[disabled] .btn-warning {
+	--button-foreground: var(--color-on-warning);
+	background: var(--color-warning);
+	border-color: var(--color-warning);
+	color: var(--color-on-warning);
+}
+
+.btn-danger.disabled,
+.btn-danger[disabled],
+fieldset[disabled] .btn-danger {
+	--button-foreground: var(--color-on-danger);
+	background: var(--color-danger);
+	border-color: var(--color-danger);
+	color: var(--color-on-danger);
+}
+
+.btn-info.disabled,
+.btn-info[disabled],
+fieldset[disabled] .btn-info {
+	background: var(--color-surface);
+	border-color: var(--color-earth);
+	color: var(--color-earth);
 }
 
 .btn:active,
@@ -1009,7 +1119,9 @@ fieldset[disabled] .btn,
 .btn[data-loading-text].disabled,
 .btn[data-loading-text][disabled] {
 	cursor: not-allowed;
-	opacity: 0.62;
+	border-style: dashed;
+	filter: none;
+	opacity: 1;
 	transform: none;
 }
 
@@ -1017,7 +1129,9 @@ fieldset[disabled] .btn,
 .btn[data-loading-text].disabled,
 .btn[data-loading-text][disabled] {
 	position: relative;
+	border-style: solid;
 	color: transparent !important;
+	filter: none;
 }
 
 .btn.is-loading::after,
@@ -1030,8 +1144,9 @@ fieldset[disabled] .btn,
 	height: 16px;
 	margin-top: -8px;
 	margin-left: -8px;
-	border: 2px solid rgba(255, 255, 255, 0.55);
-	border-top-color: #ffffff;
+	border: 2px solid transparent;
+	border-top-color: var(--button-foreground);
+	border-right-color: var(--button-foreground);
 	border-radius: 50%;
 	content: "";
 	animation: sylora-spin 0.8s linear infinite;
@@ -1053,12 +1168,67 @@ fieldset[disabled] .btn,
 }
 
 .form-control:focus {
-	border-color: var(--color-brand);
-	box-shadow: 0 0 0 3px rgba(209, 146, 178, 0.22);
+	border-color: var(--color-accent);
+	box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
 .form-control[aria-invalid="true"] {
 	border-color: var(--color-danger);
+}
+
+div.required .control-label::before,
+.text-danger,
+.has-error .control-label,
+.has-error .help-block {
+	color: var(--color-danger);
+}
+
+.text-success,
+.has-success .control-label,
+.has-success .help-block {
+	color: var(--color-success);
+}
+
+.text-warning,
+.has-warning .control-label,
+.has-warning .help-block {
+	color: var(--color-warning);
+}
+
+.has-error .form-control {
+	border-color: var(--color-danger);
+}
+
+.has-success .form-control {
+	border-color: var(--color-success);
+}
+
+.has-warning .form-control {
+	border-color: var(--color-warning);
+}
+
+.alert-success {
+	border-color: var(--color-success);
+	background: var(--color-surface);
+	color: var(--color-success);
+}
+
+.alert-warning {
+	border-color: var(--color-warning);
+	background: var(--color-surface);
+	color: var(--color-warning);
+}
+
+.alert-danger {
+	border-color: var(--color-danger);
+	background: var(--color-surface);
+	color: var(--color-danger);
+}
+
+.alert-info {
+	border-color: var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-text);
 }
 
 .form-horizontal .control-label,
@@ -1273,7 +1443,7 @@ fieldset[disabled] .btn,
 
 .site-nav a:hover,
 .site-nav a:focus {
-	color: var(--color-brand);
+	color: var(--color-accent);
 }
 
 .site-actions {
@@ -1386,7 +1556,7 @@ fieldset[disabled] .btn,
 	color: var(--color-earth);
 	font-weight: 700;
 	text-decoration: none;
-	border-bottom: 2px solid var(--color-brand);
+	border-bottom: 2px solid var(--color-accent);
 }
 
 .sylora-hero__media {
@@ -1454,7 +1624,7 @@ fieldset[disabled] .btn,
 
 .sylora-product-slide:hover,
 .sylora-product-slide:focus {
-	color: var(--color-brand);
+	color: var(--color-accent);
 	opacity: 1;
 }
 
@@ -1600,12 +1770,18 @@ fieldset[disabled] .btn,
 footer {
 	background: var(--color-earth);
 	border-top: 0;
-	color: #f5efea;
+	color: var(--color-on-earth);
 }
 
 footer a,
 footer h5 {
-	color: #ffffff;
+	color: var(--color-on-earth);
+}
+
+footer a:hover,
+footer a:focus {
+	color: var(--color-on-earth);
+	text-decoration: underline;
 }
 
 @media (max-width: 1199px) {
@@ -1904,8 +2080,8 @@ footer h5 {
 	min-width: 24px;
 	height: 24px;
 	border-radius: 999px;
-	background: var(--color-brand);
-	color: #ffffff;
+	background: var(--color-accent);
+	color: var(--color-on-accent);
 }
 
 .catalog-filters__form {
@@ -1972,7 +2148,7 @@ footer h5 {
 .catalog-filters__option input {
 	flex: 0 0 auto;
 	margin-top: 2px;
-	accent-color: var(--color-brand);
+	accent-color: var(--color-accent);
 }
 
 .catalog-filters__actions {
@@ -1995,9 +2171,9 @@ footer h5 {
 }
 
 .catalog-filters__actions button {
-	border: 1px solid var(--color-brand);
-	background: var(--color-brand);
-	color: #ffffff;
+	border: 1px solid var(--color-accent);
+	background: var(--color-accent);
+	color: var(--color-on-accent);
 }
 
 .catalog-filters__actions a {
@@ -2010,13 +2186,13 @@ footer h5 {
 .catalog-filters__actions button:focus {
 	border-color: var(--color-earth);
 	background: var(--color-earth);
-	color: #ffffff;
+	color: var(--color-on-earth);
 }
 
 .catalog-filters__actions a:hover,
 .catalog-filters__actions a:focus {
-	border-color: var(--color-brand);
-	color: var(--color-brand);
+	border-color: var(--color-accent);
+	color: var(--color-accent);
 }
 
 .catalog-grid {
@@ -2096,8 +2272,8 @@ footer h5 {
 	z-index: 2;
 	padding: 5px 9px;
 	border-radius: 999px;
-	background: var(--color-brand);
-	color: #ffffff;
+	background: var(--color-accent);
+	color: var(--color-on-accent);
 	font-weight: 700;
 	max-width: calc(100% - 24px);
 	overflow-wrap: anywhere;
@@ -2105,18 +2281,22 @@ footer h5 {
 
 .catalog-card__badge.is-new {
 	background: var(--color-success);
+	color: var(--color-on-success);
 }
 
 .catalog-card__badge.is-popular {
 	background: var(--color-earth);
+	color: var(--color-on-earth);
 }
 
 .catalog-card__badge.is-preorder {
-	background: var(--color-earth);
+	background: var(--color-warning);
+	color: var(--color-on-warning);
 }
 
 .catalog-card__badge.is-out {
 	background: var(--color-danger);
+	color: var(--color-on-danger);
 }
 
 .catalog-card__body {
@@ -2151,7 +2331,7 @@ footer h5 {
 
 .catalog-card__title a:hover,
 .catalog-card__title a:focus {
-	color: var(--color-brand);
+	color: var(--color-accent);
 }
 
 .catalog-card__description {
@@ -2174,11 +2354,11 @@ footer h5 {
 }
 
 .catalog-card__stock.is-low {
-	color: var(--color-earth);
+	color: var(--color-warning);
 }
 
 .catalog-card__stock.is-preorder {
-	color: var(--color-earth);
+	color: var(--color-warning);
 }
 
 .catalog-card__stock.is-out {
@@ -2197,7 +2377,7 @@ footer h5 {
 }
 
 .catalog-card .price-new {
-	color: var(--color-danger);
+	color: var(--color-accent);
 	font-weight: 700;
 	overflow-wrap: anywhere;
 }
@@ -2250,10 +2430,11 @@ footer h5 {
 }
 
 .catalog-card__cart {
+	--button-foreground: var(--color-on-accent);
 	width: auto;
-	border: 1px solid var(--color-brand);
-	background: var(--color-brand);
-	color: #ffffff;
+	border: 1px solid var(--color-accent);
+	background: var(--color-accent);
+	color: var(--color-on-accent);
 	line-height: 1.2;
 	text-transform: none;
 }
@@ -2284,9 +2465,9 @@ footer h5 {
 
 .catalog-card__icon.is-selected,
 .product-summary__tools .is-selected {
-	border-color: var(--color-brand);
-	background: var(--color-brand);
-	color: #ffffff;
+	border-color: var(--color-accent);
+	background: var(--color-accent);
+	color: var(--color-on-accent);
 }
 
 .catalog-card__actions .is-loading {
@@ -2304,42 +2485,50 @@ footer h5 {
 	height: 16px;
 	margin-top: -8px;
 	margin-left: -8px;
-	border: 2px solid rgba(120, 91, 68, 0.28);
-	border-top-color: var(--color-earth);
+	border: 2px solid transparent;
+	border-top-color: var(--button-foreground, var(--color-earth));
+	border-right-color: var(--button-foreground, var(--color-earth));
 	border-radius: 50%;
 	content: "";
 	animation: sylora-spin 0.8s linear infinite;
 }
 
 .catalog-card__cart.is-loading::after {
-	border-color: rgba(255, 255, 255, 0.55);
-	border-top-color: #ffffff;
+	border-color: transparent;
+	border-top-color: var(--color-on-accent);
+	border-right-color: var(--color-on-accent);
 }
 
 .catalog-card__cart.is-confirmed {
+	--button-foreground: var(--color-on-success);
 	border-color: var(--color-success);
 	background: var(--color-success);
+	color: var(--color-on-success);
 }
 
-.catalog-card__cart[disabled],
-.quick-view__actions .catalog-card__cart[disabled] {
+.catalog-card__cart[disabled]:not(.is-loading),
+.quick-view__actions .catalog-card__cart[disabled]:not(.is-loading) {
 	cursor: not-allowed;
-	opacity: 0.62;
+	border-color: var(--color-danger);
+	background: var(--color-surface);
+	color: var(--color-danger);
+	opacity: 1;
 }
 
 .catalog-card__cart:not([disabled]):hover,
 .catalog-card__cart:not([disabled]):focus {
+	--button-foreground: var(--color-on-earth);
 	border-color: var(--color-earth);
 	background: var(--color-earth);
-	color: #ffffff;
+	color: var(--color-on-earth);
 }
 
 .catalog-card__more:hover,
 .catalog-card__more:focus,
 .catalog-card__icon:hover,
 .catalog-card__icon:focus {
-	border-color: var(--color-brand);
-	color: var(--color-brand);
+	border-color: var(--color-accent);
+	color: var(--color-accent);
 }
 
 .catalog-empty {
@@ -2712,11 +2901,11 @@ footer h5 {
 }
 
 .product-stock.is-low {
-	color: var(--color-earth);
+	color: var(--color-warning);
 }
 
 .product-stock.is-preorder {
-	color: var(--color-earth);
+	color: var(--color-warning);
 }
 
 .product-stock.is-out {
@@ -2735,7 +2924,7 @@ footer h5 {
 }
 
 .product-price__current {
-	color: var(--color-earth);
+	color: var(--color-accent);
 	font-weight: 700;
 	line-height: 1.1;
 	overflow-wrap: anywhere;
@@ -2749,7 +2938,7 @@ footer h5 {
 
 .product-price__saving {
 	margin: 8px 0 0;
-	color: var(--color-earth);
+	color: var(--color-accent);
 	font-weight: 700;
 }
 
@@ -3166,7 +3355,7 @@ footer h5 {
 
 .sylora-form .form-control:invalid:not(:placeholder-shown),
 .sylora-form input[type="checkbox"]:invalid {
-	border-color: var(--color-accent);
+	border-color: var(--color-danger);
 }
 
 .sylora-form textarea.form-control {
@@ -3242,7 +3431,7 @@ footer h5 {
 
 .site-footer p,
 .site-footer li {
-	color: rgba(255, 255, 255, 0.82);
+	color: var(--color-on-earth);
 }
 
 .site-footer__note {
@@ -3252,7 +3441,7 @@ footer h5 {
 .site-footer__bottom {
 	margin-top: 26px;
 	padding-top: 18px;
-	border-top: 1px solid rgba(255, 255, 255, 0.24);
+	border-top: 1px solid var(--color-on-earth-border);
 }
 
 .site-footer__bottom p {
@@ -3265,7 +3454,7 @@ footer h5 {
 }
 
 .site-footer__payments {
-	color: rgba(255, 255, 255, 0.82);
+	color: var(--color-on-earth);
 }
 
 @media (max-width: 991px) {
@@ -4036,7 +4225,7 @@ footer h5 {
 	padding: 24px 28px;
 	border-radius: 18px;
 	background: var(--color-earth);
-	color: #fff;
+	color: var(--color-on-earth);
 }
 
 .content-page__cta div {
@@ -4051,8 +4240,8 @@ footer h5 {
 
 .content-page__cta .btn {
 	flex: 0 0 auto;
-	border-color: #fff;
-	background: #fff;
+	border-color: var(--color-on-earth);
+	background: var(--color-on-earth);
 	color: var(--color-earth);
 }
 
