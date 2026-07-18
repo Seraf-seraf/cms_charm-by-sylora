@@ -2769,9 +2769,10 @@ footer a:focus {
 }
 
 .product-gallery__main .thumbnail img {
+	display: block;
 	width: 100%;
 	aspect-ratio: 4 / 5;
-	object-fit: cover;
+	object-fit: contain;
 }
 
 .product-page .image-additional {
