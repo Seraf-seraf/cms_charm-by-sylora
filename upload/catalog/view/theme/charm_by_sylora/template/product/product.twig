@@ -241,7 +241,7 @@
           <div class="rating">
             <p class="product-review__links"><span class="product-review__stars" role="img" aria-label="Оценка: {{ rating }} из 5">{% for i in 1..5 %}
               {% if rating < i %}<span class="fa fa-stack" aria-hidden="true"><i class="fa fa-star-o fa-stack-1x"></i></span>{% else %}<span class="fa fa-stack" aria-hidden="true"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>{% endif %}
-              {% endfor %}</span> <a href="#product-reviews">{{ reviews }}</a> <span aria-hidden="true">/</span> <a href="#form-review">{{ text_write }}</a></p>
+              {% endfor %}</span> <a href="{{ share }}#product-reviews">{{ reviews }}</a> <span aria-hidden="true">/</span> <a href="{{ share }}#form-review">{{ text_write }}</a></p>
           </div>
           {% endif %} </div>
       </div>
@@ -297,7 +297,8 @@
                   {% for score in 1..5 %}
                   <label class="product-review__rating-option">
                     <input type="radio" name="rating" value="{{ score }}" />
-                    <span>{{ score }}</span>
+                    <span class="product-review__rating-star" aria-hidden="true">&#9733;</span>
+                    <span class="sr-only">{{ score }} из 5</span>
                   </label>
                   {% endfor %}
                   <span class="product-review__rating-edge">{{ entry_good }}</span>

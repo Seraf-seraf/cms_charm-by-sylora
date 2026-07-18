@@ -136,19 +136,17 @@ class ControllerProductProduct extends Controller {
 
 			$this->load->model('tool/image');
 
-			if ($product_info['image']) {
-				$data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height'));
-			} else {
-				$data['popup'] = '';
-			}
+			$image_filename = is_string($product_info['image']) && $product_info['image'] !== '' && is_file(DIR_IMAGE . $product_info['image'])
+				? $product_info['image']
+				: 'placeholder.png';
+			$popup_width = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_width');
+			$popup_height = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_popup_height');
+			$thumb_width = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_thumb_width');
+			$thumb_height = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_thumb_height');
 
-			if ($product_info['image']) {
-				$data['image'] = $this->model_tool_image->resizeWithSources($product_info['image'], (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_thumb_width'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_thumb_height'));
-				$data['thumb'] = $data['image']['src'];
-			} else {
-				$data['thumb'] = '';
-				$data['image'] = array();
-			}
+			$data['popup'] = $this->model_tool_image->resize($image_filename, $popup_width, $popup_height);
+			$data['image'] = $this->model_tool_image->resizeWithSources($image_filename, $thumb_width, $thumb_height);
+			$data['thumb'] = $data['image']['src'];
 
 			$data['images'] = array();
 			$data['main_image_alt'] = $product_info['name'];
