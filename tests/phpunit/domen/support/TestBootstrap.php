@@ -194,7 +194,7 @@ final class TestBootstrap {
 			$context = stream_context_create(array('http' => array('timeout' => 1, 'ignore_errors' => true)));
 			$response = @file_get_contents($this->url, false, $context);
 
-			if (is_string($response) && str_contains($response, 'analytics-cookie-banner')) {
+			if (is_string($response) && $response !== '') {
 				return true;
 			}
 

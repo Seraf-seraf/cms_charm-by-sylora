@@ -5,6 +5,11 @@ declare(strict_types=1);
 final class CookieConsentBrowserResult {
 	public function __construct(
 		public readonly bool $bannerHidden,
+		public readonly string $bannerTitle,
+		public readonly string $acceptText,
+		public readonly string $rejectText,
+		public readonly string $settingsText,
+		public readonly int $extensionScriptCount,
 		public readonly bool $dataLayerExists,
 		public readonly string $consent,
 		public readonly int $metricaRequestCount,
@@ -20,6 +25,11 @@ final class CookieConsentBrowserResult {
 	public static function fromArray(array $result): self {
 		return new self(
 			self::readBool($result, 'bannerHidden'),
+			self::readString($result, 'bannerTitle'),
+			self::readString($result, 'acceptText'),
+			self::readString($result, 'rejectText'),
+			self::readString($result, 'settingsText'),
+			self::readInt($result, 'extensionScriptCount'),
 			self::readBool($result, 'dataLayerExists'),
 			self::readString($result, 'consent'),
 			self::countStringList($result, 'metricaRequests'),
@@ -45,6 +55,17 @@ final class CookieConsentBrowserResult {
 	 */
 	private static function readString(array $result, string $key): string {
 		if (!isset($result[$key]) || !is_string($result[$key])) {
+			throw new RuntimeException('Поле ' . $key . ' отсутствует в результате browser-runner.');
+		}
+
+		return $result[$key];
+	}
+
+	/**
+	 * @param array<string, mixed> $result
+	 */
+	private static function readInt(array $result, string $key): int {
+		if (!isset($result[$key]) || !is_int($result[$key])) {
 			throw new RuntimeException('Поле ' . $key . ' отсутствует в результате browser-runner.');
 		}
 

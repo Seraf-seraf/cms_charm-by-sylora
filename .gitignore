@@ -83,6 +83,7 @@
 /upload/.idea
 /.vscode
 /.cache/
+/extensions/yandex-metrica-consent/
 
 # OS and editor noise
 .DS_Store
