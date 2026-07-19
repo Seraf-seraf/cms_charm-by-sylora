@@ -28,6 +28,7 @@ class ControllerExtensionAnalyticsYandexMetrica extends Controller {
 		$this->load->model('catalog/information');
 
 		$store_id = isset($this->request->get['store_id']) ? (int)$this->request->get['store_id'] : 0;
+		$saved_settings = $this->model_setting_setting->getSetting('analytics_yandex_metrica', $store_id);
 
 		if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
 			$this->model_setting_setting->editSetting('analytics_yandex_metrica', $this->request->post, $store_id);
@@ -49,7 +50,7 @@ class ControllerExtensionAnalyticsYandexMetrica extends Controller {
 
 		foreach (array('counter', 'webvisor', 'ecommerce', 'cookie_days', 'privacy_information_id', 'status') as $field) {
 			$key = 'analytics_yandex_metrica_' . $field;
-			$data[$key] = isset($this->request->post[$key]) ? $this->request->post[$key] : $this->model_setting_setting->getSettingValue($key, $store_id);
+			$data[$key] = isset($this->request->post[$key]) ? $this->request->post[$key] : (isset($saved_settings[$key]) ? $saved_settings[$key] : '');
 		}
 
 		if (!$data['analytics_yandex_metrica_cookie_days']) {
@@ -60,7 +61,7 @@ class ControllerExtensionAnalyticsYandexMetrica extends Controller {
 		$data['informations'] = $this->model_catalog_information->getInformations();
 		$banner = isset($this->request->post['analytics_yandex_metrica_banner'])
 			? $this->request->post['analytics_yandex_metrica_banner']
-			: $this->model_setting_setting->getSettingValue('analytics_yandex_metrica_banner', $store_id);
+			: (isset($saved_settings['analytics_yandex_metrica_banner']) ? $saved_settings['analytics_yandex_metrica_banner'] : array());
 		$data['analytics_yandex_metrica_banner'] = is_array($banner) ? $banner : array();
 		$defaults = $this->getBannerDefaults();
 

@@ -22,7 +22,7 @@ try {
 	$defaults = array(
 		'analytics_yandex_metrica_cookie_days' => array('value' => '365', 'serialized' => 0),
 		'analytics_yandex_metrica_privacy_information_id' => array('value' => (string)$privacy_information_id, 'serialized' => 0),
-		'analytics_yandex_metrica_banner' => array('value' => serialize(array()), 'serialized' => 1)
+		'analytics_yandex_metrica_banner' => array('value' => json_encode(array()), 'serialized' => 1)
 	);
 
 	foreach ($defaults as $key => $setting) {
