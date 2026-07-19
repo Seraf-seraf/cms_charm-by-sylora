@@ -305,6 +305,14 @@
                 </div>
               </fieldset>
             </div>
+            <div class="form-group required product-review__consent">
+              <div class="col-sm-12">
+                <label class="product-review__consent-label" for="input-publication-consent">
+                  <input type="checkbox" name="publication_consent" value="1" id="input-publication-consent" />
+                  <span>{{ entry_publication_consent|raw }}</span>
+                </label>
+              </div>
+            </div>
             {{ captcha }}
             <div class="buttons clearfix">
               <div class="pull-right">
@@ -604,6 +612,7 @@ $('#button-review').on('click', function() {
 				$('input[name=\'name\']').val('');
 				$('textarea[name=\'text\']').val('');
 				$('input[name=\'rating\']:checked').prop('checked', false);
+				$('input[name=\'publication_consent\']').prop('checked', false);
 			}
 		}
 	});

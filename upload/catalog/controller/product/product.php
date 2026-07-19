@@ -1,5 +1,7 @@
 <?php
 class ControllerProductProduct extends Controller {
+	private const PUBLICATION_CONSENT_VERSION = 'review-publication-v1';
+
 	private $error = array();
 
 	public function index() {
@@ -699,16 +701,23 @@ class ControllerProductProduct extends Controller {
 
 		if (isset($this->request->get['product_id']) && $this->request->get['product_id']) {
 			if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-				if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 25)) {
+				$name = isset($this->request->post['name']) ? (string)$this->request->post['name'] : '';
+				$text = isset($this->request->post['text']) ? (string)$this->request->post['text'] : '';
+
+				if ((utf8_strlen($name) < 3) || (utf8_strlen($name) > 25)) {
 					$json['error'] = $this->language->get('error_name');
 				}
 
-				if ((utf8_strlen($this->request->post['text']) < 25) || (utf8_strlen($this->request->post['text']) > 1000)) {
+				if ((utf8_strlen($text) < 25) || (utf8_strlen($text) > 1000)) {
 					$json['error'] = $this->language->get('error_text');
 				}
 			
 				if (empty($this->request->post['rating']) || $this->request->post['rating'] < 0 || $this->request->post['rating'] > 5) {
 					$json['error'] = $this->language->get('error_rating');
+				}
+
+				if (!isset($this->request->post['publication_consent']) || (string)$this->request->post['publication_consent'] !== '1') {
+					$json['error'] = $this->language->get('error_publication_consent');
 				}
 
 				// Captcha
@@ -723,7 +732,21 @@ class ControllerProductProduct extends Controller {
 				if (!isset($json['error'])) {
 					$this->load->model('catalog/review');
 
-					$this->model_catalog_review->addReview($this->request->get['product_id'], $this->request->post);
+					$ip = isset($this->request->server['REMOTE_ADDR']) ? (string)$this->request->server['REMOTE_ADDR'] : '';
+
+					if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
+						$ip = '';
+					}
+
+					$user_agent = isset($this->request->server['HTTP_USER_AGENT']) ? trim((string)$this->request->server['HTTP_USER_AGENT']) : '';
+					$accept_language = isset($this->request->server['HTTP_ACCEPT_LANGUAGE']) ? trim((string)$this->request->server['HTTP_ACCEPT_LANGUAGE']) : '';
+					$review_data = $this->request->post;
+					$review_data['publication_consent'] = 1;
+					$review_data['publication_consent_version'] = self::PUBLICATION_CONSENT_VERSION;
+					$review_data['publication_consent_ip'] = $ip;
+					$review_data['publication_consent_fingerprint'] = hash('sha256', $user_agent . "\n" . $accept_language);
+
+					$this->model_catalog_review->addReview($this->request->get['product_id'], $review_data);
 
 					$json['success'] = $this->language->get('text_success');
 				}

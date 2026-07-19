@@ -24,6 +24,10 @@ class CatalogModelCatalogReviewTest extends OpenCartTest {
 			'name' => "Reviewer's name",
 			'text' => 'Review',
 			'rating' => 0,
+			'publication_consent' => 1,
+			'publication_consent_version' => 'review-publication-v1',
+			'publication_consent_ip' => '127.0.0.1',
+			'publication_consent_fingerprint' => hash('sha256', "Test agent\nru-RU"),
 		);
 		
 		for ($i = 0; $i < 5; $i++) {
@@ -40,6 +44,10 @@ class CatalogModelCatalogReviewTest extends OpenCartTest {
 			'name' => "Reviewer's name",
 			'text' => 'Review',
 			'rating' => 0,
+			'publication_consent' => 1,
+			'publication_consent_version' => 'review-publication-v1',
+			'publication_consent_ip' => '127.0.0.1',
+			'publication_consent_fingerprint' => hash('sha256', "Test agent\nru-RU"),
 		);
 		
 		for ($i = 0; $i < 5; $i++) {
@@ -59,6 +67,10 @@ class CatalogModelCatalogReviewTest extends OpenCartTest {
 			'name' => "Reviewer's name",
 			'text' => 'Review',
 			'rating' => 0,
+			'publication_consent' => 1,
+			'publication_consent_version' => 'review-publication-v1',
+			'publication_consent_ip' => '127.0.0.1',
+			'publication_consent_fingerprint' => hash('sha256', "Test agent\nru-RU"),
 		);
 		
 		for ($i = 0; $i < 5; $i++) {

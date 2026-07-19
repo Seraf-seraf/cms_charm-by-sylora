@@ -415,6 +415,12 @@ class ControllerCatalogReview extends Controller {
 			$data['error_rating'] = '';
 		}
 
+		if (isset($this->error['publication_consent'])) {
+			$data['error_publication_consent'] = $this->error['publication_consent'];
+		} else {
+			$data['error_publication_consent'] = '';
+		}
+
 		$url = '';
 
 		if (isset($this->request->get['filter_product'])) {
@@ -465,7 +471,7 @@ class ControllerCatalogReview extends Controller {
 
 		$data['cancel'] = $this->url->link('catalog/review', 'user_token=' . $this->session->data['user_token'] . $url, true);
 
-		if (isset($this->request->get['review_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['review_id'])) {
 			$review_info = $this->model_catalog_review->getReview($this->request->get['review_id']);
 		}
 
@@ -529,6 +535,14 @@ class ControllerCatalogReview extends Controller {
 			$data['status'] = '';
 		}
 
+		$data['publication_consent'] = !empty($review_info['publication_consent']);
+		$data['publication_consent_version'] = !empty($review_info['publication_consent_version']) ? $review_info['publication_consent_version'] : '';
+		$data['publication_consent_at'] = !empty($review_info['publication_consent_at']) ? $review_info['publication_consent_at'] : '';
+		$data['publication_consent_ip'] = !empty($review_info['publication_consent_ip']) ? $review_info['publication_consent_ip'] : '';
+		$data['publication_consent_fingerprint'] = !empty($review_info['publication_consent_fingerprint']) ? $review_info['publication_consent_fingerprint'] : '';
+		$data['publication_consent_withdrawn_at'] = !empty($review_info['publication_consent_withdrawn_at']) ? $review_info['publication_consent_withdrawn_at'] : '';
+		$data['publication_consent_withdrawn'] = !empty($this->request->post['publication_consent_withdrawn']);
+
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
@@ -555,6 +569,15 @@ class ControllerCatalogReview extends Controller {
 
 		if (!isset($this->request->post['rating']) || $this->request->post['rating'] < 0 || $this->request->post['rating'] > 5) {
 			$this->error['rating'] = $this->language->get('error_rating');
+		}
+
+		if (!empty($this->request->post['status'])) {
+			$review_info = isset($this->request->get['review_id']) ? $this->model_catalog_review->getReview((int)$this->request->get['review_id']) : array();
+			$withdraw_consent = !empty($this->request->post['publication_consent_withdrawn']);
+
+			if (!$withdraw_consent && (empty($review_info['publication_consent']) || !empty($review_info['publication_consent_withdrawn_at']))) {
+				$this->error['publication_consent'] = $this->language->get('error_publication_consent');
+			}
 		}
 
 		return !$this->error;

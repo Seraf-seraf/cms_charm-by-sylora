@@ -25,9 +25,26 @@
     <div class="site-footer__bottom">
       <p>{{ powered }}</p>
       <p class="site-footer__developer">Разработано <a href="https://bastyle.tech" target="_blank" rel="noopener">Bastyle.tech</a></p>
+      {% if analytics_consent_enabled %}
+      <button type="button" class="site-footer__cookie-settings" data-cookie-settings>Настройки аналитики</button>
+      {% endif %}
     </div>
   </div>
 </footer>
+{% if analytics_consent_enabled %}
+<section class="cookie-consent" id="analytics-cookie-banner" role="dialog" aria-modal="false" aria-labelledby="analytics-cookie-title" hidden>
+  <div class="cookie-consent__inner">
+    <div class="cookie-consent__copy">
+      <h2 id="analytics-cookie-title">Аналитические cookies</h2>
+      <p>Мы используем Яндекс Метрику, чтобы понимать, как работает сайт. Подробнее — в <a href="{{ privacy_policy }}">Политике конфиденциальности</a>.</p>
+    </div>
+    <div class="cookie-consent__actions">
+      <button type="button" class="btn btn-primary" data-cookie-consent="analytics">Разрешить аналитику</button>
+      <button type="button" class="btn btn-default" data-cookie-consent="essential">Продолжить без аналитики</button>
+    </div>
+  </div>
+</section>
+{% endif %}
 {% for style in styles %}
 <link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
 {% endfor %}

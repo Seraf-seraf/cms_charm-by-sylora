@@ -1,30 +1,59 @@
 <script>
-window.dataLayer = window.dataLayer || [];
-{% if ecommerce_event %}window.dataLayer.push({{ ecommerce_event|json_encode|raw }});{% endif %}
-(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t);a=e.getElementsByTagName(t)[0];k.async=1;k.src=r;a.parentNode.insertBefore(k,a);})(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
-ym({{ counter }}, 'init', {clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:{{ webvisor ? 'true' : 'false' }}, ecommerce:{{ ecommerce ? 'true' : 'false' }});
-(function() {
+(function(window, document) {
   var counter = {{ counter }};
-  function goal(name) { if (typeof ym === 'function') ym(counter, 'reachGoal', name); }
-  document.addEventListener('click', function(event) {
-    var link = event.target.closest && event.target.closest('a[href]');
-    if (!link) return;
-    var href = link.getAttribute('href') || '';
-    if (href.indexOf('tel:') === 0) goal('phone_click');
-    else if (href.indexOf('mailto:') === 0) goal('email_click');
-    else if (/t\.me|wa\.me|whatsapp|vk\.com/i.test(href)) goal('messenger_click');
-    if (/checkout\/checkout|route=checkout\/checkout/.test(href)) goal('checkout_start');
+  var initialized = false;
+  var listenersBound = false;
+  var ecommerceEvent = {{ ecommerce_event|json_encode|raw }};
+
+  function goal(name) {
+    if (typeof ym === 'function') ym(counter, 'reachGoal', name);
+  }
+
+  function bindListeners() {
+    if (listenersBound) return;
+    listenersBound = true;
+    document.addEventListener('click', function(event) {
+      var link = event.target.closest && event.target.closest('a[href]');
+      if (!link) return;
+      var href = link.getAttribute('href') || '';
+      if (href.indexOf('tel:') === 0) goal('phone_click');
+      else if (href.indexOf('mailto:') === 0) goal('email_click');
+      else if (/t\.me|wa\.me|whatsapp|vk\.com/i.test(href)) goal('messenger_click');
+      if (/checkout\/checkout|route=checkout\/checkout/.test(href)) goal('checkout_start');
+    });
+    document.addEventListener('sylora:cart-add', function(event) {
+      goal('add_to_cart');
+      {% if ecommerce %}window.dataLayer.push({ecommerce:{currencyCode:'{{ currency }}',add:{products:[{id:String(event.detail.product_id),quantity:Number(event.detail.quantity || 1)}]}}});{% endif %}
+    });
+    document.addEventListener('sylora:cart-remove', function(event) {
+      {% if ecommerce %}window.dataLayer.push({ecommerce:{currencyCode:'{{ currency }}',remove:{products:[{id:String(event.detail.product_id || event.detail.key),quantity:Number(event.detail.quantity || 1)}]}}});{% endif %}
+    });
+  }
+
+  function initialize() {
+    if (initialized) return;
+    initialized = true;
+    window['disableYaCounter' + counter] = false;
+    window.dataLayer = window.dataLayer || [];
+    if (ecommerceEvent && Object.keys(ecommerceEvent).length) window.dataLayer.push(ecommerceEvent);
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t);a=e.getElementsByTagName(t)[0];k.async=1;k.src=r;a.parentNode.insertBefore(k,a);})(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+    ym(counter, 'init', {clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:{{ webvisor ? 'true' : 'false' }}, ecommerce:{{ ecommerce ? 'true' : 'false' }}});
+    bindListeners();
+    {% if success_page %}goal('order_success');{% endif %}
+    {% if checkout_page %}goal('checkout_start');{% endif %}
+    {% if contact_success %}goal('contact_submit');{% endif %}
+  }
+
+  function disable() {
+    window['disableYaCounter' + counter] = true;
+  }
+
+  document.addEventListener('sylora:cookie-consent-changed', function(event) {
+    if (event.detail && event.detail.choice === 'v1:analytics') initialize();
+    else disable();
   });
-  document.addEventListener('sylora:cart-add', function(event) {
-    goal('add_to_cart');
-    {% if ecommerce %}window.dataLayer.push({ecommerce:{currencyCode:'{{ currency }}',add:{products:[{id:String(event.detail.product_id),quantity:Number(event.detail.quantity || 1)}]}}});{% endif %}
-  });
-  document.addEventListener('sylora:cart-remove', function(event) {
-    {% if ecommerce %}window.dataLayer.push({ecommerce:{currencyCode:'{{ currency }}',remove:{products:[{id:String(event.detail.product_id || event.detail.key),quantity:Number(event.detail.quantity || 1)}]}}});{% endif %}
-  });
-  {% if success_page %}goal('order_success');{% endif %}
-  {% if checkout_page %}goal('checkout_start');{% endif %}
-  {% if contact_success %}goal('contact_submit');{% endif %}
-})();
+
+  if (window.SyloraCookieConsent && window.SyloraCookieConsent.isAnalyticsAllowed()) initialize();
+  else disable();
+})(window, document);
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/{{ counter }}" style="position:absolute;left:-9999px" alt=""></div></noscript>

@@ -2987,6 +2987,33 @@ footer a:focus {
 	color: var(--color-accent);
 }
 
+.product-review__consent {
+	margin-top: 20px;
+}
+
+.product-review__consent-label {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin: 0;
+	font-weight: 400;
+	line-height: 1.5;
+	cursor: pointer;
+}
+
+.product-review__consent-label input[type="checkbox"] {
+	flex: 0 0 auto;
+	width: 18px;
+	height: 18px;
+	margin: 2px 0 0;
+	accent-color: var(--color-accent);
+}
+
+.product-review__consent-label input[type="checkbox"]:focus-visible {
+	outline: 3px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
 #review .pagination {
 	display: flex;
 	flex-wrap: wrap;
@@ -3710,6 +3737,77 @@ footer a:focus {
 	margin: 0;
 }
 
+.site-footer__cookie-settings {
+	margin: 8px 0 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--color-on-earth);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.site-footer__cookie-settings:hover,
+.site-footer__cookie-settings:focus-visible {
+	color: var(--color-on-earth);
+	opacity: 0.78;
+}
+
+.cookie-consent {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1100;
+	padding: 14px;
+	pointer-events: none;
+}
+
+.cookie-consent[hidden] {
+	display: none;
+}
+
+.cookie-consent__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	width: min(1120px, 100%);
+	margin: 0 auto;
+	padding: 18px 20px;
+	border: 1px solid var(--color-border);
+	border-radius: 12px;
+	background: var(--color-surface);
+	box-shadow: 0 14px 40px rgba(42, 36, 33, 0.2);
+	color: var(--color-text);
+	pointer-events: auto;
+}
+
+.cookie-consent__copy {
+	min-width: 0;
+}
+
+.cookie-consent__copy h2 {
+	margin: 0 0 6px;
+	font-size: 1.8rem;
+}
+
+.cookie-consent__copy p {
+	margin: 0;
+	color: var(--color-muted);
+}
+
+.cookie-consent__actions {
+	display: flex;
+	flex: 0 0 auto;
+	gap: 10px;
+}
+
+.cookie-consent__actions .btn {
+	min-height: 44px;
+	white-space: nowrap;
+}
+
 .site-footer__socials,
 .site-footer__payments {
 	margin-top: 8px;
@@ -3735,6 +3833,30 @@ footer a:focus {
 }
 
 @media (max-width: 767px) {
+	.cookie-consent {
+		padding: 8px;
+	}
+
+	.cookie-consent__inner,
+	.cookie-consent__actions {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.cookie-consent__inner {
+		gap: 14px;
+		padding: 16px;
+	}
+
+	.cookie-consent__actions {
+		width: 100%;
+	}
+
+	.cookie-consent__actions .btn {
+		width: 100%;
+		white-space: normal;
+	}
+
 	.about-hero h1,
 
 	.about-grid,

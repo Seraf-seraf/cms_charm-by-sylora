@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogReview extends Model {
 	public function addReview($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . (int)$data['product_id'] . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = '" . $this->db->escape($data['date_added']) . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . (int)$data['product_id'] . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '0', publication_consent = '0', date_added = '" . $this->db->escape($data['date_added']) . "'");
 
 		$review_id = $this->db->getLastId();
 
@@ -11,7 +11,13 @@ class ModelCatalogReview extends Model {
 	}
 
 	public function editReview($review_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . (int)$data['product_id'] . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = '" . $this->db->escape($data['date_added']) . "', date_modified = NOW() WHERE review_id = '" . (int)$review_id . "'");
+		$review = $this->getReview($review_id);
+		$withdraw_consent = !empty($data['publication_consent_withdrawn']) && !empty($review['publication_consent']) && empty($review['publication_consent_withdrawn_at']);
+		$has_active_consent = !empty($review['publication_consent']) && empty($review['publication_consent_withdrawn_at']) && !$withdraw_consent;
+		$status = $has_active_consent ? (int)$data['status'] : 0;
+		$withdrawal_sql = $withdraw_consent ? ', publication_consent_withdrawn_at = NOW()' : '';
+
+		$this->db->query("UPDATE " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . (int)$data['product_id'] . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . $status . "', date_added = '" . $this->db->escape($data['date_added']) . "', date_modified = NOW()" . $withdrawal_sql . " WHERE review_id = '" . (int)$review_id . "'");
 
 		$this->cache->delete('product');
 	}

@@ -19,6 +19,9 @@ class ControllerCommonFooter extends Controller {
 		$data['footer_column_count'] = count($data['footer_columns']);
 
 		$data['powered'] = sprintf($this->language->get('text_powered'), date('Y', time()));
+		$metrica_counter = (string)$this->config->get('analytics_yandex_metrica_counter');
+		$data['analytics_consent_enabled'] = (bool)$this->config->get('analytics_yandex_metrica_status') && preg_match('/^\d{5,12}$/', $metrica_counter) === 1;
+		$data['privacy_policy'] = $this->getInformationUrl('privacy-policy');
 
 		// Whos Online
 		if ($this->config->get('config_customer_online')) {
