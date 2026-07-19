@@ -21,5 +21,10 @@
     "psr-4": {
         "Tools\\PHPStan\\": "tools/phpstan/"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5",
+    "phpstan/phpstan": "2.1.17",
+    "friendsofphp/php-cs-fixer": "3.41.1"
   }
 }
