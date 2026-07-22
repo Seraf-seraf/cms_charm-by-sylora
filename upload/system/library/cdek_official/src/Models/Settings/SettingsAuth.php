@@ -19,8 +19,6 @@ class SettingsAuth extends ValidatableSettingsContract
      */
     final public function validate(): void
     {
-        require_once DIR_SYSTEM . 'library/sylora_secret.php';
-
         if ($this->authTestMode) {
             return;
         }
@@ -31,10 +29,6 @@ class SettingsAuth extends ValidatableSettingsContract
 
         if (empty($this->authSecret)) {
             throw new RuntimeException('cdek_error_auth_secret_empty');
-        }
-
-        if (!\SyloraSecret::isReference($this->authSecret)) {
-            throw new RuntimeException('cdek_error_auth_secret_reference');
         }
 
         if (empty($this->apiKey)) {

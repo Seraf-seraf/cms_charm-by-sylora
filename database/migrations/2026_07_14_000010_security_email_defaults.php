@@ -18,7 +18,6 @@ $secretReferences = array(
 	'shipping_russian_post_token' => array('shipping_russian_post', 'env:RUSSIAN_POST_TOKEN'),
 	'shipping_russian_post_login' => array('shipping_russian_post', 'env:RUSSIAN_POST_LOGIN'),
 	'shipping_russian_post_password' => array('shipping_russian_post', 'env:RUSSIAN_POST_PASSWORD'),
-	'cdek_official__authSecret' => array('cdek_official', 'env:CDEK_AUTH_SECRET'),
 );
 
 foreach ($secretReferences as $key => $setting) {
