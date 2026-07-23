@@ -19,4 +19,4 @@ $_['entry_status'] = 'Status';
 $_['entry_sort_order'] = 'Sort order';
 $_['text_secret_saved'] = 'A value is saved. Leave blank to keep it.';
 $_['error_permission'] = 'Permission denied.';
-$_['error_required'] = 'Origin postcode and API credentials are required.';
+$_['error_required'] = 'ECOM widget ID, origin postcode and API credentials are required.';

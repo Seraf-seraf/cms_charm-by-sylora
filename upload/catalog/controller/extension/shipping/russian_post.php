@@ -20,7 +20,7 @@ class ControllerExtensionShippingRussianPost extends Controller {
 			'weight' => $package['weight'],
 			'sumoc' => (int)round($this->cart->getSubTotal() * 100),
 			'startZip' => (string)$this->config->get('shipping_russian_post_origin_postcode'),
-			'dimensions' => array($package['length'], $package['width'], $package['height']),
+			'dimensions' => $delivery->getWidgetDimensions($package),
 			'order_lines' => $lines
 		)));
 	}

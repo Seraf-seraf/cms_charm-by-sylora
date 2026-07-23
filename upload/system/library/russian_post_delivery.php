@@ -58,6 +58,14 @@ class RussianPostDelivery {
 		return array('weight' => max(1, $weight), 'length' => max(1, $length), 'width' => max(1, $width), 'height' => max(1, $height));
 	}
 
+	public function getWidgetDimensions($package) {
+		return array(array(
+			'length' => (int)$package['length'],
+			'width' => (int)$package['width'],
+			'height' => (int)$package['height']
+		));
+	}
+
 	public function getFingerprint($address, $package) {
 		$items = array();
 		foreach ($this->cart->getProducts() as $product) {
@@ -86,10 +94,8 @@ class RussianPostDelivery {
 			'declared-value' => (int)round($this->cart->getSubTotal() * 100)
 		);
 		$url = rtrim((string)$this->config->get('shipping_russian_post_api_url'), '/') . '/1.0/tariff';
-		require_once DIR_SYSTEM . 'library/sylora_secret.php';
-
-		$login = SyloraSecret::resolve($this->config->get('shipping_russian_post_login'));
-		$password = SyloraSecret::resolve($this->config->get('shipping_russian_post_password'));
+		$login = (string)$this->config->get('shipping_russian_post_login');
+		$password = (string)$this->config->get('shipping_russian_post_password');
 		$ch = curl_init($url);
 		curl_setopt_array($ch, array(
 			CURLOPT_POST => true,
@@ -99,7 +105,7 @@ class RussianPostDelivery {
 			CURLOPT_HTTPHEADER => array(
 				'Accept: application/json;charset=UTF-8',
 				'Content-Type: application/json;charset=UTF-8',
-				'Authorization: AccessToken ' . SyloraSecret::resolve($this->config->get('shipping_russian_post_token')),
+				'Authorization: AccessToken ' . (string)$this->config->get('shipping_russian_post_token'),
 				'X-User-Authorization: Basic ' . base64_encode($login . ':' . $password)
 			),
 			CURLOPT_POSTFIELDS => json_encode($payload)
