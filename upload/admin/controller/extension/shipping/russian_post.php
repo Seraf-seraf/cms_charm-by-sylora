@@ -61,21 +61,11 @@ class ControllerExtensionShippingRussianPost extends Controller {
 	}
 
 	protected function validate() {
-		require_once DIR_SYSTEM . 'library/sylora_secret.php';
-
 		if (!$this->user->hasPermission('modify', 'extension/shipping/russian_post')) $this->error['warning'] = $this->language->get('error_permission');
 		if (!empty($this->request->post['shipping_russian_post_status'])) {
 			foreach (array('origin_postcode', 'token', 'login', 'password') as $field) {
 				$key = 'shipping_russian_post_' . $field;
 				if (empty($this->request->post[$key]) && !$this->config->get($key)) $this->error['warning'] = $this->language->get('error_required');
-			}
-		}
-		foreach (array('token', 'login', 'password') as $field) {
-			$key = 'shipping_russian_post_' . $field;
-			$value = isset($this->request->post[$key]) && $this->request->post[$key] !== '' ? $this->request->post[$key] : $this->config->get($key);
-
-			if (!SyloraSecret::isEmptyOrReference($value)) {
-				$this->error['warning'] = $this->language->get('error_secret_reference');
 			}
 		}
 		return !$this->error;

@@ -15,9 +15,6 @@ upsertSetting($db, $prefix, 'config', 'config_login_attempts', '5');
 $secretReferences = array(
 	'payment_payment_service_api_key' => array('payment_payment_service', 'env:PAYMENT_SERVICE_API_KEY'),
 	'payment_payment_service_shared_secret' => array('payment_payment_service', 'env:PAYMENT_SERVICE_SHARED_SECRET'),
-	'shipping_russian_post_token' => array('shipping_russian_post', 'env:RUSSIAN_POST_TOKEN'),
-	'shipping_russian_post_login' => array('shipping_russian_post', 'env:RUSSIAN_POST_LOGIN'),
-	'shipping_russian_post_password' => array('shipping_russian_post', 'env:RUSSIAN_POST_PASSWORD'),
 );
 
 foreach ($secretReferences as $key => $setting) {
