@@ -1,5 +1,0 @@
-<table class="table table-bordered">
-  <tr><th>Отделение</th><td>{{ delivery.postcode }} — {{ delivery.address }}</td></tr>
-  <tr><th>Стоимость</th><td>{{ delivery.cost }}</td></tr>
-  <tr><th>Срок</th><td>{% if delivery.min_days and delivery.min_days != delivery.max_days %}{{ delivery.min_days }}–{{ delivery.max_days }} дней{% elseif delivery.max_days %}до {{ delivery.max_days }} дней{% else %}не указан{% endif %}</td></tr>
-</table>

@@ -86,6 +86,19 @@
 /extensions/yandex-metrica-consent/
 /extensions/russian-post-delivery/
 
+# Russian Post is installed from the external OCMOD package.
+/upload/admin/controller/extension/shipping/russian_post.php
+/upload/admin/language/en-gb/extension/shipping/russian_post.php
+/upload/admin/language/ru-ru/extension/shipping/russian_post.php
+/upload/admin/view/template/extension/shipping/russian_post.twig
+/upload/admin/view/template/extension/shipping/russian_post_order.twig
+/upload/catalog/controller/extension/shipping/russian_post.php
+/upload/catalog/language/en-gb/extension/shipping/russian_post.php
+/upload/catalog/language/ru-ru/extension/shipping/russian_post.php
+/upload/catalog/model/extension/shipping/russian_post.php
+/upload/catalog/view/javascript/shipping/russian_post.js
+/upload/system/library/russian_post_delivery.php
+
 # OS and editor noise
 .DS_Store
 Thumbs.db
