@@ -9,14 +9,14 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-      <section class="contact-page">
+      <section class="contact-page" aria-labelledby="contact-title">
         <header class="contact-head">
           <p class="sylora-eyebrow">Charm by Sylora</p>
-          <h1>{{ heading_title }}</h1>
+          <h1 id="contact-title">{{ heading_title }}</h1>
           <p>{{ text_intro }}</p>
         </header>
         <div class="contact-layout">
-          <aside class="contact-card" aria-label="{{ text_location }}">
+          <aside class="contact-card">
             {% if image.src %}
             <picture>
               {% for source in image.sources %}
@@ -27,7 +27,9 @@
             {% endif %}
             <h2>{{ store }}</h2>
             <ul class="contact-list">
-              <li><strong>{{ text_region }}</strong><span>{{ region ? region : text_region }}</span></li>
+              {% if region %}
+              <li><strong>{{ text_region }}</strong><span>{{ region }}</span></li>
+              {% endif %}
               {% if store_email %}
               <li><strong>{{ text_email }}</strong><a href="mailto:{{ store_email }}">{{ store_email }}</a></li>
               {% endif %}
@@ -81,7 +83,7 @@
             </div>
           </aside>
           <div class="contact-form-card">
-            <h2>{{ text_contact }}</h2>
+            <h2 id="contact-form-title">{{ text_contact }}</h2>
             {% if error_spam %}
             <div class="alert alert-danger" role="alert">{{ error_spam }}</div>
             {% endif %}
@@ -115,7 +117,7 @@
               </div>
             </details>
             {% endif %}
-            <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal sylora-form">
+            <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal sylora-form" aria-labelledby="contact-form-title">
               <fieldset>
                 <div class="form-group sylora-hp" aria-hidden="true">
                   <label for="input-company">Компания</label>
@@ -129,17 +131,18 @@
                   <div class="text-danger" id="error-name">{{ error_name }}</div>
                   {% endif %}
                 </div>
+                <p id="contact-method-hint" class="contact-method-hint">{{ text_contact_method }}</p>
                 <div class="contact-form-grid">
-                  <div class="form-group required">
+                  <div class="form-group">
                     <label class="control-label" for="input-email">{{ entry_email }}</label>
-                    <input type="email" name="email" value="{{ email }}" id="input-email" class="form-control" autocomplete="email"{% if error_email %} aria-invalid="true" aria-describedby="error-email"{% endif %} />
+                    <input type="email" name="email" value="{{ email }}" id="input-email" class="form-control" autocomplete="email" aria-describedby="contact-method-hint{% if error_email %} error-email{% endif %}"{% if error_email %} aria-invalid="true"{% endif %} />
                     {% if error_email %}
                     <div class="text-danger" id="error-email">{{ error_email }}</div>
                     {% endif %}
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="input-telephone">{{ entry_telephone }}</label>
-                    <input type="tel" name="telephone" value="{{ telephone_value }}" id="input-telephone" class="form-control" autocomplete="tel" minlength="7" />
+                    <input type="tel" name="telephone" value="{{ telephone_value }}" id="input-telephone" class="form-control" autocomplete="tel" minlength="7" aria-describedby="contact-method-hint{% if error_email %} error-email{% endif %}"{% if error_email %} aria-invalid="true"{% endif %} />
                   </div>
                 </div>
                 <div class="form-group required">
@@ -192,6 +195,26 @@
             email.setCustomValidity('');
           }
         });
+
+        ['#input-email', '#input-telephone'].forEach(function(selector) {
+          var field = form.querySelector(selector);
+
+          if (field) {
+            field.addEventListener('input', function() {
+              var emailField = form.querySelector('#input-email');
+
+              if (emailField) {
+                emailField.setCustomValidity('');
+              }
+            });
+          }
+        });
+
+        var firstInvalid = form.querySelector('[aria-invalid="true"]');
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+        }
       })();
       </script>
       {% if contact_schema %}

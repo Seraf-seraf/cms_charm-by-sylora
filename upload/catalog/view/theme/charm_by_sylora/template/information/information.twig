@@ -11,10 +11,10 @@
     <div id="content" class="{{ class }}">{{ content_top }}
       {% if about_page %}
       <article class="about-page">
-        <section class="about-hero">
+        <section class="about-hero" aria-labelledby="about-title">
           <div>
             <p class="sylora-eyebrow">О мастере</p>
-            <h1>{{ heading_title }}</h1>
+            <h1 id="about-title">{{ heading_title }}</h1>
             <p>Ручные украшения с мягким характером, созданные небольшими партиями для повседневных образов, подарков и личных деталей.</p>
             <div class="sylora-actions">
               <a class="btn btn-primary" href="{{ catalog_href }}">Смотреть каталог</a>
@@ -26,35 +26,36 @@
           {% endif %}
         </section>
 
-        <section class="about-grid">
-          <div>
+        <div class="about-grid">
+          <section>
             <h2>История бренда</h2>
-            <p>Charm by Sylora вырос из внимания к спокойным оттенкам, аккуратной фурнитуре и вещам, которые приятно носить каждый день. В основе бренда - ручная сборка, малые партии и бережное отношение к деталям.</p>
-          </div>
-          <div>
+            <p>Charm by Sylora вырос из внимания к спокойным оттенкам, аккуратной фурнитуре и вещам, которые приятно носить каждый день. В основе бренда — ручная сборка, малые партии и бережное отношение к деталям.</p>
+          </section>
+          <section>
             <h2>Философия</h2>
             <p>Украшение должно дополнять человека, а не спорить с ним. Поэтому коллекции строятся вокруг мягких форм, природных сочетаний и понятных материалов.</p>
-          </div>
-          <div>
+          </section>
+          <section>
             <h2>Как создаются изделия</h2>
             <p>Каждая модель проходит подбор материалов, сборку, проверку креплений и упаковку. Повторы возможны, если нужные элементы остаются в наличии.</p>
-          </div>
-          <div>
+          </section>
+          <section>
             <h2>Чем отличаются украшения</h2>
             <p>Небольшие партии, ручная работа, спокойная палитра и готовая подарочная подача помогают выбрать изделие для себя или близкого человека.</p>
-          </div>
-        </section>
+          </section>
+        </div>
 
-        <section class="about-trust">
+        <section class="about-trust" aria-labelledby="about-trust-title">
+          <h2 id="about-trust-title" class="sr-only">Условия покупки</h2>
           <div><strong>Бережная упаковка</strong><span>Украшение готово к подарку после получения.</span></div>
-          <div><strong>Доставка по России</strong><span>Сроки и условия уточняются при оформлении заказа.</span></div>
-          <div><strong>Онлайн-оплата</strong><span>Оплата планируется через платежный агрегатор.</span></div>
+          <div><strong>Доставка по России</strong><span>Варианты, стоимость и ориентировочные сроки показываются при оформлении заказа.</span></div>
+          <div><strong>Онлайн-оплата</strong><span>Оплата банковской картой проходит через защищённый платёжный сервис. Магазин не хранит данные карты.</span></div>
         </section>
 
         {% if description %}
-        <section class="about-content">
+        <div class="about-content">
           {{ description }}
-        </section>
+        </div>
         {% endif %}
         {% if about_schema %}
         <script type="application/ld+json">{{ about_schema|raw }}</script>

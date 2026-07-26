@@ -83,9 +83,20 @@ class ControllerInformationContact extends Controller {
 		$data['text_socials'] = $this->language->get('text_socials');
 		$data['text_legal'] = $this->language->get('text_legal');
 		$data['text_response'] = $this->language->get('text_response');
+		$data['text_contact_method'] = $this->language->get('text_contact_method');
 		$data['entry_telephone'] = $this->language->get('entry_telephone');
 		$data['delivery_href'] = $this->url->link('information/information', 'information_id=6');
-		$data['privacy_href'] = $this->url->link('information/information', 'information_id=3');
+
+		$this->load->model('catalog/information');
+
+		$privacy_information = $this->model_catalog_information->getInformationBySeoKeyword('privacy-policy');
+		$privacy_information_id = 3;
+
+		if (is_array($privacy_information) && isset($privacy_information['information_id'])) {
+			$privacy_information_id = (int)$privacy_information['information_id'];
+		}
+
+		$data['privacy_href'] = $this->url->link('information/information', 'information_id=' . $privacy_information_id);
 
 		$data['action'] = $this->url->link('information/contact', '', true);
 

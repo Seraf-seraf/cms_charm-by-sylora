@@ -862,6 +862,7 @@ html[dir=rtl] #cart .dropdown-menu {
 }
 
 html {
+	font-size: 100%;
 	background: var(--color-bg);
 }
 
@@ -893,6 +894,7 @@ input[type="reset"],
 .about-trust > *,
 .contact-card,
 .contact-form-card,
+.sitemap-group,
 .cart-item,
 .cart-summary,
 .cart-modules,
@@ -3448,6 +3450,7 @@ footer a:focus {
 }
 
 .about-grid > div,
+.about-grid > section,
 .about-content,
 .contact-card,
 .contact-form-card {
@@ -3458,6 +3461,7 @@ footer a:focus {
 }
 
 .about-grid h2,
+.sitemap-group h2,
 .contact-card h2,
 .contact-form-card h2 {
 	margin-top: 0;
@@ -3627,6 +3631,11 @@ footer a:focus {
 	gap: 14px;
 }
 
+.contact-method-hint {
+	margin: 0 0 14px;
+	color: var(--color-muted);
+}
+
 .sylora-checkbox {
 	display: flex;
 	align-items: flex-start;
@@ -3718,6 +3727,11 @@ footer a:focus {
 	margin-top: 0;
 }
 
+.site-footer__column {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
 .site-footer p,
 .site-footer li {
 	color: var(--color-on-earth);
@@ -3746,10 +3760,76 @@ footer a:focus {
 	color: var(--color-on-earth);
 }
 
+/* Sitemap */
+.sitemap-page {
+	margin-bottom: 48px;
+	overflow-wrap: anywhere;
+}
+
+.sitemap-page__header {
+	max-width: 740px;
+	margin-bottom: 28px;
+}
+
+.sitemap-page__header h1 {
+	margin: 0;
+	line-height: 1.12;
+}
+
+.sitemap-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.sitemap-group {
+	min-width: 0;
+	padding: 22px;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-surface);
+}
+
+.sitemap-group h2 {
+	margin: 0 0 16px;
+	color: var(--color-earth);
+}
+
+.sitemap-list,
+.sitemap-list ul {
+	display: grid;
+	gap: 10px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sitemap-list ul {
+	margin: 10px 0 0 18px;
+	padding-left: 14px;
+	border-left: 1px solid var(--color-border);
+}
+
+.sitemap-list li,
+.sitemap-list a {
+	min-width: 0;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+.sitemap-list a {
+	color: var(--color-text);
+	font-weight: 700;
+}
+
 @media (max-width: 991px) {
 	.about-hero,
 	.contact-layout {
 		grid-template-columns: 1fr;
+	}
+
+	.sitemap-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
 	.site-footer__grid {
@@ -3767,6 +3847,7 @@ footer a:focus {
 	.about-grid,
 	.about-trust,
 	.contact-form-grid,
+	.sitemap-grid,
 	.site-footer__grid {
 		grid-template-columns: 1fr;
 	}
@@ -4274,11 +4355,19 @@ footer a:focus {
 	font-weight: 760;
 	letter-spacing: -.045em;
 	line-height: .98;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .content-page__body {
 	display: grid;
 	gap: 26px;
+}
+
+.content-page__body > * {
+	min-width: 0;
+	max-width: 100%;
+	overflow-wrap: anywhere;
 }
 
 .content-page__body > h2,
@@ -4788,6 +4877,7 @@ button .fa {
 .catalog-card__title,
 .catalog-card .price,
 .about-grid h2,
+.sitemap-group h2,
 .quick-view .price,
 .product-purchase h2,
 .contact-card h2,
