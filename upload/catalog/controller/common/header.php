@@ -167,7 +167,7 @@ class ControllerCommonHeader extends Controller {
 		$data['shopping_cart'] = $this->url->link('checkout/cart');
 		$data['contact'] = $this->url->link('information/contact');
 		$data['catalog'] = $this->getCatalogUrl();
-		$data['about'] = $this->url->link('information/information', 'information_id=4');
+		$data['about'] = $this->getAboutUrl();
 		
 		$data['search'] = $this->load->controller('common/search');
 		$data['cart'] = $this->load->controller('common/cart');
@@ -187,6 +187,18 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		return $this->url->link('product/search');
+	}
+
+	private function getAboutUrl() {
+		$this->load->model('catalog/information');
+
+		$information = $this->model_catalog_information->getInformationBySeoKeyword('about');
+
+		if (is_array($information) && isset($information['information_id']) && (int)$information['information_id'] > 0) {
+			return $this->url->link('information/information', 'information_id=' . (int)$information['information_id']);
+		}
+
+		return $this->url->link('information/contact');
 	}
 
 	private function getRobotsDirective() {

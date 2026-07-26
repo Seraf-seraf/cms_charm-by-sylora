@@ -71,7 +71,11 @@ class ControllerCommonFooter extends Controller {
 
 		$information = $this->model_catalog_information->getInformationBySeoKeyword($keyword);
 
-		return $information ? $this->url->link('information/information', 'information_id=' . (int)$information['information_id']) : $this->url->link('information/contact');
+		if (is_array($information) && isset($information['information_id']) && (int)$information['information_id'] > 0) {
+			return $this->url->link('information/information', 'information_id=' . (int)$information['information_id']);
+		}
+
+		return $this->url->link('information/contact');
 	}
 
 	private function getDefaultFooterColumns() {
@@ -115,7 +119,7 @@ class ControllerCommonFooter extends Controller {
 				'items' => array(
 					array('text' => 'Главная', 'url' => $this->url->link('common/home')),
 					array('text' => 'Каталог', 'url' => $this->getCatalogUrl()),
-					array('text' => 'Обо мне', 'url' => $this->url->link('information/information', 'information_id=4')),
+					array('text' => 'Обо мне', 'url' => $this->getInformationUrl('about')),
 					array('text' => 'Корзина', 'url' => $this->url->link('checkout/cart')),
 				),
 			),

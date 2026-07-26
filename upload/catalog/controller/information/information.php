@@ -18,19 +18,29 @@ class ControllerInformationInformation extends Controller {
 		$information_info = $this->model_catalog_information->getInformation($information_id);
 
 		if ($information_info) {
+			$canonical = $this->url->link('information/information', 'information_id=' . $information_id);
+			$about_information = $this->model_catalog_information->getInformationBySeoKeyword('about');
+			$about_information_id = 0;
+
+			if (is_array($about_information) && isset($about_information['information_id'])) {
+				$about_information_id = (int)$about_information['information_id'];
+			}
+
+			$is_about_page = $about_information_id > 0 && $information_id === $about_information_id;
+
 			$this->document->setTitle($this->seo->title($information_info['meta_title'], $information_info['title'], 'information'));
 			$this->document->setDescription($this->seo->description($information_info['meta_description'], $information_info['description'], $information_info['title'], 'information'));
 			$this->document->setKeywords($information_info['meta_keyword']);
-			$this->document->addLink($this->url->link('information/information', 'information_id=' . $information_id), 'canonical');
+			$this->document->addLink($canonical, 'canonical');
 
 
 			$data['heading_title'] = $information_info['title'];
-			$data['about_page'] = ($information_id == 4);
-			$data['content_page'] = ($information_id != 4);
+			$data['about_page'] = $is_about_page;
+			$data['content_page'] = !$is_about_page;
 			$data['catalog_href'] = $this->getCatalogUrl();
 			$data['contact_href'] = $this->url->link('information/contact');
 			$data['about_image'] = $this->getAboutImage();
-			$data['about_schema'] = $information_id == 4 ? $this->getAboutSchema($information_info) : '';
+			$data['about_schema'] = $is_about_page ? $this->getAboutSchema($information_info, $canonical) : '';
 
 			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');
 
@@ -117,14 +127,14 @@ class ControllerInformationInformation extends Controller {
 		return '';
 	}
 
-	private function getAboutSchema(array $information_info) {
+	private function getAboutSchema(array $information_info, $canonical) {
 		$is_https = !empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off';
 		$server = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
 
 		$schema = array(
 			'@context' => 'https://schema.org',
 			'@type'    => 'AboutPage',
-			'url'      => $this->url->link('information/information', 'information_id=4'),
+			'url'      => $canonical,
 			'name'     => $information_info['title'],
 			'description' => $information_info['meta_description'],
 			'about'    => array(

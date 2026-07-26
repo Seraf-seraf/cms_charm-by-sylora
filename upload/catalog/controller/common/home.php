@@ -6,6 +6,7 @@ class ControllerCommonHome extends Controller {
 		$this->document->setKeywords('украшения ручной работы, авторские украшения, серьги, браслеты, подвески, Charm by Sylora');
 
 		$this->load->model('catalog/category');
+		$this->load->model('catalog/information');
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
 		$this->load->library('seo');
@@ -19,7 +20,7 @@ class ControllerCommonHome extends Controller {
 		$data['home_categories'] = array();
 		$data['heading_title'] = $this->seo->heading($this->config->get('config_name'), 'home');
 		$data['catalog'] = $this->getCatalogUrl();
-		$data['about'] = $this->url->link('information/information', 'information_id=4');
+		$data['about'] = $this->getAboutUrl();
 
 		$categories = $this->model_catalog_category->getCategories(0);
 
@@ -189,5 +190,15 @@ class ControllerCommonHome extends Controller {
 		}
 
 		return $this->url->link('product/search');
+	}
+
+	private function getAboutUrl() {
+		$information = $this->model_catalog_information->getInformationBySeoKeyword('about');
+
+		if (is_array($information) && isset($information['information_id']) && (int)$information['information_id'] > 0) {
+			return $this->url->link('information/information', 'information_id=' . (int)$information['information_id']);
+		}
+
+		return $this->url->link('information/contact');
 	}
 }
