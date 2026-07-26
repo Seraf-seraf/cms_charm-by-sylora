@@ -85,9 +85,15 @@ class ControllerInformationContact extends Controller {
 		$data['text_response'] = $this->language->get('text_response');
 		$data['text_contact_method'] = $this->language->get('text_contact_method');
 		$data['entry_telephone'] = $this->language->get('entry_telephone');
-		$data['delivery_href'] = $this->url->link('information/information', 'information_id=6');
 
 		$this->load->model('catalog/information');
+
+		$data['delivery_href'] = '';
+		$delivery_information = $this->model_catalog_information->getInformationBySeoKeyword('delivery-payment');
+
+		if (is_array($delivery_information) && isset($delivery_information['information_id'])) {
+			$data['delivery_href'] = $this->url->link('information/information', 'information_id=' . (int)$delivery_information['information_id']);
+		}
 
 		$privacy_information = $this->model_catalog_information->getInformationBySeoKeyword('privacy-policy');
 		$privacy_information_id = 3;

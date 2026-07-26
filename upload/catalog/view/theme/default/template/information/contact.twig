@@ -41,7 +41,9 @@
               <li><strong>{{ text_comment }}</strong><span>{{ comment }}</span></li>
               {% endif %}
             </ul>
+            {% if delivery_href %}
             <a class="sylora-link" href="{{ delivery_href }}">{{ text_delivery }}</a>
+            {% endif %}
             {% if geocode %}
             <a href="https://maps.google.com/maps?q={{ geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" rel="noopener" class="btn btn-default"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
             {% endif %}
