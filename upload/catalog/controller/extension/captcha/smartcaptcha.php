@@ -20,11 +20,9 @@ class ControllerExtensionCaptchaSmartcaptcha extends Controller {
 			return $this->language->get('error_captcha');
 		}
 
-		require_once DIR_SYSTEM . 'library/sylora_secret.php';
+		$secret = $this->config->get('captcha_smartcaptcha_secret');
 
-		$secret = SyloraSecret::resolve($this->config->get('captcha_smartcaptcha_secret'));
-
-		if ($secret === '') {
+		if (!is_string($secret) || $secret === '') {
 			return $this->language->get('error_captcha');
 		}
 

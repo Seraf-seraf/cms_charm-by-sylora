@@ -27,7 +27,7 @@ class SettingsAuth extends ValidatableSettingsContract
             throw new RuntimeException('cdek_error_auth_id_empty');
         }
 
-        if (empty($this->authSecret)) {
+        if (empty($this->authSecret) || preg_match('/^env:[A-Z][A-Z0-9_]{1,127}$/', trim($this->authSecret)) === 1) {
             throw new RuntimeException('cdek_error_auth_secret_empty');
         }
 

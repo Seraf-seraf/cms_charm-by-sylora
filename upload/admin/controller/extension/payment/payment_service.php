@@ -78,7 +78,10 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			}
 		}
 
-		// Never render the stored callback signing secret back into the admin page.
+		$data['payment_payment_service_api_key_configured'] = (bool)$this->config->get('payment_payment_service_api_key');
+		$data['payment_payment_service_shared_secret_configured'] = (bool)$this->config->get('payment_payment_service_shared_secret');
+		// Never render stored merchant credentials back into the admin page.
+		$data['payment_payment_service_api_key'] = '';
 		$data['payment_payment_service_shared_secret'] = '';
 
 		if ($data['payment_payment_service_api_url'] === null || $data['payment_payment_service_api_url'] === '') {
@@ -154,13 +157,11 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			$this->error['api_url'] = $this->language->get('error_api_url');
 		}
 
-		require_once DIR_SYSTEM . 'library/sylora_secret.php';
-
-		if (!isset($this->request->post['payment_payment_service_api_key']) || !SyloraSecret::isReference($this->request->post['payment_payment_service_api_key'])) {
+		if (!$this->isStoredSecret($this->request->post['payment_payment_service_api_key'] ?? '', 1)) {
 			$this->error['api_key'] = $this->language->get('error_api_key');
 		}
 
-		if (!isset($this->request->post['payment_payment_service_shared_secret']) || !SyloraSecret::isReference($this->request->post['payment_payment_service_shared_secret'])) {
+		if (!$this->isStoredSecret($this->request->post['payment_payment_service_shared_secret'] ?? '', 32)) {
 			$this->error['shared_secret'] = $this->language->get('error_shared_secret');
 		}
 
@@ -183,5 +184,13 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 		}
 
 		return strtolower($parts['scheme']) === 'http' && in_array(strtolower($parts['host']), array('localhost', '127.0.0.1', '::1'), true);
+	}
+
+	private function isStoredSecret($value, $minimum_length) {
+		if (!is_string($value) || strlen($value) < $minimum_length) {
+			return false;
+		}
+
+		return preg_match('/^env:[A-Z][A-Z0-9_]{1,127}$/', trim($value)) !== 1;
 	}
 }

@@ -33,4 +33,17 @@ final class SettingsAuthTest extends TestCase {
 
 		$settings->validate();
 	}
+
+	public function testEnvironmentReferenceIsRejected(): void {
+		$settings = new SettingsAuth([
+			'cdek_official__authId' => 'account',
+			'cdek_official__authSecret' => 'env:CDEK_AUTH_SECRET',
+			'cdek_official__apiKey' => 'map-api-key',
+		]);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('cdek_error_auth_secret_empty');
+
+		$settings->validate();
+	}
 }

@@ -9,6 +9,7 @@ $_['text_edit']                   = 'Edit Payment Service';
 $_['text_enabled']                = 'Enabled';
 $_['text_disabled']               = 'Disabled';
 $_['text_all_zones']              = 'All Zones';
+$_['text_secret_saved']            = 'The value is stored in the OpenCart settings. Leave the field blank to keep it unchanged.';
 
 // Entry
 $_['entry_api_url']               = 'Payment service URL';

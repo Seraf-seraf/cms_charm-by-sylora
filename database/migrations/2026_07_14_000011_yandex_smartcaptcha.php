@@ -10,7 +10,7 @@ $prefix = DB_PREFIX;
 
 registerExtension($db, $prefix);
 upsertSetting($db, $prefix, 'captcha_smartcaptcha', 'captcha_smartcaptcha_key', '');
-upsertSetting($db, $prefix, 'captcha_smartcaptcha', 'captcha_smartcaptcha_secret', 'env:YANDEX_SMARTCAPTCHA_SECRET');
+upsertSetting($db, $prefix, 'captcha_smartcaptcha', 'captcha_smartcaptcha_secret', '');
 upsertSetting($db, $prefix, 'captcha_smartcaptcha', 'captcha_smartcaptcha_status', '0');
 upsertSetting($db, $prefix, 'config', 'config_captcha', 'smartcaptcha');
 upsertSetting($db, $prefix, 'config', 'config_captcha_page', json_encode(array('register', 'guest', 'review', 'return', 'contact')), 1);

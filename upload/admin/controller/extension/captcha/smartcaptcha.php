@@ -48,8 +48,6 @@ class ControllerExtensionCaptchaSmartcaptcha extends Controller {
 	}
 
 	protected function validate() {
-		require_once DIR_SYSTEM . 'library/sylora_secret.php';
-
 		if (!$this->user->hasPermission('modify', 'extension/captcha/smartcaptcha')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
@@ -58,10 +56,16 @@ class ControllerExtensionCaptchaSmartcaptcha extends Controller {
 			$this->error['key'] = $this->language->get('error_key');
 		}
 
-		if (empty($this->request->post['captcha_smartcaptcha_secret']) || !SyloraSecret::isReference($this->request->post['captcha_smartcaptcha_secret'])) {
+		$secret = $this->request->post['captcha_smartcaptcha_secret'] ?? '';
+
+		if (!$this->isStoredSecret($secret)) {
 			$this->error['secret'] = $this->language->get('error_secret');
 		}
 
 		return !$this->error;
+	}
+
+	private function isStoredSecret($value) {
+		return is_string($value) && $value !== '' && preg_match('/^env:[A-Z][A-Z0-9_]{1,127}$/', trim($value)) !== 1;
 	}
 }
