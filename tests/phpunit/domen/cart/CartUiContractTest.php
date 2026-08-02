@@ -41,6 +41,7 @@ final class CartUiContractTest extends TestCase {
 		self::assertStringContainsString('overflow-x: hidden;', $stylesheet);
 		self::assertStringContainsString('grid-template-columns: 64px minmax(0, 1fr) 44px;', $stylesheet);
 		self::assertMatchesRegularExpression('/\.cart-items\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
+		self::assertMatchesRegularExpression('/\.cart-main\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
 		self::assertMatchesRegularExpression('/\.cart-item\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
 	}
 

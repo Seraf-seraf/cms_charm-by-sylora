@@ -4239,6 +4239,10 @@ footer a:focus {
 	align-items: start;
 }
 
+.cart-main {
+	min-width: 0;
+}
+
 .cart-empty {
 	max-width: 680px;
 	padding: 28px;
