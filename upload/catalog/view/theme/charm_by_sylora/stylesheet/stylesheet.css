@@ -4258,11 +4258,13 @@ footer a:focus {
 
 .cart-items {
 	display: grid;
+	min-width: 0;
 	gap: 16px;
 }
 
 .cart-item {
 	display: grid;
+	min-width: 0;
 	grid-template-columns: 160px minmax(0, 1fr);
 	gap: 18px;
 	padding: 16px;
