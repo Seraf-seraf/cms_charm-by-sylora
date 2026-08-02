@@ -44,8 +44,13 @@
                 {% for product in products %}
                 <article class="cart-item">
                   <a class="cart-item__image" href="{{ product.href }}">
-                    {% if product.thumb %}
-                    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" width="47" height="47" loading="lazy" decoding="async" />
+                    {% if product.image.src %}
+                    <picture>
+                      {% for source in product.image.sources %}
+                      <source srcset="{{ source.src }}" type="{{ source.type }}">
+                      {% endfor %}
+                      <img src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+                    </picture>
                     {% endif %}
                   </a>
                   <div class="cart-item__body">

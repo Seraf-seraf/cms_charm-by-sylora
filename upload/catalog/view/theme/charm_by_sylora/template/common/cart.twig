@@ -5,11 +5,18 @@
     <li>
       <div class="mini-cart__items">
         {% for product in products %}
-        <article class="mini-cart__item mini-cart__item--voucher">
-          {% if product.thumb %}
-          <a class="mini-cart__image" href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" width="47" height="47" loading="lazy" decoding="async" /></a>
+        <article class="mini-cart__item">
+          {% if product.image.src %}
+          <a class="mini-cart__image" href="{{ product.href }}">
+            <picture>
+              {% for source in product.image.sources %}
+              <source srcset="{{ source.src }}" type="{{ source.type }}">
+              {% endfor %}
+              <img src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+            </picture>
+          </a>
           {% endif %}
-          <div>
+          <div class="mini-cart__content">
             <a class="mini-cart__name" href="{{ product.href }}">{{ product.name }}</a>
             {% if product.option %}
             {% for option in product.option %}
@@ -25,8 +32,8 @@
         </article>
         {% endfor %}
         {% for voucher in vouchers %}
-        <article class="mini-cart__item">
-          <div>
+        <article class="mini-cart__item mini-cart__item--voucher">
+          <div class="mini-cart__content">
             <span class="mini-cart__name">{{ voucher.description }}</span>
             <span class="mini-cart__line">x 1 · {{ voucher.amount }}</span>
           </div>

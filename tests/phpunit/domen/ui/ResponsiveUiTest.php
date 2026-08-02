@@ -35,6 +35,7 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		self::assertTrue($result['dynamic']['iconOnly'] ?? false);
 		self::assertFalse($result['dynamic']['iconWithText'] ?? true);
 		$this->assertFixtureIcons($result['fixtures'] ?? array());
+		$this->assertVisualContracts($result['visualContracts'] ?? array(), $width);
 
 		foreach ($result['icons'] ?? array() as $icon) {
 			$this->assertCenteredIcon($icon, null);
@@ -67,12 +68,48 @@ final class ResponsiveUiTest extends BrowserTestCase {
 			'miniCartRemove' => 44,
 			'productTools' => 44,
 			'search' => 40,
+			'miniItemRemove' => 44,
+			'cartItemRemove' => 44,
 		);
 
 		foreach ($expectedSizes as $name => $expectedSize) {
 			self::assertArrayHasKey($name, $fixtures);
 			$this->assertCenteredIcon($fixtures[$name], $expectedSize);
 		}
+	}
+
+	/**
+	 * @param array<string, mixed> $contracts
+	 */
+	private function assertVisualContracts(array $contracts, int $width): void {
+		$miniSize = $width <= 767 ? 64 : 80;
+		$cartSize = $width <= 767 ? 96 : ($width <= 991 ? 112 : 160);
+
+		$this->assertResponsiveImage($contracts['miniImage'] ?? array(), $miniSize, 'mini cart image');
+		$this->assertResponsiveImage($contracts['cartImage'] ?? array(), $cartSize, 'cart image');
+		$this->assertResponsiveImage($contracts['contactImage'] ?? array(), 160, 'contact image');
+
+		$wishlistOffset = $width <= 767 ? 18 : 22;
+		self::assertSame($wishlistOffset, $contracts['wishlist']['right'] ?? null, 'wishlist right');
+		self::assertSame($wishlistOffset, $contracts['wishlist']['top'] ?? null, 'wishlist top');
+		self::assertTrue($contracts['wishlist']['contained'] ?? false, 'wishlist must remain inside product summary');
+		self::assertFalse($contracts['captcha']['hasVisibleTitle'] ?? true);
+		self::assertSame('Подтвердите, что вы не робот', $contracts['captcha']['label'] ?? null);
+		self::assertSame('fixture-captcha-control', $contracts['captcha']['labelTarget'] ?? null);
+		self::assertTrue($contracts['captcha']['hasError'] ?? false);
+	}
+
+	/**
+	 * @param array<string, mixed> $image
+	 */
+	private function assertResponsiveImage(array $image, int $expectedSize, string $message): void {
+		self::assertSame($expectedSize, $image['containerWidth'] ?? null, $message);
+		self::assertSame($expectedSize, $image['containerHeight'] ?? null, $message);
+		self::assertLessThanOrEqual($expectedSize, $image['imageWidth'] ?? PHP_INT_MAX, $message);
+		self::assertLessThanOrEqual($expectedSize, $image['imageHeight'] ?? PHP_INT_MAX, $message);
+		self::assertGreaterThanOrEqual($image['imageWidth'] ?? PHP_INT_MAX, $image['naturalWidth'] ?? 0, $message);
+		self::assertGreaterThanOrEqual($image['imageHeight'] ?? PHP_INT_MAX, $image['naturalHeight'] ?? 0, $message);
+		self::assertSame('contain', $image['objectFit'] ?? null, $message);
 	}
 
 	/**

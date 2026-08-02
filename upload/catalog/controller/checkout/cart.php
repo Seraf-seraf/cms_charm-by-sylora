@@ -63,9 +63,14 @@ class ControllerCheckoutCart extends Controller {
 				}
 
 				if ($product['image']) {
-					$image = $this->model_tool_image->resize($product['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
+					$image = $this->model_tool_image->resizeWithSources($product['image'], (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
 				} else {
-					$image = '';
+					$image = array(
+						'src'     => '',
+						'sources' => array(),
+						'width'   => (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'),
+						'height'  => (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height')
+					);
 				}
 
 				$option_data = array();
@@ -125,7 +130,8 @@ class ControllerCheckoutCart extends Controller {
 				$data['products'][] = array(
 					'cart_id'   => $product['cart_id'],
 					'product_id' => $product['product_id'],
-					'thumb'     => $image,
+					'thumb'     => $image['src'],
+					'image'     => $image,
 					'name'      => $product['name'],
 					'model'     => $product['model'],
 					'option'    => $option_data,

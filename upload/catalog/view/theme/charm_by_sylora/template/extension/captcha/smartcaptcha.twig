@@ -1,6 +1,5 @@
 <script src="https://smartcaptcha.cloud.yandex.ru/captcha.js?render=onload&onload=syloraSmartCaptchaOnload" defer></script>
-<div class="captcha-section">
-  <p class="captcha-section__title">{{ text_captcha }}</p>
+<div class="captcha-section" aria-label="{{ text_captcha }}">
   <div class="form-group required smartcaptcha-field">
     <label class="control-label" for="{{ container_id }}">{{ entry_captcha }}</label>
     <div id="{{ container_id }}" class="smart-captcha" data-sitekey="{{ site_key }}" style="height: 100px"></div>

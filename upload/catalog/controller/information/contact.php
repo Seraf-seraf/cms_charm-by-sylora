@@ -109,7 +109,7 @@ class ControllerInformationContact extends Controller {
 		$this->load->model('tool/image');
 
 		if ($this->config->get('config_image')) {
-			$data['image'] = $this->model_tool_image->resizeWithSources($this->config->get('config_image'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_location_width'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_location_height'));
+			$data['image'] = $this->model_tool_image->resizeWithSources($this->config->get('config_image'), 320, 320);
 		} else {
 			$data['image'] = array();
 		}
