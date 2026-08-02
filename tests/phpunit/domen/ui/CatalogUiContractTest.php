@@ -70,6 +70,8 @@ final class CatalogUiContractTest extends TestCase {
 		self::assertStringContainsString('filterDetails.open = true;', $category);
 		self::assertStringContainsString('grid-template-columns: 280px minmax(0, 1fr);', $css);
 		self::assertStringContainsString('grid-template-columns: repeat(3, minmax(0, 1fr));', $css);
+		self::assertMatchesRegularExpression('/\.catalog-toolbar\s*\{[^}]*flex-wrap: wrap;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-toolbar__controls\s*\{[^}]*flex-wrap: wrap;[^}]*max-width: 100%;/s', $css);
 		self::assertMatchesRegularExpression('/@media \(max-width: 1199px\).*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/s', $css);
 		self::assertMatchesRegularExpression('/@media \(max-width: 767px\).*?\.catalog-grid\s*\{\s*grid-template-columns: minmax\(0, 1fr\);/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card__wishlist\s*\{[^}]*position: absolute;[^}]*top: 12px;[^}]*right: 12px;/s', $css);

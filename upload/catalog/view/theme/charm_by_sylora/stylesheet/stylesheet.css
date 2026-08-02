@@ -2288,6 +2288,7 @@ footer a:focus {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	flex-wrap: wrap;
 	gap: 16px;
 	margin-bottom: 22px;
 	padding: 14px 0;
@@ -2302,6 +2303,9 @@ footer a:focus {
 .catalog-toolbar__controls {
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+	max-width: 100%;
 	gap: 12px;
 }
 
