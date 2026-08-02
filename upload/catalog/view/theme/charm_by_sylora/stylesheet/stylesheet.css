@@ -3986,16 +3986,27 @@ footer a:focus {
 }
 
 .captcha-section {
+	overflow: hidden;
 	min-width: 0;
+	max-width: 100%;
 	padding-top: 4px;
 	border-top: 1px solid var(--color-border);
 }
 
 .smartcaptcha-field {
 	display: grid;
+	overflow: hidden;
 	min-width: 0;
 	width: 100%;
+	max-width: 100%;
+	margin-right: 0;
+	margin-left: 0;
 	gap: 8px;
+}
+
+.form-group.smartcaptcha-field {
+	margin-right: 0;
+	margin-left: 0;
 }
 
 .smartcaptcha-field .control-label {
@@ -4026,6 +4037,7 @@ footer a:focus {
 .smartcaptcha-field.is-responsive-overflowing .smart-captcha {
 	overflow-x: auto;
 	overflow-y: hidden;
+	overscroll-behavior-x: contain;
 }
 
 .sylora-hp {
@@ -4450,6 +4462,12 @@ footer a:focus {
 	box-shadow: var(--shadow-soft);
 }
 
+#cart .dropdown-menu.mini-cart {
+	width: min(420px, calc(100vw - 24px));
+	min-width: 0;
+	max-width: 420px;
+}
+
 .mini-cart__items {
 	display: grid;
 	gap: 12px;
@@ -4473,6 +4491,11 @@ footer a:focus {
 
 .mini-cart__item--voucher {
 	grid-template-columns: minmax(0, 1fr) 44px;
+}
+
+.mini-cart__content {
+	min-width: 0;
+	overflow-wrap: anywhere;
 }
 
 .mini-cart__image {
@@ -4587,6 +4610,15 @@ footer a:focus {
 }
 
 @media (max-width: 767px) {
+	#cart .dropdown-menu.mini-cart {
+		position: fixed;
+		top: var(--site-nav-top, 66px);
+		right: 12px;
+		left: 12px;
+		width: auto;
+		max-width: none;
+		max-height: calc(100vh - var(--site-nav-top, 66px) - 12px);
+	}
 
 	.cart-item {
 		grid-template-columns: 96px minmax(0, 1fr);

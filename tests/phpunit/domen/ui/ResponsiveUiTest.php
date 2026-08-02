@@ -54,6 +54,7 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		self::assertTrue($result['brand']['fullyVisible'] ?? false);
 		self::assertLessThanOrEqual(1, $result['brand']['overflow'] ?? null);
 		$this->assertFixtureIcons($result['fixtures'] ?? array());
+		$this->assertVisualContracts($result['visualContracts'] ?? array(), 320);
 	}
 
 	/**
@@ -97,6 +98,24 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		self::assertSame('Подтвердите, что вы не робот', $contracts['captcha']['label'] ?? null);
 		self::assertSame('fixture-captcha-control', $contracts['captcha']['labelTarget'] ?? null);
 		self::assertTrue($contracts['captcha']['hasError'] ?? false);
+		self::assertTrue($contracts['captcha']['fieldContained'] ?? false, 'captcha field must remain inside its section');
+		self::assertTrue($contracts['captcha']['responsiveOverflowing'] ?? false, 'captcha overflow detector must remain active');
+		self::assertGreaterThan($contracts['captcha']['widgetClientWidth'] ?? PHP_INT_MAX, $contracts['captcha']['widgetScrollWidth'] ?? 0);
+		self::assertSame('auto', $contracts['captcha']['widgetOverflowX'] ?? null);
+
+		$miniDropdown = $contracts['miniDropdown'] ?? array();
+		self::assertTrue($miniDropdown['contained'] ?? false, 'mini cart must remain inside viewport');
+		self::assertSame(0, $miniDropdown['overflow'] ?? null, 'mini cart must not overflow horizontally');
+		self::assertSame(0, $miniDropdown['itemOverflow'] ?? null, 'mini cart item must shrink inside dropdown');
+
+		if ($width <= 767) {
+			$availableWidth = $miniDropdown['availableWidth'] ?? $width;
+			self::assertSame($availableWidth - 24, $miniDropdown['width'] ?? null, 'mobile mini cart width');
+			self::assertSame(12, $miniDropdown['left'] ?? null, 'mobile mini cart left inset');
+			self::assertSame($availableWidth - 12, $miniDropdown['right'] ?? null, 'mobile mini cart right inset');
+		} else {
+			self::assertSame(420, $miniDropdown['width'] ?? null, 'desktop mini cart width');
+		}
 	}
 
 	/**

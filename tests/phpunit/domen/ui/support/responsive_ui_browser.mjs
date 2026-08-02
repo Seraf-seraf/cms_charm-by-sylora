@@ -126,9 +126,16 @@ try {
 			'<span style="display:block;width:100%;max-width:420px"><article id="fixture-mini-cart" class="mini-cart__item"><a id="fixture-mini-image" class="mini-cart__image" href="#"><picture><img id="fixture-mini-image-img" src="' + image + '" alt="Товар" width="320" height="320"></picture></a><div class="mini-cart__content">Товар</div><button id="fixture-mini-remove" class="mini-cart__remove" type="button" aria-label="Удалить"><i class="fa fa-times" aria-hidden="true"></i></button></article></span>',
 			'<article id="fixture-cart-item" class="cart-item" style="width:100%"><a id="fixture-cart-image" class="cart-item__image" href="#"><picture><img id="fixture-cart-image-img" src="' + image + '" alt="Товар" width="320" height="320"></picture></a><div class="cart-item__body"><div class="cart-item__top"><h2>Товар</h2><button class="cart-item__remove" type="button" aria-label="Удалить"><i class="fa fa-times" aria-hidden="true"></i></button></div><div class="cart-item__bottom"><div>Количество</div><div>Цена</div><div>Итого</div></div></div></article>',
 			'<aside class="contact-card" style="width:220px"><picture><img id="fixture-contact-image" class="contact-card__image" src="' + image + '" alt="Charm by Sylora" width="320" height="320"></picture></aside>',
-			'<div id="fixture-captcha" class="captcha-section" aria-label="Проверка от спама"><div class="form-group required smartcaptcha-field"><label class="control-label" for="fixture-captcha-control">Подтвердите, что вы не робот</label><div id="fixture-captcha-control" class="smart-captcha"></div><div class="text-danger">Ошибка проверки</div></div></div>'
+			'<div id="fixture-captcha" class="captcha-section" aria-label="Проверка от спама" style="width:220px;max-width:100%"><div class="form-group required smartcaptcha-field"><label class="control-label" for="fixture-captcha-control">Подтвердите, что вы не робот</label><div id="fixture-captcha-control" class="smart-captcha"><div style="width:300px;height:100px">Проверка</div></div><div class="text-danger">Ошибка проверки</div></div></div>'
 		].join('');
 		document.body.appendChild(fixture);
+		const cart = document.querySelector('#cart');
+		const miniDropdown = document.createElement('ul');
+		miniDropdown.id = 'fixture-mini-dropdown';
+		miniDropdown.className = 'dropdown-menu pull-right mini-cart';
+		miniDropdown.style.display = 'block';
+		miniDropdown.innerHTML = '<li><div class="mini-cart__items"><article id="fixture-dropdown-item" class="mini-cart__item"><span class="mini-cart__image"></span><div class="mini-cart__content">Товар в мини-корзине</div><button class="mini-cart__remove" type="button" aria-label="Удалить"><i class="fa fa-times" aria-hidden="true"></i></button></article></div></li>';
+		cart.appendChild(miniDropdown);
 		await Promise.all(Array.from(fixture.querySelectorAll('img')).map(node => node.decode ? node.decode() : Promise.resolve()));
 	})()`);
 	await delay(250);
@@ -211,6 +218,11 @@ try {
 		const wishlistStyle = getComputedStyle(wishlistNode);
 		const captcha = document.getElementById('fixture-captcha');
 		const captchaLabel = captcha.querySelector('label');
+		const captchaField = captcha.querySelector('.smartcaptcha-field');
+		const captchaWidget = captcha.querySelector('.smart-captcha');
+		const miniDropdown = document.getElementById('fixture-mini-dropdown');
+		const miniDropdownRect = miniDropdown.getBoundingClientRect();
+		const miniDropdownItem = document.getElementById('fixture-dropdown-item');
 		const visualContracts = {
 			miniImage: measureImage('fixture-mini-image', 'fixture-mini-image' + '-img'),
 			cartImage: measureImage('fixture-cart-image', 'fixture-cart-image' + '-img'),
@@ -224,7 +236,21 @@ try {
 				hasVisibleTitle: captcha.querySelector('.captcha-section__title') !== null,
 				label: captchaLabel.textContent.trim(),
 				labelTarget: captchaLabel.htmlFor,
-				hasError: captcha.querySelector('.text-danger') !== null
+				hasError: captcha.querySelector('.text-danger') !== null,
+				fieldContained: captchaField.getBoundingClientRect().left >= captcha.getBoundingClientRect().left && captchaField.getBoundingClientRect().right <= captcha.getBoundingClientRect().right,
+				widgetClientWidth: captchaWidget.clientWidth,
+				widgetScrollWidth: captchaWidget.scrollWidth,
+				widgetOverflowX: getComputedStyle(captchaWidget).overflowX,
+				responsiveOverflowing: captchaField.classList.contains('is-responsive-overflowing')
+			},
+			miniDropdown: {
+				availableWidth: document.documentElement.clientWidth,
+				width: Math.round(miniDropdownRect.width),
+				left: Math.round(miniDropdownRect.left),
+				right: Math.round(miniDropdownRect.right),
+				contained: miniDropdownRect.left >= 11 && miniDropdownRect.right <= document.documentElement.clientWidth - 11,
+				overflow: Math.max(0, miniDropdown.scrollWidth - miniDropdown.clientWidth),
+				itemOverflow: Math.max(0, miniDropdownItem.scrollWidth - miniDropdownItem.clientWidth)
 			}
 		};
 
