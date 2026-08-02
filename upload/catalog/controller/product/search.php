@@ -8,6 +8,12 @@ class ControllerProductSearch extends Controller {
 		$this->load->model('catalog/product');
 
 		$this->load->model('tool/image');
+		$this->load->library('catalog_schema');
+		$catalog_schema = $this->registry->get('catalog_schema');
+
+		if (!$catalog_schema instanceof Catalog_schema) {
+			throw new RuntimeException('Catalog schema library is not available.');
+		}
 
 		if (isset($this->request->get['search'])) {
 			$search = $this->request->get['search'];
@@ -513,6 +519,61 @@ class ControllerProductSearch extends Controller {
 		$data['sort'] = $sort;
 		$data['order'] = $order;
 		$data['limit'] = $limit;
+
+		$schema_url = $this->url->link('product/search', '', true);
+		$schema_query = '';
+
+		if ($search !== '') {
+			$schema_query .= '&search=' . urlencode($search);
+		}
+
+		if ($tag !== '') {
+			$schema_query .= '&tag=' . urlencode($tag);
+		}
+
+		if ($description) {
+			$schema_query .= '&description=true';
+		}
+
+		if ($category_id) {
+			$schema_query .= '&category_id=' . $category_id;
+		}
+
+		if ($sub_category) {
+			$schema_query .= '&sub_category=true';
+		}
+
+		if ($page > 1) {
+			$schema_query .= '&page=' . $page;
+		}
+
+		if (isset($this->request->get['sort'])) {
+			$schema_query .= '&sort=' . urlencode((string)$sort);
+		}
+
+		if (isset($this->request->get['order'])) {
+			$schema_query .= '&order=' . urlencode((string)$order);
+		}
+
+		if (isset($this->request->get['limit'])) {
+			$schema_query .= '&limit=' . $limit;
+		}
+
+		if ($schema_query !== '') {
+			$schema_url = $this->url->link('product/search', ltrim($schema_query, '&'), true);
+		}
+
+		$schema_breadcrumbs = array(
+			array(
+				'text' => $this->language->get('text_breadcrumb_home'),
+				'href' => $this->url->link('common/home', '', true)
+			),
+			array(
+				'text' => $data['heading_title'],
+				'href' => $schema_url
+			)
+		);
+		$data['catalog_schema'] = $catalog_schema->build($data['heading_title'], $schema_url, $schema_breadcrumbs, $data['products'], $page, $limit);
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

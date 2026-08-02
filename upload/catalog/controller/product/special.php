@@ -6,6 +6,13 @@ class ControllerProductSpecial extends Controller {
 		$this->load->model('catalog/product');
 
 		$this->load->model('tool/image');
+		$this->load->library('catalog_schema');
+		$catalog_schema = $this->registry->get('catalog_schema');
+
+		if (!$catalog_schema instanceof Catalog_schema) {
+			throw new RuntimeException('Catalog schema library is not available.');
+		}
+
 		$this->load->library('seo');
 
 		if (isset($this->request->get['sort'])) {
@@ -34,8 +41,7 @@ class ControllerProductSpecial extends Controller {
 
 		$this->document->setTitle($this->seo->title('', $this->language->get('heading_title'), 'special'));
 		$this->document->setDescription($this->seo->description('', '', $this->language->get('heading_title'), 'special'));
-
-
+		$data['heading_title'] = $this->language->get('heading_title');
 
 		$url = '';
 
@@ -310,10 +316,12 @@ class ControllerProductSpecial extends Controller {
 
 		// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
 		if ($page == 1) {
-		    $this->document->addLink($this->url->link('product/special', '', true), 'canonical');
+			$schema_url = $this->url->link('product/special', '', true);
 		} else {
-		    $this->document->addLink($this->url->link('product/special', 'page='. $page , true), 'canonical');
-		}		
+			$schema_url = $this->url->link('product/special', 'page=' . $page, true);
+		}
+
+		$this->document->addLink($schema_url, 'canonical');
 		
 		if ($page > 1) {
 			$this->document->addLink($this->url->link('product/special', (($page - 2) ? '&page='. ($page - 1) : ''), true), 'prev');
@@ -326,6 +334,17 @@ class ControllerProductSpecial extends Controller {
 		$data['sort'] = $sort;
 		$data['order'] = $order;
 		$data['limit'] = $limit;
+		$schema_breadcrumbs = array(
+			array(
+				'text' => $this->language->get('text_breadcrumb_home'),
+				'href' => $this->url->link('common/home', '', true)
+			),
+			array(
+				'text' => $data['heading_title'],
+				'href' => $schema_url
+			)
+		);
+		$data['catalog_schema'] = $catalog_schema->build($data['heading_title'], $schema_url, $schema_breadcrumbs, $data['products'], $page, $limit);
 
 		$data['continue'] = $this->url->link('common/home');
 

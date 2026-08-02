@@ -28,7 +28,10 @@ final class Twig {
 		);
 
 		try {
-			$loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
+			$main_loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
+			$template_root = $this->getTemplateRoot($filename);
+			$filesystem_loader = new \Twig\Loader\FilesystemLoader(array($template_root, DIR_TEMPLATE));
+			$loader = new \Twig\Loader\ChainLoader(array($main_loader, $filesystem_loader));
 
 			$twig = new \Twig\Environment($loader, $config);
 
@@ -37,5 +40,18 @@ final class Twig {
 			trigger_error('Error: Could not load template ' . $filename . '! ' . $e->getMessage());
 			exit();
 		}	
-	}	
+	}
+
+	private function getTemplateRoot($filename) {
+		$marker = '/template/';
+		$position = strpos($filename, $marker);
+
+		if ($position === false) {
+			return DIR_TEMPLATE;
+		}
+
+		$relative_root = substr($filename, 0, $position + strlen($marker));
+
+		return rtrim(DIR_TEMPLATE, '/\\') . '/' . ltrim($relative_root, '/\\');
+	}
 }

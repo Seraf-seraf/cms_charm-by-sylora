@@ -72,6 +72,7 @@ final class CartUiContractTest extends TestCase {
 		$basicCaptcha = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/captcha/basic.twig');
 		$googleCaptcha = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/captcha/google.twig');
 		$smartCaptcha = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/captcha/smartcaptcha.twig');
+		$yandexCaptcha = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/captcha/yandex.twig');
 
 		self::assertStringContainsString("resizeWithSources(\$this->config->get('config_image'), 320, 320)", $contactController);
 		self::assertStringContainsString('title="{{ button_wishlist }}"', $product);
@@ -83,6 +84,10 @@ final class CartUiContractTest extends TestCase {
 		self::assertStringContainsString('aria-label="{{ text_captcha }}"', $smartCaptcha);
 		self::assertStringContainsString('<label class="control-label"', $smartCaptcha);
 		self::assertStringContainsString('error_captcha', $smartCaptcha);
+		self::assertStringNotContainsString('<legend>{{ text_captcha }}</legend>', $yandexCaptcha);
+		self::assertStringContainsString('<legend class="sr-only">{{ text_captcha }}</legend>', $yandexCaptcha);
+		self::assertStringContainsString('aria-labelledby="{{ container_id }}-label"', $yandexCaptcha);
+		self::assertStringContainsString('role="alert"', $yandexCaptcha);
 	}
 
 	private function read(string $relativePath): string {

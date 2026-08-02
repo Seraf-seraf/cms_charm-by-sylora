@@ -116,6 +116,19 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		} else {
 			self::assertSame(420, $miniDropdown['width'] ?? null, 'desktop mini cart width');
 		}
+
+		$catalog = $contracts['catalog'] ?? array();
+		$expectedColumns = $width <= 767 ? 1 : ($width <= 1199 ? 2 : 3);
+		self::assertSame($expectedColumns, $catalog['columns'] ?? null, 'catalog columns');
+		self::assertTrue($catalog['equalHeights'] ?? false, 'catalog cards must have equal heights');
+		self::assertSame(0, $catalog['overflow'] ?? null, 'catalog grid overflow');
+		self::assertSame(44, $catalog['wishlistWidth'] ?? null, 'catalog wishlist width');
+		self::assertSame(44, $catalog['wishlistHeight'] ?? null, 'catalog wishlist height');
+		self::assertSame(12, $catalog['wishlistTop'] ?? null, 'catalog wishlist top');
+		self::assertSame(12, $catalog['wishlistRight'] ?? null, 'catalog wishlist right');
+		self::assertTrue($catalog['overlaysSeparate'] ?? false, 'badge and wishlist must not overlap');
+		self::assertSame(0, $catalog['toolbarOverflow'] ?? null, 'catalog toolbar overflow');
+		self::assertSame(array(44, 44), $catalog['controlHeights'] ?? null, 'catalog toolbar control heights');
 	}
 
 	/**

@@ -9,6 +9,12 @@ class ControllerProductCategory extends Controller {
 
 		$this->load->model('tool/image');
 		$this->load->library('seo');
+		$this->load->library('catalog_schema');
+		$catalog_schema = $this->registry->get('catalog_schema');
+
+		if (!$catalog_schema instanceof Catalog_schema) {
+			throw new RuntimeException('Catalog schema library is not available.');
+		}
 
 		if (isset($this->request->get['filter'])) {
 			if (is_array($this->request->get['filter'])) {
@@ -417,10 +423,12 @@ class ControllerProductCategory extends Controller {
 			$canonical_url = '';
 
 			if ($page == 1) {
-			    $this->document->addLink($this->url->link('product/category', 'path=' . $canonical_path . $canonical_url), 'canonical');
+				$schema_url = $this->url->link('product/category', 'path=' . $canonical_path . $canonical_url, true);
 			} else {
-				$this->document->addLink($this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . '&page='. $page), 'canonical');
+				$schema_url = $this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . '&page=' . $page, true);
 			}
+
+			$this->document->addLink($schema_url, 'canonical');
 			
 			if ($page > 1) {
 			    $this->document->addLink($this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . (($page - 2) ? '&page='. ($page - 1) : '')), 'prev');
@@ -444,6 +452,29 @@ class ControllerProductCategory extends Controller {
 			$data['filter_action'] = 'index.php';
 			$data['filter_reset'] = $this->url->link('product/category', 'path=' . $this->request->get['path']);
 			$data['active_filter_count'] = count($data['filter_category']) + ($price_min !== '' ? 1 : 0) + ($price_max !== '' ? 1 : 0) + ($availability !== '' ? 1 : 0) + ($filter_is_new ? 1 : 0) + ($filter_is_sale ? 1 : 0);
+			$schema_breadcrumbs = array(
+				array(
+					'text' => $this->language->get('text_breadcrumb_home'),
+					'href' => $this->url->link('common/home', '', true)
+				)
+			);
+			$schema_path = array();
+
+			foreach (explode('_', (string)$canonical_path) as $schema_category_id) {
+				$schema_category = $this->model_catalog_category->getCategory((int)$schema_category_id);
+
+				if (!$schema_category) {
+					continue;
+				}
+
+				$schema_path[] = (int)$schema_category_id;
+				$schema_breadcrumbs[] = array(
+					'text' => $schema_category['name'],
+					'href' => $this->url->link('product/category', 'path=' . implode('_', $schema_path), true)
+				);
+			}
+
+			$data['catalog_schema'] = $catalog_schema->build($data['heading_title'], $schema_url, $schema_breadcrumbs, $data['products'], $page, $limit);
 
 			$data['continue'] = $this->url->link('common/home');
 

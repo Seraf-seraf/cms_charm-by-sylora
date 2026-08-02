@@ -13,15 +13,16 @@
         <p class="sylora-eyebrow">Каталог</p>
         <h1>{{ heading_title }}</h1>
       </header>
-      <section class="catalog-search-panel" aria-label="Поиск по каталогу">
-      <label class="control-label" for="input-search">Поиск по товарам</label>
+      <form class="catalog-search-panel" action="{{ search_url }}" method="get" aria-label="{{ text_catalog_search }}">
+      <label class="control-label" for="input-search">{{ text_catalog_search_label }}</label>
       <div class="row">
         <div class="col-sm-4">
-          <input type="text" name="search" value="{{ search }}" placeholder="Например: серьги, браслет, подвеска" id="input-search" class="form-control" />
+          <input type="text" name="search" value="{{ search }}" placeholder="{{ text_catalog_search_placeholder }}" id="input-search" class="form-control" />
         </div>
         <div class="col-sm-3">
-          <select name="category_id" class="form-control">
-            <option value="0">Все категории</option>
+          <label class="sr-only" for="input-category">{{ text_all_categories }}</label>
+          <select name="category_id" id="input-category" class="form-control">
+            <option value="0">{{ text_all_categories }}</option>
             {% for category_1 in categories %}
             {% if category_1.category_id == category_id %}
             <option value="{{ category_1.category_id }}" selected="selected">{{ category_1.name }}</option>
@@ -52,7 +53,7 @@
             {% else %}
             <input type="checkbox" name="sub_category" value="1" />
             {% endif %}
-            Искать в подкатегориях</label>
+            {{ text_search_subcategories }}</label>
         </div>
       </div>
       <p>
@@ -62,16 +63,16 @@
           {% else %}
           <input type="checkbox" name="description" value="1" id="description" />
           {% endif %}
-          Искать в описании</label>
+          {{ text_search_description }}</label>
       </p>
-      <input type="button" value="Найти" id="button-search" class="btn btn-primary" />
-      </section>
+      <button type="submit" id="button-search" class="btn btn-primary">{{ button_search }}</button>
+      </form>
       {% if products %}
       <div class="catalog-toolbar">
         <div class="catalog-toolbar__count">{{ results }}</div>
         <div class="catalog-toolbar__controls">
-          <div class="form-group input-group input-group-sm">
-            <label class="input-group-addon" for="input-sort">Сортировка</label>
+          <div class="catalog-toolbar__field">
+            <label for="input-sort">{{ text_sort }}</label>
             <select id="input-sort" class="form-control" onchange="location = this.value;">
               {% for sorts in sorts %}
               {% if sorts.value == '%s-%s'|format(sort, order) %}
@@ -82,8 +83,8 @@
               {% endfor %}
             </select>
           </div>
-          <div class="form-group input-group input-group-sm">
-            <label class="input-group-addon" for="input-limit">Показать</label>
+          <div class="catalog-toolbar__field">
+            <label for="input-limit">{{ text_limit }}</label>
             <select id="input-limit" class="form-control" onchange="location = this.value;">
               {% for limits in limits %}
               {% if limits.value == limit %}
@@ -98,119 +99,23 @@
       </div>
       <div class="catalog-grid">
         {% for product in products %}
-        <article class="product-layout product-grid catalog-card">
-          <div class="product-thumb">
-            <a class="catalog-card__image" href="{{ product.href }}">
-              {% if product.badge %}
-              <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
-              {% endif %}
-              <picture>
-                {% for source in product.image.sources %}
-                <source srcset="{{ source.src }}" type="{{ source.type }}">
-                {% endfor %}
-                <img class="catalog-card__image-primary" src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
-              </picture>
-              {% if product.hover_image.src %}
-              <picture>
-                {% for source in product.hover_image.sources %}
-                <source srcset="{{ source.src }}" type="{{ source.type }}">
-                {% endfor %}
-                <img class="catalog-card__image-hover" src="{{ product.hover_image.src }}" alt="{{ product.name }} - дополнительное фото" title="{{ product.name }}" width="{{ product.hover_image.width }}" height="{{ product.hover_image.height }}" loading="lazy" decoding="async" />
-              </picture>
-              {% endif %}
-            </a>
-            <div class="catalog-card__body">
-              <div class="caption">
-                <h2 class="catalog-card__title"><a href="{{ product.href }}">{{ product.name }}</a></h2>
-                {% if product.price %}
-                <p class="price">
-                  {% if  not product.special %}
-                  {{ product.price }}
-                  {% else %}
-                  <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>
-                  {% endif %}
-                  {% if product.tax %}
-                  <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
-                  {% endif %}
-                </p>
-                {% endif %}
-                <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
-                <p class="catalog-card__description">{{ product.description }}</p>
-                {% if product.rating %}
-                <div class="rating">
-                  {% for i in 1..5 %}
-                  {% if product.rating < i %}
-                  <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>
-                  {% else %}
-                  <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>
-                  {% endif %}
-                  {% endfor %}
-                </div>
-                {% endif %}
-              </div>
-              <div class="catalog-card__actions">
-                {% if product.can_buy %}
-                <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
-                {% else %}
-                <button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban"></i> <span>Нет в наличии</span></button>
-                {% endif %}
-                <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
-                <div class="catalog-card__tools">
-                  <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" aria-pressed="false" onclick="wishlist.add('{{ product.product_id }}', this);"><i class="fa fa-heart"></i></button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
+        {% set heading_level = 'h2' %}
+        {% set enable_quick_view = false %}
+        {% include 'product/product_card.twig' %}
         {% endfor %}
       </div>
-      <div class="row">
-        <div class="col-sm-6 text-left">{{ pagination }}</div>
-      </div>
+      <nav class="catalog-pagination" aria-label="{{ text_pagination_navigation }}">{{ pagination }}</nav>
       {% else %}
-      <p class="catalog-empty">По вашему запросу ничего не найдено. Попробуйте изменить запрос или открыть весь каталог.</p>
-      <p><a class="btn btn-primary" href="{{ search_url }}">Открыть каталог</a></p>
+      <p class="catalog-empty">{{ text_catalog_search_empty }}</p>
+      <p><a class="btn btn-primary" href="{{ search_url }}">{{ button_open_catalog }}</a></p>
       {% endif %}
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </main>
+{% if catalog_schema %}
+<script type="application/ld+json">{{ catalog_schema|raw }}</script>
+{% endif %}
 <script type="text/javascript"><!--
-$('#button-search').bind('click', function() {
-	url = '{{ search_url|replace({'&amp;': '&'}) }}';
-
-	var search = $('#content input[name=\'search\']').prop('value');
-
-	if (search) {
-		url += '&search=' + encodeURIComponent(search);
-	}
-
-	var category_id = $('#content select[name=\'category_id\']').prop('value');
-
-	if (category_id > 0) {
-		url += '&category_id=' + encodeURIComponent(category_id);
-	}
-
-	var sub_category = $('#content input[name=\'sub_category\']:checked').prop('value');
-
-	if (sub_category) {
-		url += '&sub_category=true';
-	}
-
-	var filter_description = $('#content input[name=\'description\']:checked').prop('value');
-
-	if (filter_description) {
-		url += '&description=true';
-	}
-
-	location = url;
-});
-
-$('#content input[name=\'search\']').bind('keydown', function(e) {
-	if (e.keyCode == 13) {
-		$('#button-search').trigger('click');
-	}
-});
-
 $('select[name=\'category_id\']').on('change', function() {
 	if (this.value == '0') {
 		$('input[name=\'sub_category\']').prop('disabled', true);

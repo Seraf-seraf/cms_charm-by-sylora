@@ -126,7 +126,8 @@ try {
 			'<span style="display:block;width:100%;max-width:420px"><article id="fixture-mini-cart" class="mini-cart__item"><a id="fixture-mini-image" class="mini-cart__image" href="#"><picture><img id="fixture-mini-image-img" src="' + image + '" alt="Товар" width="320" height="320"></picture></a><div class="mini-cart__content">Товар</div><button id="fixture-mini-remove" class="mini-cart__remove" type="button" aria-label="Удалить"><i class="fa fa-times" aria-hidden="true"></i></button></article></span>',
 			'<article id="fixture-cart-item" class="cart-item" style="width:100%"><a id="fixture-cart-image" class="cart-item__image" href="#"><picture><img id="fixture-cart-image-img" src="' + image + '" alt="Товар" width="320" height="320"></picture></a><div class="cart-item__body"><div class="cart-item__top"><h2>Товар</h2><button class="cart-item__remove" type="button" aria-label="Удалить"><i class="fa fa-times" aria-hidden="true"></i></button></div><div class="cart-item__bottom"><div>Количество</div><div>Цена</div><div>Итого</div></div></div></article>',
 			'<aside class="contact-card" style="width:220px"><picture><img id="fixture-contact-image" class="contact-card__image" src="' + image + '" alt="Charm by Sylora" width="320" height="320"></picture></aside>',
-			'<div id="fixture-captcha" class="captcha-section" aria-label="Проверка от спама" style="width:220px;max-width:100%"><div class="form-group required smartcaptcha-field"><label class="control-label" for="fixture-captcha-control">Подтвердите, что вы не робот</label><div id="fixture-captcha-control" class="smart-captcha"><div style="width:300px;height:100px">Проверка</div></div><div class="text-danger">Ошибка проверки</div></div></div>'
+			'<div id="fixture-captcha" class="captcha-section" aria-label="Проверка от спама" style="width:220px;max-width:100%"><div class="form-group required smartcaptcha-field"><label class="control-label" for="fixture-captcha-control">Подтвердите, что вы не робот</label><div id="fixture-captcha-control" class="smart-captcha"><div style="width:300px;height:100px">Проверка</div></div><div class="text-danger">Ошибка проверки</div></div></div>',
+			'<section id="fixture-catalog" style="width:100%;min-width:0"><div id="fixture-toolbar" class="catalog-toolbar"><span class="catalog-toolbar__count">Найдено 3 товара</span><div class="catalog-toolbar__controls"><div class="catalog-toolbar__field"><label for="fixture-sort">Сортировка</label><select id="fixture-sort" class="form-control"><option>По цене</option></select></div><div class="catalog-toolbar__field"><label for="fixture-limit">Показать</label><select id="fixture-limit" class="form-control"><option>12</option></select></div></div></div><div id="fixture-catalog-grid" class="catalog-grid"><article class="catalog-card"><div class="product-thumb"><div id="fixture-card-media" class="catalog-card__media"><a class="catalog-card__image" href="#"><img src="' + image + '" alt="Товар"></a><span id="fixture-card-badge" class="catalog-card__badge">Скидка</span><button id="fixture-card-wishlist" class="catalog-card__icon catalog-card__wishlist" type="button" aria-label="Избранное"><i class="fa fa-heart" aria-hidden="true"></i></button></div><div class="catalog-card__body"><div class="caption"><h2 class="catalog-card__title">Очень длинное название украшения для проверки переноса текста внутри карточки каталога</h2><p class="price"><span class="price-new">1 200 ₽</span><span class="price-old">2 400 ₽</span></p><p class="catalog-card__description">Описание товара</p></div><footer class="catalog-card__actions"><button class="catalog-card__cart">Купить</button><div class="catalog-card__secondary"><a class="catalog-card__more" href="#">Подробнее</a><button class="catalog-card__icon"><i class="fa fa-eye"></i></button></div></footer></div></div></article><article class="catalog-card"><div class="product-thumb"><div class="catalog-card__media"><a class="catalog-card__image" href="#"><img src="' + image + '" alt="Товар"></a></div><div class="catalog-card__body"><div class="caption"><h2 class="catalog-card__title">Товар</h2></div><footer class="catalog-card__actions"><button class="catalog-card__cart" disabled>Нет в наличии</button><div class="catalog-card__secondary catalog-card__secondary--single"><a class="catalog-card__more" href="#">Подробнее</a></div></footer></div></div></article><article class="catalog-card"><div class="product-thumb"><div class="catalog-card__media"><a class="catalog-card__image" href="#"><img src="' + image + '" alt="Товар"></a></div><div class="catalog-card__body"><div class="caption"><h2 class="catalog-card__title">Товар</h2></div><footer class="catalog-card__actions"><button class="catalog-card__cart">Купить</button><div class="catalog-card__secondary catalog-card__secondary--single"><a class="catalog-card__more" href="#">Подробнее</a></div></footer></div></div></article></div></section>'
 		].join('');
 		document.body.appendChild(fixture);
 		const cart = document.querySelector('#cart');
@@ -223,6 +224,19 @@ try {
 		const miniDropdown = document.getElementById('fixture-mini-dropdown');
 		const miniDropdownRect = miniDropdown.getBoundingClientRect();
 		const miniDropdownItem = document.getElementById('fixture-dropdown-item');
+		const catalogGrid = document.getElementById('fixture-catalog-grid');
+		const catalogCards = Array.from(catalogGrid.children);
+		const catalogRows = catalogCards.reduce((rows, card) => {
+			const rect = card.getBoundingClientRect();
+			const top = Math.round(rect.top);
+			rows[top] = rows[top] || [];
+			rows[top].push(Math.round(rect.height));
+			return rows;
+		}, {});
+		const catalogMedia = document.getElementById('fixture-card-media').getBoundingClientRect();
+		const catalogBadge = document.getElementById('fixture-card-badge').getBoundingClientRect();
+		const catalogWishlist = document.getElementById('fixture-card-wishlist').getBoundingClientRect();
+		const toolbar = document.getElementById('fixture-toolbar');
 		const visualContracts = {
 			miniImage: measureImage('fixture-mini-image', 'fixture-mini-image' + '-img'),
 			cartImage: measureImage('fixture-cart-image', 'fixture-cart-image' + '-img'),
@@ -251,6 +265,18 @@ try {
 				contained: miniDropdownRect.left >= 11 && miniDropdownRect.right <= document.documentElement.clientWidth - 11,
 				overflow: Math.max(0, miniDropdown.scrollWidth - miniDropdown.clientWidth),
 				itemOverflow: Math.max(0, miniDropdownItem.scrollWidth - miniDropdownItem.clientWidth)
+			},
+			catalog: {
+				columns: getComputedStyle(catalogGrid).gridTemplateColumns.split(' ').length,
+				equalHeights: Object.values(catalogRows).every(heights => new Set(heights).size === 1),
+				overflow: Math.max(0, catalogGrid.scrollWidth - catalogGrid.clientWidth),
+				wishlistWidth: Math.round(catalogWishlist.width),
+				wishlistHeight: Math.round(catalogWishlist.height),
+				wishlistTop: Math.round(catalogWishlist.top - catalogMedia.top),
+				wishlistRight: Math.round(catalogMedia.right - catalogWishlist.right),
+				overlaysSeparate: catalogBadge.right <= catalogWishlist.left,
+				toolbarOverflow: Math.max(0, toolbar.scrollWidth - toolbar.clientWidth),
+				controlHeights: Array.from(toolbar.querySelectorAll('select')).map(control => Math.round(control.getBoundingClientRect().height))
 			}
 		};
 

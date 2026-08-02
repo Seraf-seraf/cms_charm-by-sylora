@@ -47,10 +47,12 @@
       <br/>
       {% endif %}
       {% endif %}
+      <div class="catalog-shell">
+      <aside class="catalog-shell__sidebar">
       {% if filter_groups or products or active_filter_count %}
-      <details class="catalog-filters" {% if active_filter_count %}open{% endif %}>
+      <details class="catalog-filters" data-active-filters="{% if active_filter_count %}true{% else %}false{% endif %}"{% if active_filter_count %} open{% endif %}>
         <summary class="catalog-filters__summary">
-          <span>Фильтры</span>
+          <span>{{ text_filters }}</span>
           {% if active_filter_count %}
           <strong>{{ active_filter_count }}</strong>
           {% endif %}
@@ -63,42 +65,42 @@
           <input type="hidden" name="limit" value="{{ limit }}" />
           <div class="catalog-filters__grid">
             <fieldset class="catalog-filters__group">
-              <legend>Цена</legend>
+              <legend>{{ text_filter_price }}</legend>
               <div class="catalog-filters__price">
                 <label for="input-price-min">
-                  <span>от</span>
+                  <span>{{ text_filter_from }}</span>
                   <input type="number" name="price_min" value="{{ filter_price_min }}" min="0" step="1" inputmode="decimal" id="input-price-min" />
                 </label>
                 <label for="input-price-max">
-                  <span>до</span>
+                  <span>{{ text_filter_to }}</span>
                   <input type="number" name="price_max" value="{{ filter_price_max }}" min="0" step="1" inputmode="decimal" id="input-price-max" />
                 </label>
               </div>
             </fieldset>
             <fieldset class="catalog-filters__group">
-              <legend>Наличие</legend>
+              <legend>{{ text_filter_availability }}</legend>
               <label class="catalog-filters__option">
                 <input type="radio" name="availability" value="" {% if not filter_availability %}checked="checked"{% endif %} />
-                <span>Любое</span>
+                <span>{{ text_filter_any }}</span>
               </label>
               <label class="catalog-filters__option">
                 <input type="radio" name="availability" value="in_stock" {% if filter_availability == 'in_stock' %}checked="checked"{% endif %} />
-                <span>В наличии</span>
+                <span>{{ text_filter_in_stock }}</span>
               </label>
               <label class="catalog-filters__option">
                 <input type="radio" name="availability" value="out_of_stock" {% if filter_availability == 'out_of_stock' %}checked="checked"{% endif %} />
-                <span>Под заказ или нет в наличии</span>
+                <span>{{ text_filter_out_of_stock }}</span>
               </label>
             </fieldset>
             <fieldset class="catalog-filters__group">
-              <legend>Подборки</legend>
+              <legend>{{ text_filter_collections }}</legend>
               <label class="catalog-filters__option">
                 <input type="checkbox" name="is_new" value="1" {% if filter_is_new %}checked="checked"{% endif %} />
-                <span>Новинки</span>
+                <span>{{ text_filter_new }}</span>
               </label>
               <label class="catalog-filters__option">
                 <input type="checkbox" name="is_sale" value="1" {% if filter_is_sale %}checked="checked"{% endif %} />
-                <span>Скидки</span>
+                <span>{{ text_filter_sale }}</span>
               </label>
             </fieldset>
             {% for filter_group in filter_groups %}
@@ -114,20 +116,22 @@
             {% endfor %}
           </div>
           <div class="catalog-filters__actions">
-            <button type="submit">Применить</button>
+            <button type="submit">{{ button_filter_apply }}</button>
             {% if active_filter_count %}
-            <a href="{{ filter_reset }}">Сбросить</a>
+            <a href="{{ filter_reset }}">{{ button_filter_reset }}</a>
             {% endif %}
           </div>
         </form>
       </details>
       {% endif %}
+      </aside>
+      <div class="catalog-shell__main">
       {% if products %}
       <div class="catalog-toolbar">
         <div class="catalog-toolbar__count">{{ results }}</div>
         <div class="catalog-toolbar__controls">
-          <div class="form-group input-group input-group-sm">
-            <label class="input-group-addon" for="input-sort">Сортировка</label>
+          <div class="catalog-toolbar__field">
+            <label for="input-sort">{{ text_sort }}</label>
             <select id="input-sort" class="form-control" onchange="location = this.value;">
               {% for sorts in sorts %}
               {% if sorts.value == '%s-%s'|format(sort, order) %}
@@ -138,8 +142,8 @@
               {% endfor %}
             </select>
           </div>
-          <div class="form-group input-group input-group-sm">
-            <label class="input-group-addon" for="input-limit">Показать</label>
+          <div class="catalog-toolbar__field">
+            <label for="input-limit">{{ text_limit }}</label>
             <select id="input-limit" class="form-control" onchange="location = this.value;">
               {% for limits in limits %}
               {% if limits.value == limit %}
@@ -153,97 +157,11 @@
         </div>
       </div>
       <div class="catalog-grid"> {% for product in products %}
-        <article class="product-layout product-grid catalog-card">
-          <div class="product-thumb">
-            <a class="catalog-card__image" href="{{ product.href }}">
-              {% if product.badge %}
-              <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
-              {% endif %}
-              <picture>
-                {% for source in product.image.sources %}
-                <source srcset="{{ source.src }}" type="{{ source.type }}">
-                {% endfor %}
-                <img class="catalog-card__image-primary" src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
-              </picture>
-              {% if product.hover_image.src %}
-              <picture>
-                {% for source in product.hover_image.sources %}
-                <source srcset="{{ source.src }}" type="{{ source.type }}">
-                {% endfor %}
-                <img class="catalog-card__image-hover" src="{{ product.hover_image.src }}" alt="{{ product.name }} - дополнительное фото" title="{{ product.name }}" width="{{ product.hover_image.width }}" height="{{ product.hover_image.height }}" loading="lazy" decoding="async" />
-              </picture>
-              {% endif %}
-            </a>
-            <div class="catalog-card__body">
-              <div class="caption">
-                <h2 class="catalog-card__title"><a href="{{ product.href }}">{{ product.name }}</a></h2>
-                {% if product.price %}
-                <p class="price"> {% if not product.special %}
-                  {{ product.price }}
-                  {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
-                  {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
-                {% endif %}
-                <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
-                <p class="catalog-card__description">{{ product.description }}</p>
-                {% if product.rating %}
-                <div class="rating"> {% for i in 1..5 %}
-                  {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>{% endif %}
-                  {% endfor %} </div>
-                {% endif %} </div>
-              <div class="catalog-card__actions">
-                {% if product.can_buy %}
-                <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
-                {% else %}
-                <button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban"></i> <span>Нет в наличии</span></button>
-                {% endif %}
-                <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
-                <div class="catalog-card__tools">
-                  <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" data-toggle="tooltip" title="Быстрый просмотр" aria-label="Быстрый просмотр" aria-haspopup="dialog" aria-expanded="false"><i class="fa fa-eye"></i></button>
-                  <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" aria-pressed="false" onclick="wishlist.add('{{ product.product_id }}', this);"><i class="fa fa-heart"></i></button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <dialog class="quick-view" id="quick-view-{{ product.product_id }}" aria-labelledby="quick-view-title-{{ product.product_id }}">
-            <form class="quick-view__close" method="dialog">
-              <button type="submit" aria-label="Закрыть"><i class="fa fa-times"></i></button>
-            </form>
-            <div class="quick-view__grid">
-              <picture>
-                {% for source in product.image.sources %}
-                <source srcset="{{ source.src }}" type="{{ source.type }}">
-                {% endfor %}
-                <img src="{{ product.image.src }}" alt="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
-              </picture>
-              <div class="quick-view__content">
-                {% if product.badge %}
-                <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
-                {% endif %}
-                <h2 id="quick-view-title-{{ product.product_id }}">{{ product.name }}</h2>
-                {% if product.price %}
-                <p class="price"> {% if not product.special %}
-                  {{ product.price }}
-                  {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
-                  {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
-                {% endif %}
-                <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
-                <p>{{ product.quick_description }}</p>
-                <div class="quick-view__actions">
-                  {% if product.can_buy %}
-                  <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
-                  {% else %}
-                  <button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban"></i> <span>Нет в наличии</span></button>
-                  {% endif %}
-                  <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
-                </div>
-              </div>
-            </div>
-          </dialog>
-        </article>
+        {% set heading_level = 'h2' %}
+        {% set enable_quick_view = true %}
+        {% include 'product/product_card.twig' %}
         {% endfor %} </div>
-      <div class="row">
-        <div class="col-sm-6 text-left">{{ pagination }}</div>
-      </div>
+      <nav class="catalog-pagination" aria-label="{{ text_pagination_navigation }}">{{ pagination }}</nav>
       {% endif %}
       {% if not categories and not products %}
       <p class="catalog-empty">{{ text_empty }}</p>
@@ -251,13 +169,38 @@
         <div class="pull-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
       </div>
       {% endif %}
+      </div>
+      </div>
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </main>
+{% if catalog_schema %}
+<script type="application/ld+json">{{ catalog_schema|raw }}</script>
+{% endif %}
 <script>
 (function() {
   var lastQuickViewTrigger = null;
   var focusableSelector = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  var filterDetails = document.querySelector('.catalog-filters');
+  var desktopFilters = window.matchMedia('(min-width: 992px)');
+
+  function syncFilterDisclosure(event) {
+    if (!filterDetails) return;
+
+    if (desktopFilters.matches) {
+      filterDetails.open = true;
+    } else if (event && filterDetails.getAttribute('data-active-filters') !== 'true') {
+      filterDetails.open = false;
+    }
+  }
+
+  syncFilterDisclosure();
+
+  if (typeof desktopFilters.addEventListener === 'function') {
+    desktopFilters.addEventListener('change', syncFilterDisclosure);
+  } else if (typeof desktopFilters.addListener === 'function') {
+    desktopFilters.addListener(syncFilterDisclosure);
+  }
 
   function getFocusable(container) {
     return Array.prototype.slice.call(container.querySelectorAll(focusableSelector)).filter(function(element) {
