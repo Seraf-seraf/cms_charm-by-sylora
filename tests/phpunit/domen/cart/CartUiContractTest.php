@@ -43,6 +43,7 @@ final class CartUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/\.cart-items\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
 		self::assertMatchesRegularExpression('/\.cart-main\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
 		self::assertMatchesRegularExpression('/\.cart-item\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
+		self::assertMatchesRegularExpression('/@media \(max-width: 991px\).*?\.cart-layout\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/s', $stylesheet);
 	}
 
 	public function testRussianCartActionsHaveAccessibleTranslations(): void {
