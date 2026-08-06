@@ -198,20 +198,20 @@
           {% endif %}
           <ul class="list-unstyled product-meta product-meta--secondary">
             {% if manufacturer %}
-            <li><span>Бренд</span> <a href="{{ manufacturers }}">{{ manufacturer }}</a></li>
+            <li><span class="product-meta__label">Бренд</span> <a class="product-meta__value" href="{{ manufacturers }}">{{ manufacturer }}</a></li>
             {% endif %}
-            <li><span>Артикул</span> {{ model }}</li>
+            <li><span class="product-meta__label">Артикул</span> <span class="product-meta__value">{{ model }}</span></li>
             {% if reward %}
-            <li><span>Бонусные баллы</span> {{ reward }}</li>
+            <li><span class="product-meta__label">Бонусные баллы</span> <span class="product-meta__value">{{ reward }}</span></li>
             {% endif %}
             {% if product_details.materials %}
-            <li><span>Материалы</span> {{ product_details.materials }}</li>
+            <li><span class="product-meta__label">Материалы</span> <span class="product-meta__value">{{ product_details.materials }}</span></li>
             {% endif %}
             {% if product_details.size %}
-            <li><span>Размер</span> {{ product_details.size }}</li>
+            <li><span class="product-meta__label">Размер</span> <span class="product-meta__value">{{ product_details.size }}</span></li>
             {% endif %}
             {% if product_details.color %}
-            <li><span>Цвет</span> {{ product_details.color }}</li>
+            <li><span class="product-meta__label">Цвет</span> <span class="product-meta__value">{{ product_details.color }}</span></li>
             {% endif %}
           </ul>
           <div class="product-trust">

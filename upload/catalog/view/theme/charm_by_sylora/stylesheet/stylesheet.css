@@ -1737,27 +1737,6 @@ div.required .control-label::before,
 	scrollbar-width: thin;
 }
 
-.sylora-product-slider:before,
-.sylora-product-slider:after {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	z-index: 1;
-	width: 64px;
-	content: "";
-	pointer-events: none;
-}
-
-.sylora-product-slider:before {
-	left: 0;
-	background: linear-gradient(90deg, var(--color-surface-2), rgba(255, 255, 255, 0));
-}
-
-.sylora-product-slider:after {
-	right: 0;
-	background: linear-gradient(270deg, var(--color-surface-2), rgba(255, 255, 255, 0));
-}
-
 .sylora-product-slider__track {
 	display: flex;
 	align-items: stretch;
@@ -1785,7 +1764,23 @@ div.required .control-label::before,
 	opacity: 1;
 }
 
-.sylora-product-slide img,
+.sylora-product-slide picture {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 5;
+	overflow: hidden;
+	background: var(--color-surface);
+}
+
+.sylora-product-slide img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	background: var(--color-surface);
+}
+
 .sylora-product-slider--fallback img {
 	display: block;
 	width: 100%;
@@ -2579,13 +2574,20 @@ footer a:focus {
 	opacity: 1;
 }
 
+.catalog-card__image picture {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
 .catalog-card__image img {
 	position: absolute;
 	inset: 0;
 	width: 100%;
 	height: 100%;
 	margin: 0;
-	object-fit: cover;
+	object-fit: contain;
+	object-position: center;
 	transition: opacity 180ms ease, transform 180ms ease;
 }
 
@@ -2741,6 +2743,7 @@ footer a:focus {
 	grid-template-columns: minmax(0, 1fr);
 	align-items: stretch;
 	gap: 8px;
+	margin-top: auto;
 	padding: 0 16px 16px;
 	border: 0;
 	background: transparent;
@@ -3157,11 +3160,24 @@ footer a:focus {
 	background: var(--color-surface);
 }
 
-.product-gallery__main .thumbnail img {
+.product-gallery__main .thumbnail {
 	display: block;
 	width: 100%;
 	aspect-ratio: 4 / 5;
+}
+
+.product-gallery__main .thumbnail picture {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.product-gallery__main .thumbnail img {
+	display: block;
+	width: 100%;
+	height: 100%;
 	object-fit: contain;
+	object-position: center;
 }
 
 .product-page .image-additional {
@@ -3488,20 +3504,24 @@ footer a:focus {
 }
 
 .product-meta li {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: max-content minmax(0, 1fr);
 	gap: 16px;
 	min-width: 0;
 	color: var(--color-text);
-	overflow-wrap: anywhere;
 }
 
-.product-meta li > * {
+.product-meta__label {
+	white-space: nowrap;
+}
+
+.product-meta__value {
 	min-width: 0;
 	overflow-wrap: anywhere;
+	text-align: right;
 }
 
-.product-meta span {
+.product-meta__label {
 	color: var(--color-muted);
 }
 
@@ -3759,9 +3779,12 @@ footer a:focus {
 	}
 
 	.product-meta li {
-		align-items: flex-start;
-		flex-direction: column;
+		grid-template-columns: minmax(0, 1fr);
 		gap: 2px;
+	}
+
+	.product-meta__value {
+		text-align: left;
 	}
 
 	.product-section {

@@ -14,6 +14,7 @@
         <h1>{{ heading_title }}</h1>
       </header>
       <form class="catalog-search-panel" action="{{ search_url }}" method="get" aria-label="{{ text_catalog_search }}">
+      <input type="hidden" name="route" value="product/search" />
       <label class="control-label" for="input-search">{{ text_catalog_search_label }}</label>
       <div class="row">
         <div class="col-sm-4">

@@ -26,8 +26,19 @@ abstract class BrowserTestCase extends TestCase {
 		$bootstrap = self::getBootstrap();
 
 		if ($bootstrap->getUnavailableReason() !== '') {
+			if (getenv('SYLORA_REQUIRE_BROWSER') === '1') {
+				throw new RuntimeException($bootstrap->getUnavailableReason());
+			}
+
 			self::markTestSkipped($bootstrap->getUnavailableReason());
 		}
+	}
+
+	/**
+	 * @param array<string, scalar> $query
+	 */
+	final protected function getRouteUrl(string $route, array $query = array()): string {
+		return self::getBootstrap()->getRouteUrl($route, $query);
 	}
 
 	/**

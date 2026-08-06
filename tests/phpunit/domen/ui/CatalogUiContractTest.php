@@ -78,11 +78,19 @@ final class CatalogUiContractTest extends TestCase {
 
 		$search = $this->themeTemplate('product/search.twig');
 		self::assertStringContainsString('<form class="catalog-search-panel" action="{{ search_url }}" method="get"', $search);
+		self::assertStringContainsString('<input type="hidden" name="route" value="product/search" />', $search);
 		self::assertStringContainsString('<button type="submit" id="button-search"', $search);
 		self::assertStringContainsString('<label class="sr-only" for="input-category">{{ text_all_categories }}</label>', $search);
 		self::assertStringContainsString('id="input-category"', $search);
 		self::assertStringNotContainsString('value="{{ category_2.category_id }}>', $search);
 		self::assertStringNotContainsString('value="{{ category_3.category_id }}>', $search);
+		self::assertStringContainsString('value="{{ category_2.category_id }}">', $search);
+		self::assertStringContainsString('value="{{ category_3.category_id }}">', $search);
+		self::assertMatchesRegularExpression('/\.catalog-card__image img\s*\{[^}]*object-fit: contain;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*margin-top: auto;/s', $css);
+		self::assertMatchesRegularExpression('/\.sylora-product-slide img\s*\{[^}]*object-fit: cover;/s', $css);
+		self::assertStringNotContainsString('.sylora-product-slider:after', $css);
+		self::assertStringContainsString('product-meta__label', $this->themeTemplate('product/product.twig'));
 	}
 
 	public function testSharedRussianLanguageContainsCatalogLabels(): void {

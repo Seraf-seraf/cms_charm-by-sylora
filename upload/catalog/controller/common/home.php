@@ -55,11 +55,9 @@ class ControllerCommonHome extends Controller {
 		}
 
 		foreach ($featured_products as $product) {
-			if ($product['image']) {
-				$image = $this->model_tool_image->resizeWithSources($product['image'], $image_width, $image_height);
-			} else {
-				$image = $this->model_tool_image->resizeWithSources('placeholder.png', $image_width, $image_height);
-			}
+			$image_filename = $product['image'] ? $product['image'] : 'placeholder.png';
+			$image = $this->model_tool_image->resizeWithSources($image_filename, $image_width, $image_height);
+			$hero_image = $this->model_tool_image->resizeCoverWithSources($image_filename, $image_width, $image_height);
 
 			$hover_image = array(
 				'src'     => '',
@@ -147,7 +145,10 @@ class ControllerCommonHome extends Controller {
 				'href'        => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 			);
 
-			$data['hero_products'][] = $product_data;
+			$hero_product = $product_data;
+			$hero_product['thumb'] = $hero_image['src'];
+			$hero_product['image'] = $hero_image;
+			$data['hero_products'][] = $hero_product;
 
 			if (count($data['featured_products']) < 3) {
 				$data['featured_products'][] = $product_data;

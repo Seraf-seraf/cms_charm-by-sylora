@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 final class TestBootstrap {
 	private string $root;
+	private string $baseUrl = '';
 	private string $url = '';
 	private string $unavailableReason = '';
 	private ?mysqli $database = null;
@@ -55,7 +56,8 @@ final class TestBootstrap {
 			return;
 		}
 
-		$this->url = rtrim($serverUrl, '/') . '/index.php?route=common/home';
+		$this->baseUrl = rtrim($serverUrl, '/');
+		$this->url = $this->getRouteUrl('common/home');
 
 		try {
 			$this->database = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, (int)DB_PORT);
@@ -101,6 +103,15 @@ final class TestBootstrap {
 
 	public function getUrl(): string {
 		return $this->url;
+	}
+
+	/**
+	 * @param array<string, scalar> $query
+	 */
+	public function getRouteUrl(string $route, array $query = array()): string {
+		$query = array_merge(array('route' => $route), $query);
+
+		return $this->baseUrl . '/index.php?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 	}
 
 	public function getNodeExecutable(): string {
