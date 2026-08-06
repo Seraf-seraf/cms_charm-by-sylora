@@ -88,9 +88,16 @@ final class CatalogUiContractTest extends TestCase {
 		self::assertStringContainsString('value="{{ category_3.category_id }}">', $search);
 		self::assertMatchesRegularExpression('/\.catalog-card__image img\s*\{[^}]*object-fit: contain;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*margin-top: auto;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card\s*\{[^}]*display: flex;[^}]*height: 100%;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__media\s*\{[^}]*width: 100%;[^}]*max-height: 480px;[^}]*aspect-ratio: 4 \/ 5;[^}]*overflow: hidden;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__image\s*\{[^}]*position: relative;[^}]*width: 100%;[^}]*height: 100%;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination\s*\{[^}]*display: flex;[^}]*gap: 8px;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination > li > a,[^{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;[^}]*border-radius: 8px;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination > \.active > a,[\s\S]*?\{[^}]*background: var\(--color-accent\);[^}]*color: var\(--color-on-accent\);/s', $css);
 		self::assertMatchesRegularExpression('/\.sylora-product-slide img\s*\{[^}]*object-fit: cover;/s', $css);
 		self::assertStringNotContainsString('.sylora-product-slider:after', $css);
 		self::assertStringContainsString('product-meta__label', $this->themeTemplate('product/product.twig'));
+		self::assertStringContainsString('stylesheet.min.css?v=20260807-catalog-cards-v2', $this->themeTemplate('common/header.twig'));
 	}
 
 	public function testSharedRussianLanguageContainsCatalogLabels(): void {

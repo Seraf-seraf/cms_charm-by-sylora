@@ -43,6 +43,12 @@ final class CatalogFilterFunctionalTest extends BrowserTestCase {
 		self::assertTrue($result['catalog']['equalMedia'] ?? false);
 		self::assertSame(array('contain'), $result['catalog']['objectFits'] ?? null);
 		self::assertTrue($result['catalog']['actionsAligned'] ?? false);
+		self::assertLessThanOrEqual(480, $result['catalog']['maxMediaHeight'] ?? PHP_INT_MAX);
+		self::assertTrue($result['pagination']['exists'] ?? false);
+		self::assertTrue($result['pagination']['minimumTouchTarget'] ?? false);
+		self::assertTrue($result['pagination']['rounded'] ?? false);
+		self::assertTrue($result['pagination']['activeUsesThemeAccent'] ?? false);
+		self::assertTrue($result['pagination']['notBootstrapBlue'] ?? false);
 	}
 
 	private function request(string $url): string {

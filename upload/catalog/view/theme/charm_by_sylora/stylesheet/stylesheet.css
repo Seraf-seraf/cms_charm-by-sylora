@@ -2535,21 +2535,25 @@ footer a:focus {
 .catalog-grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
+	align-items: stretch;
 	gap: 22px;
 	margin-bottom: 28px;
 }
 
 .catalog-card {
+	display: flex;
 	float: none;
 	width: auto;
+	height: 100%;
 	min-width: 0;
 	container-type: inline-size;
 }
 
 .catalog-card .product-thumb {
 	display: flex;
+	flex: 1 1 auto;
 	flex-direction: column;
-	height: 100%;
+	height: auto;
 	margin: 0;
 	overflow: hidden;
 	border: 1px solid var(--color-border);
@@ -2559,13 +2563,21 @@ footer a:focus {
 
 .catalog-card__media {
 	position: relative;
+	flex: 0 0 auto;
+	width: 100%;
+	max-height: 480px;
 	min-width: 0;
+	aspect-ratio: 4 / 5;
+	overflow: hidden;
+	background: var(--color-surface);
 }
 
 .catalog-card__image {
 	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
 	overflow: hidden;
-	aspect-ratio: 4 / 5;
 	background: var(--color-surface);
 }
 
@@ -2575,9 +2587,8 @@ footer a:focus {
 }
 
 .catalog-card__image picture {
-	display: block;
-	width: 100%;
-	height: 100%;
+	position: absolute;
+	inset: 0;
 }
 
 .catalog-card__image img {
@@ -2597,6 +2608,86 @@ footer a:focus {
 
 .catalog-card__image-hover {
 	opacity: 0;
+}
+
+.catalog-pagination {
+	display: flex;
+	justify-content: center;
+	margin: 28px 0;
+}
+
+.catalog-pagination .pagination {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 8px;
+	max-width: 100%;
+	margin: 0;
+}
+
+.catalog-pagination .pagination > li {
+	display: block;
+}
+
+.catalog-pagination .pagination > li > a,
+.catalog-pagination .pagination > li > span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	float: none;
+	min-width: 44px;
+	min-height: 44px;
+	margin: 0;
+	padding: 0 14px;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-surface);
+	color: var(--color-earth);
+	font-family: var(--font-display);
+	font-weight: 700;
+	line-height: 1;
+	text-decoration: none;
+	transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.catalog-pagination .pagination > li:first-child > a,
+.catalog-pagination .pagination > li:first-child > span,
+.catalog-pagination .pagination > li:last-child > a,
+.catalog-pagination .pagination > li:last-child > span {
+	border-radius: 8px;
+}
+
+.catalog-pagination .pagination > li > a:hover,
+.catalog-pagination .pagination > li > a:focus {
+	border-color: var(--color-accent);
+	background: var(--color-bg);
+	color: var(--color-accent);
+	box-shadow: 0 8px 20px var(--color-focus-ring);
+}
+
+.catalog-pagination .pagination > .active > a,
+.catalog-pagination .pagination > .active > a:hover,
+.catalog-pagination .pagination > .active > a:focus,
+.catalog-pagination .pagination > .active > span,
+.catalog-pagination .pagination > .active > span:hover,
+.catalog-pagination .pagination > .active > span:focus {
+	border-color: var(--color-accent);
+	background: var(--color-accent);
+	color: var(--color-on-accent);
+}
+
+.catalog-pagination .pagination > .disabled > a,
+.catalog-pagination .pagination > .disabled > a:hover,
+.catalog-pagination .pagination > .disabled > a:focus,
+.catalog-pagination .pagination > .disabled > span,
+.catalog-pagination .pagination > .disabled > span:hover,
+.catalog-pagination .pagination > .disabled > span:focus {
+	cursor: not-allowed;
+	border-color: var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-muted);
+	box-shadow: none;
+	opacity: 0.62;
 }
 
 @media (hover: hover) and (pointer: fine) {
