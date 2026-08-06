@@ -8,6 +8,9 @@
 # Image File
 !/upload/image/no_image.jpg
 
+# Product images uploaded through the OpenCart admin panel
+/upload/image/catalog/
+
 # Image Cache Files
 /upload/image/cache/*
 !/upload/image/cache/.gitkeep
