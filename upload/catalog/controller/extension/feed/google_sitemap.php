@@ -93,6 +93,8 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 	}
 
 	private function escapeXml($value) {
-		return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+		$decoded_value = html_entity_decode($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+
+		return htmlspecialchars($decoded_value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
 	}
 }
