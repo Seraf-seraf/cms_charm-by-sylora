@@ -449,6 +449,7 @@ $('#button-cart').on('click', function() {
 	});
 });
 //--></script>
+{% if has_datetime_option %}
 <script type="text/javascript"><!--
 $('.date').datetimepicker({
 	language: '{{ datepicker }}',
@@ -518,6 +519,7 @@ $('button[id^=\'button-upload\']').on('click', function() {
 	}, 500);
 });
 //--></script>
+{% endif %}
 <script type="text/javascript"><!--
 $('#review').delegate('.pagination a', 'click', function(e) {
     e.preventDefault();

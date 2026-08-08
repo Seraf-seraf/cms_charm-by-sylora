@@ -266,6 +266,8 @@ class ControllerProductProduct extends Controller {
 				$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 			}
 
+			$data['has_datetime_option'] = $has_datetime_option;
+
 			if ($product_info['minimum']) {
 				$data['minimum'] = $product_info['minimum'];
 			} else {
