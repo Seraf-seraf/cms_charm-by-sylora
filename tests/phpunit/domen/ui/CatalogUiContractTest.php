@@ -118,6 +118,17 @@ final class CatalogUiContractTest extends TestCase {
 		}
 	}
 
+	public function testCatalogRussianLanguageContainsAddedSortLabels(): void {
+		foreach (array('category.php', 'search.php', 'special.php') as $file) {
+			$language = array();
+			$_ = &$language;
+			require $this->root . '/upload/catalog/language/ru-ru/product/' . $file;
+
+			self::assertSame('Популярные', $language['text_popular_desc'] ?? null, $file);
+			self::assertSame('Сначала новые', $language['text_date_desc'] ?? null, $file);
+		}
+	}
+
 	private function themeTemplate(string $path): string {
 		return $this->read('upload/catalog/view/theme/charm_by_sylora/template/' . $path);
 	}
