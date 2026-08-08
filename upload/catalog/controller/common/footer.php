@@ -171,6 +171,10 @@ class ControllerCommonFooter extends Controller {
 
 				$url = isset($item['url']) ? trim((string)$item['url']) : '';
 
+				if ($url === '/all-jewelry') {
+					$url = $this->getCatalogUrl();
+				}
+
 				if ($url !== '' && !preg_match('#^(?:https?://|mailto:|tel:|/(?!/)|\#)#i', $url)) {
 					$url = '';
 				}

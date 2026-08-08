@@ -1027,7 +1027,7 @@ class ControllerSettingSetting extends Controller {
 				'item_count' => 4,
 				'items' => array(
 					array('text' => 'Главная', 'url' => '/'),
-					array('text' => 'Каталог', 'url' => '/all-jewelry'),
+					array('text' => 'Каталог', 'url' => '/search'),
 					array('text' => 'Обо мне', 'url' => '/about'),
 					array('text' => 'Корзина', 'url' => '/index.php?route=checkout/cart'),
 				),
