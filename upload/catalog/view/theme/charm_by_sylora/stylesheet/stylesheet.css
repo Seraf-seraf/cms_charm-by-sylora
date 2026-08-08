@@ -3446,7 +3446,7 @@ footer a:focus {
 	padding: 4px;
 	border: 0;
 	background: transparent;
-	color: var(--color-border);
+	color: var(--color-muted);
 	cursor: pointer;
 }
 

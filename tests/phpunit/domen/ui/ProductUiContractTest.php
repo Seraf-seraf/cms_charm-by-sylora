@@ -25,6 +25,21 @@ final class ProductUiContractTest extends TestCase {
 		);
 	}
 
+	public function testReviewRatingUsesVisibleThemeColor(): void {
+		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
+		$header = $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/header.twig');
+
+		self::assertMatchesRegularExpression(
+			'/\.product-review__rating-option\s*\{[^}]*color: var\(--color-muted\);/s',
+			$css
+		);
+		self::assertDoesNotMatchRegularExpression(
+			'/\.product-review__rating-option\s*\{[^}]*color: var\(--color-border\);/s',
+			$css
+		);
+		self::assertStringContainsString('stylesheet.min.css?v=20260808-review-rating-v1', $header);
+	}
+
 	private function read(string $path): string {
 		$content = file_get_contents($this->root . '/' . $path);
 
