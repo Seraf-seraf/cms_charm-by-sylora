@@ -4661,6 +4661,24 @@ footer a:focus {
 	margin-top: 18px;
 }
 
+.cart-page .is-icon-only {
+	width: 44px;
+	min-width: 44px;
+	height: 44px;
+	min-height: 44px;
+}
+
+.cart-modules .panel-heading {
+	padding: 0;
+}
+
+.cart-modules .accordion-toggle {
+	display: flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 10px 15px;
+}
+
 .mini-cart {
 	width: min(420px, calc(100vw - 24px));
 	padding: 0;
