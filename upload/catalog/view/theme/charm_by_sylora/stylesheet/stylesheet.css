@@ -1195,6 +1195,13 @@ main input.form-control {
 	min-height: 44px;
 }
 
+[id^="account-"] .btn,
+[id^="account-"] select.form-control,
+[id^="account-"] textarea.form-control,
+[id^="account-"] input.form-control {
+	min-height: 44px;
+}
+
 div.required .control-label::before,
 .text-danger,
 .has-error .control-label,
