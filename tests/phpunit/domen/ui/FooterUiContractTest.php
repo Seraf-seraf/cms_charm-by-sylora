@@ -21,6 +21,17 @@ final class FooterUiContractTest extends TestCase {
 		self::assertStringNotContainsString("array('text' => 'Каталог', 'url' => '/all-jewelry')", $settingController);
 	}
 
+	public function testFooterLinksHaveMinimumTouchTarget(): void {
+		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
+		$header = $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/header.twig');
+
+		self::assertMatchesRegularExpression(
+			'/\.site-footer a\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s',
+			$css
+		);
+		self::assertStringContainsString('stylesheet.min.css?v=20260808-footer-links-v1', $header);
+	}
+
 	private function read(string $path): string {
 		$content = file_get_contents($this->root . '/' . $path);
 
