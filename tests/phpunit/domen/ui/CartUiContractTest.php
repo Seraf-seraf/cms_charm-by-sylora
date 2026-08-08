@@ -23,7 +23,26 @@ final class CartUiContractTest extends TestCase {
 			'/\.cart-modules \.accordion-toggle\s*\{[^}]*display: flex;[^}]*min-height: 44px;/s',
 			$css
 		);
-		self::assertStringContainsString('stylesheet.min.css?v=20260808-cart-targets-v1', $header);
+		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
+	}
+
+	public function testCartActionsUseNaturalRussianCopy(): void {
+		$cartLanguage = $this->loadLanguage('upload/catalog/language/ru-ru/checkout/cart.php');
+		$shippingLanguage = $this->loadLanguage('upload/catalog/language/ru-ru/extension/total/shipping.php');
+
+		self::assertSame('Что вы хотели бы сделать ещё?', $cartLanguage['text_next'] ?? null);
+		self::assertSame('Рассчитать стоимость доставки', $shippingLanguage['heading_title'] ?? null);
+	}
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	private function loadLanguage(string $path): array {
+		$language = array();
+		$_ = &$language;
+		require $this->root . '/' . $path;
+
+		return $language;
 	}
 
 	private function read(string $path): string {

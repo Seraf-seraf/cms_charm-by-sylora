@@ -19,7 +19,7 @@ final class SitemapUiContractTest extends TestCase {
 			'/\.sitemap-list a\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s',
 			$css
 		);
-		self::assertStringContainsString('stylesheet.min.css?v=20260808-sitemap-links-v1', $header);
+		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
 	}
 
 	private function read(string $path): string {

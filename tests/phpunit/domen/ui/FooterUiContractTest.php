@@ -29,7 +29,7 @@ final class FooterUiContractTest extends TestCase {
 			'/\.site-footer a\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s',
 			$css
 		);
-		self::assertStringContainsString('stylesheet.min.css?v=20260808-footer-links-v1', $header);
+		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
 	}
 
 	private function read(string $path): string {

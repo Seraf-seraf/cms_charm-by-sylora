@@ -100,7 +100,7 @@ final class CatalogUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/\.sylora-product-slide img\s*\{[^}]*object-fit: cover;/s', $css);
 		self::assertStringNotContainsString('.sylora-product-slider:after', $css);
 		self::assertStringContainsString('product-meta__label', $this->themeTemplate('product/product.twig'));
-		self::assertStringContainsString('stylesheet.min.css?v=20260808-catalog-options-v1', $this->themeTemplate('common/header.twig'));
+		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $this->themeTemplate('common/header.twig'));
 	}
 
 	public function testSharedRussianLanguageContainsCatalogLabels(): void {

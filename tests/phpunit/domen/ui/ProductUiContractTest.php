@@ -37,7 +37,7 @@ final class ProductUiContractTest extends TestCase {
 			'/\.product-review__rating-option\s*\{[^}]*color: var\(--color-border\);/s',
 			$css
 		);
-		self::assertStringContainsString('stylesheet.min.css?v=20260808-review-rating-v1', $header);
+		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
 	}
 
 	private function read(string $path): string {

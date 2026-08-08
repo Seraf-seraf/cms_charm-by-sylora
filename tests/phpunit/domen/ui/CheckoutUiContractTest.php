@@ -27,7 +27,7 @@ final class CheckoutUiContractTest extends TestCase {
 			'/\.checkout-accordion \.form-control\s*\{[^}]*min-height: 44px;/s',
 			$css
 		);
-		self::assertStringContainsString('stylesheet.min.css?v=20260808-checkout-controls-v1', $header);
+		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
 	}
 
 	private function read(string $path): string {
