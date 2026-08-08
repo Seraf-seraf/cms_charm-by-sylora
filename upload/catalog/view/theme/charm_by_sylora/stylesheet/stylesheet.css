@@ -1188,6 +1188,13 @@ fieldset[disabled] .btn,
 	border-color: var(--color-danger);
 }
 
+main .btn,
+main select.form-control,
+main textarea.form-control,
+main input.form-control {
+	min-height: 44px;
+}
+
 div.required .control-label::before,
 .text-danger,
 .has-error .control-label,

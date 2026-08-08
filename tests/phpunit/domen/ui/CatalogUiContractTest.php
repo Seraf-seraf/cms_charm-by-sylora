@@ -94,10 +94,11 @@ final class CatalogUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination\s*\{[^}]*display: flex;[^}]*gap: 8px;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination > li > a,[^{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;[^}]*border-radius: 8px;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination > \.active > a,[\s\S]*?\{[^}]*background: var\(--color-accent\);[^}]*color: var\(--color-on-accent\);/s', $css);
+		self::assertMatchesRegularExpression('/main \.btn,\s*main select\.form-control,\s*main textarea\.form-control,\s*main input\.form-control\s*\{[^}]*min-height: 44px;/s', $css);
 		self::assertMatchesRegularExpression('/\.sylora-product-slide img\s*\{[^}]*object-fit: cover;/s', $css);
 		self::assertStringNotContainsString('.sylora-product-slider:after', $css);
 		self::assertStringContainsString('product-meta__label', $this->themeTemplate('product/product.twig'));
-		self::assertStringContainsString('stylesheet.min.css?v=20260807-catalog-cards-v2', $this->themeTemplate('common/header.twig'));
+		self::assertStringContainsString('stylesheet.min.css?v=20260808-form-controls-v1', $this->themeTemplate('common/header.twig'));
 	}
 
 	public function testSharedRussianLanguageContainsCatalogLabels(): void {
