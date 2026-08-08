@@ -1202,6 +1202,14 @@ main input.form-control {
 	min-height: 44px;
 }
 
+#account-login form > a,
+#account-register .radio-inline {
+	display: inline-flex;
+	min-width: 44px;
+	min-height: 44px;
+	align-items: center;
+}
+
 div.required .control-label::before,
 .text-danger,
 .has-error .control-label,

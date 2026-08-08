@@ -19,7 +19,11 @@ final class AccountUiContractTest extends TestCase {
 			'/\[id\^="account-"\] \.btn,[^{]+\{[^}]*min-height: 44px;/s',
 			$css
 		);
-		self::assertStringContainsString('stylesheet.min.css?v=20260808-account-controls-v1', $header);
+		self::assertMatchesRegularExpression(
+			'/#account-login form > a,[^{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s',
+			$css
+		);
+		self::assertStringContainsString('stylesheet.min.css?v=20260808-account-actions-v1', $header);
 	}
 
 	private function read(string $path): string {
