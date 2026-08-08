@@ -133,10 +133,17 @@
     }
   }
 
+  function syncNavButton(isOpen) {
+    if (!navButton) return;
+    navButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    navButton.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+    navButton.innerHTML = '<i class="fa ' + (isOpen ? 'fa-times' : 'fa-bars') + '" aria-hidden="true"></i>';
+  }
+
   function closeNav() {
     if (!nav || !navButton || !backdrop) return;
     nav.classList.remove('is-open');
-    navButton.setAttribute('aria-expanded', 'false');
+    syncNavButton(false);
     backdrop.hidden = true;
   }
 
@@ -159,7 +166,7 @@
   if (navButton && nav && backdrop) {
     navButton.addEventListener('click', function() {
       var isOpen = nav.classList.toggle('is-open');
-      navButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      syncNavButton(isOpen);
       backdrop.hidden = !isOpen;
     });
     backdrop.addEventListener('click', closeNav);
