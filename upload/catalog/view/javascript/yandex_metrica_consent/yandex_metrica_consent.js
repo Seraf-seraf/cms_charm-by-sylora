@@ -202,7 +202,7 @@
 		banner.appendChild(inner);
 		document.body.appendChild(banner);
 
-		var footer = document.querySelector('.site-footer__bottom, footer');
+		var footer = document.querySelector('.site-footer__bottom');
 
 		if (footer) {
 			var settings = document.createElement('button');

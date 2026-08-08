@@ -17,6 +17,8 @@ final class CookieConsentTest extends BrowserTestCase {
 		self::assertSame('Разрешить аналитику', $result->acceptText);
 		self::assertSame('Продолжить без аналитики', $result->rejectText);
 		self::assertSame('Настройки аналитики', $result->settingsText);
+		self::assertTrue($result->settingsInSiteFooter);
+		self::assertFalse($result->settingsInCatalogCard);
 		self::assertSame(1, $result->extensionScriptCount);
 		self::assertFalse($result->dataLayerExists);
 		self::assertSame(0, $result->metricaRequestCount);

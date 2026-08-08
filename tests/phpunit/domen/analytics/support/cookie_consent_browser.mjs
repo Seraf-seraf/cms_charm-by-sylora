@@ -128,6 +128,8 @@ try {
 		acceptText: document.querySelector('[data-cookie-consent=analytics]')?.textContent ?? '',
 		rejectText: document.querySelector('[data-cookie-consent=essential]')?.textContent ?? '',
 		settingsText: document.querySelector('[data-cookie-settings]')?.textContent ?? '',
+		settingsInSiteFooter: Boolean(document.querySelector('.site-footer__bottom > .ym-consent-settings')),
+		settingsInCatalogCard: Boolean(document.querySelector('.catalog-card__actions .ym-consent-settings')),
 		extensionScriptCount: Array.from(document.scripts).filter(script => script.src.includes('yandex_metrica_consent.js')).length,
 		dataLayerExists: Array.isArray(window.dataLayer),
 		consent: (document.cookie.match(/(?:^|; )sylora_cookie_consent=([^;]*)/) || [,''])[1] ? decodeURIComponent((document.cookie.match(/(?:^|; )sylora_cookie_consent=([^;]*)/) || [,''])[1]) : '',
