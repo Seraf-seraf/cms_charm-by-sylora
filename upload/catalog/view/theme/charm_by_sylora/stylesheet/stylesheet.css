@@ -4406,6 +4406,10 @@ footer a:focus {
 }
 
 .sitemap-list a {
+	display: inline-flex;
+	min-width: 44px;
+	min-height: 44px;
+	align-items: center;
 	color: var(--color-text);
 	font-weight: 700;
 }
