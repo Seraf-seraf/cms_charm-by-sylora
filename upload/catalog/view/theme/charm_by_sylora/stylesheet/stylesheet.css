@@ -2467,9 +2467,10 @@ footer a:focus {
 
 .catalog-filters__option {
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 	gap: 8px;
-	margin: 0 0 9px;
+	min-height: 44px;
+	margin: 0;
 	color: var(--color-muted);
 	font-weight: 400;
 	line-height: 1.35;
@@ -2477,7 +2478,7 @@ footer a:focus {
 
 .catalog-filters__option input {
 	flex: 0 0 auto;
-	margin-top: 2px;
+	margin-top: 0;
 	accent-color: var(--color-accent);
 }
 
