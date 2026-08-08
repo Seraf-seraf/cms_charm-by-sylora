@@ -4952,7 +4952,7 @@ footer a:focus {
 }
 
 .checkout-accordion .form-control {
-	min-height: 42px;
+	min-height: 44px;
 	border-color: var(--color-border);
 	border-radius: 8px;
 	background: var(--color-bg);
