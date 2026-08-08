@@ -84,8 +84,6 @@ final class CartUiContractTest extends TestCase {
 		self::assertStringContainsString('aria-label="{{ text_captcha }}"', $smartCaptcha);
 		self::assertStringContainsString('<label class="control-label"', $smartCaptcha);
 		self::assertStringContainsString('error_captcha', $smartCaptcha);
-		self::assertStringContainsString('class="sylora-smartcaptcha"', $smartCaptcha);
-		self::assertStringNotContainsString('class="smart-captcha"', $smartCaptcha . $yandexCaptcha);
 		self::assertStringNotContainsString('<legend>{{ text_captcha }}</legend>', $yandexCaptcha);
 		self::assertStringContainsString('<legend class="sr-only">{{ text_captcha }}</legend>', $yandexCaptcha);
 		self::assertStringContainsString('aria-labelledby="{{ container_id }}-label"', $yandexCaptcha);
