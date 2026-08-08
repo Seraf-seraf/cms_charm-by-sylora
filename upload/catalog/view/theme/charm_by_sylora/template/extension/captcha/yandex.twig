@@ -3,7 +3,7 @@
   <legend class="sr-only">{{ text_captcha }}</legend>
   <div class="form-group required smartcaptcha-field{% if error_captcha %} has-error{% endif %}">
     <span id="{{ container_id }}-label" class="control-label">{{ entry_captcha }}</span>
-    <div id="{{ container_id }}" class="smart-captcha" data-sitekey="{{ site_key }}" aria-labelledby="{{ container_id }}-label"{% if error_captcha %} aria-describedby="{{ container_id }}-error"{% endif %}></div>
+    <div id="{{ container_id }}" class="sylora-smartcaptcha" data-sitekey="{{ site_key }}" aria-labelledby="{{ container_id }}-label"{% if error_captcha %} aria-describedby="{{ container_id }}-error"{% endif %}></div>
     {% if error_captcha %}
     <div id="{{ container_id }}-error" class="text-danger" role="alert">{{ error_captcha }}</div>
     {% endif %}
@@ -13,7 +13,7 @@
 window.syloraYandexCaptchaOnload = function() {
   if (!window.smartCaptcha) return;
 
-  var nodes = document.querySelectorAll('.smart-captcha[data-sitekey]:not([data-rendered])');
+  var nodes = document.querySelectorAll('.sylora-smartcaptcha[data-sitekey]:not([data-rendered])');
 
   for (var i = 0; i < nodes.length; i++) {
     window.smartCaptcha.render(nodes[i], {

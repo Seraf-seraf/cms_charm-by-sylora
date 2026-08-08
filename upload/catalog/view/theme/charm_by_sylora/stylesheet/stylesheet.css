@@ -4253,14 +4253,14 @@ footer a:focus {
 	padding-left: 0;
 }
 
-.smart-captcha {
+.sylora-smartcaptcha {
 	min-width: 0;
 	width: 100%;
 	max-width: 100%;
 	overflow: hidden;
 }
 
-.smartcaptcha-field.is-responsive-overflowing .smart-captcha {
+.smartcaptcha-field.is-responsive-overflowing .sylora-smartcaptcha {
 	overflow-x: auto;
 	overflow-y: hidden;
 	overscroll-behavior-x: contain;
