@@ -20,7 +20,7 @@ final class AccountUiContractTest extends TestCase {
 			$css
 		);
 		self::assertMatchesRegularExpression(
-			'/#account-login form > a,[^{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s',
+			'/#account-login form \.form-group > a,[^{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s',
 			$css
 		);
 		self::assertStringContainsString('stylesheet.min.css?v=20260808-account-actions-v1', $header);

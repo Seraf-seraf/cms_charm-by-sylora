@@ -1202,7 +1202,7 @@ main input.form-control {
 	min-height: 44px;
 }
 
-#account-login form > a,
+#account-login form .form-group > a,
 #account-register .radio-inline {
 	display: inline-flex;
 	min-width: 44px;
