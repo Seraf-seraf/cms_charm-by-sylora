@@ -2,20 +2,12 @@
 class ControllerCheckoutCart extends Controller {
 	public function index() {
 		$this->load->language('checkout/cart');
+		$this->load->model('catalog/category');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'href' => $this->url->link('common/home'),
-			'text' => $this->language->get('text_home')
-		);
 
-		$data['breadcrumbs'][] = array(
-			'href' => $this->url->link('checkout/cart'),
-			'text' => $this->language->get('heading_title')
-		);
 
 		if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
 			if (!$this->cart->hasStock() && (!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning'))) {
@@ -71,9 +63,14 @@ class ControllerCheckoutCart extends Controller {
 				}
 
 				if ($product['image']) {
-					$image = $this->model_tool_image->resize($product['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
+					$image = $this->model_tool_image->resizeWithSources($product['image'], (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
 				} else {
-					$image = '';
+					$image = array(
+						'src'     => '',
+						'sources' => array(),
+						'width'   => (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'),
+						'height'  => (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height')
+					);
 				}
 
 				$option_data = array();
@@ -132,7 +129,9 @@ class ControllerCheckoutCart extends Controller {
 
 				$data['products'][] = array(
 					'cart_id'   => $product['cart_id'],
-					'thumb'     => $image,
+					'product_id' => $product['product_id'],
+					'thumb'     => $image['src'],
+					'image'     => $image,
 					'name'      => $product['name'],
 					'model'     => $product['model'],
 					'option'    => $option_data,
@@ -213,7 +212,7 @@ class ControllerCheckoutCart extends Controller {
 				);
 			}
 
-			$data['continue'] = $this->url->link('common/home');
+			$data['continue'] = $this->getCatalogUrl();
 
 			$data['checkout'] = $this->url->link('checkout/checkout', '', true);
 
@@ -242,11 +241,19 @@ class ControllerCheckoutCart extends Controller {
 
 			$this->response->setOutput($this->load->view('checkout/cart', $data));
 		} else {
-			$data['text_error'] = $this->language->get('text_empty');
-			
-			$data['continue'] = $this->url->link('common/home');
-
 			unset($this->session->data['success']);
+
+			$data['error_warning'] = '';
+			$data['attention'] = '';
+			$data['success'] = '';
+			$data['action'] = $this->url->link('checkout/cart/edit', '', true);
+			$data['weight'] = '';
+			$data['products'] = array();
+			$data['vouchers'] = array();
+			$data['totals'] = array();
+			$data['continue'] = $this->getCatalogUrl();
+			$data['checkout'] = $this->url->link('checkout/checkout', '', true);
+			$data['modules'] = array();
 
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');
@@ -255,12 +262,13 @@ class ControllerCheckoutCart extends Controller {
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
 
-			$this->response->setOutput($this->load->view('error/not_found', $data));
+			$this->response->setOutput($this->load->view('checkout/cart', $data));
 		}
 	}
 
 	public function add() {
 		$this->load->language('checkout/cart');
+		$this->load->model('catalog/category');
 
 		$json = array();
 
@@ -319,6 +327,10 @@ class ControllerCheckoutCart extends Controller {
 				$this->cart->add($this->request->post['product_id'], $quantity, $option, $recurring_id);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
+				$json['cart_url'] = str_replace('&amp;', '&', $this->url->link('checkout/cart'));
+				$json['continue_url'] = str_replace('&amp;', '&', $this->getCatalogUrl());
+				$json['text_cart_action'] = $this->language->get('text_cart_action');
+				$json['text_continue_action'] = $this->language->get('text_continue_action');
 
 				// Unset all shipping and payment methods
 				unset($this->session->data['shipping_method']);
@@ -378,6 +390,20 @@ class ControllerCheckoutCart extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$category) {
+			$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
 	}
 
 	public function edit() {

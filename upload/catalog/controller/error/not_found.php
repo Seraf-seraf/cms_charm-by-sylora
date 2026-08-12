@@ -2,15 +2,18 @@
 class ControllerErrorNotFound extends Controller {
 	public function index() {
 		$this->load->language('error/not_found');
+		$this->load->model('catalog/category');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setRobots('noindex, nofollow');
 
-		$data['breadcrumbs'] = array();
+		$data['heading_title'] = $this->language->get('heading_title');
+		$data['text_error'] = $this->language->get('text_error');
+		$data['text_catalog'] = $this->language->get('text_catalog');
+		$data['text_home'] = $this->language->get('text_home');
+		$data['text_contact'] = $this->language->get('text_contact');
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
+
 
 		if (isset($this->request->get['route'])) {
 			$url_data = $this->request->get;
@@ -27,13 +30,11 @@ class ControllerErrorNotFound extends Controller {
 				$url = '&' . urldecode(http_build_query($url_data, '', '&'));
 			}
 
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('heading_title'),
-				'href' => $this->url->link($route, $url, $this->request->server['HTTPS'])
-			);
 		}
 
 		$data['continue'] = $this->url->link('common/home');
+		$data['catalog'] = $this->getCatalogUrl();
+		$data['contact'] = $this->url->link('information/contact');
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
@@ -45,5 +46,19 @@ class ControllerErrorNotFound extends Controller {
 		$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 
 		$this->response->setOutput($this->load->view('error/not_found', $data));
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$category) {
+			$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
 	}
 }

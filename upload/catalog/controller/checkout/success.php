@@ -4,6 +4,20 @@ class ControllerCheckoutSuccess extends Controller {
 		$this->load->language('checkout/success');
 
 		if (isset($this->session->data['order_id'])) {
+			$this->load->model('checkout/order');
+			$order_id = (int)$this->session->data['order_id'];
+			$order_info = $this->model_checkout_order->getOrder($order_id);
+			$order_products = $this->model_checkout_order->getOrderProducts($order_id);
+			$products = array();
+
+			foreach ($order_products as $product) {
+				$products[] = array('id' => (string)$product['product_id'], 'name' => $product['name'], 'price' => (float)$product['price'], 'quantity' => (int)$product['quantity']);
+			}
+
+			if ($order_info && $products) {
+				$this->session->data['analytics_purchase'] = array('ecommerce' => array('currencyCode' => $order_info['currency_code'], 'purchase' => array('actionField' => array('id' => (string)$order_id, 'revenue' => (float)$order_info['total']), 'products' => $products)));
+			}
+
 			$this->cart->clear();
 
 			unset($this->session->data['shipping_method']);
@@ -22,27 +36,10 @@ class ControllerCheckoutSuccess extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_basket'),
-			'href' => $this->url->link('checkout/cart')
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_checkout'),
-			'href' => $this->url->link('checkout/checkout', '', true)
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_success'),
-			'href' => $this->url->link('checkout/success')
-		);
 
 		if ($this->customer->isLogged()) {
 			$data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/account', '', true), $this->url->link('account/order', '', true), $this->url->link('account/download', '', true), $this->url->link('information/contact'));

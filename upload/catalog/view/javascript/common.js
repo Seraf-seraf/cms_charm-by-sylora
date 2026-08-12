@@ -22,6 +22,189 @@ function getURLVar(key) {
 	}
 }
 
+(function() {
+	var overflowClass = 'is-responsive-overflowing';
+	var frame = null;
+	var mutationObserver = null;
+	var resizeObserver = null;
+
+	function hasHorizontalOverflow(element) {
+		return element.clientWidth > 0 && element.scrollWidth > element.clientWidth + 1;
+	}
+
+	function getPixelValue(element, property) {
+		var value = window.getComputedStyle(element)[property];
+		var parsed = parseFloat(value);
+
+		return isNaN(parsed) ? 0 : parsed;
+	}
+
+	function headerNeedsCompactLayout(header) {
+		if (hasHorizontalOverflow(header)) {
+			return true;
+		}
+
+		var brand = header.querySelector('.site-brand');
+		var nav = header.querySelector('.site-nav');
+		var actions = header.querySelector('.site-actions');
+
+		if (!brand || !nav || !actions || window.getComputedStyle(nav).position === 'fixed') {
+			return false;
+		}
+
+		var links = nav.querySelectorAll('a');
+		var navWidth = 0;
+		var navGap = getPixelValue(nav, 'columnGap');
+
+		for (var index = 0; index < links.length; index++) {
+			navWidth += links[index].scrollWidth;
+		}
+
+		if (links.length > 1) {
+			navWidth += navGap * (links.length - 1);
+		}
+
+		var headerGap = getPixelValue(header, 'columnGap');
+		var requiredWidth = brand.scrollWidth + navWidth + actions.scrollWidth + (headerGap * 2);
+
+		return requiredWidth > header.clientWidth;
+	}
+
+	function cardActionsOverflow(actions) {
+		if (hasHorizontalOverflow(actions)) {
+			return true;
+		}
+
+		var controls = actions.querySelectorAll('button, a');
+
+		for (var index = 0; index < controls.length; index++) {
+			if (hasHorizontalOverflow(controls[index])) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	function captchaOverflow(field) {
+		var widget = field.querySelector('.smart-captcha');
+
+		return hasHorizontalOverflow(field) || (widget && hasHorizontalOverflow(widget));
+	}
+
+	function updateIconOnlyControls() {
+		var controls = document.querySelectorAll('button, a, [role="button"]');
+
+		for (var index = 0; index < controls.length; index++) {
+			var control = controls[index];
+			var copy = control.cloneNode(true);
+			var hiddenNodes = copy.querySelectorAll('i, svg, .fa, .glyphicon, [aria-hidden="true"], .sr-only, .visually-hidden');
+			var rawText = (control.textContent || '').replace(/\s+/g, ' ').trim();
+
+			for (var hiddenIndex = 0; hiddenIndex < hiddenNodes.length; hiddenIndex++) {
+				hiddenNodes[hiddenIndex].remove();
+			}
+
+			var visibleText = (copy.textContent || '').replace(/\s+/g, ' ').trim();
+			var hasIcon = control.querySelector('i, svg, .fa, .glyphicon, [class*="icon-"]') !== null;
+			var isCloseSymbol = /^[×✕✖✗✘]+$/.test(rawText);
+			var isIconOnly = (hasIcon && visibleText === '') || isCloseSymbol;
+
+			control.classList.toggle('is-icon-only', isIconOnly);
+		}
+	}
+
+	function updateNode(element, detector) {
+		if (resizeObserver) {
+			resizeObserver.observe(element);
+		}
+
+		element.classList.remove(overflowClass);
+		void element.offsetWidth;
+		element.classList.toggle(overflowClass, detector(element));
+	}
+
+	function updateResponsiveOverflow() {
+		frame = null;
+		updateIconOnlyControls();
+
+		var headers = document.querySelectorAll('.site-header__inner');
+		var cardActions = document.querySelectorAll('.catalog-card__actions');
+		var captchaWidgets = document.querySelectorAll('.smart-captcha');
+		var index;
+
+		for (index = 0; index < captchaWidgets.length; index++) {
+			var captchaField = captchaWidgets[index].closest('.form-group');
+
+			if (captchaField) {
+				captchaField.classList.add('smartcaptcha-field');
+			}
+		}
+
+		var captchaFields = document.querySelectorAll('.smartcaptcha-field');
+
+		for (index = 0; index < headers.length; index++) {
+			updateNode(headers[index], headerNeedsCompactLayout);
+
+			var siteHeader = headers[index].closest('.site-header');
+
+			if (siteHeader) {
+				headers[index].style.setProperty('--site-nav-top', Math.ceil(siteHeader.getBoundingClientRect().bottom) + 'px');
+			}
+		}
+
+		for (index = 0; index < cardActions.length; index++) {
+			updateNode(cardActions[index], cardActionsOverflow);
+		}
+
+		for (index = 0; index < captchaFields.length; index++) {
+			updateNode(captchaFields[index], captchaOverflow);
+		}
+	}
+
+	function scheduleResponsiveOverflowUpdate() {
+		if (frame !== null) {
+			return;
+		}
+
+		frame = window.requestAnimationFrame(updateResponsiveOverflow);
+	}
+
+	function startResponsiveOverflowMonitor() {
+		scheduleResponsiveOverflowUpdate();
+
+		if ('MutationObserver' in window && document.body) {
+			mutationObserver = new MutationObserver(scheduleResponsiveOverflowUpdate);
+			mutationObserver.observe(document.body, {
+				childList: true,
+				subtree: true
+			});
+		}
+
+		if ('ResizeObserver' in window) {
+			resizeObserver = new ResizeObserver(scheduleResponsiveOverflowUpdate);
+			resizeObserver.observe(document.documentElement);
+		}
+
+		if (document.fonts && document.fonts.ready) {
+			document.fonts.ready.then(scheduleResponsiveOverflowUpdate);
+		}
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', startResponsiveOverflowMonitor);
+	} else {
+		startResponsiveOverflowMonitor();
+	}
+
+	window.addEventListener('load', scheduleResponsiveOverflowUpdate);
+	window.addEventListener('resize', scheduleResponsiveOverflowUpdate);
+
+	if (window.visualViewport) {
+		window.visualViewport.addEventListener('resize', scheduleResponsiveOverflowUpdate);
+	}
+})();
+
 $(document).ready(function() {
 	// Highlight any found errors
 	$('.text-danger').each(function() {
@@ -135,9 +318,57 @@ $(document).ready(function() {
 	});
 });
 
+function showSiteNotification(notification) {
+	var host = $('#site-notifications');
+
+	if (!host.length) {
+		host = $('<div id="site-notifications" class="site-notifications container" aria-live="polite" aria-atomic="true"></div>');
+		$('body').prepend(host);
+	}
+
+	host.html(notification);
+}
+
+function setProductActionLoading(trigger, loading) {
+	if (!trigger) {
+		return;
+	}
+
+	var element = $(trigger);
+
+	if (loading) {
+		element.data('was-disabled', element.prop('disabled'));
+		element.prop('disabled', true).attr('aria-busy', 'true').addClass('is-loading');
+	} else {
+		element.prop('disabled', Boolean(element.data('was-disabled'))).removeAttr('aria-busy').removeClass('is-loading');
+	}
+}
+
+function confirmProductAction(trigger, action) {
+	if (!trigger) {
+		return;
+	}
+
+	var element = $(trigger);
+
+	if (action === 'wishlist') {
+		element.attr({
+			'aria-label': 'Товар в избранном',
+			'aria-pressed': 'true',
+			'data-original-title': 'В избранном',
+			'title': 'В избранном'
+		}).addClass('is-selected');
+	} else {
+		element.addClass('is-confirmed');
+		window.setTimeout(function() {
+			element.removeClass('is-confirmed');
+		}, 1400);
+	}
+}
+
 // Cart add remove functions
 var cart = {
-	'add': function(product_id, quantity) {
+	'add': function(product_id, quantity, trigger) {
 		$.ajax({
 			url: 'index.php?route=checkout/cart/add',
 			type: 'post',
@@ -145,9 +376,11 @@ var cart = {
 			dataType: 'json',
 			beforeSend: function() {
 				$('#cart > button').button('loading');
+				setProductActionLoading(trigger, true);
 			},
 			complete: function() {
 				$('#cart > button').button('reset');
+				setProductActionLoading(trigger, false);
 			},
 			success: function(json) {
 				$('.alert-dismissible, .text-danger').remove();
@@ -157,14 +390,27 @@ var cart = {
 				}
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					document.dispatchEvent(new CustomEvent('sylora:cart-add', {detail: {product_id: product_id, quantity: (typeof(quantity) != 'undefined' ? quantity : 1)}}));
+					var cartUrl = json['cart_url'] || 'index.php?route=checkout/cart';
+					var continueUrl = json['continue_url'] || 'index.php?route=product/search';
+					var cartText = json['text_cart_action'] || 'Перейти в корзину';
+					var continueText = json['text_continue_action'] || 'Продолжить покупки';
+					var notification = '<div class="alert alert-success alert-dismissible cart-notice" role="status">';
+
+					notification += '<div class="cart-notice__message"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>';
+					notification += '<div class="cart-notice__actions">';
+					notification += '<a class="btn btn-primary btn-sm" href="' + cartUrl + '">' + cartText + '</a>';
+					notification += '<a class="btn btn-default btn-sm" href="' + continueUrl + '">' + continueText + '</a>';
+					notification += '</div>';
+					notification += '<button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+
+					showSiteNotification(notification);
+					confirmProductAction(trigger, 'cart');
 
 					// Need to set timeout otherwise it wont update the total
 					setTimeout(function () {
 						$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
 					}, 100);
-
-					$('html, body').animate({ scrollTop: 0 }, 'slow');
 
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
 				}
@@ -192,7 +438,7 @@ var cart = {
 					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
 				}, 100);
 
-				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
+				if ($('#checkout-cart').length || getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
 					location = 'index.php?route=checkout/cart';
 				} else {
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
@@ -203,7 +449,7 @@ var cart = {
 			}
 		});
 	},
-	'remove': function(key) {
+	'remove': function(key, product_id, quantity) {
 		$.ajax({
 			url: 'index.php?route=checkout/cart/remove',
 			type: 'post',
@@ -216,12 +462,13 @@ var cart = {
 				$('#cart > button').button('reset');
 			},
 			success: function(json) {
+				document.dispatchEvent(new CustomEvent('sylora:cart-remove', {detail: {key: key, product_id: product_id, quantity: quantity}}));
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
 					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
 				}, 100);
 
-				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
+				if ($('#checkout-cart').length || getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
 					location = 'index.php?route=checkout/cart';
 				} else {
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
@@ -270,12 +517,18 @@ var voucher = {
 }
 
 var wishlist = {
-	'add': function(product_id) {
+	'add': function(product_id, trigger) {
 		$.ajax({
 			url: 'index.php?route=account/wishlist/add',
 			type: 'post',
 			data: 'product_id=' + product_id,
 			dataType: 'json',
+			beforeSend: function() {
+				setProductActionLoading(trigger, true);
+			},
+			complete: function() {
+				setProductActionLoading(trigger, false);
+			},
 			success: function(json) {
 				$('.alert-dismissible').remove();
 
@@ -284,13 +537,14 @@ var wishlist = {
 				}
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					showSiteNotification('<div class="alert alert-success alert-dismissible" role="status"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					confirmProductAction(trigger, 'wishlist');
+					document.dispatchEvent(new CustomEvent('sylora:wishlist-add', {detail: {product_id: product_id}}));
 				}
 
 				$('#wishlist-total span').html(json['total']);
 				$('#wishlist-total').attr('title', json['total']);
 
-				$('html, body').animate({ scrollTop: 0 }, 'slow');
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);

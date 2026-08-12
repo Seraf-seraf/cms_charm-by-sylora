@@ -582,22 +582,9 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
 
 		$data['heading_title'] = $this->language->get('text_title');
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', '', true)
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_cart'),
-			'href' => $this->url->link('checkout/cart', '', true)
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_title'),
-			'href' => $this->url->link('extension/module/paypal_smart_button/confirmOrder', '', true)
-		);
 
 		$points_total = 0;
 

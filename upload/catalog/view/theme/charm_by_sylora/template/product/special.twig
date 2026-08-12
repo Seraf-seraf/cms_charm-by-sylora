@@ -1,0 +1,64 @@
+{{ header }}
+<main id="product-search" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <header class="catalog-head">
+        <p class="sylora-eyebrow">Акции</p>
+        <h1>{{ heading_title }}</h1>
+      </header>
+      {% if products %}
+      <div class="catalog-toolbar">
+        <div class="catalog-toolbar__count">{{ results }}</div>
+        <div class="catalog-toolbar__controls">
+          <div class="catalog-toolbar__field">
+            <label for="input-sort">{{ text_sort }}</label>
+            <select id="input-sort" class="form-control" onchange="location = this.value;">
+              {% for sorts in sorts %}
+              {% if sorts.value == '%s-%s'|format(sort, order) %}
+              <option value="{{ sorts.href }}" selected="selected">{{ sorts.text }}</option>
+              {% else %}
+              <option value="{{ sorts.href }}">{{ sorts.text }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <div class="catalog-toolbar__field">
+            <label for="input-limit">{{ text_limit }}</label>
+            <select id="input-limit" class="form-control" onchange="location = this.value;">
+              {% for limits in limits %}
+              {% if limits.value == limit %}
+              <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
+              {% else %}
+              <option value="{{ limits.href }}">{{ limits.text }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="catalog-grid"> {% for product in products %}
+        {% set heading_level = 'h2' %}
+        {% set enable_quick_view = false %}
+        {% include 'product/product_card.twig' %}
+        {% endfor %} </div>
+      <nav class="catalog-pagination" aria-label="{{ text_pagination_navigation }}">{{ pagination }}</nav>
+      {% else %}
+      <p class="catalog-empty">{{ text_empty }}</p>
+      <div class="buttons">
+        <div class="pull-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
+      </div>
+      {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</main>
+{% if catalog_schema %}
+<script type="application/ld+json">{{ catalog_schema|raw }}</script>
+{% endif %}
+{{ footer }}

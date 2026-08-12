@@ -1,0 +1,258 @@
+{{ header }}
+<main id="product-category" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <header class="catalog-head">
+        <p class="sylora-eyebrow">Каталог</p>
+        <h1>{{ heading_title }}</h1>
+      </header>
+      {% if thumb or description %}
+      <div class="row"> {% if thumb %}
+        <div class="col-sm-2"><img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" width="80" height="80" loading="lazy" decoding="async" /></div>
+        {% endif %}
+        {% if description %}
+        <div class="col-sm-10">{{ description }}</div>
+        {% endif %}</div>
+      <hr>
+      {% endif %}
+      {% if categories %}
+      <h2 class="catalog-subtitle">Подкатегории</h2>
+      {% if categories|length <= 5 %}
+      <div class="row">
+        <div class="col-sm-3">
+          <ul>
+            {% for category in categories %}
+            <li><a href="{{ category.href }}">{{ category.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% else %}
+      <div class="row">{% for category in categories|batch((categories|length / 4)|round(1, 'ceil')) %}
+        <div class="col-sm-3">
+          <ul>
+            {% for child in category %}
+            <li><a href="{{ child.href }}">{{ child.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}</div>
+      <br/>
+      {% endif %}
+      {% endif %}
+      <div class="catalog-shell">
+      <aside class="catalog-shell__sidebar">
+      {% if filter_groups or products or active_filter_count %}
+      <details class="catalog-filters" data-active-filters="{% if active_filter_count %}true{% else %}false{% endif %}"{% if active_filter_count %} open{% endif %}>
+        <summary class="catalog-filters__summary">
+          <span>{{ text_filters }}</span>
+          {% if active_filter_count %}
+          <strong>{{ active_filter_count }}</strong>
+          {% endif %}
+        </summary>
+        <form class="catalog-filters__form" action="{{ filter_action }}" method="get">
+          <input type="hidden" name="route" value="product/category" />
+          <input type="hidden" name="path" value="{{ filter_path }}" />
+          <input type="hidden" name="sort" value="{{ sort }}" />
+          <input type="hidden" name="order" value="{{ order }}" />
+          <input type="hidden" name="limit" value="{{ limit }}" />
+          <div class="catalog-filters__grid">
+            <fieldset class="catalog-filters__group">
+              <legend>{{ text_filter_price }}</legend>
+              <div class="catalog-filters__price">
+                <label for="input-price-min">
+                  <span>{{ text_filter_from }}</span>
+                  <input type="number" name="price_min" value="{{ filter_price_min }}" min="0" step="1" inputmode="decimal" id="input-price-min" />
+                </label>
+                <label for="input-price-max">
+                  <span>{{ text_filter_to }}</span>
+                  <input type="number" name="price_max" value="{{ filter_price_max }}" min="0" step="1" inputmode="decimal" id="input-price-max" />
+                </label>
+              </div>
+            </fieldset>
+            <fieldset class="catalog-filters__group">
+              <legend>{{ text_filter_availability }}</legend>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="" {% if not filter_availability %}checked="checked"{% endif %} />
+                <span>{{ text_filter_any }}</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="in_stock" {% if filter_availability == 'in_stock' %}checked="checked"{% endif %} />
+                <span>{{ text_filter_in_stock }}</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="radio" name="availability" value="out_of_stock" {% if filter_availability == 'out_of_stock' %}checked="checked"{% endif %} />
+                <span>{{ text_filter_out_of_stock }}</span>
+              </label>
+            </fieldset>
+            <fieldset class="catalog-filters__group">
+              <legend>{{ text_filter_collections }}</legend>
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="is_new" value="1" {% if filter_is_new %}checked="checked"{% endif %} />
+                <span>{{ text_filter_new }}</span>
+              </label>
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="is_sale" value="1" {% if filter_is_sale %}checked="checked"{% endif %} />
+                <span>{{ text_filter_sale }}</span>
+              </label>
+            </fieldset>
+            {% for filter_group in filter_groups %}
+            <fieldset class="catalog-filters__group">
+              <legend>{{ filter_group.name }}</legend>
+              {% for filter in filter_group.filter %}
+              <label class="catalog-filters__option">
+                <input type="checkbox" name="filter[]" value="{{ filter.filter_id }}" {% if filter.filter_id in filter_category %}checked="checked"{% endif %} />
+                <span>{{ filter.name }}</span>
+              </label>
+              {% endfor %}
+            </fieldset>
+            {% endfor %}
+          </div>
+          <div class="catalog-filters__actions">
+            <button type="submit">{{ button_filter_apply }}</button>
+            {% if active_filter_count %}
+            <a href="{{ filter_reset }}">{{ button_filter_reset }}</a>
+            {% endif %}
+          </div>
+        </form>
+      </details>
+      {% endif %}
+      </aside>
+      <div class="catalog-shell__main">
+      {% if products %}
+      <div class="catalog-toolbar">
+        <div class="catalog-toolbar__count">{{ results }}</div>
+        <div class="catalog-toolbar__controls">
+          <div class="catalog-toolbar__field">
+            <label for="input-sort">{{ text_sort }}</label>
+            <select id="input-sort" class="form-control" onchange="location = this.value;">
+              {% for sorts in sorts %}
+              {% if sorts.value == '%s-%s'|format(sort, order) %}
+              <option value="{{ sorts.href }}" selected="selected">{{ sorts.text }}</option>
+              {% else %}
+              <option value="{{ sorts.href }}">{{ sorts.text }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <div class="catalog-toolbar__field">
+            <label for="input-limit">{{ text_limit }}</label>
+            <select id="input-limit" class="form-control" onchange="location = this.value;">
+              {% for limits in limits %}
+              {% if limits.value == limit %}
+              <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
+              {% else %}
+              <option value="{{ limits.href }}">{{ limits.text }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="catalog-grid"> {% for product in products %}
+        {% set heading_level = 'h2' %}
+        {% set enable_quick_view = true %}
+        {% include 'product/product_card.twig' %}
+        {% endfor %} </div>
+      <nav class="catalog-pagination" aria-label="{{ text_pagination_navigation }}">{{ pagination }}</nav>
+      {% endif %}
+      {% if not categories and not products %}
+      <p class="catalog-empty">{{ text_empty }}</p>
+      <div class="buttons">
+        <div class="pull-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
+      </div>
+      {% endif %}
+      </div>
+      </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</main>
+{% if catalog_schema %}
+<script type="application/ld+json">{{ catalog_schema|raw }}</script>
+{% endif %}
+<script>
+(function() {
+  var lastQuickViewTrigger = null;
+  var focusableSelector = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  var filterDetails = document.querySelector('.catalog-filters');
+  var desktopFilters = window.matchMedia('(min-width: 992px)');
+
+  function syncFilterDisclosure(event) {
+    if (!filterDetails) return;
+
+    if (desktopFilters.matches) {
+      filterDetails.open = true;
+    } else if (event && filterDetails.getAttribute('data-active-filters') !== 'true') {
+      filterDetails.open = false;
+    }
+  }
+
+  syncFilterDisclosure();
+
+  if (typeof desktopFilters.addEventListener === 'function') {
+    desktopFilters.addEventListener('change', syncFilterDisclosure);
+  } else if (typeof desktopFilters.addListener === 'function') {
+    desktopFilters.addListener(syncFilterDisclosure);
+  }
+
+  function getFocusable(container) {
+    return Array.prototype.slice.call(container.querySelectorAll(focusableSelector)).filter(function(element) {
+      return element.offsetParent !== null || element === document.activeElement;
+    });
+  }
+
+  document.addEventListener('click', function(event) {
+    var trigger = event.target.closest ? event.target.closest('.js-quick-view-open') : null;
+    if (!trigger) return;
+
+    var dialog = document.getElementById(trigger.getAttribute('data-dialog-id'));
+    if (!dialog || typeof dialog.showModal !== 'function') return;
+
+    lastQuickViewTrigger = trigger;
+    trigger.setAttribute('aria-expanded', 'true');
+    dialog.showModal();
+
+    var focusable = getFocusable(dialog);
+    if (focusable.length) {
+      focusable[0].focus();
+    }
+  });
+
+  document.addEventListener('keydown', function(event) {
+    var dialog = document.querySelector('.quick-view[open]');
+    if (!dialog || event.key !== 'Tab') return;
+
+    var focusable = getFocusable(dialog);
+    if (!focusable.length) return;
+
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  document.addEventListener('close', function(event) {
+    if (!event.target.classList || !event.target.classList.contains('quick-view')) return;
+
+    if (lastQuickViewTrigger) {
+      lastQuickViewTrigger.setAttribute('aria-expanded', 'false');
+      lastQuickViewTrigger.focus();
+      lastQuickViewTrigger = null;
+    }
+  }, true);
+})();
+</script>
+{{ footer }}

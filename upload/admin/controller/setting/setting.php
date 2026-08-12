@@ -180,6 +180,31 @@ class ControllerSettingSetting extends Controller {
 			$data['config_meta_keyword'] = $this->config->get('config_meta_keyword');
 		}
 
+		$data['seo_templates'] = array();
+		$seo_template_labels = array(
+			'config_seo_home_h1_template' => 'Главная: H1',
+			'config_seo_category_title_template' => 'Категория: Title',
+			'config_seo_category_description_template' => 'Категория: Description',
+			'config_seo_product_title_template' => 'Товар: Title',
+			'config_seo_product_description_template' => 'Товар: Description',
+			'config_seo_information_title_template' => 'Информационная страница: Title',
+			'config_seo_information_description_template' => 'Информационная страница: Description',
+			'config_seo_manufacturer_title_template' => 'Производитель: Title',
+			'config_seo_manufacturer_description_template' => 'Производитель: Description',
+			'config_seo_special_title_template' => 'Акции: Title',
+			'config_seo_special_description_template' => 'Акции: Description',
+			'config_seo_contact_title_template' => 'Контакты: Title',
+			'config_seo_contact_description_template' => 'Контакты: Description'
+		);
+
+		foreach ($seo_template_labels as $key => $label) {
+			$data['seo_templates'][] = array(
+				'key' => $key,
+				'label' => $label,
+				'value' => isset($this->request->post[$key]) ? $this->request->post[$key] : $this->config->get($key)
+			);
+		}
+
 		if (isset($this->request->post['config_theme'])) {
 			$data['config_theme'] = $this->request->post['config_theme'];
 		} else {
@@ -258,6 +283,28 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$data['config_fax'] = $this->config->get('config_fax');
 		}
+
+		if (isset($this->request->post['config_footer_column_count'])) {
+			$data['config_footer_column_count'] = (int)$this->request->post['config_footer_column_count'];
+		} else {
+			$data['config_footer_column_count'] = (int)$this->config->get('config_footer_column_count');
+		}
+
+		if ($data['config_footer_column_count'] < 1 || $data['config_footer_column_count'] > 5) {
+			$data['config_footer_column_count'] = 5;
+		}
+
+		if (isset($this->request->post['config_footer_columns']) && is_array($this->request->post['config_footer_columns'])) {
+			$footer_columns = $this->request->post['config_footer_columns'];
+		} else {
+			$footer_columns = $this->config->get('config_footer_columns');
+		}
+
+		if (!is_array($footer_columns)) {
+			$footer_columns = $this->getDefaultFooterColumns();
+		}
+
+		$data['config_footer_columns'] = $this->prepareFooterColumns($footer_columns);
 		
 		if (isset($this->request->post['config_image'])) {
 			$data['config_image'] = $this->request->post['config_image'];
@@ -940,10 +987,120 @@ class ControllerSettingSetting extends Controller {
 		$this->response->setOutput($this->load->view('setting/setting', $data));
 	}
 
+	private function getDefaultFooterColumns() {
+		$contact_items = array(
+			array('text' => 'Написать нам', 'url' => '/contact'),
+		);
+
+		$telephone = trim((string)$this->config->get('config_telephone'));
+
+		if ($telephone !== '') {
+			$contact_items[] = array(
+				'text' => $telephone,
+				'url' => 'tel:' . preg_replace('/[^0-9+]/', '', $telephone),
+			);
+		}
+
+		$email = trim((string)$this->config->get('config_email'));
+
+		if ($email !== '') {
+			$contact_items[] = array('text' => $email, 'url' => 'mailto:' . $email);
+		}
+
+		$address = trim((string)$this->config->get('config_address'));
+
+		if ($address !== '') {
+			$contact_items[] = array('text' => $address, 'url' => '');
+		}
+
+		return array(
+			array(
+				'title' => 'Charm by Sylora',
+				'item_count' => 2,
+				'items' => array(
+					array('text' => 'Ручные украшения небольшими партиями: серьги, браслеты, подвески, колье и комплекты с бережной упаковкой.', 'url' => ''),
+					array('text' => 'Онлайн-оплата через платежный агрегатор.', 'url' => ''),
+				),
+			),
+			array(
+				'title' => 'Каталог',
+				'item_count' => 4,
+				'items' => array(
+					array('text' => 'Главная', 'url' => '/'),
+					array('text' => 'Каталог', 'url' => '/search'),
+					array('text' => 'Обо мне', 'url' => '/about'),
+					array('text' => 'Корзина', 'url' => '/index.php?route=checkout/cart'),
+				),
+			),
+			array(
+				'title' => 'Покупателям',
+				'item_count' => 5,
+				'items' => array(
+					array('text' => 'Доставка и оплата', 'url' => '/delivery-payment'),
+					array('text' => 'Возврат и обмен', 'url' => '/returns'),
+					array('text' => 'Уход за украшениями', 'url' => '/jewelry-care'),
+					array('text' => 'Размеры и материалы', 'url' => '/sizes-materials'),
+					array('text' => 'Подарочная упаковка', 'url' => '/gift-packaging'),
+				),
+			),
+			array(
+				'title' => 'Информация',
+				'item_count' => 3,
+				'items' => array(
+					array('text' => 'Политика конфиденциальности', 'url' => '/privacy-policy'),
+					array('text' => 'Оферта', 'url' => '/offer'),
+					array('text' => 'Карта сайта', 'url' => '/index.php?route=information/sitemap'),
+				),
+			),
+			array(
+				'title' => 'Контакты',
+				'item_count' => min(5, count($contact_items)),
+				'items' => $contact_items,
+			),
+		);
+	}
+
+	private function prepareFooterColumns(array $columns) {
+		$prepared_columns = array();
+
+		for ($column_index = 0; $column_index < 5; $column_index++) {
+			$column = isset($columns[$column_index]) && is_array($columns[$column_index]) ? $columns[$column_index] : array();
+			$items = isset($column['items']) && is_array($column['items']) ? $column['items'] : array();
+			$item_count = isset($column['item_count']) ? (int)$column['item_count'] : count($items);
+			$prepared_items = array();
+
+			for ($item_index = 0; $item_index < 5; $item_index++) {
+				$item = isset($items[$item_index]) && is_array($items[$item_index]) ? $items[$item_index] : array();
+				$prepared_items[] = array(
+					'text' => isset($item['text']) ? (string)$item['text'] : '',
+					'url' => isset($item['url']) ? (string)$item['url'] : '',
+				);
+			}
+
+			$prepared_columns[] = array(
+				'title' => isset($column['title']) ? (string)$column['title'] : '',
+				'item_count' => max(1, min(5, $item_count)),
+				'items' => $prepared_items,
+			);
+		}
+
+		return $prepared_columns;
+	}
+
 	protected function validate() {
 		if (!$this->user->hasPermission('modify', 'setting/setting')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
+
+		$footer_column_count = isset($this->request->post['config_footer_column_count'])
+			? (int)$this->request->post['config_footer_column_count']
+			: 5;
+		$this->request->post['config_footer_column_count'] = max(1, min(5, $footer_column_count));
+
+		$footer_columns = isset($this->request->post['config_footer_columns']) && is_array($this->request->post['config_footer_columns'])
+			? $this->request->post['config_footer_columns']
+			: $this->getDefaultFooterColumns();
+		$this->request->post['config_footer_columns'] = $this->prepareFooterColumns($footer_columns);
 
 		if (!$this->request->post['config_meta_title']) {
 			$this->error['meta_title'] = $this->language->get('error_meta_title');

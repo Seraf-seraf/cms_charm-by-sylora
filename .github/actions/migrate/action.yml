@@ -1,0 +1,43 @@
+name: migrate
+description: Update the production checkout and run OpenCart database migrations.
+
+inputs:
+  host:
+    description: SSH host.
+    required: true
+  user:
+    description: SSH user.
+    required: true
+  password:
+    description: SSH password.
+    required: true
+  port:
+    description: SSH port.
+    required: true
+    default: "22"
+  deploy-path:
+    description: OpenCart directory on the remote host.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Run migrations over SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ inputs.host }}
+        username: ${{ inputs.user }}
+        password: ${{ inputs.password }}
+        port: ${{ inputs.port }}
+        debug: true
+        script: |
+          set -eux
+
+          export PATH="$HOME/bin:$PATH"
+
+          cd "${{ inputs['deploy-path'] }}"
+
+          git fetch origin main
+          git reset --hard origin/main
+
+          php database/migrate.php

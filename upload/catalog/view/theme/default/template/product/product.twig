@@ -14,36 +14,35 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-      <div class="row"> {% if column_left or column_right %}
+      <div class="product-page"> {% if column_left or column_right %}
         {% set class = 'col-sm-6' %}
         {% else %}
-        {% set class = 'col-sm-8' %}
+        {% set class = 'product-page__media' %}
         {% endif %}
         <div class="{{ class }}"> {% if thumb or images %}
           <ul class="thumbnails">
             {% if thumb %}
-            <li><a class="thumbnail" href="{{ popup }}" title="{{ heading_title }}"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" /></a></li>
+            <li class="product-gallery__main"><a class="thumbnail" href="{{ popup }}" title="{{ main_image_alt }}"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ main_image_alt }}" /></a></li>
             {% endif %}
             {% if images %}
             {% for image in images %}
-            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ heading_title }}"> <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" /></a></li>
+            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ image.alt }}"> <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ image.alt }}" loading="lazy" /></a></li>
             {% endfor %}
             {% endif %}
           </ul>
           {% endif %}
-          <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab-description" data-toggle="tab">{{ tab_description }}</a></li>
+          {% if attribute_groups or review_status %}
+          <ul class="nav nav-tabs product-tabs">
             {% if attribute_groups %}
-            <li><a href="#tab-specification" data-toggle="tab">{{ tab_attribute }}</a></li>
+            <li class="active"><a href="#tab-specification" data-toggle="tab">Характеристики</a></li>
             {% endif %}
             {% if review_status %}
-            <li><a href="#tab-review" data-toggle="tab">{{ tab_review }}</a></li>
+            <li{% if not attribute_groups %} class="active"{% endif %}><a href="#tab-review" data-toggle="tab">Отзывы</a></li>
             {% endif %}
           </ul>
-          <div class="tab-content">
-            <div class="tab-pane active" id="tab-description">{{ description }}</div>
+          <div class="tab-content product-tabs__content">
             {% if attribute_groups %}
-            <div class="tab-pane" id="tab-specification">
+            <div class="tab-pane active" id="tab-specification">
               <table class="table table-bordered">
                 {% for attribute_group in attribute_groups %}
                 <thead>
@@ -64,7 +63,7 @@
             </div>
             {% endif %}
             {% if review_status %}
-            <div class="tab-pane" id="tab-review">
+            <div class="tab-pane{% if not attribute_groups %} active{% endif %}" id="tab-review">
               <form class="form-horizontal" id="form-review">
                 <div id="review"></div>
                 <h2>{{ text_write }}</h2>
@@ -109,45 +108,55 @@
               </form>
             </div>
             {% endif %}</div>
+          {% endif %}
         </div>
         {% if column_left or column_right %}
         {% set class = 'col-sm-6' %}
         {% else %}
-        {% set class = 'col-sm-4' %}
+        {% set class = 'product-page__summary' %}
         {% endif %}
         <div class="{{ class }}">
-          <div class="btn-group">
-            <button type="button" data-toggle="tooltip" class="btn btn-default" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product_id }}');"><i class="fa fa-heart"></i></button>
-            <button type="button" data-toggle="tooltip" class="btn btn-default" title="{{ button_compare }}" onclick="compare.add('{{ product_id }}');"><i class="fa fa-exchange"></i></button>
+          <div class="product-summary__tools">
+            <button type="button" data-toggle="tooltip" class="btn btn-default" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product_id }}');"><i class="fa fa-heart"></i></button>
           </div>
+          <p class="sylora-eyebrow">Украшение ручной работы</p>
           <h1>{{ heading_title }}</h1>
-          <ul class="list-unstyled">
+          <ul class="list-unstyled product-meta">
             {% if manufacturer %}
-            <li>{{ text_manufacturer }} <a href="{{ manufacturers }}">{{ manufacturer }}</a></li>
+            <li><span>Бренд</span> <a href="{{ manufacturers }}">{{ manufacturer }}</a></li>
             {% endif %}
-            <li>{{ text_model }} {{ model }}</li>
+            <li><span>Артикул</span> {{ model }}</li>
             {% if reward %}
-            <li>{{ text_reward }} {{ reward }}</li>
+            <li><span>Бонусные баллы</span> {{ reward }}</li>
             {% endif %}
-            <li>{{ text_stock }} {{ stock }}</li>
+            {% if product_details.materials %}
+            <li><span>Материалы</span> {{ product_details.materials }}</li>
+            {% endif %}
+            {% if product_details.size %}
+            <li><span>Размер</span> {{ product_details.size }}</li>
+            {% endif %}
+            {% if product_details.color %}
+            <li><span>Цвет</span> {{ product_details.color }}</li>
+            {% endif %}
+            <li><span>Наличие</span> <strong class="product-stock {{ stock_class }}">{{ stock }}</strong></li>
           </ul>
           {% if price %}
-          <ul class="list-unstyled">
+          <ul class="list-unstyled product-price">
             {% if not special %}
             <li>
               <h2>{{ price }}</h2>
             </li>
             {% else %}
-            <li><span style="text-decoration: line-through;">{{ price }}</span></li>
+            <li><span class="product-price__old">{{ price }}</span></li>
             <li>
               <h2>{{ special }}</h2>
             </li>
             {% endif %}
             {% if tax %}
-            <li>{{ text_tax }} {{ tax }}</li>
+            <li class="product-price__tax">{{ text_tax }} {{ tax }}</li>
             {% endif %}
             {% if points %}
-            <li>{{ text_points }} {{ points }}</li>
+            <li class="product-price__tax">{{ text_points }} {{ points }}</li>
             {% endif %}
             {% if discounts %}
             <li>
@@ -159,9 +168,9 @@
             {% endif %}
           </ul>
           {% endif %}
-          <div id="product"> {% if options %}
+          <div id="product" class="product-purchase"> {% if options %}
             <hr>
-            <h3>{{ text_option }}</h3>
+            <h2>Выберите вариант</h2>
             {% for option in options %}
             {% if option.type == 'select' %}
             <div class="form-group{% if option.required %} required {% endif %}">
@@ -274,15 +283,38 @@
             </div>
             {% endif %}
             <div class="form-group">
-              <label class="control-label" for="input-quantity">{{ entry_qty }}</label>
+              <label class="control-label" for="input-quantity">Количество</label>
               <input type="text" name="quantity" value="{{ minimum }}" size="2" id="input-quantity" class="form-control" />
               <input type="hidden" name="product_id" value="{{ product_id }}" />
               <br/>
-              <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block">{{ button_cart }}</button>
+              <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block">В корзину</button>
             </div>
             {% if minimum > 1 %}
             <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_minimum }}</div>
             {% endif %}</div>
+          <div class="product-trust">
+            <div><strong>Бережная упаковка</strong><span>Подходит для подарка без дополнительной подготовки.</span></div>
+            <div><strong>Доставка по России</strong><span>Сроки и стоимость уточняются при оформлении заказа.</span></div>
+            <div><strong>Уход за украшением</strong><span>Храните изделие отдельно и избегайте длительного контакта с водой.</span></div>
+          </div>
+          <div class="product-accordions" role="list">
+            <details open>
+              <summary>Описание</summary>
+              <div>{{ description }}</div>
+            </details>
+            <details>
+              <summary>Уход</summary>
+              <div>
+                <p>{{ care_text }}</p>
+              </div>
+            </details>
+            <details>
+              <summary>Доставка и возврат</summary>
+              <div>
+                <p>{{ delivery_return_text }}</p>
+              </div>
+            </details>
+          </div>
           {% if review_status %}
           <div class="rating">
             <p>{% for i in 1..5 %}
@@ -292,22 +324,25 @@
           {% endif %} </div>
       </div>
       {% if products %}
-      <h3>{{ text_related }}</h3>
-      <div class="row"> {% set i = 0 %}
+      <section class="related-products">
+      <div class="sylora-section__head">
+        <h2>Похожие украшения</h2>
+      </div>
+      <div class="catalog-grid"> {% set i = 0 %}
         {% for product in products %}
-        {% if column_left and column_right %}
-        {% set class = 'col-xs-8 col-sm-6' %}
-        {% elseif column_left or column_right %}
-        {% set class = 'col-xs-6 col-md-4' %}
-        {% else %}
-        {% set class = 'col-xs-6 col-sm-3' %}
-        {% endif %}
-        <div class="{{ class }}">
-          <div class="product-thumb transition">
-            <div class="image"><a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" /></a></div>
+        <article class="product-layout product-grid catalog-card">
+          <div class="product-thumb">
+            <a class="catalog-card__image" href="{{ product.href }}">
+              {% if product.special %}
+              <span class="catalog-card__badge">Скидка</span>
+              {% endif %}
+              <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" loading="lazy" />
+            </a>
+            <div class="catalog-card__body">
             <div class="caption">
-              <h4><a href="{{ product.href }}">{{ product.name }}</a></h4>
-              <p>{{ product.description }}</p>
+              <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+              <h2><a href="{{ product.href }}">{{ product.name }}</a></h2>
+              <p class="catalog-card__description">{{ product.description }}</p>
               {% if product.rating %}
               <div class="rating"> {% for j in 1..5 %}
                 {% if product.rating < j %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span> {% endif %}
@@ -319,22 +354,17 @@
                 {% else %} <span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span> {% endif %}
                 {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
               {% endif %} </div>
-            <div class="button-group">
-              <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span> <i class="fa fa-shopping-cart"></i></button>
-              <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
-              <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+            <div class="button-group catalog-card__actions">
+              <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+              <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
+              <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+            </div>
             </div>
           </div>
-        </div>
-        {% if column_left and column_right and (i + 1) % 2 == 0 %}
-        <div class="clearfix visible-md visible-sm"></div>
-        {% elseif column_left or column_right and (i + 1) % 3 == 0 %}
-        <div class="clearfix visible-md"></div>
-        {% elseif (i + 1) % 4 == 0 %}
-        <div class="clearfix visible-md"></div>
-        {% endif %}
+        </article>
         {% set i = i + 1 %}
         {% endfor %} </div>
+      </section>
         {% endif %}
         {% if tags %}
         <p>{{ text_tags }}
@@ -346,6 +376,12 @@
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
+{% if product_schema %}
+<script type="application/ld+json">{{ product_schema|raw }}</script>
+{% endif %}
+{% if breadcrumb_schema %}
+<script type="application/ld+json">{{ breadcrumb_schema|raw }}</script>
+{% endif %}
 <script type="text/javascript"><!--
 $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 	$.ajax({
@@ -405,7 +441,20 @@ $('#button-cart').on('click', function() {
 			}
 
 			if (json['success']) {
-				$('.breadcrumb').after('<div class="alert alert-success alert-dismissible">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				var cartUrl = json['cart_url'] || 'index.php?route=checkout/cart';
+				var continueUrl = json['continue_url'] || 'index.php?route=product/search';
+				var cartText = json['text_cart_action'] || 'Перейти в корзину';
+				var continueText = json['text_continue_action'] || 'Продолжить покупки';
+				var notification = '<div class="alert alert-success alert-dismissible cart-notice" role="status">';
+
+				notification += '<div class="cart-notice__message"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>';
+				notification += '<div class="cart-notice__actions">';
+				notification += '<a class="btn btn-primary btn-sm" href="' + cartUrl + '">' + cartText + '</a>';
+				notification += '<a class="btn btn-default btn-sm" href="' + continueUrl + '">' + continueText + '</a>';
+				notification += '</div>';
+				notification += '<button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+
+				$('.breadcrumb').after(notification);
 
 				$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
 

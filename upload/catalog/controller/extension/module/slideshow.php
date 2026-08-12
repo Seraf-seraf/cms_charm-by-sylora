@@ -11,6 +11,8 @@ class ControllerExtensionModuleSlideshow extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/swiper/js/swiper.jquery.min.js');
 		
 		$data['banners'] = array();
+		$data['width'] = max(1, (int)$setting['width']);
+		$data['height'] = max(1, (int)$setting['height']);
 
 		$results = $this->model_design_banner->getBanner($setting['banner_id']);
 
@@ -19,7 +21,7 @@ class ControllerExtensionModuleSlideshow extends Controller {
 				$data['banners'][] = array(
 					'title' => $result['title'],
 					'link'  => $result['link'],
-					'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])
+					'image' => $this->model_tool_image->resize($result['image'], $data['width'], $data['height'])
 				);
 			}
 		}

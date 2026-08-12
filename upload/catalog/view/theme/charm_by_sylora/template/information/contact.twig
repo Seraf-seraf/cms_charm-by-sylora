@@ -1,0 +1,226 @@
+{{ header }}
+<main id="information-contact" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <section class="contact-page" aria-labelledby="contact-title">
+        <header class="contact-head">
+          <p class="sylora-eyebrow">Charm by Sylora</p>
+          <h1 id="contact-title">{{ heading_title }}</h1>
+          <p>{{ text_intro }}</p>
+        </header>
+        <div class="contact-layout">
+          <aside class="contact-card">
+            {% if image.src %}
+            <picture>
+              {% for source in image.sources %}
+              <source srcset="{{ source.src }}" type="{{ source.type }}">
+              {% endfor %}
+              <img src="{{ image.src }}" alt="{{ store }}" title="{{ store }}" class="contact-card__image" width="{{ image.width }}" height="{{ image.height }}" loading="lazy" decoding="async" />
+            </picture>
+            {% endif %}
+            <h2>{{ store }}</h2>
+            <ul class="contact-list">
+              {% if region %}
+              <li><strong>{{ text_region }}</strong><span>{{ region }}</span></li>
+              {% endif %}
+              {% if store_email %}
+              <li><strong>{{ text_email }}</strong><a href="mailto:{{ store_email }}">{{ store_email }}</a></li>
+              {% endif %}
+              {% if telephone %}
+              <li><strong>{{ text_telephone }}</strong><a href="tel:{{ telephone_href }}">{{ telephone }}</a></li>
+              {% endif %}
+              {% if address %}
+              <li><strong>{{ text_address }}</strong><span>{{ address }}</span></li>
+              {% endif %}
+              {% if open %}
+              <li><strong>{{ text_open }}</strong><span>{{ open }}</span></li>
+              {% endif %}
+              {% if response_time %}
+              <li><strong>{{ text_response }}</strong><span>{{ response_time }}</span></li>
+              {% endif %}
+              {% if comment %}
+              <li><strong>{{ text_comment }}</strong><span>{{ comment }}</span></li>
+              {% endif %}
+            </ul>
+            {% if messenger_links %}
+            <div class="contact-link-group">
+              <strong>{{ text_messengers }}</strong>
+              <div>
+                {% for link in messenger_links %}
+                <a href="{{ link.href }}" target="_blank" rel="noopener">{{ link.label }}</a>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+            {% if social_links %}
+            <div class="contact-link-group">
+              <strong>{{ text_socials }}</strong>
+              <div>
+                {% for link in social_links %}
+                <a href="{{ link.href }}" target="_blank" rel="noopener">{{ link.label }}</a>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+            {% if legal_info %}
+            <div class="contact-legal">
+              <strong>{{ text_legal }}</strong>
+              <span>{{ legal_info }}</span>
+            </div>
+            {% endif %}
+            <div class="contact-actions">
+              <a class="sylora-link" href="{{ delivery_href }}">{{ text_delivery }}</a>
+              {% if geocode %}
+              <a href="https://maps.google.com/maps?q={{ geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" rel="noopener" class="btn btn-default"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
+              {% endif %}
+            </div>
+          </aside>
+          <div class="contact-form-card">
+            <h2 id="contact-form-title">{{ text_contact }}</h2>
+            {% if error_spam %}
+            <div class="alert alert-danger" role="alert">{{ error_spam }}</div>
+            {% endif %}
+            {% if locations %}
+            <details class="contact-locations">
+              <summary>{{ text_store }}</summary>
+              <div class="contact-locations__grid">
+                {% for location in locations %}
+                <section>
+                  <h3>{{ location.name }}</h3>
+                  {% if location.image %}
+                  <img src="{{ location.image }}" alt="{{ location.name }}" title="{{ location.name }}" class="img-thumbnail" width="268" height="50" loading="lazy" decoding="async" />
+                  {% endif %}
+                  {% if location.address %}
+                  <p>{{ location.address }}</p>
+                  {% endif %}
+                  {% if location.telephone %}
+                  <p><strong>{{ text_telephone }}</strong><br>{{ location.telephone }}</p>
+                  {% endif %}
+                  {% if location.open %}
+                  <p><strong>{{ text_open }}</strong><br>{{ location.open }}</p>
+                  {% endif %}
+                  {% if location.comment %}
+                  <p>{{ location.comment }}</p>
+                  {% endif %}
+                  {% if location.geocode %}
+                  <a href="https://maps.google.com/maps?q={{ location.geocode|url_encode }}&hl={{ geocode_hl }}&t=m&z=15" target="_blank" rel="noopener" class="btn btn-info"><i class="fa fa-map-marker"></i> {{ button_map }}</a>
+                  {% endif %}
+                </section>
+                {% endfor %}
+              </div>
+            </details>
+            {% endif %}
+            <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal sylora-form" aria-labelledby="contact-form-title">
+              <fieldset>
+                <div class="form-group sylora-hp" aria-hidden="true">
+                  <label for="input-company">Компания</label>
+                  <input type="text" name="company" value="" id="input-company" tabindex="-1" autocomplete="off" class="form-control" />
+                </div>
+                <input type="hidden" name="form_started_at" value="{{ form_started_at }}" />
+                <div class="form-group required">
+                  <label class="control-label" for="input-name">{{ entry_name }}</label>
+                  <input type="text" name="name" value="{{ name }}" id="input-name" class="form-control" autocomplete="name" minlength="3" maxlength="32" required{% if error_name %} aria-invalid="true" aria-describedby="error-name"{% endif %} />
+                  {% if error_name %}
+                  <div class="text-danger" id="error-name">{{ error_name }}</div>
+                  {% endif %}
+                </div>
+                <p id="contact-method-hint" class="contact-method-hint">{{ text_contact_method }}</p>
+                <div class="contact-form-grid">
+                  <div class="form-group">
+                    <label class="control-label" for="input-email">{{ entry_email }}</label>
+                    <input type="email" name="email" value="{{ email }}" id="input-email" class="form-control" autocomplete="email" aria-describedby="contact-method-hint{% if error_email %} error-email{% endif %}"{% if error_email %} aria-invalid="true"{% endif %} />
+                    {% if error_email %}
+                    <div class="text-danger" id="error-email">{{ error_email }}</div>
+                    {% endif %}
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label" for="input-telephone">{{ entry_telephone }}</label>
+                    <input type="tel" name="telephone" value="{{ telephone_value }}" id="input-telephone" class="form-control" autocomplete="tel" minlength="7" aria-describedby="contact-method-hint{% if error_email %} error-email{% endif %}"{% if error_email %} aria-invalid="true"{% endif %} />
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="control-label" for="input-enquiry">{{ entry_enquiry }}</label>
+                  <textarea name="enquiry" rows="8" id="input-enquiry" class="form-control" minlength="10" maxlength="3000" required{% if error_enquiry %} aria-invalid="true" aria-describedby="error-enquiry"{% endif %}>{{ enquiry }}</textarea>
+                  {% if error_enquiry %}
+                  <div class="text-danger" id="error-enquiry">{{ error_enquiry }}</div>
+                  {% endif %}
+                </div>
+                <div class="form-group required">
+                  <label class="checkbox sylora-checkbox">
+                    <input type="checkbox" name="privacy_agree" value="1"{% if privacy_agree %} checked="checked"{% endif %} required{% if error_privacy %} aria-invalid="true" aria-describedby="error-privacy"{% endif %} />
+                    <span>{{ text_privacy }}{% if privacy_href %} <a href="{{ privacy_href }}" target="_blank" rel="noopener">Политику конфиденциальности</a>{% endif %}</span>
+                  </label>
+                  {% if error_privacy %}
+                  <div class="text-danger" id="error-privacy">{{ error_privacy }}</div>
+                  {% endif %}
+                </div>
+                {{ captcha }}
+              </fieldset>
+              <div class="buttons">
+                <div>
+                  <input class="btn btn-primary" type="submit" value="{{ button_submit }}" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+      <script>
+      (function() {
+        var form = document.querySelector('.sylora-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function(event) {
+          var email = form.querySelector('#input-email');
+          var phone = form.querySelector('#input-telephone');
+          var hasContact = (email && email.value.trim()) || (phone && phone.value.trim());
+
+          if (!hasContact) {
+            event.preventDefault();
+            if (email) {
+              email.setCustomValidity('{{ error_email_text|e('js') }}');
+              email.reportValidity();
+            }
+            return;
+          }
+
+          if (email) {
+            email.setCustomValidity('');
+          }
+        });
+
+        ['#input-email', '#input-telephone'].forEach(function(selector) {
+          var field = form.querySelector(selector);
+
+          if (field) {
+            field.addEventListener('input', function() {
+              var emailField = form.querySelector('#input-email');
+
+              if (emailField) {
+                emailField.setCustomValidity('');
+              }
+            });
+          }
+        });
+
+        var firstInvalid = form.querySelector('[aria-invalid="true"]');
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+        }
+      })();
+      </script>
+      {% if contact_schema %}
+      <script type="application/ld+json">{{ contact_schema|raw }}</script>
+      {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</main>
+{{ footer }}

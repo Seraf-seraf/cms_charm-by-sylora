@@ -1,21 +1,224 @@
 <?php
 class ControllerCommonHome extends Controller {
 	public function index() {
-		$this->document->setTitle($this->config->get('config_meta_title'));
-		$this->document->setDescription($this->config->get('config_meta_description'));
-		$this->document->setKeywords($this->config->get('config_meta_keyword'));
+		$this->document->setTitle($this->config->get('config_meta_title') ?: 'Charm by Sylora - украшения ручной работы');
+		$this->document->setDescription($this->config->get('config_meta_description') ?: 'Интернет-магазин авторских украшений ручной работы: серьги, браслеты, подвески, колье и подарочные комплекты.');
+		$this->document->setKeywords('украшения ручной работы, авторские украшения, серьги, браслеты, подвески, Charm by Sylora');
 
-		if (isset($this->request->get['route'])) {
-			$this->document->addLink($this->config->get('config_url'), 'canonical');
+		$this->load->model('catalog/category');
+		$this->load->model('catalog/information');
+		$this->load->model('catalog/product');
+		$this->load->model('tool/image');
+		$this->load->library('seo');
+
+		$is_https = (!empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off')
+			|| (!empty($this->request->server['HTTP_X_FORWARDED_PROTO']) && strtolower($this->request->server['HTTP_X_FORWARDED_PROTO']) == 'https');
+		$canonical = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
+
+		$this->document->addLink($canonical, 'canonical');
+
+		$data['home_categories'] = array();
+		$data['heading_title'] = $this->seo->heading($this->config->get('config_name'), 'home');
+		$data['catalog'] = $this->getCatalogUrl();
+		$data['about'] = $this->getAboutUrl();
+
+		$categories = $this->model_catalog_category->getCategoriesWithProducts(0);
+
+		foreach ($categories as $category) {
+			$data['home_categories'][] = array(
+				'name'        => $category['name'],
+				'description' => $this->getCategorySummary($category['description']),
+				'href'        => $this->url->link('product/category', 'path=' . $category['category_id'])
+			);
+
+			if (count($data['home_categories']) >= 6) {
+				break;
+			}
 		}
 
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['column_right'] = $this->load->controller('common/column_right');
-		$data['content_top'] = $this->load->controller('common/content_top');
-		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['featured_products'] = array();
+		$featured_products = array();
+		$image_width = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
+		$image_height = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
+
+		foreach ($this->model_catalog_product->getProductSpecials(array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => 6)) as $product) {
+			$featured_products[$product['product_id']] = $product;
+		}
+
+		foreach ($this->model_catalog_product->getLatestProducts(6) as $product) {
+			$featured_products[$product['product_id']] = $product;
+		}
+
+		foreach ($this->model_catalog_product->getPopularProducts(6) as $product) {
+			$featured_products[$product['product_id']] = $product;
+		}
+
+		foreach ($featured_products as $product) {
+			$image_filename = $product['image'] ? $product['image'] : 'placeholder.png';
+			$image = $this->model_tool_image->resizeWithSources($image_filename, $image_width, $image_height);
+
+			$hover_image = array(
+				'src'     => '',
+				'sources' => array(),
+				'width'   => $image_width,
+				'height'  => $image_height
+			);
+			$product_images = $this->model_catalog_product->getProductImages($product['product_id']);
+
+			foreach ($product_images as $product_image) {
+				if (!empty($product_image['image']) && $product_image['image'] !== $product['image']) {
+					$hover_image = $this->model_tool_image->resizeWithSources($product_image['image'], $image_width, $image_height);
+					break;
+				}
+			}
+
+			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
+				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+			} else {
+				$price = false;
+			}
+
+			if (!is_null($product['special']) && (float)$product['special'] >= 0) {
+				$special = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+			} else {
+				$special = false;
+			}
+
+			if ($product['quantity'] <= 0) {
+				if ((int)$product['stock_status_id'] === 5) {
+					$stock = 'Нет в наличии';
+					$stock_class = 'is-out';
+				} elseif ((int)$product['stock_status_id'] === 6 || (int)$product['stock_status_id'] === 8) {
+					$stock = 'Под заказ';
+					$stock_class = 'is-preorder';
+				} else {
+					$stock = $product['stock_status'];
+					$stock_class = 'is-out';
+				}
+			} elseif ($product['quantity'] <= 2) {
+				$stock = 'Осталось мало';
+				$stock_class = 'is-low';
+			} else {
+				$stock = 'В наличии';
+				$stock_class = 'is-in';
+			}
+
+			$is_new = !empty($product['date_added']) && strtotime($product['date_added']) >= strtotime('-30 days');
+
+			if ($stock === 'Нет в наличии') {
+				$badge = 'Нет в наличии';
+				$badge_class = 'is-out';
+			} elseif ($stock === 'Под заказ') {
+				$badge = 'Под заказ';
+				$badge_class = 'is-preorder';
+			} elseif ($special) {
+				$badge = 'Скидка';
+				$badge_class = 'is-sale';
+			} elseif ($is_new) {
+				$badge = 'Новинка';
+				$badge_class = 'is-new';
+			} else {
+				$badge = 'Популярное';
+				$badge_class = 'is-popular';
+			}
+
+			$description = trim(strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')));
+			$description_suffix = utf8_strlen($description) > 120 ? '..' : '';
+
+			$product_data = array(
+				'product_id'  => $product['product_id'],
+				'thumb'       => $image['src'],
+				'image'       => $image,
+				'hover_image' => $hover_image,
+				'name'        => $product['name'],
+				'description' => utf8_substr($description, 0, 120) . $description_suffix,
+				'price'       => $price,
+				'special'     => $special,
+				'badge'       => $badge,
+				'badge_class' => $badge_class,
+				'stock'       => $stock,
+				'stock_class' => $stock_class,
+				'can_buy'     => $stock !== 'Нет в наличии',
+				'minimum'     => $product['minimum'] > 0 ? $product['minimum'] : 1,
+				'href'        => $this->url->link('product/product', 'product_id=' . $product['product_id'])
+			);
+
+			$data['featured_products'][] = $product_data;
+
+			if (count($data['featured_products']) >= 3) {
+				break;
+			}
+		}
+
+		$data['hero_banner'] = $this->getHeroBanner();
+		$data['column_left'] = '';
+		$data['column_right'] = '';
+		$data['content_top'] = '';
+		$data['content_bottom'] = '';
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
 		$this->response->setOutput($this->load->view('common/home', $data));
+	}
+
+	private function getHeroBanner() {
+		$this->load->model('design/layout');
+		$this->load->model('setting/module');
+
+		$layout_id = $this->model_design_layout->getLayout('common/home');
+
+		if (!$layout_id) {
+			$layout_id = (int)$this->config->get('config_layout_id');
+		}
+
+		foreach ($this->model_design_layout->getLayoutModules($layout_id, 'content_top') as $module) {
+			$code = explode('.', $module['code'], 2);
+
+			if ($code[0] !== 'slideshow' || !isset($code[1])) {
+				continue;
+			}
+
+			$setting = $this->model_setting_module->getModule((int)$code[1]);
+
+			if (is_array($setting) && !empty($setting['status'])) {
+				return trim($this->load->controller('extension/module/slideshow', $setting));
+			}
+		}
+
+		return '';
+	}
+
+	private function getCategorySummary($description) {
+		$summary = trim(strip_tags(html_entity_decode($description, ENT_QUOTES, 'UTF-8')));
+
+		if ($summary) {
+			return utf8_substr($summary, 0, 96);
+		}
+
+		return 'Подборка украшений из управляемого каталога';
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$category) {
+			$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
+	}
+
+	private function getAboutUrl() {
+		$information = $this->model_catalog_information->getInformationBySeoKeyword('about');
+
+		if (is_array($information) && isset($information['information_id']) && (int)$information['information_id'] > 0) {
+			return $this->url->link('information/information', 'information_id=' . (int)$information['information_id']);
+		}
+
+		return $this->url->link('information/contact');
 	}
 }

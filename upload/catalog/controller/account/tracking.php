@@ -16,22 +16,9 @@ class ControllerAccountTracking extends Controller {
 	
 			$this->document->setTitle($this->language->get('heading_title'));
 	
-			$data['breadcrumbs'] = array();
 	
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_home'),
-				'href' => $this->url->link('common/home')
-			);
 	
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_account'),
-				'href' => $this->url->link('account/account', '', true)
-			);
 	
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('heading_title'),
-				'href' => $this->url->link('account/tracking', '', true)
-			);
 	
 			$data['text_description'] = sprintf($this->language->get('text_description'), $this->config->get('config_name'));
 	

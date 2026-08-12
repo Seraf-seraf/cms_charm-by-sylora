@@ -2,24 +2,19 @@
 class ControllerProductManufacturer extends Controller {
 	public function index() {
 		$this->load->language('product/manufacturer');
+		$this->load->library('seo');
 
 		$this->load->model('catalog/manufacturer');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setTitle($this->seo->title('', $this->language->get('heading_title'), 'manufacturer'));
+		$this->document->setDescription($this->seo->description('', '', $this->language->get('heading_title'), 'manufacturer'));
+		$this->document->addLink($this->url->link('product/manufacturer'), 'canonical');
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_brand'),
-			'href' => $this->url->link('product/manufacturer')
-		);
 
 		$data['categories'] = array();
+		$data['manufacturer'] = $this->url->link('product/manufacturer');
 
 		$results = $this->model_catalog_manufacturer->getManufacturers();
 
@@ -54,6 +49,7 @@ class ControllerProductManufacturer extends Controller {
 
 	public function info() {
 		$this->load->language('product/manufacturer');
+		$this->load->library('seo');
 
 		$this->load->model('catalog/manufacturer');
 
@@ -91,22 +87,15 @@ class ControllerProductManufacturer extends Controller {
 			$limit = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
 		}
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_brand'),
-			'href' => $this->url->link('product/manufacturer')
-		);
 
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
 
 		if ($manufacturer_info) {
-			$this->document->setTitle($manufacturer_info['name']);
+			$this->document->setRobots('noindex, follow');
+			$this->document->setTitle($this->seo->title('', $manufacturer_info['name'], 'manufacturer'));
+			$this->document->setDescription($this->seo->description('', '', $manufacturer_info['name'], 'manufacturer'));
 
 			$url = '';
 
@@ -126,10 +115,6 @@ class ControllerProductManufacturer extends Controller {
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 
-			$data['breadcrumbs'][] = array(
-				'text' => $manufacturer_info['name'],
-				'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url)
-			);
 
 			$data['heading_title'] = $manufacturer_info['name'];
 
@@ -194,7 +179,7 @@ class ControllerProductManufacturer extends Controller {
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $result['rating'],
-					'href'        => $this->url->link('product/product', 'manufacturer_id=' . $result['manufacturer_id'] . '&product_id=' . $result['product_id'] . $url)
+					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
 				);
 			}
 
@@ -362,10 +347,6 @@ class ControllerProductManufacturer extends Controller {
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 
-			$data['breadcrumbs'][] = array(
-				'text' => $this->language->get('text_error'),
-				'href' => $this->url->link('product/manufacturer/info', $url)
-			);
 
 			$this->document->setTitle($this->language->get('text_error'));
 
@@ -376,6 +357,7 @@ class ControllerProductManufacturer extends Controller {
 			$data['continue'] = $this->url->link('common/home');
 
 			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+			$this->document->setRobots('noindex, nofollow');
 
 			$data['header'] = $this->load->controller('common/header');
 			$data['footer'] = $this->load->controller('common/footer');

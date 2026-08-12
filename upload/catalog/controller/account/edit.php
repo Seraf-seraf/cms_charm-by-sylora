@@ -28,22 +28,9 @@ class ControllerAccountEdit extends Controller {
 			$this->response->redirect($this->url->link('account/account', '', true));
 		}
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_account'),
-			'href' => $this->url->link('account/account', '', true)
-		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_edit'),
-			'href' => $this->url->link('account/edit', '', true)
-		);
 
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];

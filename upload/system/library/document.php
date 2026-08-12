@@ -14,6 +14,7 @@ class Document {
 	private $title;
 	private $description;
 	private $keywords;
+	private $robots;
 
 	private $links = array();
 	private $styles = array();
@@ -73,6 +74,14 @@ class Document {
      */
 	public function getKeywords() {
 		return $this->keywords;
+	}
+
+	public function setRobots($robots) {
+		$this->robots = $robots;
+	}
+
+	public function getRobots() {
+		return $this->robots;
 	}
 	
 	/**

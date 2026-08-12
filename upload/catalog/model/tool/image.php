@@ -50,4 +50,200 @@ class ModelToolImage extends Model {
 			return $this->config->get('config_url') . 'image/' . $image_new;
 		}
 	}
+
+	public function resizeWithSources($filename, int $width, int $height): array {
+		$fallback = $this->resize($filename, $width, $height);
+
+		if (!$fallback) {
+			return array(
+				'src'     => '',
+				'sources' => array(),
+				'width'   => $width,
+				'height'  => $height
+			);
+		}
+
+		$sources = array();
+		$extension = pathinfo($filename, PATHINFO_EXTENSION);
+		$image_new = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+		$source_path = DIR_IMAGE . $image_new;
+
+		if (is_file($source_path)) {
+			$webp = $this->createOptimizedSource($source_path, $image_new, 'webp');
+
+			if ($webp) {
+				$sources[] = array(
+					'type' => 'image/webp',
+					'src'  => $webp
+				);
+			}
+
+			$avif = $this->createOptimizedSource($source_path, $image_new, 'avif');
+
+			if ($avif) {
+				array_unshift($sources, array(
+					'type' => 'image/avif',
+					'src'  => $avif
+				));
+			}
+		}
+
+		return array(
+			'src'     => $fallback,
+			'sources' => $sources,
+			'width'   => $width,
+			'height'  => $height
+		);
+	}
+
+	public function resizeCoverWithSources($filename, int $width, int $height): array {
+		$fallback = $this->resizeCover($filename, $width, $height);
+
+		if ($fallback === '') {
+			return array(
+				'src'     => '',
+				'sources' => array(),
+				'width'   => $width,
+				'height'  => $height
+			);
+		}
+
+		$sources = array();
+		$extension = pathinfo($filename, PATHINFO_EXTENSION);
+		$image_new = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . $width . 'x' . $height . '-cover.' . $extension;
+		$source_path = DIR_IMAGE . $image_new;
+
+		if (is_file($source_path)) {
+			$webp = $this->createOptimizedSource($source_path, $image_new, 'webp');
+
+			if ($webp) {
+				$sources[] = array('type' => 'image/webp', 'src' => $webp);
+			}
+
+			$avif = $this->createOptimizedSource($source_path, $image_new, 'avif');
+
+			if ($avif) {
+				array_unshift($sources, array('type' => 'image/avif', 'src' => $avif));
+			}
+		}
+
+		return array(
+			'src'     => $fallback,
+			'sources' => $sources,
+			'width'   => $width,
+			'height'  => $height
+		);
+	}
+
+	private function resizeCover($filename, int $width, int $height): string {
+		if ($width < 1 || $height < 1) {
+			return '';
+		}
+
+		$source_path = DIR_IMAGE . $filename;
+		$real_path = realpath($source_path);
+
+		if (!is_file($source_path) || !is_string($real_path) || substr(str_replace('\\', '/', $real_path), 0, strlen(DIR_IMAGE)) != str_replace('\\', '/', DIR_IMAGE)) {
+			return '';
+		}
+
+		$extension = pathinfo($filename, PATHINFO_EXTENSION);
+		$image_new = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . $width . 'x' . $height . '-cover.' . $extension;
+
+		if (!is_file(DIR_IMAGE . $image_new) || filemtime($source_path) > filemtime(DIR_IMAGE . $image_new)) {
+			$image_info = getimagesize($source_path);
+
+			if (!is_array($image_info) || !isset($image_info[0], $image_info[1], $image_info[2]) || $image_info[0] < 1 || $image_info[1] < 1) {
+				return '';
+			}
+
+			if (!in_array($image_info[2], array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_WEBP))) {
+				return $this->getImageUrl($filename);
+			}
+
+			$path = '';
+
+			foreach (explode('/', dirname($image_new)) as $directory) {
+				$path .= '/' . $directory;
+
+				if (!is_dir(DIR_IMAGE . $path)) {
+					@mkdir(DIR_IMAGE . $path, 0777);
+				}
+			}
+
+			$image = new Image($source_path);
+			$source_ratio = $image_info[0] / $image_info[1];
+			$target_ratio = $width / $height;
+			$image->resize($width, $height, $source_ratio > $target_ratio ? 'h' : 'w');
+			$image->save(DIR_IMAGE . $image_new);
+		}
+
+		return $this->getImageUrl($image_new);
+	}
+
+	private function createOptimizedSource(string $source_path, string $relative_path, string $format): string {
+		if ($format == 'webp' && !function_exists('imagewebp')) {
+			return '';
+		}
+
+		if ($format == 'avif' && !function_exists('imageavif')) {
+			return '';
+		}
+
+		$target_relative_path = preg_replace('/\.[^.]+$/', '.' . $format, $relative_path);
+
+		if (!is_string($target_relative_path)) {
+			return '';
+		}
+
+		$target_path = DIR_IMAGE . $target_relative_path;
+
+		if (is_file($target_path) && filemtime($target_path) >= filemtime($source_path)) {
+			return $this->getImageUrl($target_relative_path);
+		}
+
+		$image_info = getimagesize($source_path);
+
+		if (!is_array($image_info) || !isset($image_info[2])) {
+			return '';
+		}
+
+		if ($image_info[2] == IMAGETYPE_PNG) {
+			$image = imagecreatefrompng($source_path);
+		} elseif ($image_info[2] == IMAGETYPE_JPEG) {
+			$image = imagecreatefromjpeg($source_path);
+		} elseif ($image_info[2] == IMAGETYPE_WEBP && function_exists('imagecreatefromwebp')) {
+			$image = imagecreatefromwebp($source_path);
+		} else {
+			return '';
+		}
+
+		if (!is_object($image) && !is_resource($image)) {
+			return '';
+		}
+
+		imagepalettetotruecolor($image);
+		imagealphablending($image, true);
+		imagesavealpha($image, true);
+
+		if ($format == 'webp') {
+			$created = imagewebp($image, $target_path, 82);
+		} else {
+			$created = imageavif($image, $target_path, 52);
+		}
+
+		imagedestroy($image);
+
+		return $created ? $this->getImageUrl($target_relative_path) : '';
+	}
+
+	private function getImageUrl(string $image): string {
+		$image = str_replace(' ', '%20', $image);
+
+		if ($this->request->server['HTTPS']) {
+			return $this->config->get('config_ssl') . 'image/' . $image;
+		}
+
+		return $this->config->get('config_url') . 'image/' . $image;
+	}
 }

@@ -7,6 +7,8 @@ class ControllerCheckoutLogin extends Controller {
 
 		if (isset($this->session->data['account'])) {
 			$data['account'] = $this->session->data['account'];
+		} elseif ($data['checkout_guest']) {
+			$data['account'] = 'guest';
 		} else {
 			$data['account'] = 'register';
 		}

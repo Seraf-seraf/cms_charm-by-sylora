@@ -19,8 +19,13 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-      <h1>{{ heading_title }}</h1>
-      <div class="panel-group" id="accordion">
+      <section class="checkout-page">
+        <header class="checkout-head">
+          <p class="sylora-eyebrow">Покупка</p>
+          <h1>{{ heading_title }}</h1>
+          <p>{{ text_checkout_intro }}</p>
+        </header>
+      <div class="panel-group checkout-accordion" id="accordion">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">{{ text_checkout_option }}</h4>
@@ -83,6 +88,7 @@
           </div>
         </div>
       </div>
+      </section>
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>

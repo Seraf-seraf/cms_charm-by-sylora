@@ -113,8 +113,52 @@
                 <option value="0" selected="selected">{{ text_disabled }}</option>                
                 {% endif %}
               </select>
+              {% if error_publication_consent %}
+              <div class="text-danger">{{ error_publication_consent }}</div>
+              {% endif %}
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_publication_consent }}</label>
+            <div class="col-sm-10">
+              {% if publication_consent_withdrawn_at %}
+              <p class="form-control-static text-danger">{{ text_publication_consent_withdrawn|format(publication_consent_withdrawn_at) }}</p>
+              {% elseif publication_consent %}
+              <p class="form-control-static text-success">{{ text_publication_consent_active }}</p>
+              {% else %}
+              <p class="form-control-static text-muted">{{ text_publication_consent_missing }}</p>
+              {% endif %}
+            </div>
+          </div>
+          {% if publication_consent %}
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_publication_consent_version }}</label>
+            <div class="col-sm-10"><p class="form-control-static">{{ publication_consent_version }}</p></div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_publication_consent_at }}</label>
+            <div class="col-sm-10"><p class="form-control-static">{{ publication_consent_at }}</p></div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_publication_consent_ip }}</label>
+            <div class="col-sm-10"><p class="form-control-static">{{ publication_consent_ip }}</p></div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ entry_publication_consent_fingerprint }}</label>
+            <div class="col-sm-10"><p class="form-control-static"><code>{{ publication_consent_fingerprint }}</code></p></div>
+          </div>
+          {% if not publication_consent_withdrawn_at %}
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-publication-consent-withdrawn">{{ entry_publication_consent_withdrawn }}</label>
+            <div class="col-sm-10">
+              <label class="checkbox-inline">
+                <input type="checkbox" name="publication_consent_withdrawn" value="1" id="input-publication-consent-withdrawn"{% if publication_consent_withdrawn %} checked="checked"{% endif %} />
+                {{ entry_publication_consent_withdrawn }}
+              </label>
+            </div>
+          </div>
+          {% endif %}
+          {% endif %}
         </form>
       </div>
     </div>

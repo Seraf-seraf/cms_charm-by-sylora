@@ -8,6 +8,12 @@ class ControllerProductSearch extends Controller {
 		$this->load->model('catalog/product');
 
 		$this->load->model('tool/image');
+		$this->load->library('catalog_schema');
+		$catalog_schema = $this->registry->get('catalog_schema');
+
+		if (!$catalog_schema instanceof Catalog_schema) {
+			throw new RuntimeException('Catalog schema library is not available.');
+		}
 
 		if (isset($this->request->get['search'])) {
 			$search = $this->request->get['search'];
@@ -70,15 +76,11 @@ class ControllerProductSearch extends Controller {
 		} elseif (isset($this->request->get['tag'])) {
 			$this->document->setTitle($this->language->get('heading_title') .  ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']);
 		} else {
-			$this->document->setTitle($this->language->get('heading_title'));
+			$this->document->setTitle('Каталог украшений Charm by Sylora');
+			$this->document->setDescription('Каталог авторских украшений ручной работы: серьги, браслеты, подвески, колье и комплекты с доставкой по России.');
 		}
 
-		$data['breadcrumbs'] = array();
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home')
-		);
 
 		$url = '';
 
@@ -118,15 +120,11 @@ class ControllerProductSearch extends Controller {
 			$url .= '&limit=' . $this->request->get['limit'];
 		}
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('product/search', $url)
-		);
 
 		if (isset($this->request->get['search'])) {
 			$data['heading_title'] = $this->language->get('heading_title') .  ' - ' . $this->request->get['search'];
 		} else {
-			$data['heading_title'] = $this->language->get('heading_title');
+			$data['heading_title'] = 'Каталог украшений';
 		}
 
 		$data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
@@ -171,7 +169,7 @@ class ControllerProductSearch extends Controller {
 
 		$data['products'] = array();
 
-		if (isset($this->request->get['search']) || isset($this->request->get['tag'])) {
+		if (isset($this->request->get['search']) || isset($this->request->get['tag']) || !isset($this->request->get['route']) || $this->request->get['route'] == 'product/search') {
 			$filter_data = array(
 				'filter_name'         => $search,
 				'filter_tag'          => $tag,
@@ -189,10 +187,28 @@ class ControllerProductSearch extends Controller {
 			$results = $this->model_catalog_product->getProducts($filter_data);
 
 			foreach ($results as $result) {
+				$image_width = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
+				$image_height = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
+
 				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
+					$image = $this->model_tool_image->resizeWithSources($result['image'], $image_width, $image_height);
 				} else {
-					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height'));
+					$image = $this->model_tool_image->resizeWithSources('placeholder.png', $image_width, $image_height);
+				}
+
+				$hover_image = array(
+					'src'     => '',
+					'sources' => array(),
+					'width'   => $image_width,
+					'height'  => $image_height
+				);
+				$product_images = $this->model_catalog_product->getProductImages($result['product_id']);
+
+				foreach ($product_images as $product_image) {
+					if (!empty($product_image['image']) && $product_image['image'] !== $result['image']) {
+						$hover_image = $this->model_tool_image->resizeWithSources($product_image['image'], $image_width, $image_height);
+						break;
+					}
 				}
 
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -221,17 +237,63 @@ class ControllerProductSearch extends Controller {
 					$rating = false;
 				}
 
+				if ($result['quantity'] <= 0) {
+					if ((int)$result['stock_status_id'] === 6 || (int)$result['stock_status_id'] === 8) {
+						$stock = 'Под заказ';
+						$stock_class = 'is-preorder';
+					} elseif ((int)$result['stock_status_id'] === 5) {
+						$stock = 'Нет в наличии';
+						$stock_class = 'is-out';
+					} else {
+						$stock = $result['stock_status'];
+						$stock_class = 'is-out';
+					}
+				} elseif ($result['quantity'] <= 2) {
+					$stock = 'Осталось мало';
+					$stock_class = 'is-low';
+				} else {
+					$stock = 'В наличии';
+					$stock_class = 'is-in';
+				}
+
+				$is_new = !empty($result['date_added']) && strtotime($result['date_added']) >= strtotime('-30 days');
+				$badge = '';
+				$badge_class = '';
+
+				if ($stock === 'Нет в наличии') {
+					$badge = 'Нет в наличии';
+					$badge_class = 'is-out';
+				} elseif ($stock === 'Под заказ') {
+					$badge = 'Под заказ';
+					$badge_class = 'is-preorder';
+				} elseif ($special) {
+					$badge = 'Скидка';
+					$badge_class = 'is-sale';
+				} elseif ($is_new) {
+					$badge = 'Новинка';
+					$badge_class = 'is-new';
+				}
+
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
-					'thumb'       => $image,
+					'thumb'       => $image['src'],
+					'hover_thumb' => $hover_image['src'],
+					'image'       => $image,
+					'hover_image' => $hover_image,
 					'name'        => $result['name'],
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
 					'price'       => $price,
 					'special'     => $special,
+					'is_new'      => $is_new,
+					'badge'       => $badge,
+					'badge_class' => $badge_class,
+					'stock'       => $stock,
+					'stock_class' => $stock_class,
+					'can_buy'     => $stock !== 'Нет в наличии',
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $result['rating'],
-					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'] . $url)
+					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
 				);
 			}
 
@@ -267,6 +329,18 @@ class ControllerProductSearch extends Controller {
 				'text'  => $this->language->get('text_default'),
 				'value' => 'p.sort_order-ASC',
 				'href'  => $this->url->link('product/search', 'sort=p.sort_order&order=ASC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_popular_desc'),
+				'value' => 'p.viewed-DESC',
+				'href'  => $this->url->link('product/search', 'sort=p.viewed&order=DESC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_date_desc'),
+				'value' => 'p.date_added-DESC',
+				'href'  => $this->url->link('product/search', 'sort=p.date_added&order=DESC' . $url)
 			);
 
 			$data['sorts'][] = array(
@@ -437,6 +511,7 @@ class ControllerProductSearch extends Controller {
 		}
 
 		$data['search'] = $search;
+		$data['search_url'] = $this->url->link('product/search');
 		$data['description'] = $description;
 		$data['category_id'] = $category_id;
 		$data['sub_category'] = $sub_category;
@@ -444,6 +519,61 @@ class ControllerProductSearch extends Controller {
 		$data['sort'] = $sort;
 		$data['order'] = $order;
 		$data['limit'] = $limit;
+
+		$schema_url = $this->url->link('product/search', '', true);
+		$schema_query = '';
+
+		if ($search !== '') {
+			$schema_query .= '&search=' . urlencode($search);
+		}
+
+		if ($tag !== '') {
+			$schema_query .= '&tag=' . urlencode($tag);
+		}
+
+		if ($description) {
+			$schema_query .= '&description=true';
+		}
+
+		if ($category_id) {
+			$schema_query .= '&category_id=' . $category_id;
+		}
+
+		if ($sub_category) {
+			$schema_query .= '&sub_category=true';
+		}
+
+		if ($page > 1) {
+			$schema_query .= '&page=' . $page;
+		}
+
+		if (isset($this->request->get['sort'])) {
+			$schema_query .= '&sort=' . urlencode((string)$sort);
+		}
+
+		if (isset($this->request->get['order'])) {
+			$schema_query .= '&order=' . urlencode((string)$order);
+		}
+
+		if (isset($this->request->get['limit'])) {
+			$schema_query .= '&limit=' . $limit;
+		}
+
+		if ($schema_query !== '') {
+			$schema_url = $this->url->link('product/search', ltrim($schema_query, '&'), true);
+		}
+
+		$schema_breadcrumbs = array(
+			array(
+				'text' => $this->language->get('text_breadcrumb_home'),
+				'href' => $this->url->link('common/home', '', true)
+			),
+			array(
+				'text' => $data['heading_title'],
+				'href' => $schema_url
+			)
+		);
+		$data['catalog_schema'] = $catalog_schema->build($data['heading_title'], $schema_url, $schema_breadcrumbs, $data['products'], $page, $limit);
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

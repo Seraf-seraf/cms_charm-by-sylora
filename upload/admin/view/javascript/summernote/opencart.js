@@ -3,12 +3,15 @@ $(document).ready(function() {
 	$('[data-toggle=\'summernote\']').each(function() {
 		var element = this;
 
-		if ($(this).attr('data-lang') && $(this).attr('data-lang')!='en-gb') {
-			$('head').append('<script type="text/javascript" src="view/javascript/summernote/lang/summernote-' + $(this).attr('data-lang') + '.min.js"></script>');
+		var language = $(this).attr('data-lang');
+		var summernoteLanguage = language == 'ru-ru' ? 'ru-RU' : language;
+
+		if (summernoteLanguage) {
+			$('head').append('<script type="text/javascript" src="view/javascript/summernote/lang/summernote-' + summernoteLanguage + '.min.js"></script>');
 		}
 
 		$(element).summernote({
-			lang: $(this).attr('data-lang'),
+			lang: summernoteLanguage,
 			disableDragAndDrop: true,
 			height: 300,
 			emptyPara: '',

@@ -56,9 +56,9 @@ class ControllerCommonCart extends Controller {
 
 		foreach ($this->cart->getProducts() as $product) {
 			if ($product['image']) {
-				$image = $this->model_tool_image->resize($product['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
+				$image = $this->model_tool_image->resizeWithSources($product['image'], (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
 			} else {
-				$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
+				$image = $this->model_tool_image->resizeWithSources('placeholder.png', (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
 			}
 
 			$option_data = array();
@@ -96,7 +96,9 @@ class ControllerCommonCart extends Controller {
 
 			$data['products'][] = array(
 				'cart_id'   => $product['cart_id'],
-				'thumb'     => $image,
+				'product_id' => $product['product_id'],
+				'thumb'     => $image['src'],
+				'image'     => $image,
 				'name'      => $product['name'],
 				'model'     => $product['model'],
 				'option'    => $option_data,

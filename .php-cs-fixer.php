@@ -137,9 +137,10 @@ return $config
         'yield_from_array_to_yields' => true,
     ])
     ->setFinder(PhpCsFixer\Finder::create()
-        ->in(__DIR__ . '/upload/')
+         ->in(__DIR__ . '/upload/')
          ->exclude([
-             __DIR__ . '/upload/system/storage/vendor/',
+             'system/storage/vendor',
+             'system/library/cdek_official',
          ])
         // ->append([
         //     'file-to-include',
