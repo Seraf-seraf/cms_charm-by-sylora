@@ -3,24 +3,31 @@
 {% endif %}
 {% if shipping_methods %}
 <p>{{ text_shipping_method }}</p>
+<div class="shipping-methods" data-shipping-methods aria-busy="false">
 {% for shipping_method in shipping_methods %}
-<p><strong>{{ shipping_method.title }}</strong></p>
+<section class="shipping-methods__group">
+<p class="shipping-methods__title">{{ shipping_method.title }}</p>
 {% if not shipping_method.error %}
+<div class="shipping-methods__list">
 {% for quote in shipping_method.quote %}
-<div class="radio">
-  <label> {% if quote.code == code or not code %}
+<label class="shipping-method-card">{% if quote.code == code or not code %}
     {% set code = quote.code %}
-    <input type="radio" name="shipping_method" value="{{ quote.code }}" checked="checked" />
+    <input class="shipping-method-card__control" type="radio" name="shipping_method" value="{{ quote.code }}" checked="checked" />
     {% else %}
-    <input type="radio" name="shipping_method" value="{{ quote.code }}" />
+    <input class="shipping-method-card__control" type="radio" name="shipping_method" value="{{ quote.code }}" />
     {% endif %}
-    {{ quote.title }} - {{ quote.text }}</label>
+  <span class="shipping-method-card__marker" aria-hidden="true"></span>
+  <span class="shipping-method-card__title">{{ quote.title }}</span>
+  <span class="shipping-method-card__price">{{ quote.text }}</span>
+</label>
+{% endfor %}
 </div>
-{% endfor %}
 {% else %}
-<div class="alert alert-danger alert-dismissible">{{ shipping_method.error }}</div>
+<div class="shipping-methods__status alert alert-danger alert-dismissible" role="alert">{{ shipping_method.error }}</div>
 {% endif %}
+</section>
 {% endfor %}
+</div>
 {% endif %}
 <p><strong>{{ text_comments }}</strong></p>
 <p>

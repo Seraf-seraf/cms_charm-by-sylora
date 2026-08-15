@@ -4,6 +4,15 @@
 var configElement = document.getElementById('cart-shipping-config');
 var config = configElement ? JSON.parse(configElement.textContent || '{}') : {};
 
+function escapeHtml(value) {
+	return String(value)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#039;');
+}
+
 $('#button-quote').on('click', function() {
 	$.ajax({
 		url: 'index.php?route=extension/total/shipping/quote',
@@ -49,28 +58,37 @@ $('#button-quote').on('click', function() {
 				html += '        <h4 class="modal-title">' + config.textShippingMethod + '</h4>';
 				html += '      </div>';
 				html += '      <div class="modal-body">';
+				html += '        <div class="shipping-methods shipping-methods--modal" data-shipping-methods aria-busy="false">';
 
 				for (var i in json['shipping_method']) {
-					html += '<p><strong>' + json['shipping_method'][i]['title'] + '</strong></p>';
+					html += '<section class="shipping-methods__group">';
+					html += '<p class="shipping-methods__title">' + escapeHtml(json['shipping_method'][i]['title']) + '</p>';
 
 					if (!json['shipping_method'][i]['error']) {
+						html += '<div class="shipping-methods__list">';
 						for (var j in json['shipping_method'][i]['quote']) {
-							html += '<div class="radio">';
-							html += '  <label>';
+							var quote = json['shipping_method'][i]['quote'][j];
+							html += '<label class="shipping-method-card">';
 
-							if (json['shipping_method'][i]['quote'][j]['code'] == '' + config.shippingMethod + '') {
-								html += '<input type="radio" name="shipping_method" value="' + json['shipping_method'][i]['quote'][j]['code'] + '" checked="checked" />';
+							if (quote['code'] == '' + config.shippingMethod + '') {
+								html += '<input class="shipping-method-card__control" type="radio" name="shipping_method" value="' + escapeHtml(quote['code']) + '" checked="checked" />';
 							} else {
-								html += '<input type="radio" name="shipping_method" value="' + json['shipping_method'][i]['quote'][j]['code'] + '" />';
+								html += '<input class="shipping-method-card__control" type="radio" name="shipping_method" value="' + escapeHtml(quote['code']) + '" />';
 							}
 
-							html += json['shipping_method'][i]['quote'][j]['title'] + ' - ' + json['shipping_method'][i]['quote'][j]['text'] + '</label></div>';
+							html += '<span class="shipping-method-card__marker" aria-hidden="true"></span>';
+							html += '<span class="shipping-method-card__title">' + escapeHtml(quote['title']) + '</span>';
+							html += '<span class="shipping-method-card__price">' + escapeHtml(quote['text']) + '</span>';
+							html += '</label>';
 						}
+						html += '</div>';
 					} else {
-						html += '<div class="alert alert-danger alert-dismissible">' + json['shipping_method'][i]['error'] + '</div>';
+						html += '<div class="shipping-methods__status alert alert-danger alert-dismissible" role="alert">' + escapeHtml(json['shipping_method'][i]['error']) + '</div>';
 					}
+					html += '</section>';
 				}
 
+				html += '        </div>';
 				html += '      </div>';
 				html += '      <div class="modal-footer">';
 				html += '        <button type="button" class="btn btn-default" data-dismiss="modal">' + config.buttonCancel + '</button>';

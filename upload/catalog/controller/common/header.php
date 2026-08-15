@@ -201,6 +201,9 @@ class ControllerCommonHeader extends Controller {
 		$this->load->model('catalog/category');
 		
 		$data['home'] = $this->url->link('common/home');
+		$data['logged'] = $this->customer->isLogged();
+		$data['login'] = $this->url->link('account/login', '', true);
+		$data['account'] = $this->url->link('account/account', '', true);
 		$data['shopping_cart'] = $this->url->link('checkout/cart');
 		$data['contact'] = $this->url->link('information/contact');
 		$data['catalog'] = $this->getCatalogUrl();
