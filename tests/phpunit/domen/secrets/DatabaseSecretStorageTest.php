@@ -16,6 +16,10 @@ final class DatabaseSecretStorageTest extends TestCase {
 	}
 
 	public function testPaymentServiceAcceptsDatabaseValuesAndRejectsEnvironmentReferences(): void {
+		if (!defined('DIR_SYSTEM')) {
+			define('DIR_SYSTEM', $this->root . '/upload/system/');
+		}
+
 		require_once $this->root . '/upload/admin/controller/extension/payment/payment_service.php';
 		$controller = (new ReflectionClass(ControllerExtensionPaymentPaymentService::class))->newInstanceWithoutConstructor();
 		$method = new ReflectionMethod($controller, 'isStoredSecret');

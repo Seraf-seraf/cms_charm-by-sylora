@@ -19,6 +19,23 @@ final class PaymentServiceOrderStatusPolicyTest extends TestCase {
 		self::assertSame(array(), PaymentServiceOrderStatusPolicy::violations(array(2), array(6), self::SAFE_STATUSES));
 	}
 
+	public function testPendingDoesNotChangeStock(): void {
+		self::assertSame(0, $this->stockDelta(0, self::SAFE_STATUSES['pending']));
+	}
+
+	public function testFirstSucceededSubtractsStockOnce(): void {
+		self::assertSame(-1, $this->stockDelta(self::SAFE_STATUSES['pending'], self::SAFE_STATUSES['succeeded']));
+	}
+
+	public function testRepeatedSucceededDoesNotSubtractStockAgain(): void {
+		self::assertSame(0, $this->stockDelta(self::SAFE_STATUSES['succeeded'], self::SAFE_STATUSES['succeeded']));
+	}
+
+	public function testFailedAndCanceledAfterPendingDoNotRestoreUnsubtractedStock(): void {
+		self::assertSame(0, $this->stockDelta(self::SAFE_STATUSES['pending'], self::SAFE_STATUSES['failed']));
+		self::assertSame(0, $this->stockDelta(self::SAFE_STATUSES['pending'], self::SAFE_STATUSES['canceled']));
+	}
+
 	public function testEachUnpaidStatusIsRejectedAsProcessingOrComplete(): void {
 		foreach (array('pending', 'failed', 'canceled', 'refunded') as $status) {
 			$statusId = self::SAFE_STATUSES[$status];
@@ -58,5 +75,29 @@ final class PaymentServiceOrderStatusPolicyTest extends TestCase {
 		self::assertStringContainsString("'unsafe_status_configuration_' . \$configuration_violation", $controller);
 		self::assertStringContainsString('PaymentServiceOrderStatusPolicy::violations(', $model);
 		self::assertStringContainsString('PaymentServiceOrderStatusPolicy::violations(', $admin);
+	}
+
+	public function testOrderModelChangesStockOnlyAcrossStockStatusBoundary(): void {
+		$model = file_get_contents(dirname(__DIR__, 4) . '/upload/catalog/model/checkout/order.php');
+
+		self::assertIsString($model);
+		self::assertStringContainsString("if (!in_array(\$order_info['order_status_id'], array_merge(\$this->config->get('config_processing_status'), \$this->config->get('config_complete_status'))) && in_array(\$order_status_id, array_merge(\$this->config->get('config_processing_status'), \$this->config->get('config_complete_status'))))", $model);
+		self::assertStringContainsString("if (in_array(\$order_info['order_status_id'], array_merge(\$this->config->get('config_processing_status'), \$this->config->get('config_complete_status'))) && !in_array(\$order_status_id, array_merge(\$this->config->get('config_processing_status'), \$this->config->get('config_complete_status'))))", $model);
+	}
+
+	private function stockDelta(int $currentStatusId, int $newStatusId): int {
+		$stockStatuses = array(self::SAFE_STATUSES['succeeded'], 6);
+		$currentAffectsStock = in_array($currentStatusId, $stockStatuses, true);
+		$newAffectsStock = in_array($newStatusId, $stockStatuses, true);
+
+		if (!$currentAffectsStock && $newAffectsStock) {
+			return -1;
+		}
+
+		if ($currentAffectsStock && !$newAffectsStock) {
+			return 1;
+		}
+
+		return 0;
 	}
 }
