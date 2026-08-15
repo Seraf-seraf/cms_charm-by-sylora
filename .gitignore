@@ -100,7 +100,7 @@
 /upload/catalog/language/ru-ru/extension/shipping/russian_post.php
 /upload/catalog/model/extension/shipping/russian_post.php
 /upload/catalog/view/javascript/shipping/russian_post.js
-/upload/catalog/view/stylesheet/shipping/russian_post.css
+/upload/catalog/view/theme/default/stylesheet/shipping/russian_post.css
 /upload/system/library/russian_post_delivery.php
 
 # OS and editor noise
