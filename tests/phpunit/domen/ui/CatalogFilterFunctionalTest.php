@@ -34,7 +34,7 @@ final class CatalogFilterFunctionalTest extends BrowserTestCase {
 		$result = $this->runBrowserScenario(__DIR__ . '/support/catalog_regression_browser.mjs', 'visual');
 
 		self::assertTrue($result['hero']['equalFrames'] ?? false);
-		self::assertSame(array('cover'), $result['hero']['objectFits'] ?? null);
+		self::assertSame(array('fill'), $result['hero']['objectFits'] ?? null);
 		self::assertSame('none', $result['hero']['beforeContent'] ?? null);
 		self::assertSame('none', $result['hero']['afterContent'] ?? null);
 		self::assertGreaterThanOrEqual(0.9, $result['product']['widthOccupancy'] ?? 0);
@@ -90,7 +90,9 @@ final class CatalogFilterFunctionalTest extends BrowserTestCase {
 		return null;
 	}
 
-	/** @return list<string> */
+	/**
+	 * @return list<string>
+	 */
 	private function productLinks(string $html): array {
 		$xpath = new DOMXPath($this->document($html));
 		$nodes = $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " catalog-card__title ")]/a');

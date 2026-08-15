@@ -62,14 +62,15 @@ final class CatalogUiContractTest extends TestCase {
 
 		$category = $this->themeTemplate('product/category.twig');
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
+		$storefront = $this->read('upload/catalog/view/javascript/storefront.js');
 
 		self::assertStringContainsString('<div class="catalog-shell">', $category);
 		self::assertStringContainsString('<aside class="catalog-shell__sidebar">', $category);
 		self::assertStringContainsString('<span>{{ text_filters }}</span>', $category);
-		self::assertStringContainsString("window.matchMedia('(min-width: 992px)')", $category);
-		self::assertStringContainsString('filterDetails.open = true;', $category);
+		self::assertStringContainsString("window.matchMedia('(min-width: 992px)')", $storefront);
+		self::assertStringContainsString('filterDetails.open = true;', $storefront);
 		self::assertStringContainsString('grid-template-columns: 280px minmax(0, 1fr);', $css);
-		self::assertStringContainsString('grid-template-columns: repeat(3, minmax(0, 1fr));', $css);
+		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-toolbar\s*\{[^}]*flex-wrap: wrap;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-toolbar__controls\s*\{[^}]*flex-wrap: wrap;[^}]*max-width: 100%;/s', $css);
 		self::assertMatchesRegularExpression('/@media \(max-width: 1199px\).*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/s', $css);

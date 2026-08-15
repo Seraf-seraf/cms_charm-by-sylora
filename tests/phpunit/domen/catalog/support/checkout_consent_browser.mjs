@@ -236,10 +236,12 @@ try {
 	process.stdout.write(`${JSON.stringify(result)}\n`);
 } finally {
 	if (client) client.close();
+	const chromeExited = new Promise(resolve => chrome.once('exit', resolve));
 	chrome.kill('SIGTERM');
-	await Promise.race([
-		new Promise(resolve => chrome.once('exit', resolve)),
-		delay(2000),
-	]);
-	await rm(profile, { recursive: true, force: true });
+	await Promise.race([chromeExited, delay(2000)]);
+	if (chrome.exitCode === null) {
+		chrome.kill('SIGKILL');
+		await Promise.race([chromeExited, delay(2000)]);
+	}
+	await rm(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
 }

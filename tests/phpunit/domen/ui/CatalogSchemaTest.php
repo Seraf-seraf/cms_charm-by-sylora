@@ -73,7 +73,7 @@ final class CatalogSchemaTest extends PHPUnit\Framework\TestCase {
 			self::assertIsString($template);
 			self::assertStringContainsString("load->library('catalog_schema')", $controller, $route);
 			self::assertStringContainsString("['catalog_schema']", $controller, $route);
-			self::assertStringContainsString('<script type="application/ld+json">{{ catalog_schema|raw }}</script>', $template, $route);
+			self::assertStringContainsString('<script nonce="{{ csp_nonce }}" type="application/ld+json">{{ catalog_schema|raw }}</script>', $template, $route);
 		}
 	}
 

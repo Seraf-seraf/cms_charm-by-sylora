@@ -33,6 +33,7 @@ final class CheckoutUiContractTest extends TestCase {
 	public function testShippingQuoteModalUsesThemeControls(): void {
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
 		$shipping = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/total/shipping.twig');
+		$cart = $this->read('upload/catalog/view/javascript/cart.js');
 		$cdek = $this->read('upload/catalog/view/javascript/shipping/cdek_official.js');
 
 		self::assertMatchesRegularExpression(
@@ -40,11 +41,11 @@ final class CheckoutUiContractTest extends TestCase {
 			$css
 		);
 		self::assertMatchesRegularExpression(
-			'/#modal-shipping \.modal-body \.radio label\s*\{[^}]*min-height: 48px;[^}]*border-radius: 8px;[^}]*background: var\(--color-surface\);/s',
+			'/\.shipping-method-card\s*\{[^}]*grid-template-columns: 22px minmax\(0, 1fr\) auto;[^}]*min-height: 56px;/s',
 			$css
 		);
 		self::assertMatchesRegularExpression(
-			'/#modal-shipping \.modal-body input\[type="radio"\]\s*\{[^}]*accent-color: var\(--color-accent\);/s',
+			'/\.shipping-method-card__control\s*\{[^}]*position: absolute;[^}]*width: 1px;[^}]*height: 1px;/s',
 			$css
 		);
 		self::assertMatchesRegularExpression(
@@ -52,7 +53,11 @@ final class CheckoutUiContractTest extends TestCase {
 			$css
 		);
 		self::assertMatchesRegularExpression(
-			'/\.radio label:has\(input\[type="radio"\]:checked\)\s*\{[^}]*background: var\(--color-bg\);[^}]*color: var\(--color-text\);/s',
+			'/\.shipping-method-card:has\(\.shipping-method-card__control:focus-visible\)\s*\{[^}]*outline: 3px solid var\(--color-focus-ring\);/s',
+			$css
+		);
+		self::assertMatchesRegularExpression(
+			'/\.shipping-method-card:has\(\.shipping-method-card__control:disabled\)\s*\{[^}]*cursor: not-allowed;[^}]*opacity: \.55;/s',
 			$css
 		);
 		self::assertMatchesRegularExpression(
@@ -60,8 +65,10 @@ final class CheckoutUiContractTest extends TestCase {
 			$css
 		);
 		self::assertStringNotContainsString('<style data-cdek>', $cdek);
-		self::assertStringContainsString("$('input[name=\\'shipping_method\\']:checked').length === 0", $shipping);
-		self::assertStringContainsString('syncShippingButton();', $shipping);
+		self::assertStringContainsString('type="application/json"', $shipping);
+		self::assertStringNotContainsString('syncShippingButton', $shipping);
+		self::assertStringContainsString("$('input[name=\\'shipping_method\\']:checked').length === 0", $cart);
+		self::assertStringContainsString('syncShippingButton();', $cart);
 		self::assertMatchesRegularExpression(
 			'/\.modal-footer \.btn-primary\[disabled\]\s*\{[^}]*color: #ffffff;[^}]*opacity: 1;/s',
 			$css

@@ -4,12 +4,12 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const [, , targetUrl, viewportArgument, chromeBinary] = process.argv;
-const [viewportValue, pageScaleValue = '1'] = (viewportArgument || '').split('@');
+const [viewportValue, pageScaleValue = '1', colorScheme = 'light'] = (viewportArgument || '').split('@');
 const viewportWidth = Number(viewportValue);
 const pageScale = Number(pageScaleValue);
 
-if (!targetUrl || !Number.isInteger(viewportWidth) || viewportWidth < 320 || ![1, 2].includes(pageScale) || !chromeBinary) {
-	throw new Error('Usage: responsive_ui_browser.mjs <url> <viewport-width[@page-scale]> <chrome-binary>');
+if (!targetUrl || !Number.isInteger(viewportWidth) || viewportWidth < 320 || ![1, 2].includes(pageScale) || !['light', 'dark'].includes(colorScheme) || !chromeBinary) {
+	throw new Error('Usage: responsive_ui_browser.mjs <url> <viewport-width[@page-scale[@light|dark]]> <chrome-binary>');
 }
 
 const profile = await mkdtemp(join(tmpdir(), 'sylora-responsive-ui-'));
@@ -104,6 +104,9 @@ try {
 		height: 900,
 		deviceScaleFactor: 1,
 		mobile: false,
+	});
+	await client.command('Emulation.setEmulatedMedia', {
+		features: [{ name: 'prefers-color-scheme', value: colorScheme }],
 	});
 	await client.command('Page.navigate', { url: targetUrl });
 	await delay(1800);
@@ -237,6 +240,15 @@ try {
 		const catalogBadge = document.getElementById('fixture-card-badge').getBoundingClientRect();
 		const catalogWishlist = document.getElementById('fixture-card-wishlist').getBoundingClientRect();
 		const toolbar = document.getElementById('fixture-toolbar');
+		const desktopAccount = document.querySelector('.site-account');
+		const mobileAccount = document.querySelector('.site-nav__account');
+		const navigation = document.getElementById('site-nav');
+		const navigationWasOpen = navigation.classList.contains('is-open');
+		navigation.classList.add('is-open');
+		const desktopAccountRect = desktopAccount.getBoundingClientRect();
+		const mobileAccountRect = mobileAccount.getBoundingClientRect();
+		const isVisible = rect => rect.width > 0 && rect.height > 0;
+		if (!navigationWasOpen) navigation.classList.remove('is-open');
 		const visualContracts = {
 			miniImage: measureImage('fixture-mini-image', 'fixture-mini-image' + '-img'),
 			cartImage: measureImage('fixture-cart-image', 'fixture-cart-image' + '-img'),
@@ -283,11 +295,22 @@ try {
 		return JSON.stringify({
 			viewportWidth: window.innerWidth,
 			pageScale: window.visualViewport ? window.visualViewport.scale : 1,
+			theme: document.documentElement.getAttribute('data-theme'),
 			documentOverflow: Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
 			brand: {
 				text: brand.textContent.trim(),
 				overflow: Math.max(0, brand.scrollWidth - brand.clientWidth),
 				fullyVisible: brandRect.left >= -1 && brandRect.right <= window.innerWidth + 1
+			},
+			account: {
+				desktopVisible: isVisible(desktopAccountRect),
+				desktopWidth: Math.round(desktopAccountRect.width),
+				desktopHeight: Math.round(desktopAccountRect.height),
+				desktopLabel: desktopAccount.getAttribute('aria-label'),
+				mobileVisible: isVisible(mobileAccountRect),
+				mobileWidth: Math.round(mobileAccountRect.width),
+				mobileHeight: Math.round(mobileAccountRect.height),
+				mobileLabel: mobileAccount.getAttribute('aria-label')
 			},
 			fonts: {
 				body: getComputedStyle(document.body).fontFamily,
@@ -312,10 +335,12 @@ try {
 	process.stdout.write(`${state}\n`);
 } finally {
 	if (client) client.close();
+	const chromeExited = new Promise(resolve => chrome.once('exit', resolve));
 	chrome.kill('SIGTERM');
-	await Promise.race([
-		new Promise(resolve => chrome.once('exit', resolve)),
-		delay(2000),
-	]);
+	await Promise.race([chromeExited, delay(2000)]);
+	if (chrome.exitCode === null) {
+		chrome.kill('SIGKILL');
+		await Promise.race([chromeExited, delay(2000)]);
+	}
 	await rm(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
 }

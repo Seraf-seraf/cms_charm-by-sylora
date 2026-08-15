@@ -9,7 +9,7 @@ final class ResponsiveUiTest extends BrowserTestCase {
 	 * @return iterable<string, array{int}>
 	 */
 	public static function viewportProvider(): iterable {
-		foreach (array(320, 360, 390, 768, 1024, 1440) as $width) {
+		foreach (array(320, 360, 390, 414, 768, 1024, 1440) as $width) {
 			yield (string)$width => array($width);
 		}
 	}
@@ -26,6 +26,19 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		self::assertSame('Charm by Sylora', $result['brand']['text'] ?? null);
 		self::assertTrue($result['brand']['fullyVisible'] ?? false);
 		self::assertLessThanOrEqual(1, $result['brand']['overflow'] ?? null);
+		self::assertSame('light', $result['theme'] ?? null);
+		self::assertSame($width > 1050, $result['account']['desktopVisible'] ?? null);
+		self::assertSame($width <= 1050, $result['account']['mobileVisible'] ?? null);
+		self::assertSame('Войти', $result['account']['desktopLabel'] ?? null);
+		self::assertSame('Войти', $result['account']['mobileLabel'] ?? null);
+
+		if ($width > 1050) {
+			self::assertGreaterThanOrEqual(44, $result['account']['desktopWidth'] ?? 0);
+			self::assertGreaterThanOrEqual(44, $result['account']['desktopHeight'] ?? 0);
+		} else {
+			self::assertGreaterThanOrEqual(44, $result['account']['mobileWidth'] ?? 0);
+			self::assertGreaterThanOrEqual(44, $result['account']['mobileHeight'] ?? 0);
+		}
 		self::assertStringContainsString('Rubik', (string)($result['fonts']['body'] ?? ''));
 		self::assertStringContainsString('Rubik', (string)($result['fonts']['brand'] ?? ''));
 		self::assertStringContainsString('Montserrat', (string)($result['fonts']['display'] ?? ''));
@@ -54,6 +67,22 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		self::assertTrue($result['brand']['fullyVisible'] ?? false);
 		self::assertLessThanOrEqual(1, $result['brand']['overflow'] ?? null);
 		$this->assertFixtureIcons($result['fixtures'] ?? array());
+		$this->assertVisualContracts($result['visualContracts'] ?? array(), 320);
+	}
+
+	public function testResponsiveUiUsesDarkThemeAt320Pixels(): void {
+		$result = $this->runBrowserScenario(
+			__DIR__ . '/support/responsive_ui_browser.mjs',
+			'320@1@dark'
+		);
+
+		self::assertSame(320, $result['viewportWidth'] ?? null);
+		self::assertSame('dark', $result['theme'] ?? null);
+		self::assertLessThanOrEqual(1, $result['documentOverflow'] ?? null);
+		self::assertTrue($result['brand']['fullyVisible'] ?? false);
+		self::assertTrue($result['account']['mobileVisible'] ?? false);
+		self::assertGreaterThanOrEqual(44, $result['account']['mobileWidth'] ?? 0);
+		self::assertGreaterThanOrEqual(44, $result['account']['mobileHeight'] ?? 0);
 		$this->assertVisualContracts($result['visualContracts'] ?? array(), 320);
 	}
 

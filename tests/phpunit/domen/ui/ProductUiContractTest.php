@@ -11,18 +11,18 @@ final class ProductUiContractTest extends TestCase {
 		$this->root = dirname(__DIR__, 4);
 	}
 
-	public function testDatetimePickerIsRenderedOnlyForMatchingProductOptions(): void {
+	public function testDatetimePickerUsesExternalScriptAndMatchingSelectors(): void {
 		$controller = $this->read('upload/catalog/controller/product/product.php');
 		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/product/product.twig');
+		$script = $this->read('upload/catalog/view/javascript/product.js');
 
 		self::assertStringContainsString('$data[\'has_datetime_option\'] = $has_datetime_option;', $controller);
-		self::assertStringContainsString('{% if has_datetime_option %}', $template);
-		self::assertSame(1, substr_count($template, "$('.date').datetimepicker({"));
-		self::assertStringContainsString("$('.time').datetimepicker({", $template);
-		self::assertMatchesRegularExpression(
-			'/\{% if has_datetime_option %\}.*?\$\(\'\.date\'\)\.datetimepicker.*?\$\(\'\.time\'\)\.datetimepicker.*?\{% endif %\}/s',
-			$template
-		);
+		self::assertStringContainsString('data-datepicker="{{ datepicker }}"', $template);
+		self::assertStringContainsString('<script src="catalog/view/javascript/product.js?', $template);
+		self::assertStringNotContainsString('datetimepicker({', $template);
+		self::assertSame(1, substr_count($script, "$('.date').datetimepicker({"));
+		self::assertStringContainsString("$('.datetime').datetimepicker({", $script);
+		self::assertStringContainsString("$('.time').datetimepicker({", $script);
 	}
 
 	public function testReviewRatingUsesVisibleThemeColor(): void {
