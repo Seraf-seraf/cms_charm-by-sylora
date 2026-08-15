@@ -17,6 +17,11 @@ class ControllerCommonFooter extends Controller {
 
 		$data['footer_columns'] = $this->prepareFooterColumns($columns, $column_count);
 		$data['footer_column_count'] = count($data['footer_columns']);
+		$data['legal_name'] = trim((string)$this->config->get('config_sylora_legal_name'));
+
+		if ($data['legal_name'] === '') {
+			$data['legal_name'] = 'Индивидуальный предприниматель Глава крестьянского (фермерского) хозяйства Кравчук Серафим Сергеевич';
+		}
 
 		$data['powered'] = sprintf($this->language->get('text_powered'), date('Y', time()));
 		// Whos Online
