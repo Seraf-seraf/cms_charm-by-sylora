@@ -120,7 +120,12 @@ class ControllerStartupStartup extends Controller {
 		}
 				
 		if (!isset($this->request->cookie['language']) || $this->request->cookie['language'] != $code) {
-			setcookie('language', $code, time() + 60 * 60 * 24 * 30, '/');
+			$this->cookie->set(
+				'language',
+				$code,
+				time() + 60 * 60 * 24 * 30,
+				'/'
+			);
 		}
 				
 		// Overwrite the default language object
@@ -151,7 +156,12 @@ class ControllerStartupStartup extends Controller {
 		
 		// Tracking Code
 		if (isset($this->request->get['tracking'])) {
-			setcookie('tracking', $this->request->get['tracking'], time() + 3600 * 24 * 1000, '/');
+			$this->cookie->set(
+				'tracking',
+				$this->request->get['tracking'],
+				time() + 3600 * 24 * 1000,
+				'/'
+			);
 		
 			$this->db->query("UPDATE `" . DB_PREFIX . "marketing` SET clicks = (clicks + 1) WHERE code = '" . $this->db->escape($this->request->get['tracking']) . "'");
 		}		
@@ -180,7 +190,12 @@ class ControllerStartupStartup extends Controller {
 		}
 		
 		if (!isset($this->request->cookie['currency']) || $this->request->cookie['currency'] != $code) {
-			setcookie('currency', $code, time() + 60 * 60 * 24 * 30, '/');
+			$this->cookie->set(
+				'currency',
+				$code,
+				time() + 60 * 60 * 24 * 30,
+				'/'
+			);
 		}		
 		
 		$this->registry->set('currency', new Cart\Currency($this->registry));

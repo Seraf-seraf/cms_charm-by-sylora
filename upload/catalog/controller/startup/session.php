@@ -22,7 +22,15 @@ class ControllerStartupSession extends Controller {
 			
 			$this->session->start($session_id);
 			
-			setcookie($this->config->get('session_name'), $this->session->getId(), (ini_get('session.cookie_lifetime') ? time() + ini_get('session.cookie_lifetime') : 0), ini_get('session.cookie_path'), ini_get('session.cookie_domain'));	
+			$this->cookie->set(
+				$this->config->get('session_name'),
+				$this->session->getId(),
+				(ini_get('session.cookie_lifetime') ? time() + (int)ini_get('session.cookie_lifetime') : 0),
+				ini_get('session.cookie_path'),
+				ini_get('session.cookie_domain'),
+				true,
+				'Lax'
+			);
 		}
 	}
 }

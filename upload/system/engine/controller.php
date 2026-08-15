@@ -10,6 +10,7 @@
 /**
 * Controller class
  *
+ * @property Cookie $cookie
  * @mixin Registry
 */
 abstract class Controller {

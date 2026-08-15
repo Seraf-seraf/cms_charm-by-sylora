@@ -550,7 +550,7 @@ class ControllerExtensionPaymentAmazonLoginPay extends Controller {
                             // capital L in Amazon cookie name is required, do not alter for coding standards
                             if (isset($this->request->cookie['amazon_Login_state_cache'])) {
                                 //@todo - rework this by triggering the JavaScript logout
-                                setcookie('amazon_Login_state_cache', null, -1, '/');
+                                $this->cookie->clear('amazon_Login_state_cache');
                             }
 
                             throw new \RuntimeException($cart_error_messages[$reason_code]);
@@ -689,7 +689,7 @@ class ControllerExtensionPaymentAmazonLoginPay extends Controller {
                             // capital L in Amazon cookie name is required, do not alter for coding standards
                             if (isset($this->request->cookie['amazon_Login_state_cache'])) {
                                 //@todo - rework this by triggering the JavaScript logout
-                                setcookie('amazon_Login_state_cache', null, -1, '/');
+                                $this->cookie->clear('amazon_Login_state_cache');
                             }
 
                             throw new \RuntimeException($cart_error_messages[$reason_code]);

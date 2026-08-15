@@ -71,6 +71,7 @@ $registry->set('request', new Request());
 
 // Response
 $response = new Response();
+$registry->set('cookie', new Cookie());
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 header('Expires: Thu, 19 Nov 1981 08:52:00 GMT', true);
 header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0', true);
@@ -119,7 +120,15 @@ if ($config->get('session_autostart')) {
 
 	$session->start($session_id);
 
-	setcookie($config->get('session_name'), $session->getId(), (ini_get('session.cookie_lifetime') ? time() + ini_get('session.cookie_lifetime') : 0), ini_get('session.cookie_path'), ini_get('session.cookie_domain'));
+	$registry->get('cookie')->set(
+		$config->get('session_name'),
+		$session->getId(),
+		(ini_get('session.cookie_lifetime') ? time() + (int)ini_get('session.cookie_lifetime') : 0),
+		ini_get('session.cookie_path'),
+		ini_get('session.cookie_domain'),
+		true,
+		'Lax'
+	);
 }
 
 // Cache
