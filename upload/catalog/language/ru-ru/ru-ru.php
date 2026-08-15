@@ -35,6 +35,7 @@ $_['text_limit']             = 'Показать';
 $_['text_filters']           = 'Фильтры';
 $_['text_pagination_navigation'] = 'Навигация по страницам';
 $_['text_filter_price']      = 'Цена';
+$_['text_filter_categories'] = 'Категории';
 $_['text_filter_from']       = 'от';
 $_['text_filter_to']         = 'до';
 $_['text_filter_availability'] = 'Наличие';

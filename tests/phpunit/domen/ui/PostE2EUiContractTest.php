@@ -25,6 +25,7 @@ final class PostE2EUiContractTest extends TestCase {
 		self::assertSame(2, substr_count($template, 'aria-label="{{ account_label }}"'));
 		self::assertMatchesRegularExpression('/\.site-account\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s', $css);
 		self::assertStringContainsString('.site-account:focus-visible', $css);
+		self::assertMatchesRegularExpression('/<div class="site-actions">[\s\S]*class="theme-toggle"[\s\S]*class="site-cart"[\s\S]*class="site-account"/', $template);
 	}
 
 	public function testBrandAndCatalogLayoutContractsAreStable(): void {
@@ -35,7 +36,7 @@ final class PostE2EUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/\.catalog-card__body\s*\{[^}]*padding: 16px;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card \.caption\s*\{[^}]*padding: 0 0 12px;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*padding: 0;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*display: flex;[^}]*flex-direction: column;/s', $css);
 		self::assertStringContainsString('class="row catalog-page-layout"', $category);
 		self::assertMatchesRegularExpression('/\.catalog-page-layout > #column-left,[^{]+\{[^}]*float: none;[^}]*width: 100%;/s', $css);
 		self::assertMatchesRegularExpression('/@media \(max-width: 420px\).*?\.catalog-filters__price\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
@@ -97,7 +98,18 @@ final class PostE2EUiContractTest extends TestCase {
 			$this->read('legal-pages/returns.txt')
 		);
 		self::assertStringContainsString("config_sylora_legal_name", $this->read('upload/catalog/controller/common/footer.php'));
-		self::assertStringContainsString('{{ legal_name }}', $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/footer.twig'));
+		self::assertStringNotContainsString('{{ legal_name }}', $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/footer.twig'));
+	}
+
+	public function testRequestedAccountRoutesUseDedicatedFullWidthLayout(): void {
+		foreach (array('login', 'forgotten', 'register') as $route) {
+			$controller = $this->read('upload/catalog/controller/account/' . $route . '.php');
+			$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/account/' . $route . '.twig');
+
+			self::assertStringContainsString("\$data['column_right'] = '';", $controller, $route);
+			self::assertStringContainsString('account-auth', $template, $route);
+			self::assertStringNotContainsString('{{ column_right }}', $template, $route);
+		}
 	}
 
 	private function shippingControlRule(string $css): string {

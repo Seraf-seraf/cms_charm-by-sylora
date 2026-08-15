@@ -61,16 +61,22 @@ final class CatalogUiContractTest extends TestCase {
 		}
 
 		$category = $this->themeTemplate('product/category.twig');
+		$categoryController = $this->read('upload/catalog/controller/product/category.php');
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
 		$storefront = $this->read('upload/catalog/view/javascript/storefront.js');
 
 		self::assertStringContainsString('<div class="catalog-shell">', $category);
 		self::assertStringContainsString('<aside class="catalog-shell__sidebar">', $category);
+		self::assertStringContainsString('name="path" value="{{ category.category_id }}"', $category);
+		self::assertStringContainsString('{{ category.total }}', $category);
+		self::assertStringNotContainsString('{{ column_left }}', $category);
+		self::assertStringContainsString("\$data['filter_availability'] = \$availability_filter;", $categoryController);
+		self::assertStringContainsString("(\$availability_filter !== '' ? 1 : 0)", $categoryController);
 		self::assertStringContainsString('<span>{{ text_filters }}</span>', $category);
 		self::assertStringContainsString("window.matchMedia('(min-width: 992px)')", $storefront);
 		self::assertStringContainsString('filterDetails.open = true;', $storefront);
-		self::assertStringContainsString('grid-template-columns: 280px minmax(0, 1fr);', $css);
-		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
+		self::assertStringContainsString('grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);', $css);
+		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*display: flex;[^}]*flex-direction: column;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-toolbar\s*\{[^}]*flex-wrap: wrap;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-toolbar__controls\s*\{[^}]*flex-wrap: wrap;[^}]*max-width: 100%;/s', $css);
 		self::assertMatchesRegularExpression('/@media \(max-width: 1199px\).*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/s', $css);
@@ -110,6 +116,7 @@ final class CatalogUiContractTest extends TestCase {
 		foreach (array(
 			'button_details', 'button_quick_view', 'button_close', 'button_filter_apply', 'button_filter_reset',
 			'text_out_of_stock', 'text_additional_image', 'text_sort', 'text_limit', 'text_filters',
+			'text_filter_categories',
 			'text_pagination_navigation', 'text_catalog_search', 'text_catalog_search_label',
 			'text_catalog_search_placeholder', 'text_all_categories', 'text_search_subcategories',
 			'text_search_description', 'text_catalog_search_empty', 'button_open_catalog',

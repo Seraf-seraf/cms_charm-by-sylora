@@ -75,6 +75,31 @@ class ModelCatalogCategory extends Model {
 		return $filter_group_data;
 	}
 
+	public function getCategoryProductFilters($category_id) {
+		$query = $this->db->query("SELECT DISTINCT f.filter_id, f.filter_group_id, fd.name, f.sort_order, fgd.name AS group_name, fg.sort_order AS group_sort_order FROM " . DB_PREFIX . "category_path cp INNER JOIN " . DB_PREFIX . "product_to_category p2c ON (p2c.category_id = cp.category_id) INNER JOIN " . DB_PREFIX . "product p ON (p.product_id = p2c.product_id) INNER JOIN " . DB_PREFIX . "product_to_store p2s ON (p2s.product_id = p.product_id) INNER JOIN " . DB_PREFIX . "product_filter pf ON (pf.product_id = p.product_id) INNER JOIN " . DB_PREFIX . "filter f ON (f.filter_id = pf.filter_id) INNER JOIN " . DB_PREFIX . "filter_description fd ON (fd.filter_id = f.filter_id) INNER JOIN " . DB_PREFIX . "filter_group fg ON (fg.filter_group_id = f.filter_group_id) INNER JOIN " . DB_PREFIX . "filter_group_description fgd ON (fgd.filter_group_id = fg.filter_group_id) WHERE cp.path_id = '" . (int)$category_id . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND fgd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY group_sort_order, LCASE(group_name), f.sort_order, LCASE(fd.name)");
+
+		$filter_groups = array();
+
+		foreach ($query->rows as $filter) {
+			$filter_group_id = (int)$filter['filter_group_id'];
+
+			if (!isset($filter_groups[$filter_group_id])) {
+				$filter_groups[$filter_group_id] = array(
+					'filter_group_id' => $filter_group_id,
+					'name' => $filter['group_name'],
+					'filter' => array()
+				);
+			}
+
+			$filter_groups[$filter_group_id]['filter'][] = array(
+				'filter_id' => (int)$filter['filter_id'],
+				'name' => $filter['name']
+			);
+		}
+
+		return array_values($filter_groups);
+	}
+
 	public function getCategoryLayoutId($category_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_to_layout WHERE category_id = '" . (int)$category_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
 

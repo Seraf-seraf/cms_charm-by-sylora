@@ -46,9 +46,9 @@ class ControllerProductCategory extends Controller {
 		}
 
 		if (isset($this->request->get['availability']) && in_array($this->request->get['availability'], array('in_stock', 'out_of_stock'))) {
-			$availability = $this->request->get['availability'];
+			$availability_filter = $this->request->get['availability'];
 		} else {
-			$availability = '';
+			$availability_filter = '';
 		}
 
 		$filter_is_new = !empty($this->request->get['is_new']) ? 1 : 0;
@@ -68,8 +68,8 @@ class ControllerProductCategory extends Controller {
 			$filter_url .= '&price_max=' . $price_max;
 		}
 
-		if ($availability !== '') {
-			$filter_url .= '&availability=' . $availability;
+		if ($availability_filter !== '') {
+			$filter_url .= '&availability=' . $availability_filter;
 		}
 
 		if ($filter_is_new) {
@@ -163,6 +163,22 @@ class ControllerProductCategory extends Controller {
 				);
 			}
 
+			$data['filter_categories'] = array();
+
+			foreach ($this->model_catalog_category->getCategories(0) as $filter_category) {
+				$filter_category_data = array(
+					'filter_category_id' => (int)$filter_category['category_id'],
+					'filter_sub_category' => true
+				);
+
+				$data['filter_categories'][] = array(
+					'category_id' => (int)$filter_category['category_id'],
+					'name' => $filter_category['name'],
+					'total' => $this->model_catalog_product->getTotalProducts($filter_category_data),
+					'selected' => (int)$filter_category['category_id'] === $category_id
+				);
+			}
+
 			$data['products'] = array();
 
 			$filter_data = array(
@@ -170,7 +186,7 @@ class ControllerProductCategory extends Controller {
 				'filter_filter'      => $filter,
 				'filter_price_min'   => $price_min,
 				'filter_price_max'   => $price_max,
-				'filter_availability' => $availability,
+				'filter_availability' => $availability_filter,
 				'filter_is_new'      => $filter_is_new,
 				'filter_is_sale'     => $filter_is_sale,
 				'sort'               => $sort,
@@ -445,17 +461,17 @@ class ControllerProductCategory extends Controller {
 			$data['sort'] = $sort;
 			$data['order'] = $order;
 			$data['limit'] = $limit;
-			$data['filter_groups'] = $this->model_catalog_category->getCategoryFilters($category_id);
-			$data['filter_category'] = $filter !== '' ? explode(',', $filter) : array();
+			$data['filter_groups'] = $this->model_catalog_category->getCategoryProductFilters($category_id);
+			$data['filter_category'] = $filter !== '' ? array_values(array_filter(explode(',', $filter), 'strlen')) : array();
 			$data['filter_price_min'] = $price_min;
 			$data['filter_price_max'] = $price_max;
-			$data['filter_availability'] = $availability;
+			$data['filter_availability'] = $availability_filter;
 			$data['filter_is_new'] = $filter_is_new;
 			$data['filter_is_sale'] = $filter_is_sale;
 			$data['filter_path'] = isset($this->request->get['path']) ? $this->request->get['path'] : '';
 			$data['filter_action'] = 'index.php';
 			$data['filter_reset'] = $this->url->link('product/category', 'path=' . $this->request->get['path']);
-			$data['active_filter_count'] = count($data['filter_category']) + ($price_min !== '' ? 1 : 0) + ($price_max !== '' ? 1 : 0) + ($availability !== '' ? 1 : 0) + ($filter_is_new ? 1 : 0) + ($filter_is_sale ? 1 : 0);
+			$data['active_filter_count'] = count($data['filter_category']) + ($price_min !== '' ? 1 : 0) + ($price_max !== '' ? 1 : 0) + ($availability_filter !== '' ? 1 : 0) + ($filter_is_new ? 1 : 0) + ($filter_is_sale ? 1 : 0);
 			$schema_breadcrumbs = array(
 				array(
 					'text' => $this->language->get('text_breadcrumb_home'),
@@ -486,7 +502,7 @@ class ControllerProductCategory extends Controller {
 
 			$data['continue'] = $this->url->link('common/home');
 
-			$data['column_left'] = $this->load->controller('common/column_left');
+			$data['column_left'] = '';
 			$data['column_right'] = $this->load->controller('common/column_right');
 			$data['content_top'] = $this->load->controller('common/content_top');
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');

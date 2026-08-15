@@ -1,14 +1,7 @@
 {{ header }}
 <main id="product-category" class="container">
-  <div class="row catalog-page-layout">{{ column_left }}
-    {% if column_left and column_right %}
-    {% set class = 'col-sm-6' %}
-    {% elseif column_left or column_right %}
-    {% set class = 'col-sm-9' %}
-    {% else %}
-    {% set class = 'col-sm-12' %}
-    {% endif %}
-    <div id="content" class="{{ class }}">{{ content_top }}
+  <div class="row catalog-page-layout">
+    <div id="content" class="col-sm-12">{{ content_top }}
       <header class="catalog-head">
         <p class="sylora-eyebrow">Каталог</p>
         <h1>{{ heading_title }}</h1>
@@ -22,34 +15,9 @@
         {% endif %}</div>
       <hr>
       {% endif %}
-      {% if categories %}
-      <h2 class="catalog-subtitle">Подкатегории</h2>
-      {% if categories|length <= 5 %}
-      <div class="row">
-        <div class="col-sm-3">
-          <ul>
-            {% for category in categories %}
-            <li><a href="{{ category.href }}">{{ category.name }}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-      {% else %}
-      <div class="row">{% for category in categories|batch((categories|length / 4)|round(1, 'ceil')) %}
-        <div class="col-sm-3">
-          <ul>
-            {% for child in category %}
-            <li><a href="{{ child.href }}">{{ child.name }}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endfor %}</div>
-      <br/>
-      {% endif %}
-      {% endif %}
       <div class="catalog-shell">
       <aside class="catalog-shell__sidebar">
-      {% if filter_groups or products or active_filter_count %}
+      {% if filter_categories or filter_groups or products or active_filter_count %}
       <details class="catalog-filters" data-active-filters="{% if active_filter_count %}true{% else %}false{% endif %}"{% if active_filter_count %} open{% endif %}>
         <summary class="catalog-filters__summary">
           <span>{{ text_filters }}</span>
@@ -59,11 +27,20 @@
         </summary>
         <form class="catalog-filters__form" action="{{ filter_action }}" method="get">
           <input type="hidden" name="route" value="product/category" />
-          <input type="hidden" name="path" value="{{ filter_path }}" />
           <input type="hidden" name="sort" value="{{ sort }}" />
           <input type="hidden" name="order" value="{{ order }}" />
           <input type="hidden" name="limit" value="{{ limit }}" />
           <div class="catalog-filters__grid">
+            <fieldset class="catalog-filters__group catalog-filters__categories">
+              <legend>{{ text_filter_categories }}</legend>
+              {% for category in filter_categories %}
+              <label class="catalog-filters__option">
+                <input type="radio" name="path" value="{{ category.category_id }}" {% if category.selected %}checked="checked"{% endif %} />
+                <span>{{ category.name }}</span>
+                <small>{{ category.total }}</small>
+              </label>
+              {% endfor %}
+            </fieldset>
             <fieldset class="catalog-filters__group">
               <legend>{{ text_filter_price }}</legend>
               <div class="catalog-filters__price">
