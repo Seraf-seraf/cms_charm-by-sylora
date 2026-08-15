@@ -2028,6 +2028,10 @@ div.required .control-label::before,
 	color: var(--color-text);
 }
 
+.site-header__inner.is-responsive-overflowing .site-actions .site-account {
+	display: none;
+}
+
 .account-auth {
 	padding-top: 28px;
 	padding-bottom: 48px;
@@ -2588,7 +2592,8 @@ footer a:focus {
 
 	.site-brand__sub,
 	.site-search,
-	.site-account {
+	.site-account,
+	.site-actions .site-account {
 		display: none;
 	}
 
