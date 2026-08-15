@@ -11,8 +11,7 @@ class ControllerCommonHome extends Controller {
 		$this->load->model('tool/image');
 		$this->load->library('seo');
 
-		$is_https = (!empty($this->request->server['HTTPS']) && $this->request->server['HTTPS'] != 'off')
-			|| (!empty($this->request->server['HTTP_X_FORWARDED_PROTO']) && strtolower($this->request->server['HTTP_X_FORWARDED_PROTO']) == 'https');
+		$is_https = !empty($this->request->server['HTTPS']);
 		$canonical = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
 
 		$this->document->addLink($canonical, 'canonical');

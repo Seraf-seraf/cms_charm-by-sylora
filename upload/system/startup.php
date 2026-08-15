@@ -37,13 +37,10 @@ if (!isset($_SERVER['HTTP_HOST'])) {
 }
 
 // Check if SSL
-if ((isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) || (isset($_SERVER['HTTPS']) && (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443))) {
-	$_SERVER['HTTPS'] = true;
-} elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
-	$_SERVER['HTTPS'] = true;
-} else {
-	$_SERVER['HTTPS'] = false;
-}
+require_once(DIR_SYSTEM . 'helper/request.php');
+
+$trusted_proxies = defined('TRUSTED_PROXIES') && is_array(TRUSTED_PROXIES) ? TRUSTED_PROXIES : array();
+$_SERVER['HTTPS'] = is_https_request($_SERVER, $trusted_proxies);
 
 // Modification Override
 function modification($filename) {
