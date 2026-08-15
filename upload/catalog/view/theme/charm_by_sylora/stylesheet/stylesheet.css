@@ -2272,6 +2272,13 @@ footer a:focus {
 	text-decoration: underline;
 }
 
+.catalog-page-layout > #column-left,
+.catalog-page-layout > #content,
+.catalog-page-layout > #column-right {
+	float: none;
+	width: 100%;
+}
+
 @media (max-width: 1199px) {
 	.site-header__inner {
 		gap: 16px;
@@ -3521,13 +3528,6 @@ footer a:focus {
 }
 
 @media (max-width: 991px) {
-	.catalog-page-layout > #column-left,
-	.catalog-page-layout > #content,
-	.catalog-page-layout > #column-right {
-		float: none;
-		width: 100%;
-	}
-
 	.catalog-filters__grid {
 		grid-template-columns: minmax(0, 1fr);
 	}

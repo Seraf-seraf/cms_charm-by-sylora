@@ -37,7 +37,7 @@ final class PostE2EUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*padding: 0;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
 		self::assertStringContainsString('class="row catalog-page-layout"', $category);
-		self::assertMatchesRegularExpression('/@media \(max-width: 991px\).*?\.catalog-page-layout > #column-left,[^{]+\{[^}]*float: none;[^}]*width: 100%;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-page-layout > #column-left,[^{]+\{[^}]*float: none;[^}]*width: 100%;/s', $css);
 		self::assertMatchesRegularExpression('/@media \(max-width: 420px\).*?\.catalog-filters__price\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
 		self::assertStringContainsString('overflow-wrap: anywhere;', $css);
 	}
