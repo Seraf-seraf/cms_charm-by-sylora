@@ -1,5 +1,5 @@
 <div class="slideshow swiper-viewport">
-  <div id="slideshow{{ module }}" class="swiper-container">
+  <div id="slideshow{{ module }}" class="swiper-container" data-slideshow data-pagination=".slideshow{{ module }}">
     <div class="swiper-wrapper"> {% for banner in banners %}
       <div class="swiper-slide text-center">{% if banner.link %}<a href="{{ banner.link }}"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" width="{{ width }}" height="{{ height }}" loading="{% if loop.first %}eager{% else %}lazy{% endif %}" decoding="async" /></a>{% else %}<img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" width="{{ width }}" height="{{ height }}" loading="{% if loop.first %}eager{% else %}lazy{% endif %}" decoding="async" />{% endif %}</div>
       {% endfor %} </div>
@@ -10,17 +10,3 @@
     <div class="swiper-button-prev"></div>
   </div>
 </div>
-<script type="text/javascript"><!--
-$('#slideshow{{ module }}').swiper({
-	mode: 'horizontal',
-	slidesPerView: 1,
-	pagination: '.slideshow{{ module }}',
-	paginationClickable: true,
-	nextButton: '.slideshow .swiper-button-next',
-    prevButton: '.slideshow .swiper-button-prev',
-    spaceBetween: 30,
-	autoplay: 5000,
-    autoplayDisableOnInteraction: false,
-	loop: true
-});
-//--></script>

@@ -10,17 +10,37 @@ $(() => {
         };
     }
 
-    let mapLoaded = false;
+    let mapScriptPromise = null;
+
+    const loadMapScript = () => {
+        if (Object.prototype.hasOwnProperty.call(window, 'CDEKWidget')) {
+            return $.Deferred().resolve().promise();
+        }
+
+        if (mapScriptPromise !== null) {
+            return mapScriptPromise;
+        }
+
+        const deferred = $.Deferred();
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@cdek-it/widget@3.10.4/dist/cdek-widget.umd.js';
+        script.integrity = 'sha384-d3BX/k7LeLv5Ld8LGJ/XhQKQarz+3sxJrRzNRfjTjuSrLNFvz3LFYD4aV610Jg6s';
+        script.crossOrigin = 'anonymous';
+        script.onload = () => deferred.resolve();
+        script.onerror = () => deferred.reject(new Error('CDEK widget failed integrity or network validation'));
+        document.head.appendChild(script);
+        mapScriptPromise = deferred.promise();
+
+        return mapScriptPromise;
+    };
 
     const updateGlobalData = () => $.getJSON(
       'index.php?route=extension/shipping/cdek_official/getParams',
-      {},
-      data => {
+      {})
+      .then(data => {
           window.cdek = data;
-          if (!mapLoaded && !Object.prototype.hasOwnProperty.call(window, 'CDEKWidget')) {
-              $.getScript(`//cdn.jsdelivr.net/npm/@cdek-it/widget@${data.map_version}`);
-              mapLoaded = true;
-          }
+
+          return loadMapScript().then(() => data);
       });
 
     const addButton = debounce((e) => {

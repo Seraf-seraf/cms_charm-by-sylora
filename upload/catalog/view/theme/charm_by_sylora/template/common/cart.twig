@@ -28,7 +28,7 @@
             {% endif %}
             <span class="mini-cart__line">x {{ product.quantity }} · {{ product.total }}</span>
           </div>
-          <button type="button" onclick="cart.remove('{{ product.cart_id }}', '{{ product.product_id }}', '{{ product.quantity }}');" title="{{ button_remove }}" aria-label="{{ button_remove }}" class="mini-cart__remove"><i class="fa fa-times"></i></button>
+          <button type="button" data-cart-remove="{{ product.cart_id }}" data-product-id="{{ product.product_id }}" data-quantity="{{ product.quantity }}" title="{{ button_remove }}" aria-label="{{ button_remove }}" class="mini-cart__remove"><i class="fa fa-times"></i></button>
         </article>
         {% endfor %}
         {% for voucher in vouchers %}
@@ -37,7 +37,7 @@
             <span class="mini-cart__name">{{ voucher.description }}</span>
             <span class="mini-cart__line">x 1 · {{ voucher.amount }}</span>
           </div>
-          <button type="button" onclick="voucher.remove('{{ voucher.key }}');" title="{{ button_remove }}" aria-label="{{ button_remove }}" class="mini-cart__remove"><i class="fa fa-times"></i></button>
+          <button type="button" data-voucher-remove="{{ voucher.key }}" title="{{ button_remove }}" aria-label="{{ button_remove }}" class="mini-cart__remove"><i class="fa fa-times"></i></button>
         </article>
         {% endfor %}
       </div>

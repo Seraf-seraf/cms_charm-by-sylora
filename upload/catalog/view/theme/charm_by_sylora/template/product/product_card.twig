@@ -22,7 +22,7 @@
       {% if product.badge %}
       <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
       {% endif %}
-      <button type="button" class="catalog-card__icon catalog-card__wishlist" data-toggle="tooltip" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}" aria-pressed="false" onclick="wishlist.add('{{ product.product_id }}', this);"><i class="fa fa-heart" aria-hidden="true"></i></button>
+      <button type="button" class="catalog-card__icon catalog-card__wishlist" data-toggle="tooltip" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}" aria-pressed="false" data-wishlist-add="{{ product.product_id }}"><i class="fa fa-heart" aria-hidden="true"></i></button>
     </div>
     <div class="catalog-card__body">
       <div class="caption">
@@ -40,7 +40,7 @@
       </div>
       <footer class="catalog-card__actions">
         {% if product.can_buy %}
-        <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>{{ button_cart }}</span></button>
+        <button type="button" class="catalog-card__cart" data-cart-add="{{ product.product_id }}" data-quantity="{{ product.minimum }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>{{ button_cart }}</span></button>
         {% else %}
         <button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban" aria-hidden="true"></i> <span>{{ text_out_of_stock }}</span></button>
         {% endif %}
@@ -72,7 +72,7 @@
         <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
         {% if product.quick_description %}<p>{{ product.quick_description }}</p>{% elseif product.description %}<p>{{ product.description }}</p>{% endif %}
         <div class="quick-view__actions">
-          {% if product.can_buy %}<button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}', this);"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>{{ button_cart }}</span></button>{% else %}<button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban" aria-hidden="true"></i> <span>{{ text_out_of_stock }}</span></button>{% endif %}
+          {% if product.can_buy %}<button type="button" class="catalog-card__cart" data-cart-add="{{ product.product_id }}" data-quantity="{{ product.minimum }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>{{ button_cart }}</span></button>{% else %}<button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban" aria-hidden="true"></i> <span>{{ text_out_of_stock }}</span></button>{% endif %}
           <a class="catalog-card__more" href="{{ product.href }}">{{ button_details }}</a>
         </div>
       </div>

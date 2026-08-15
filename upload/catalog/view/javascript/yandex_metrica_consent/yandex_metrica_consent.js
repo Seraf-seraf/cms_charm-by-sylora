@@ -1,7 +1,16 @@
 (function(window, document) {
 	'use strict';
 
-	var config = window.YandexMetricaConsentConfig || {};
+	var configElement = document.getElementById('yandex-metrica-consent-config');
+	var config = {};
+
+	if (configElement) {
+		try {
+			config = JSON.parse(configElement.textContent || '{}');
+		} catch (error) {
+			config = {};
+		}
+	}
 	var cookieName = 'sylora_cookie_consent';
 	var analyticsChoice = 'v1:analytics';
 	var essentialChoice = 'v1:essential';

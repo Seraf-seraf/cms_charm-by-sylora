@@ -49,7 +49,5 @@
 </div>
 {{ payment }}
 {% else %}
-<script type="text/javascript"><!--
-location = '{{ redirect }}';
-//--></script>
+<div data-checkout-redirect="{{ redirect }}"></div>
 {% endif %}

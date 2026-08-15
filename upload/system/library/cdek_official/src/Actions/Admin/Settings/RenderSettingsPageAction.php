@@ -40,7 +40,6 @@ class RenderSettingsPageAction
 
         $document->setTitle($language->get('heading_title'));
         $document->addStyle('view/stylesheet/cdek_official/settings_page.css');
-        $document->addScript('//cdn.jsdelivr.net/npm/@cdek-it/widget@' . Config::MAP_VERSION);
 
         $loader->model('setting/setting');
         $loader->model('localisation/length_class');
@@ -69,6 +68,8 @@ class RenderSettingsPageAction
         $data = [
             'success'       => $session->data['success'] ?? '',
             'error_warning' => $session->data['error_warning'] ?? '',
+            'cdek_map_script_url' => Config::MAP_SCRIPT_URL,
+            'cdek_map_script_integrity' => Config::MAP_SCRIPT_INTEGRITY,
 
             'action'      => $url->link('extension/shipping/cdek_official/store', "user_token={$session->data['user_token']}", true),
             'map_service' => $url->link("extension/shipping/cdek_official/map&user_token={$session->data['user_token']}", '', true),

@@ -132,7 +132,7 @@
         <div class="catalog-toolbar__controls">
           <div class="catalog-toolbar__field">
             <label for="input-sort">{{ text_sort }}</label>
-            <select id="input-sort" class="form-control" onchange="location = this.value;">
+            <select id="input-sort" class="form-control" data-location-select>
               {% for sorts in sorts %}
               {% if sorts.value == '%s-%s'|format(sort, order) %}
               <option value="{{ sorts.href }}" selected="selected">{{ sorts.text }}</option>
@@ -144,7 +144,7 @@
           </div>
           <div class="catalog-toolbar__field">
             <label for="input-limit">{{ text_limit }}</label>
-            <select id="input-limit" class="form-control" onchange="location = this.value;">
+            <select id="input-limit" class="form-control" data-location-select>
               {% for limits in limits %}
               {% if limits.value == limit %}
               <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
@@ -175,112 +175,6 @@
     {{ column_right }}</div>
 </main>
 {% if catalog_schema %}
-<script type="application/ld+json">{{ catalog_schema|raw }}</script>
+<script nonce="{{ csp_nonce }}" type="application/ld+json">{{ catalog_schema|raw }}</script>
 {% endif %}
-<script>
-(function() {
-  var lastQuickViewTrigger = null;
-  var focusableSelector = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-  var filterDetails = document.querySelector('.catalog-filters');
-  var desktopFilters = window.matchMedia('(min-width: 992px)');
-
-  function syncFilterDisclosure(event) {
-    if (!filterDetails) return;
-
-    if (desktopFilters.matches) {
-      filterDetails.open = true;
-    } else if (event && filterDetails.getAttribute('data-active-filters') !== 'true') {
-      filterDetails.open = false;
-    }
-  }
-
-  syncFilterDisclosure();
-
-  if (typeof desktopFilters.addEventListener === 'function') {
-    desktopFilters.addEventListener('change', syncFilterDisclosure);
-  } else if (typeof desktopFilters.addListener === 'function') {
-    desktopFilters.addListener(syncFilterDisclosure);
-  }
-
-  function getFocusable(container) {
-    return Array.prototype.slice.call(container.querySelectorAll(focusableSelector)).filter(function(element) {
-      return element.offsetParent !== null || element === document.activeElement;
-    });
-  }
-
-  document.addEventListener('click', function(event) {
-    var trigger = event.target.closest ? event.target.closest('.js-quick-view-open') : null;
-    if (!trigger) return;
-
-    var dialog = document.getElementById(trigger.getAttribute('data-dialog-id'));
-    if (!dialog || typeof dialog.showModal !== 'function') return;
-
-    lastQuickViewTrigger = trigger;
-    trigger.setAttribute('aria-expanded', 'true');
-    dialog.showModal();
-
-    var focusable = getFocusable(dialog);
-    if (focusable.length) {
-      focusable[0].focus();
-    }
-  });
-
-  document.addEventListener('keydown', function(event) {
-    var dialog = document.querySelector('.quick-view[open]');
-    if (!dialog || event.key !== 'Tab') return;
-
-    var focusable = getFocusable(dialog);
-    if (!focusable.length) return;
-
-    var first = focusable[0];
-    var last = focusable[focusable.length - 1];
-
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  });
-
-  document.addEventListener('close', function(event) {
-    if (!event.target.classList || !event.target.classList.contains('quick-view')) return;
-
-    if (lastQuickViewTrigger) {
-      lastQuickViewTrigger.setAttribute('aria-expanded', 'false');
-      lastQuickViewTrigger.focus();
-      lastQuickViewTrigger = null;
-    }
-  }, true);
-})();
-</script>
-<script>
-  document.addEventListener('submit', function (event) {
-    var form = event.target;
-
-    if (!(form instanceof HTMLFormElement)) {
-      return;
-    }
-
-    var minInput = form.querySelector('input[name="price_min"]');
-    var maxInput = form.querySelector('input[name="price_max"]');
-
-    if (!minInput || !maxInput) {
-      return;
-    }
-
-    var minValue = parseFloat(minInput.value);
-    var maxValue = parseFloat(maxInput.value);
-
-    if (isNaN(minValue) || isNaN(maxValue)) {
-      return;
-    }
-
-    if (minValue > maxValue) {
-      minInput.value = maxValue;
-      maxInput.value = minValue;
-    }
-  });
-</script>
 {{ footer }}

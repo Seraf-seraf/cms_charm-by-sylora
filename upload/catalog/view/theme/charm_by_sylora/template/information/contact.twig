@@ -117,7 +117,7 @@
               </div>
             </details>
             {% endif %}
-            <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal sylora-form" aria-labelledby="contact-form-title">
+            <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal sylora-form" aria-labelledby="contact-form-title" data-contact-error="{{ error_email_text }}">
               <fieldset>
                 <div class="form-group sylora-hp" aria-hidden="true">
                   <label for="input-company">Компания</label>
@@ -171,54 +171,8 @@
             </form>
           </div>
         </div>
-      </section>
-      <script>
-      (function() {
-        var form = document.querySelector('.sylora-form');
-        if (!form) return;
-
-        form.addEventListener('submit', function(event) {
-          var email = form.querySelector('#input-email');
-          var phone = form.querySelector('#input-telephone');
-          var hasContact = (email && email.value.trim()) || (phone && phone.value.trim());
-
-          if (!hasContact) {
-            event.preventDefault();
-            if (email) {
-              email.setCustomValidity('{{ error_email_text|e('js') }}');
-              email.reportValidity();
-            }
-            return;
-          }
-
-          if (email) {
-            email.setCustomValidity('');
-          }
-        });
-
-        ['#input-email', '#input-telephone'].forEach(function(selector) {
-          var field = form.querySelector(selector);
-
-          if (field) {
-            field.addEventListener('input', function() {
-              var emailField = form.querySelector('#input-email');
-
-              if (emailField) {
-                emailField.setCustomValidity('');
-              }
-            });
-          }
-        });
-
-        var firstInvalid = form.querySelector('[aria-invalid="true"]');
-
-        if (firstInvalid) {
-          firstInvalid.focus();
-        }
-      })();
-      </script>
-      {% if contact_schema %}
-      <script type="application/ld+json">{{ contact_schema|raw }}</script>
+      </section>      {% if contact_schema %}
+      <script nonce="{{ csp_nonce }}" type="application/ld+json">{{ contact_schema|raw }}</script>
       {% endif %}
       {{ content_bottom }}</div>
     {{ column_right }}</div>

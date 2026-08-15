@@ -24,7 +24,7 @@
         <div class="col-md-4 col-xs-6">
           <div class="form-group input-group input-group-sm">
             <label class="input-group-addon" for="input-sort">{{ text_sort }}</label>
-            <select id="input-sort" class="form-control" onchange="location = this.value;">
+            <select id="input-sort" class="form-control" data-location-select>
               {% for sorts in sorts %}
               {% if sorts.value == '%s-%s'|format(sort, order) %}
               <option value="{{ sorts.href }}" selected="selected">{{ sorts.text }}</option>
@@ -38,7 +38,7 @@
         <div class="col-md-3 col-xs-6">
           <div class="form-group input-group input-group-sm">
             <label class="input-group-addon" for="input-limit">{{ text_limit }}</label>
-            <select id="input-limit" class="form-control" onchange="location = this.value;">
+            <select id="input-limit" class="form-control" data-location-select>
               {% for limits in limits %}
               {% if limits.value == limit %}
               <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
@@ -71,9 +71,9 @@
                   {% endfor %} </div>
                 {% endif %} </div>
               <div class="button-group">
-                <button type="button" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
-                <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
-                <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+                <button type="button" data-cart-add="{{ product.product_id }}" data-quantity="{{ product.minimum }}"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
+                <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" data-wishlist-add="{{ product.product_id }}"><i class="fa fa-heart"></i></button>
+                <button type="button" data-toggle="tooltip" title="{{ button_compare }}" data-compare-add="{{ product.product_id }}"><i class="fa fa-exchange"></i></button>
               </div>
             </div>
           </div>

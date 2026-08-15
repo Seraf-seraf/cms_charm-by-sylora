@@ -58,7 +58,7 @@
         </div>
         {% endif %}
         {% if about_schema %}
-        <script type="application/ld+json">{{ about_schema|raw }}</script>
+        <script nonce="{{ csp_nonce }}" type="application/ld+json">{{ about_schema|raw }}</script>
         {% endif %}
       </article>
       {% else %}

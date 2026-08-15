@@ -19,7 +19,7 @@
         <div class="catalog-toolbar__controls">
           <div class="catalog-toolbar__field">
             <label for="input-sort">{{ text_sort }}</label>
-            <select id="input-sort" class="form-control" onchange="location = this.value;">
+            <select id="input-sort" class="form-control" data-location-select>
               {% for sorts in sorts %}
               {% if sorts.value == '%s-%s'|format(sort, order) %}
               <option value="{{ sorts.href }}" selected="selected">{{ sorts.text }}</option>
@@ -31,7 +31,7 @@
           </div>
           <div class="catalog-toolbar__field">
             <label for="input-limit">{{ text_limit }}</label>
-            <select id="input-limit" class="form-control" onchange="location = this.value;">
+            <select id="input-limit" class="form-control" data-location-select>
               {% for limits in limits %}
               {% if limits.value == limit %}
               <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
@@ -59,6 +59,6 @@
     {{ column_right }}</div>
 </main>
 {% if catalog_schema %}
-<script type="application/ld+json">{{ catalog_schema|raw }}</script>
+<script nonce="{{ csp_nonce }}" type="application/ld+json">{{ catalog_schema|raw }}</script>
 {% endif %}
 {{ footer }}
