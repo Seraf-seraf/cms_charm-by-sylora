@@ -16,6 +16,7 @@ class ControllerStartupStartup extends Controller {
 		$csp_nonce = base64_encode(random_bytes(16));
 		$this->config->set('csp_nonce', $csp_nonce);
 		$this->response->addHeader('Content-Security-Policy: ' . $this->getContentSecurityPolicy($csp_nonce));
+		$this->addSecurityHeaders();
 
 		// Store
 		if ($this->request->server['HTTPS']) {
@@ -229,6 +230,16 @@ class ControllerStartupStartup extends Controller {
 		
 		// Encryption
 		$this->registry->set('encryption', new Encryption());
+	}
+
+	private function addSecurityHeaders() {
+		if (!empty($this->request->server['HTTPS'])) {
+			$this->response->addHeader('Strict-Transport-Security: max-age=31536000');
+		}
+
+		$this->response->addHeader('X-Content-Type-Options: nosniff');
+		$this->response->addHeader('Referrer-Policy: strict-origin-when-cross-origin');
+		$this->response->addHeader('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 	}
 
 	private function getContentSecurityPolicy($nonce) {

@@ -22,6 +22,7 @@ class ControllerStartupStartup extends Controller {
 
 		// Theme
 		$this->config->set('template_cache', $this->config->get('developer_theme'));
+		$this->addSecurityHeaders();
 				
 		// Language
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE code = '" . $this->db->escape($this->config->get('config_admin_language')) . "'");
@@ -65,5 +66,15 @@ class ControllerStartupStartup extends Controller {
 		
 		// Encryption
 		$this->registry->set('encryption', new Encryption());
+	}
+
+	private function addSecurityHeaders() {
+		if (!empty($this->request->server['HTTPS'])) {
+			$this->response->addHeader('Strict-Transport-Security: max-age=31536000');
+		}
+
+		$this->response->addHeader('X-Content-Type-Options: nosniff');
+		$this->response->addHeader('Referrer-Policy: strict-origin-when-cross-origin');
+		$this->response->addHeader('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 	}
 }
