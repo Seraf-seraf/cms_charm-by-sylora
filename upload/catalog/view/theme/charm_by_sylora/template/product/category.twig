@@ -255,4 +255,32 @@
   }, true);
 })();
 </script>
+<script>
+  document.addEventListener('submit', function (event) {
+    var form = event.target;
+
+    if (!(form instanceof HTMLFormElement)) {
+      return;
+    }
+
+    var minInput = form.querySelector('input[name="price_min"]');
+    var maxInput = form.querySelector('input[name="price_max"]');
+
+    if (!minInput || !maxInput) {
+      return;
+    }
+
+    var minValue = parseFloat(minInput.value);
+    var maxValue = parseFloat(maxInput.value);
+
+    if (isNaN(minValue) || isNaN(maxValue)) {
+      return;
+    }
+
+    if (minValue > maxValue) {
+      minInput.value = maxValue;
+      maxInput.value = minValue;
+    }
+  });
+</script>
 {{ footer }}

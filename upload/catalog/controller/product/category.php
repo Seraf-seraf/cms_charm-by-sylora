@@ -38,6 +38,12 @@ class ControllerProductCategory extends Controller {
 			$price_max = '';
 		}
 
+		if ($price_min !== '' && $price_max !== '' && $price_min > $price_max) {
+			$tmp = $price_min;
+			$price_min = $price_max;
+			$price_max = $tmp;
+		}
+
 		if (isset($this->request->get['availability']) && in_array($this->request->get['availability'], array('in_stock', 'out_of_stock'))) {
 			$availability = $this->request->get['availability'];
 		} else {
