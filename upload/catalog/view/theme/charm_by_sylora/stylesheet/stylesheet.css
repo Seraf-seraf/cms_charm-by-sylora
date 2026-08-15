@@ -2272,11 +2272,29 @@ footer a:focus {
 	text-decoration: underline;
 }
 
+#product-category .catalog-page-layout {
+	margin-left: 0;
+	margin-right: 0;
+}
+
 .catalog-page-layout > #column-left,
 .catalog-page-layout > #content,
 .catalog-page-layout > #column-right {
 	float: none;
 	width: 100%;
+	max-width: 100%;
+	padding-left: 0;
+	padding-right: 0;
+	box-sizing: border-box;
+}
+
+#product-category .catalog-page-layout .swiper-viewport {
+	width: 100%;
+	max-width: 100%;
+	margin: 0 0 24px;
+	border: 0;
+	box-sizing: border-box;
+	box-shadow: none;
 }
 
 @media (max-width: 1199px) {
