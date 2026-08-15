@@ -169,7 +169,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
 			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_checkout_id'));
 
-			if ($information_info && !isset($this->request->post['agree'])) {
+			if ($information_info && empty($this->request->post['agree'])) {
 				$json['error']['warning'] = sprintf($this->language->get('error_agree'), $information_info['title']);
 			}
 		}
