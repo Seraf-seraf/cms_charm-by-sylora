@@ -29,12 +29,15 @@ final class PostE2EUiContractTest extends TestCase {
 
 	public function testBrandAndCatalogLayoutContractsAreStable(): void {
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
+		$category = $this->read('upload/catalog/view/theme/charm_by_sylora/template/product/category.twig');
 
 		self::assertMatchesRegularExpression('/\.site-brand\s*\{[^}]*flex: none;[^}]*min-width: max-content;[^}]*white-space: nowrap;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card__body\s*\{[^}]*padding: 16px;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card \.caption\s*\{[^}]*padding: 0 0 12px;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*padding: 0;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
+		self::assertStringContainsString('class="row catalog-page-layout"', $category);
+		self::assertMatchesRegularExpression('/@media \(max-width: 991px\).*?\.catalog-page-layout > #column-left,[^{]+\{[^}]*float: none;[^}]*width: 100%;/s', $css);
 		self::assertMatchesRegularExpression('/@media \(max-width: 420px\).*?\.catalog-filters__price\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
 		self::assertStringContainsString('overflow-wrap: anywhere;', $css);
 	}
