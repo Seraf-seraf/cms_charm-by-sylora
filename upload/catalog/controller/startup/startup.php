@@ -13,6 +13,10 @@ class ControllerStartupStartup extends Controller {
 	}
 
 	public function index() {
+		$csp_nonce = base64_encode(random_bytes(16));
+		$this->config->set('csp_nonce', $csp_nonce);
+		$this->response->addHeader('Content-Security-Policy: ' . $this->getContentSecurityPolicy($csp_nonce));
+
 		// Store
 		if ($this->request->server['HTTPS']) {
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store WHERE REPLACE(`ssl`, 'www.', '') = '" . $this->db->escape('https://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']), '/.\\') . '/') . "'");
@@ -210,5 +214,26 @@ class ControllerStartupStartup extends Controller {
 		
 		// Encryption
 		$this->registry->set('encryption', new Encryption());
+	}
+
+	private function getContentSecurityPolicy($nonce) {
+		$directives = array(
+			"default-src 'self'",
+			"base-uri 'self'",
+			"object-src 'none'",
+			"frame-ancestors 'none'",
+			"form-action 'self'",
+			"script-src 'self' 'nonce-" . $nonce . "' https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru https://mc.yandex.ru https://yastatic.net https://cdn.jsdelivr.net https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://suggest-maps.yandex.ru https://yandex.ru 'unsafe-eval'",
+			"script-src-attr 'unsafe-inline'",
+			"connect-src 'self' https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru https://mc.yandex.ru https://mc.webvisor.com https://mc.webvisor.org wss://mc.yandex.ru wss://mc.webvisor.com wss://mc.webvisor.org https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://*.maps.yandex.net https://suggest-maps.yandex.ru https://search-maps.yandex.ru https://api.routing.yandex.net",
+			"frame-src https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru https://api-maps.yandex.ru blob: https://mc.yandex.ru",
+			"img-src 'self' data: blob: https://mc.yandex.ru https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://*.maps.yandex.net https://yastatic.net",
+			"style-src 'self' 'unsafe-inline' blob: https://fonts.googleapis.com https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://yastatic.net",
+			"font-src 'self' data: https://fonts.gstatic.com",
+			"worker-src 'self' blob: data: https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://yastatic.net",
+			'upgrade-insecure-requests'
+		);
+
+		return implode('; ', $directives);
 	}
 }
