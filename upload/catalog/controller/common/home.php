@@ -10,6 +10,7 @@ class ControllerCommonHome extends Controller {
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
 		$this->load->library('seo');
+		$this->load->library('product_availability');
 
 		$is_https = !empty($this->request->server['HTTPS']);
 		$canonical = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
@@ -83,31 +84,28 @@ class ControllerCommonHome extends Controller {
 				$special = false;
 			}
 
-			if ($product['quantity'] <= 0) {
-				if ((int)$product['stock_status_id'] === 5) {
-					$stock = 'Нет в наличии';
-					$stock_class = 'is-out';
-				} elseif ((int)$product['stock_status_id'] === 6 || (int)$product['stock_status_id'] === 8) {
-					$stock = 'Под заказ';
-					$stock_class = 'is-preorder';
-				} else {
-					$stock = $product['stock_status'];
-					$stock_class = 'is-out';
+				$product_availability = $this->registry->get('product_availability');
+				$availability = array(
+					'state' => ProductAvailability::STATE_OUT_OF_STOCK,
+					'text' => 'Нет в наличии',
+					'css_class' => 'is-out',
+					'can_buy' => false,
+					'schema_org' => 'https://schema.org/OutOfStock'
+				);
+
+				if ($product_availability instanceof ProductAvailability) {
+					$availability = $product_availability->resolve($product);
 				}
-			} elseif ($product['quantity'] <= 2) {
-				$stock = 'Осталось мало';
-				$stock_class = 'is-low';
-			} else {
-				$stock = 'В наличии';
-				$stock_class = 'is-in';
-			}
+
+				$stock = (string)$availability['text'];
+				$stock_class = (string)$availability['css_class'];
 
 			$is_new = !empty($product['date_added']) && strtotime($product['date_added']) >= strtotime('-30 days');
 
-			if ($stock === 'Нет в наличии') {
+			if ($availability['state'] === ProductAvailability::STATE_OUT_OF_STOCK) {
 				$badge = 'Нет в наличии';
 				$badge_class = 'is-out';
-			} elseif ($stock === 'Под заказ') {
+			} elseif ($availability['state'] === ProductAvailability::STATE_PREORDER) {
 				$badge = 'Под заказ';
 				$badge_class = 'is-preorder';
 			} elseif ($special) {
@@ -137,7 +135,7 @@ class ControllerCommonHome extends Controller {
 				'badge_class' => $badge_class,
 				'stock'       => $stock,
 				'stock_class' => $stock_class,
-				'can_buy'     => $stock !== 'Нет в наличии',
+				'can_buy'     => !empty($availability['can_buy']),
 				'minimum'     => $product['minimum'] > 0 ? $product['minimum'] : 1,
 				'href'        => $this->url->link('product/product', 'product_id=' . $product['product_id'])
 			);

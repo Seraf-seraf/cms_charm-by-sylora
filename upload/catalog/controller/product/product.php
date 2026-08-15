@@ -8,6 +8,7 @@ class ControllerProductProduct extends Controller {
 	public function index() {
 		$this->load->language('product/product');
 		$this->load->library('seo');
+		$this->load->library('product_availability');
 
 		if (isset($this->request->get['product_id'])) {
 			$product_id = (int)$this->request->get['product_id'];
@@ -110,32 +111,26 @@ class ControllerProductProduct extends Controller {
 			$data['reward'] = $product_info['reward'];
 			$data['points'] = $product_info['points'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
-			$stock_status_id = (int)$product_info['stock_status_id'];
-			$is_preorder = $product_info['quantity'] <= 0 && in_array($stock_status_id, array(6, 8), true);
+			$product_availability = $this->registry->get('product_availability');
+			$availability = null;
 
-			if ($product_info['quantity'] <= 0) {
-				if ($is_preorder) {
-					$data['stock'] = 'Под заказ';
-					$data['stock_class'] = 'is-preorder';
-				} elseif ($stock_status_id === 5) {
-					$data['stock'] = 'Нет в наличии';
-					$data['stock_class'] = 'is-out';
-				} else {
-					$data['stock'] = $product_info['stock_status'];
-					$data['stock_class'] = 'is-out';
-				}
-			} elseif ($product_info['quantity'] <= 2) {
-				$data['stock'] = 'Осталось мало';
-				$data['stock_class'] = 'is-low';
-			} elseif ($this->config->get('config_stock_display')) {
-				$data['stock'] = $product_info['quantity'];
-				$data['stock_class'] = 'is-in';
-			} else {
-				$data['stock'] = 'В наличии';
-				$data['stock_class'] = 'is-in';
+			if ($product_availability instanceof ProductAvailability) {
+				$availability = $product_availability->resolve($product_info);
 			}
 
-			$data['can_buy'] = $product_info['quantity'] > 0 || $is_preorder;
+			if (!is_array($availability)) {
+				$availability = array(
+					'state' => ProductAvailability::STATE_OUT_OF_STOCK,
+					'text' => 'Нет в наличии',
+					'css_class' => 'is-out',
+					'can_buy' => false,
+					'schema_org' => 'https://schema.org/OutOfStock'
+				);
+			}
+
+			$data['stock'] = (string)$availability['text'];
+			$data['stock_class'] = (string)$availability['css_class'];
+			$data['can_buy'] = !empty($availability['can_buy']);
 
 			$this->load->model('tool/image');
 
@@ -361,18 +356,8 @@ class ControllerProductProduct extends Controller {
 				$image_url = rtrim($server, '/') . '/image/' . $product_info['image'];
 			}
 
-			$schema_availability = 'https://schema.org/InStock';
+			$schema_availability = isset($availability['schema_org']) ? (string)$availability['schema_org'] : 'https://schema.org/OutOfStock';
 			$schema_price = $this->tax->calculate($tax_price, $product_info['tax_class_id'], $this->config->get('config_tax'));
-
-			if ($product_info['quantity'] <= 0) {
-				if ($data['stock'] == 'Под заказ') {
-					$schema_availability = 'https://schema.org/PreOrder';
-				} else {
-					$schema_availability = 'https://schema.org/OutOfStock';
-				}
-			} elseif ($product_info['quantity'] <= 2) {
-				$schema_availability = 'https://schema.org/LimitedAvailability';
-			}
 
 			$manufacturer = trim((string)$product_info['manufacturer']);
 			$brand_name = $manufacturer !== '' ? $manufacturer : trim((string)$this->config->get('config_name'));
@@ -508,33 +493,29 @@ class ControllerProductProduct extends Controller {
 					$rating = false;
 				}
 
-				if ($result['quantity'] <= 0) {
-					if ((int)$result['stock_status_id'] === 6 || (int)$result['stock_status_id'] === 8) {
-						$stock = 'Под заказ';
-						$stock_class = 'is-preorder';
-					} elseif ((int)$result['stock_status_id'] === 5) {
-						$stock = 'Нет в наличии';
-						$stock_class = 'is-out';
-					} else {
-						$stock = $result['stock_status'];
-						$stock_class = 'is-out';
-					}
-				} elseif ($result['quantity'] <= 2) {
-					$stock = 'Осталось мало';
-					$stock_class = 'is-low';
-				} else {
-					$stock = 'В наличии';
-					$stock_class = 'is-in';
+				$availability = array(
+					'state' => ProductAvailability::STATE_OUT_OF_STOCK,
+					'text' => 'Нет в наличии',
+					'css_class' => 'is-out',
+					'can_buy' => false,
+					'schema_org' => 'https://schema.org/OutOfStock'
+				);
+
+				if ($product_availability instanceof ProductAvailability) {
+					$availability = $product_availability->resolve($result);
 				}
+
+				$stock = (string)$availability['text'];
+				$stock_class = (string)$availability['css_class'];
 
 				$is_new = !empty($result['date_added']) && strtotime($result['date_added']) >= strtotime('-30 days');
 				$badge = '';
 				$badge_class = '';
 
-				if ($stock === 'Нет в наличии') {
+				if ($availability['state'] === ProductAvailability::STATE_OUT_OF_STOCK) {
 					$badge = 'Нет в наличии';
 					$badge_class = 'is-out';
-				} elseif ($stock === 'Под заказ') {
+				} elseif ($availability['state'] === ProductAvailability::STATE_PREORDER) {
 					$badge = 'Под заказ';
 					$badge_class = 'is-preorder';
 				} elseif ($special) {
@@ -558,7 +539,7 @@ class ControllerProductProduct extends Controller {
 					'badge_class' => $badge_class,
 					'stock'       => $stock,
 					'stock_class' => $stock_class,
-					'can_buy'     => $stock !== 'Нет в наличии',
+					'can_buy'     => !empty($availability['can_buy']),
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $rating,

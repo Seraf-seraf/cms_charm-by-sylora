@@ -10,6 +10,7 @@ class ControllerProductCategory extends Controller {
 		$this->load->model('tool/image');
 		$this->load->library('seo');
 		$this->load->library('catalog_schema');
+		$this->load->library('product_availability');
 		$catalog_schema = $this->registry->get('catalog_schema');
 
 		if (!$catalog_schema instanceof Catalog_schema) {
@@ -233,33 +234,30 @@ class ControllerProductCategory extends Controller {
 					$rating = false;
 				}
 
-				if ($result['quantity'] <= 0) {
-					if ((int)$result['stock_status_id'] === 6 || (int)$result['stock_status_id'] === 8) {
-						$stock = 'Под заказ';
-						$stock_class = 'is-preorder';
-					} elseif ((int)$result['stock_status_id'] === 5) {
-						$stock = 'Нет в наличии';
-						$stock_class = 'is-out';
-					} else {
-						$stock = $result['stock_status'];
-						$stock_class = 'is-out';
-					}
-				} elseif ($result['quantity'] <= 2) {
-					$stock = 'Осталось мало';
-					$stock_class = 'is-low';
-				} else {
-					$stock = 'В наличии';
-					$stock_class = 'is-in';
+				$product_availability = $this->registry->get('product_availability');
+				$availability = array(
+					'state' => ProductAvailability::STATE_OUT_OF_STOCK,
+					'text' => 'Нет в наличии',
+					'css_class' => 'is-out',
+					'can_buy' => false,
+					'schema_org' => 'https://schema.org/OutOfStock'
+				);
+
+				if ($product_availability instanceof ProductAvailability) {
+					$availability = $product_availability->resolve($result);
 				}
+
+				$stock = (string)$availability['text'];
+				$stock_class = (string)$availability['css_class'];
 
 				$is_new = !empty($result['date_added']) && strtotime($result['date_added']) >= strtotime('-30 days');
 				$badge = '';
 				$badge_class = '';
 
-				if ($stock === 'Нет в наличии') {
+				if ($availability['state'] === ProductAvailability::STATE_OUT_OF_STOCK) {
 					$badge = 'Нет в наличии';
 					$badge_class = 'is-out';
-				} elseif ($stock === 'Под заказ') {
+				} elseif ($availability['state'] === ProductAvailability::STATE_PREORDER) {
 					$badge = 'Под заказ';
 					$badge_class = 'is-preorder';
 				} elseif ($special) {
@@ -286,7 +284,7 @@ class ControllerProductCategory extends Controller {
 					'badge_class' => $badge_class,
 					'stock'       => $stock,
 					'stock_class' => $stock_class,
-					'can_buy'     => $stock !== 'Нет в наличии',
+					'can_buy'     => !empty($availability['can_buy']),
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $result['rating'],
