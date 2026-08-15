@@ -143,7 +143,7 @@ $(document).delegate('#button-register', 'click', function() {
                     $('#collapse-payment-address .panel-body').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
 
-				for (i in json['error']) {
+				for (var i in json['error']) {
 					var element = $('#input-payment-' + i.replace('_', '-'));
 
 					if ($(element).parent().hasClass('input-group')) {
@@ -278,7 +278,7 @@ $(document).delegate('#button-payment-address', 'click', function() {
                     $('#collapse-payment-address .panel-body').prepend('<div class="alert alert-warning alert-dismissible">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
 
-				for (i in json['error']) {
+				for (var i in json['error']) {
 					var element = $('#input-payment-' + i.replace('_', '-'));
 
 					if ($(element).parent().hasClass('input-group')) {
@@ -381,7 +381,7 @@ $(document).delegate('#button-shipping-address', 'click', function() {
                     $('#collapse-shipping-address .panel-body').prepend('<div class="alert alert-warning alert-dismissible">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
 
-				for (i in json['error']) {
+				for (var i in json['error']) {
 					var element = $('#input-shipping-' + i.replace('_', '-'));
 
 					if ($(element).parent().hasClass('input-group')) {
@@ -467,7 +467,7 @@ $(document).delegate('#button-guest', 'click', function() {
                     $('#collapse-payment-address .panel-body').prepend('<div class="alert alert-warning alert-dismissible">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
 
-				for (i in json['error']) {
+				for (var i in json['error']) {
 					var element = $('#input-payment-' + i.replace('_', '-'));
 
 					if ($(element).parent().hasClass('input-group')) {
@@ -593,7 +593,7 @@ $(document).delegate('#button-guest-shipping', 'click', function() {
                     $('#collapse-shipping-address .panel-body').prepend('<div class="alert alert-danger alert-dismissible">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
 
-				for (i in json['error']) {
+				for (var i in json['error']) {
 					var element = $('#input-shipping-' + i.replace('_', '-'));
 
 					if ($(element).parent().hasClass('input-group')) {

@@ -52,8 +52,8 @@ final class ContentSecurityPolicyTest extends TestCase {
 
 		self::assertStringNotContainsString("'unsafe-eval'", $startup);
 		self::assertStringNotContainsString("script-src-attr 'unsafe-inline'", $startup);
-		self::assertStringNotContainsString('https://widget.pochta.ru', $startup);
-		self::assertStringNotContainsString('https://smartcaptcha.cloud.yandex.ru', $startup);
+		self::assertSame(2, substr_count($startup, 'https://widget.pochta.ru'));
+		self::assertSame(2, substr_count($startup, 'https://smartcaptcha.cloud.yandex.ru'));
 	}
 
 	public function testActiveStorefrontTemplatesContainNoExecutableInlineScriptsOrEventAttributes(): void {

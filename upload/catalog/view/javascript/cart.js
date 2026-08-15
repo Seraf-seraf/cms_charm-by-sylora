@@ -42,7 +42,7 @@ $('#button-quote').on('click', function() {
 			if (json['shipping_method']) {
 				$('#modal-shipping').remove();
 
-				html  = '<div id="modal-shipping" class="modal">';
+				var html = '<div id="modal-shipping" class="modal">';
 				html += '  <div class="modal-dialog">';
 				html += '    <div class="modal-content">';
 				html += '      <div class="modal-header">';
@@ -50,11 +50,11 @@ $('#button-quote').on('click', function() {
 				html += '      </div>';
 				html += '      <div class="modal-body">';
 
-				for (i in json['shipping_method']) {
+				for (var i in json['shipping_method']) {
 					html += '<p><strong>' + json['shipping_method'][i]['title'] + '</strong></p>';
 
 					if (!json['shipping_method'][i]['error']) {
-						for (j in json['shipping_method'][i]['quote']) {
+						for (var j in json['shipping_method'][i]['quote']) {
 							html += '<div class="radio">';
 							html += '  <label>';
 
@@ -155,10 +155,10 @@ $('select[name=\'country_id\']').on('change', function() {
 				$('input[name=\'postcode\']').parent().parent().removeClass('required');
 			}
 
-			html = '<option value="">' + config.textSelect + '</option>';
+			var html = '<option value="">' + config.textSelect + '</option>';
 
 			if (json['zone'] && json['zone'] != '') {
-				for (i = 0; i < json['zone'].length; i++) {
+				for (var i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
 					if (json['zone'][i]['zone_id'] == '' + config.zoneId + '') {
