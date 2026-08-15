@@ -45,3 +45,6 @@ class ProductAvailability {
 		);
 	}
 }
+
+class product_availability extends ProductAvailability {
+}
