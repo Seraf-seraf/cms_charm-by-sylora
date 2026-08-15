@@ -91,6 +91,9 @@
                 <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == payment_payment_service_pending_status_id %} selected="selected"{% endif %}>{{ order_status.name }}</option>
                 {% endfor %}
               </select>
+              {% if error_pending_status %}
+              <div class="text-danger">{{ error_pending_status }}</div>
+              {% endif %}
             </div>
           </div>
           <div class="form-group">
@@ -101,6 +104,9 @@
                 <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == payment_payment_service_success_status_id %} selected="selected"{% endif %}>{{ order_status.name }}</option>
                 {% endfor %}
               </select>
+              {% if error_success_status %}
+              <div class="text-danger">{{ error_success_status }}</div>
+              {% endif %}
             </div>
           </div>
           <div class="form-group">
@@ -111,6 +117,9 @@
                 <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == payment_payment_service_failed_status_id %} selected="selected"{% endif %}>{{ order_status.name }}</option>
                 {% endfor %}
               </select>
+              {% if error_failed_status %}
+              <div class="text-danger">{{ error_failed_status }}</div>
+              {% endif %}
             </div>
           </div>
           <div class="form-group">
@@ -121,6 +130,9 @@
                 <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == payment_payment_service_canceled_status_id %} selected="selected"{% endif %}>{{ order_status.name }}</option>
                 {% endfor %}
               </select>
+              {% if error_canceled_status %}
+              <div class="text-danger">{{ error_canceled_status }}</div>
+              {% endif %}
             </div>
           </div>
           <div class="form-group">
@@ -131,6 +143,9 @@
                 <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == payment_payment_service_refunded_status_id %} selected="selected"{% endif %}>{{ order_status.name }}</option>
                 {% endfor %}
               </select>
+              {% if error_refunded_status %}
+              <div class="text-danger">{{ error_refunded_status }}</div>
+              {% endif %}
             </div>
           </div>
           <div class="form-group">

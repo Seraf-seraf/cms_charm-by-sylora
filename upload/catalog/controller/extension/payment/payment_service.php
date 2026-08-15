@@ -1,4 +1,6 @@
 <?php
+require_once DIR_SYSTEM . 'library/payment_service_order_status_policy.php';
+
 class ControllerExtensionPaymentPaymentService extends Controller {
 	const MAX_CALLBACK_BODY_BYTES = 65536;
 	const MAX_API_RESPONSE_BYTES = 1048576;
@@ -36,6 +38,9 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			} elseif ($order_info['currency_code'] !== 'RUB' || (float)$order_info['total'] <= 0) {
 				$this->logPaymentError($order_info['order_id'], 'unsupported_order_amount_or_currency');
 				$json['error'] = $this->language->get('error_payment');
+			} elseif (($configuration_violation = $this->statusConfigurationViolation()) !== '') {
+				$this->logPaymentError($order_info['order_id'], 'unsafe_status_configuration_' . $configuration_violation);
+				$json['error'] = $this->language->get('error_payment');
 			} elseif (!function_exists('curl_init')) {
 				$this->logPaymentError($order_info['order_id'], 'curl_not_available');
 				$json['error'] = $this->language->get('error_payment');
@@ -63,6 +68,12 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 						$order_status_id = $this->mapStatus($response['status']);
 
 						if ((int)$order_info['order_status_id'] !== $order_status_id) {
+							$configuration_violation = $this->statusConfigurationViolation();
+
+							if ($configuration_violation !== '') {
+								throw new RuntimeException('unsafe_status_configuration_' . $configuration_violation);
+							}
+
 							$this->model_checkout_order->addOrderHistory(
 								$order_info['order_id'],
 								$order_status_id,
@@ -74,7 +85,8 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 						$json['redirect'] = $response['status'] === 'succeeded' ? $this->url->link('checkout/success', '', true) : $response['payment_url'];
 					}
 				} catch (Throwable $exception) {
-					$this->logPaymentError($order_info['order_id'], 'confirmation_processing_failed');
+					$error_code = strpos($exception->getMessage(), 'unsafe_status_configuration_') === 0 ? $exception->getMessage() : 'confirmation_processing_failed';
+					$this->logPaymentError($order_info['order_id'], $error_code);
 					$json['error'] = $this->language->get('error_payment');
 				}
 			}
@@ -157,6 +169,14 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 			return $this->jsonResponse(array('code' => 'unsupported_status', 'message' => 'Unsupported status'), 400);
 		}
 
+		$configuration_violation = $this->statusConfigurationViolation();
+
+		if ($configuration_violation !== '') {
+			$this->logPaymentError($order_id, 'unsafe_status_configuration_' . $configuration_violation);
+
+			return $this->jsonResponse(array('code' => 'unsafe_status_configuration', 'message' => 'Payment status configuration is unsafe'), 500);
+		}
+
 		if (!$this->saveEvent($payload, $raw_body, $order_id)) {
 			return $this->jsonResponse(array('status' => 'ok'));
 		}
@@ -172,13 +192,20 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 
 		try {
 			if ((int)$order_info['order_status_id'] != (int)$order_status_id) {
+				$configuration_violation = $this->statusConfigurationViolation();
+
+				if ($configuration_violation !== '') {
+					throw new RuntimeException('unsafe_status_configuration_' . $configuration_violation);
+				}
+
 				$this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true);
 			}
 
 			$this->updateStoredPaymentStatus($payload['payment_id'], $payload['status']);
 		} catch (Throwable $exception) {
 			$this->deleteEvent($payload['event_id']);
-			$this->logPaymentError($order_id, 'callback_processing_failed');
+			$error_code = strpos($exception->getMessage(), 'unsafe_status_configuration_') === 0 ? $exception->getMessage() : 'callback_processing_failed';
+			$this->logPaymentError($order_id, $error_code);
 
 			return $this->jsonResponse(array('code' => 'processing_failed', 'message' => 'Callback processing failed'), 500);
 		}
@@ -724,6 +751,22 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 		}
 
 		return (int)$this->config->get($map[$status]);
+	}
+
+	private function statusConfigurationViolation() {
+		$violations = PaymentServiceOrderStatusPolicy::violations(
+			(array)$this->config->get('config_processing_status'),
+			(array)$this->config->get('config_complete_status'),
+			array(
+				'pending'   => $this->config->get('payment_payment_service_pending_status_id'),
+				'succeeded' => $this->config->get('payment_payment_service_success_status_id'),
+				'failed'    => $this->config->get('payment_payment_service_failed_status_id'),
+				'canceled'  => $this->config->get('payment_payment_service_canceled_status_id'),
+				'refunded'  => $this->config->get('payment_payment_service_refunded_status_id')
+			)
+		);
+
+		return $violations ? (string)array_key_first($violations) : '';
 	}
 
 	private function logPaymentError($order_id, $code) {

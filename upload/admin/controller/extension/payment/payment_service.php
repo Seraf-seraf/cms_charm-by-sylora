@@ -1,4 +1,6 @@
 <?php
+require_once DIR_SYSTEM . 'library/payment_service_order_status_policy.php';
+
 class ControllerExtensionPaymentPaymentService extends Controller {
 	private $error = array();
 
@@ -28,6 +30,9 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 		}
 
 		$data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
+		foreach (array('pending', 'success', 'failed', 'canceled', 'refunded') as $status) {
+			$data['error_' . $status . '_status'] = isset($this->error[$status . '_status']) ? $this->error[$status . '_status'] : '';
+		}
 		$data['error_api_url'] = isset($this->error['api_url']) ? $this->error['api_url'] : '';
 		$data['error_api_key'] = isset($this->error['api_key']) ? $this->error['api_key'] : '';
 		$data['error_shared_secret'] = isset($this->error['shared_secret']) ? $this->error['shared_secret'] : '';
@@ -151,6 +156,24 @@ class ControllerExtensionPaymentPaymentService extends Controller {
 	protected function validate() {
 		if (!$this->user->hasPermission('modify', 'extension/payment/payment_service')) {
 			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		$payment_statuses = array();
+
+		foreach (array('pending', 'success', 'failed', 'canceled', 'refunded') as $status) {
+			$key = 'payment_payment_service_' . $status . '_status_id';
+			$payment_statuses[$status === 'success' ? 'succeeded' : $status] = isset($this->request->post[$key]) ? (int)$this->request->post[$key] : (int)$this->config->get($key);
+		}
+
+		$violations = PaymentServiceOrderStatusPolicy::violations(
+			(array)$this->config->get('config_processing_status'),
+			(array)$this->config->get('config_complete_status'),
+			$payment_statuses
+		);
+
+		foreach (array_keys($violations) as $status) {
+			$error_status = $status === 'succeeded' ? 'success' : $status;
+			$this->error[$error_status . '_status'] = $this->language->get('error_' . $error_status . '_status_blocked');
 		}
 
 		if (empty($this->request->post['payment_payment_service_api_url']) || !$this->isAllowedApiUrl($this->request->post['payment_payment_service_api_url'])) {
