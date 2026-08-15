@@ -1,5 +1,38 @@
 <?php
 namespace Template;
+
+class CspNonceTwigLoader implements \Twig\Loader\LoaderInterface {
+	private $nonce_cache_key_suffix = '#csp-nonce';
+	private $loader;
+
+	public function __construct(\Twig\Loader\LoaderInterface $loader) {
+		$this->loader = $loader;
+	}
+
+	public function getCacheKey(string $name): string {
+		return $this->loader->getCacheKey($name) . $this->nonce_cache_key_suffix;
+	}
+
+	public function getSourceContext(string $name): \Twig\Source {
+		$source = $this->loader->getSourceContext($name);
+		$code = $source->getCode();
+
+		if ($code && strpos($code, '<script') !== false) {
+			$code = preg_replace('/<script\\b(?![^>]*\\bnonce=)/i', '<script nonce="{{ csp_nonce }}"', $code);
+		}
+
+		return new \Twig\Source($code, $source->getName(), $source->getPath());
+	}
+
+	public function isFresh(string $name, int $time): bool {
+		return $this->loader->isFresh($name, $time);
+	}
+
+	public function exists(string $name): bool {
+		return $this->loader->exists($name);
+	}
+}
+
 final class Twig {
 	private $data = array();
 
@@ -31,7 +64,7 @@ final class Twig {
 			$main_loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
 			$template_root = $this->getTemplateRoot($filename);
 			$filesystem_loader = new \Twig\Loader\FilesystemLoader(array($template_root, DIR_TEMPLATE));
-			$loader = new \Twig\Loader\ChainLoader(array($main_loader, $filesystem_loader));
+			$loader = new CspNonceTwigLoader(new \Twig\Loader\ChainLoader(array($main_loader, $filesystem_loader)));
 
 			$twig = new \Twig\Environment($loader, $config);
 
