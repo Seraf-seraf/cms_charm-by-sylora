@@ -49,9 +49,11 @@ runs:
         composer require --dev --no-interaction --no-progress phpstan/phpstan:2.1.17
         ./upload/system/storage/vendor/bin/phpstan analyze --no-progress
 
-    - name: Production assets
+    - name: Build production assets
       shell: bash
-      run: php tools/build-assets.php --check
+      run: |
+        php tools/build-assets.php
+        test -s upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.min.css
 
     - name: Code style
       shell: bash

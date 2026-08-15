@@ -77,6 +77,9 @@
 # Test Config File
 /tests/phpunit/bootstrap.php
 
+# Generated production assets
+/upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.min.css
+
 # Local legal document drafts. These files can contain seller requisites and
 # must be reviewed by a lawyer before publication.
 /legal-pages/*.txt
