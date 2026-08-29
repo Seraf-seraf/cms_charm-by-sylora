@@ -53,6 +53,8 @@ class ControllerProductCategory extends Controller {
 
 		$filter_is_new = !empty($this->request->get['is_new']) ? 1 : 0;
 		$filter_is_sale = !empty($this->request->get['is_sale']) ? 1 : 0;
+		$filter_parameters = array('filter', 'price_min', 'price_max', 'availability', 'is_new', 'is_sale');
+		$has_filter_parameters = (bool)array_intersect($filter_parameters, array_keys($this->request->get));
 
 		$filter_url = '';
 
@@ -440,9 +442,9 @@ class ControllerProductCategory extends Controller {
 
 			// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
 			$canonical_path = isset($this->request->get['path']) ? $this->request->get['path'] : $category_info['category_id'];
-			$canonical_url = $filter_url;
+			$canonical_url = $has_filter_parameters ? '' : $filter_url;
 
-			if ($page == 1) {
+			if ($page == 1 || $has_filter_parameters) {
 				$schema_url = $this->url->link('product/category', 'path=' . $canonical_path . $canonical_url, true);
 			} else {
 				$schema_url = $this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . '&page=' . $page, true);
@@ -450,11 +452,11 @@ class ControllerProductCategory extends Controller {
 
 			$this->document->addLink($schema_url, 'canonical');
 			
-			if ($page > 1) {
+			if (!$has_filter_parameters && $page > 1) {
 			    $this->document->addLink($this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . (($page - 2) ? '&page='. ($page - 1) : '')), 'prev');
 			}
 
-			if ($limit && ceil($product_total / $limit) > $page) {
+			if (!$has_filter_parameters && $limit && ceil($product_total / $limit) > $page) {
 			    $this->document->addLink($this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . '&page='. ($page + 1)), 'next');
 			}
 
@@ -496,7 +498,7 @@ class ControllerProductCategory extends Controller {
 
 			$data['catalog_schema'] = $catalog_schema->build($data['heading_title'], $schema_url, $schema_breadcrumbs, $data['products'], $page, $limit);
 
-			if (!$this->model_catalog_category->hasActiveProducts($category_id)) {
+			if ($has_filter_parameters || !$this->model_catalog_category->hasActiveProducts($category_id)) {
 				$this->document->setRobots('noindex, follow');
 			}
 

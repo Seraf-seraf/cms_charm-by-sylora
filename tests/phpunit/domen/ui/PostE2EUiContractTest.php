@@ -77,7 +77,7 @@ final class PostE2EUiContractTest extends TestCase {
 		$sitemap = $this->read('upload/catalog/controller/information/sitemap.php');
 		$notFound = $this->read('upload/catalog/controller/error/not_found.php');
 
-		self::assertStringContainsString('$canonical_url = $filter_url;', $category);
+		self::assertStringContainsString("\$canonical_url = \$has_filter_parameters ? '' : \$filter_url;", $category);
 		self::assertMatchesRegularExpression('/if \(\$price_min !== \'\' && \$price_max !== \'\' && \$price_min > \$price_max\).*?\$tmp = \$price_min;.*?\$price_min = \$price_max;.*?\$price_max = \$tmp;/s', $category);
 		self::assertMatchesRegularExpression('/if \(!isNaN\(minValue\) && !isNaN\(maxValue\) && minValue > maxValue\).*?minInput\.value = maxValue;.*?maxInput\.value = minValue;/s', $storefront);
 		self::assertStringContainsString("addLink(\$this->url->link('information/sitemap', '', true), 'canonical')", $sitemap);

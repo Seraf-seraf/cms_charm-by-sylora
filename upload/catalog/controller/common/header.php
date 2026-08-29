@@ -16,6 +16,7 @@ class ControllerCommonHeader extends Controller {
 
 		$is_https = !empty($this->request->server['HTTPS']);
 		$server = $is_https ? $this->config->get('config_ssl') : $this->config->get('config_url');
+		$this->load->model('tool/image');
 
 		if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
 			$this->document->addLink($server . 'image/' . $this->config->get('config_icon'), 'icon');
@@ -30,7 +31,9 @@ class ControllerCommonHeader extends Controller {
 		$data['og_title'] = $this->document->getTitle();
 		$data['og_description'] = $this->document->getDescription();
 		$data['og_type'] = 'website';
-		$data['og_image'] = $server . 'image/catalog/sylora/jewelry-collection.png';
+		$data['og_image'] = $this->model_tool_image->resize('catalog/sylora/jewelry-collection.png', 1200, 630);
+		$data['og_image_width'] = 1200;
+		$data['og_image_height'] = 630;
 		$data['og_url'] = $server;
 
 		if (isset($this->request->server['REQUEST_URI'])) {
@@ -51,7 +54,9 @@ class ControllerCommonHeader extends Controller {
 				}
 
 				if ($product_info['image'] && is_file(DIR_IMAGE . $product_info['image'])) {
-					$data['og_image'] = rtrim($server, '/') . '/image/' . $product_info['image'];
+					$data['og_image'] = $this->model_tool_image->resize($product_info['image'], 1200, 1200);
+					$data['og_image_width'] = 1200;
+					$data['og_image_height'] = 1200;
 				}
 			}
 		}
@@ -74,8 +79,6 @@ class ControllerCommonHeader extends Controller {
 		$data['brand_logo_image'] = array();
 
 		if (is_file(DIR_IMAGE . 'catalog/sylora/charm-by-sylora.png')) {
-			$this->load->model('tool/image');
-
 			$data['brand_logo_image'] = $this->model_tool_image->resizeWithSources('catalog/sylora/charm-by-sylora.png', 108, 108);
 			$data['brand_logo'] = $data['brand_logo_image']['src'];
 		}

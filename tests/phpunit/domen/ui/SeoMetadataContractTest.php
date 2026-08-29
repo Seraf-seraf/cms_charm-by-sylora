@@ -40,8 +40,25 @@ final class SeoMetadataContractTest extends TestCase {
 		self::assertIsString($categoryController);
 		self::assertIsString($categoryModel);
 		self::assertStringContainsString('public function hasActiveProducts($category_id)', $categoryModel);
-		self::assertStringContainsString("if (!\$this->model_catalog_category->hasActiveProducts(\$category_id))", $categoryController);
+		self::assertStringContainsString("!\$this->model_catalog_category->hasActiveProducts(\$category_id)", $categoryController);
 		self::assertStringContainsString("setRobots('noindex, follow')", $categoryController);
+	}
+
+	public function testCatalogFiltersAreNoindexAndCanonicalizeToTheBaseCategory(): void {
+		$categoryController = file_get_contents(dirname(__DIR__, 4) . '/upload/catalog/controller/product/category.php');
+
+		self::assertIsString($categoryController);
+		self::assertStringContainsString("\$filter_parameters = array('filter', 'price_min', 'price_max', 'availability', 'is_new', 'is_sale')", $categoryController);
+		self::assertStringContainsString("\$canonical_url = \$has_filter_parameters ? '' : \$filter_url", $categoryController);
+		self::assertStringContainsString("if (\$has_filter_parameters || !\$this->model_catalog_category->hasActiveProducts(\$category_id))", $categoryController);
+	}
+
+	public function testPublicAssetsAreCrawlable(): void {
+		$robots = file_get_contents(dirname(__DIR__, 4) . '/upload/robots.txt');
+
+		self::assertIsString($robots);
+		self::assertNotContains('Disallow: /catalog/', preg_split('/\R/', $robots));
+		self::assertStringContainsString('Allow: /catalog/view/', $robots);
 	}
 
 	public function testOnlineStoreSchemaContainsVerifiedReturnPolicy(): void {

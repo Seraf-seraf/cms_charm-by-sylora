@@ -21,8 +21,13 @@
               <a class="sylora-link" href="{{ contact_href }}">Связаться</a>
             </div>
           </div>
-          {% if about_image %}
-          <img src="{{ about_image }}" alt="Украшения ручной работы Charm by Sylora" width="420" height="315" loading="lazy" decoding="async">
+          {% if about_image_data.src %}
+          <picture>
+            {% for source in about_image_data.sources %}
+            <source srcset="{{ source.src }}" type="{{ source.type }}">
+            {% endfor %}
+            <img src="{{ about_image_data.src }}" alt="Украшения ручной работы Charm by Sylora" width="420" height="315" loading="lazy" decoding="async">
+          </picture>
           {% endif %}
         </section>
 

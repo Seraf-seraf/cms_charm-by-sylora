@@ -15,7 +15,12 @@
         {% if hero_banner %}
         <div class="sylora-hero__banner">{{ hero_banner }}</div>
         {% else %}
-        <img class="sylora-hero__fallback" src="image/catalog/sylora/jewelry-collection.png" alt="Коллекция украшений ручной работы Charm by Sylora" width="420" height="315" loading="eager" decoding="async">
+        <picture>
+          {% for source in collection_image.sources %}
+          <source srcset="{{ source.src }}" type="{{ source.type }}">
+          {% endfor %}
+          <img class="sylora-hero__fallback" src="{{ collection_image.src }}" alt="Коллекция украшений ручной работы Charm by Sylora" width="420" height="315" loading="eager" decoding="async">
+        </picture>
         {% endif %}
       </div>
     </div>
@@ -74,7 +79,12 @@
       <p>Charm by Sylora вырос из любви к аккуратным деталям, спокойным природным оттенкам и вещам, которые приятно носить каждый день. В работе важны баланс формы, качество материалов и ощущение личного выбора.</p>
       <a class="sylora-link" href="{{ about }}">Читать историю</a>
     </div>
-    <img src="image/catalog/sylora/jewelry-collection.png" alt="Украшения ручной работы на рабочем столе мастера" width="420" height="315" loading="lazy" decoding="async">
+    <picture>
+      {% for source in collection_image.sources %}
+      <source srcset="{{ source.src }}" type="{{ source.type }}">
+      {% endfor %}
+      <img src="{{ collection_image.src }}" alt="Украшения ручной работы на рабочем столе мастера" width="420" height="315" loading="lazy" decoding="async">
+    </picture>
   </section>
 
   <section class="container sylora-seo">

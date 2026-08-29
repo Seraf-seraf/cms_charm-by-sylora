@@ -40,6 +40,13 @@ class ControllerInformationInformation extends Controller {
 			$data['catalog_href'] = $this->getCatalogUrl();
 			$data['contact_href'] = $this->url->link('information/contact');
 			$data['about_image'] = $this->getAboutImage();
+			$data['about_image_data'] = array();
+
+			if ($data['about_image'] !== '') {
+				$this->load->model('tool/image');
+				$data['about_image_data'] = $this->model_tool_image->resizeWithSources(substr($data['about_image'], strlen('image/')), 840, 630);
+			}
+
 			$data['about_schema'] = $is_about_page ? $this->getAboutSchema($information_info, $canonical) : '';
 
 			$data['description'] = html_entity_decode($information_info['description'], ENT_QUOTES, 'UTF-8');

@@ -1,8 +1,8 @@
 <?php
 class ControllerCommonHome extends Controller {
 	public function index() {
-		$this->document->setTitle($this->config->get('config_meta_title') ?: 'Charm by Sylora - украшения ручной работы');
-		$this->document->setDescription($this->config->get('config_meta_description') ?: 'Интернет-магазин авторских украшений ручной работы: серьги, браслеты, подвески, колье и подарочные комплекты.');
+		$this->document->setTitle($this->config->get('config_meta_title') ?: 'Авторские украшения ручной работы — Charm by Sylora');
+		$this->document->setDescription($this->config->get('config_meta_description') ?: 'Авторские украшения ручной работы небольшими партиями. Колье, брелоки и другие изделия с бережной упаковкой и доставкой по России.');
 		$this->document->setKeywords('украшения ручной работы, авторские украшения, серьги, браслеты, подвески, Charm by Sylora');
 
 		$this->load->model('catalog/category');
@@ -148,6 +148,7 @@ class ControllerCommonHome extends Controller {
 		}
 
 		$data['hero_banner'] = $this->getHeroBanner();
+		$data['collection_image'] = $this->model_tool_image->resizeWithSources('catalog/sylora/jewelry-collection.png', 840, 630);
 		$data['column_left'] = '';
 		$data['column_right'] = '';
 		$data['content_top'] = '';

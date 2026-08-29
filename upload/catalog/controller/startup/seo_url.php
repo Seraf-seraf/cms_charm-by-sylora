@@ -74,6 +74,10 @@ class ControllerStartupSeoUrl extends Controller {
 
 		parse_str($url_info['query'], $data);
 
+		if (isset($data['route']) && $data['route'] == 'common/home' && count($data) == 1) {
+			return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '/', $url_info['path']);
+		}
+
 		if (isset($data['route']) && count($data) == 1) {
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = '" . $this->db->escape($data['route']) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
