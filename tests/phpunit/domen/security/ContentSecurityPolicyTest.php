@@ -56,6 +56,40 @@ final class ContentSecurityPolicyTest extends TestCase {
 		self::assertSame(2, substr_count($startup, 'https://smartcaptcha.cloud.yandex.ru'));
 	}
 
+	public function testPolicyAllowsOfficialYandexMetricaEndpoints(): void {
+		$startup = $this->read('upload/catalog/controller/startup/startup.php');
+		$domains = array(
+			'mc.yandex.ru',
+			'mc.yandex.az',
+			'mc.yandex.by',
+			'mc.yandex.co.il',
+			'mc.yandex.com',
+			'mc.yandex.com.am',
+			'mc.yandex.com.ge',
+			'mc.yandex.com.tr',
+			'mc.yandex.ee',
+			'mc.yandex.fr',
+			'mc.yandex.kg',
+			'mc.yandex.kz',
+			'mc.yandex.lt',
+			'mc.yandex.lv',
+			'mc.yandex.md',
+			'mc.yandex.tj',
+			'mc.yandex.tm',
+			'mc.yandex.uz',
+			'mc.webvisor.com',
+			'mc.webvisor.org',
+		);
+
+		foreach ($domains as $domain) {
+			self::assertStringContainsString("'https://" . $domain . "'", $startup);
+		}
+
+		self::assertSame(6, substr_count($startup, '$metrica_http_sources'));
+		self::assertSame(2, substr_count($startup, '$metrica_websocket_sources'));
+		self::assertStringNotContainsString('mc.yandex.*', $startup);
+	}
+
 	public function testActiveStorefrontTemplatesContainNoExecutableInlineScriptsOrEventAttributes(): void {
 		$templates = array(
 			'upload/catalog/view/theme/charm_by_sylora/template/common/header.twig',

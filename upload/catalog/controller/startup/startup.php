@@ -243,17 +243,40 @@ class ControllerStartupStartup extends Controller {
 	}
 
 	private function getContentSecurityPolicy($nonce) {
+		$metrica_http_sources = implode(' ', array(
+			'https://mc.yandex.ru',
+			'https://mc.yandex.az',
+			'https://mc.yandex.by',
+			'https://mc.yandex.co.il',
+			'https://mc.yandex.com',
+			'https://mc.yandex.com.am',
+			'https://mc.yandex.com.ge',
+			'https://mc.yandex.com.tr',
+			'https://mc.yandex.ee',
+			'https://mc.yandex.fr',
+			'https://mc.yandex.kg',
+			'https://mc.yandex.kz',
+			'https://mc.yandex.lt',
+			'https://mc.yandex.lv',
+			'https://mc.yandex.md',
+			'https://mc.yandex.tj',
+			'https://mc.yandex.tm',
+			'https://mc.yandex.uz',
+			'https://mc.webvisor.com',
+			'https://mc.webvisor.org'
+		));
+		$metrica_websocket_sources = str_replace('https://', 'wss://', $metrica_http_sources);
 		$directives = array(
 			"default-src 'self'",
 			"base-uri 'self'",
 			"object-src 'none'",
 			"frame-ancestors 'none'",
 			"form-action 'self'",
-			"script-src 'self' 'nonce-" . $nonce . "' https://mc.yandex.ru https://yastatic.net https://cdn.jsdelivr.net/npm/@cdek-it/widget@3.10.4/dist/cdek-widget.umd.js https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://suggest-maps.yandex.ru https://yandex.ru https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru",
+			"script-src 'self' 'nonce-" . $nonce . "' " . $metrica_http_sources . " https://yastatic.net https://cdn.jsdelivr.net/npm/@cdek-it/widget@3.10.4/dist/cdek-widget.umd.js https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://suggest-maps.yandex.ru https://yandex.ru https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru",
 			"script-src-attr 'none'",
-			"connect-src 'self' https://mc.yandex.ru https://mc.webvisor.com https://mc.webvisor.org wss://mc.yandex.ru wss://mc.webvisor.com wss://mc.webvisor.org https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://*.maps.yandex.net https://suggest-maps.yandex.ru https://search-maps.yandex.ru https://api.routing.yandex.net",
-			"frame-src https://api-maps.yandex.ru blob: https://mc.yandex.ru https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru",
-			"img-src 'self' data: blob: https://mc.yandex.ru https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://*.maps.yandex.net https://yastatic.net",
+			"connect-src 'self' " . $metrica_http_sources . ' ' . $metrica_websocket_sources . " https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://*.maps.yandex.net https://suggest-maps.yandex.ru https://search-maps.yandex.ru https://api.routing.yandex.net",
+			"frame-src https://api-maps.yandex.ru blob: " . $metrica_http_sources . " https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru",
+			"img-src 'self' data: blob: " . $metrica_http_sources . " https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://*.maps.yandex.net https://yastatic.net",
 			"style-src 'self' 'unsafe-inline' blob: https://fonts.googleapis.com https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://yastatic.net",
 			"font-src 'self' data: https://fonts.gstatic.com",
 			"worker-src 'self' blob: data: https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://yastatic.net",
