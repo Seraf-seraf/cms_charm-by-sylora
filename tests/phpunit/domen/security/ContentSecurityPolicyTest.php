@@ -34,7 +34,7 @@ final class ContentSecurityPolicyTest extends TestCase {
 			"default-src 'self'",
 			"base-uri 'self'",
 			"object-src 'none'",
-			"frame-ancestors 'none'",
+			"frame-ancestors 'self'",
 			"form-action 'self'",
 			"script-src 'self' 'nonce-",
 			"script-src-attr 'none'",
@@ -54,6 +54,45 @@ final class ContentSecurityPolicyTest extends TestCase {
 		self::assertStringNotContainsString("script-src-attr 'unsafe-inline'", $startup);
 		self::assertSame(2, substr_count($startup, 'https://widget.pochta.ru'));
 		self::assertSame(2, substr_count($startup, 'https://smartcaptcha.cloud.yandex.ru'));
+	}
+
+	public function testPolicyAllowsMetricaReportsToFrameStorefront(): void {
+		$startup = $this->read('upload/catalog/controller/startup/startup.php');
+		$domains = array(
+			'metrika.yandex.ru',
+			'analytics.yandex.by',
+			'analytics.yandex.com',
+			'analytics.yandex.com.tr',
+			'analytics.yandex.kz',
+			'analytics.yandex.ru',
+			'metr.yandex.by',
+			'metr.yandex.com',
+			'metr.yandex.com.tr',
+			'metr.yandex.kz',
+			'metr.yandex.ru',
+			'metrica.ya.ru',
+			'metrica.yandex',
+			'metrica.yandex.by',
+			'metrica.yandex.com',
+			'metrica.yandex.com.tr',
+			'metrica.yandex.kz',
+			'metrica.yandex.ru',
+			'metrika.ya.ru',
+			'metrika.yandex',
+			'metrika.yandex.by',
+			'metrika.yandex.com',
+			'metrika.yandex.com.tr',
+			'metrika.yandex.kz',
+			'metrika.yandex.uz',
+		);
+
+		foreach ($domains as $domain) {
+			self::assertStringContainsString("'https://" . $domain . "'", $startup);
+		}
+
+		self::assertSame(2, substr_count($startup, '$metrica_frame_ancestors'));
+		self::assertStringContainsString('https://webvisor.com https://*.webvisor.com', $startup);
+		self::assertStringNotContainsString("frame-ancestors 'none'", $startup);
 	}
 
 	public function testPolicyAllowsOfficialYandexMetricaEndpoints(): void {

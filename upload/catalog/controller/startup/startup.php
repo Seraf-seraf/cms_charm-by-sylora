@@ -266,11 +266,38 @@ class ControllerStartupStartup extends Controller {
 			'https://mc.webvisor.org'
 		));
 		$metrica_websocket_sources = str_replace('https://', 'wss://', $metrica_http_sources);
+		$metrica_frame_ancestors = implode(' ', array(
+			'https://metrika.yandex.ru',
+			'https://analytics.yandex.by',
+			'https://analytics.yandex.com',
+			'https://analytics.yandex.com.tr',
+			'https://analytics.yandex.kz',
+			'https://analytics.yandex.ru',
+			'https://metr.yandex.by',
+			'https://metr.yandex.com',
+			'https://metr.yandex.com.tr',
+			'https://metr.yandex.kz',
+			'https://metr.yandex.ru',
+			'https://metrica.ya.ru',
+			'https://metrica.yandex',
+			'https://metrica.yandex.by',
+			'https://metrica.yandex.com',
+			'https://metrica.yandex.com.tr',
+			'https://metrica.yandex.kz',
+			'https://metrica.yandex.ru',
+			'https://metrika.ya.ru',
+			'https://metrika.yandex',
+			'https://metrika.yandex.by',
+			'https://metrika.yandex.com',
+			'https://metrika.yandex.com.tr',
+			'https://metrika.yandex.kz',
+			'https://metrika.yandex.uz'
+		));
 		$directives = array(
 			"default-src 'self'",
 			"base-uri 'self'",
 			"object-src 'none'",
-			"frame-ancestors 'none'",
+			"frame-ancestors 'self' " . $metrica_frame_ancestors . " https://webvisor.com https://*.webvisor.com",
 			"form-action 'self'",
 			"script-src 'self' 'nonce-" . $nonce . "' " . $metrica_http_sources . " https://yastatic.net https://cdn.jsdelivr.net/npm/@cdek-it/widget@3.10.4/dist/cdek-widget.umd.js https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://suggest-maps.yandex.ru https://yandex.ru https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru",
 			"script-src-attr 'none'",
