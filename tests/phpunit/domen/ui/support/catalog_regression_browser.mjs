@@ -69,6 +69,11 @@ async function navigate(client, url) {
 
 async function runCategoryControls(client) {
 	const widths = [1440, 390, 320];
+	// Product rows in Figma nodes 133:1076 and 133:1650.
+	const mobileLayouts = new Map([
+		[390, { inset: 18, gridWidth: 354, cardWidth: 171, rowGap: '24px' }],
+		[320, { inset: 16, gridWidth: 284, cardWidth: 284, rowGap: '24px' }],
+	]);
 	const viewportHeight = 1000;
 	const desktopWidth = widths[0];
 	const mobileWidth = widths[1];
@@ -99,6 +104,7 @@ async function runCategoryControls(client) {
 
 	const root = await page(() => [...document.querySelectorAll('#site-nav a')]
 		.find(link => link.textContent.trim() === 'Каталог').href);
+	await client.command('Emulation.setScrollbarsHidden', { hidden: true });
 	await navigate(client, root);
 	await page(() => document.querySelector('[data-cookie-consent="essential"]')?.click());
 	const rootPath = await page(() => document.querySelector('input[name="path"]:checked').value);
@@ -118,8 +124,15 @@ async function runCategoryControls(client) {
 			const limitRect = limit.getBoundingClientRect();
 			const filterRect = filtersButton.getBoundingClientRect();
 			const chipsRect = chips.getBoundingClientRect();
+			const gridRect = grid.getBoundingClientRect();
+			const gridStyle = getComputedStyle(grid);
 			return {
-				columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
+				columns: gridStyle.gridTemplateColumns.split(' ').length,
+				inset: gridRect.left,
+				gridWidth: gridRect.width,
+				cardWidth: grid.firstElementChild.getBoundingClientRect().width,
+				rowGap: gridStyle.rowGap,
+				columnGap: gridStyle.columnGap,
 				fits: document.documentElement.scrollWidth === document.documentElement.clientWidth,
 				panelOpen: panel.open,
 				sidebar: panel.getBoundingClientRect().right <= grid.getBoundingClientRect().left,
@@ -139,6 +152,11 @@ async function runCategoryControls(client) {
 			assert.equal(layout.sidebar, true);
 		} else {
 			assert.ok(layout.chipsAboveControls && layout.filtersAndSortAligned && layout.filterHeight >= 44);
+			const { inset, gridWidth, cardWidth, rowGap } = layout;
+			assert.deepEqual({ inset, gridWidth, cardWidth, rowGap }, mobileLayouts.get(width), `Product-grid geometry at ${width}px`);
+			if (width === mobileWidth) {
+				assert.equal(layout.columnGap, '12px');
+			}
 		}
 	}
 

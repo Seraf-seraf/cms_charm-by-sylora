@@ -1566,6 +1566,15 @@ body:has(> #product-category) { background: #f1eee6; }
 	#product-category .catalog-shell:has(.catalog-filters[open]) .catalog-shell__sidebar { grid-column: 1 / -1; }
 	#product-category .catalog-filters--enhanced .catalog-filters__close { display: flex; flex: none; }
 }
+@media (max-width: 767px) {
+	#product-category .catalog-grid { gap: 24px 12px; }
+}
+@media (min-width: 351px) and (max-width: 767px) {
+	#product-category.container { padding-inline: 18px; }
+}
+@media (max-width: 350px) {
+	#product-category .catalog-grid { margin-inline-end: 4px; }
+}
 @media (max-width: 420px) {
 	#product-search .catalog-toolbar__field { grid-template-columns: minmax(0, 1fr); }
 	#product-search .catalog-toolbar__field label { border-right: 1px solid var(--catalog-rule); border-bottom: 0; }
