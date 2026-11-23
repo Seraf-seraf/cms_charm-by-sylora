@@ -1,10 +1,15 @@
 import { spawn } from 'node:child_process';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const [, , targetUrl, viewportArgument, chromeBinary] = process.argv;
-const [viewportValue, pageScaleValue = '1', colorScheme = 'light'] = (viewportArgument || '').split('@');
+const scenario = (viewportArgument || '').split('@');
+const headerScenario = scenario[0] === 'header';
+const [viewportValue, pageScaleValue = '1', colorScheme = 'light'] = headerScenario ? [scenario[1]] : scenario;
+const [, , fixtureEmailArgument = '', fixturePassword] = scenario;
+const fixtureEmail = decodeURIComponent(fixtureEmailArgument);
+const measurementDirectory = process.env.SYLORA_HEADER_MEASUREMENT_DIR;
 const viewportWidth = Number(viewportValue);
 const pageScale = Number(pageScaleValue);
 
@@ -94,17 +99,211 @@ async function evaluate(client, expression) {
 	return response.result?.value;
 }
 
-let client;
+const defaultViewportHeight = 900;
+const compactViewportWidth = 1200;
+const desktopViewportWidth = 1201;
+const shortViewportHeight = 300;
+const tabKeyCode = 9;
+const escapeKeyCode = 27;
+const shiftModifier = 8;
 
-try {
-	const port = await getDebuggingPort();
-	client = await connect(port);
+async function setViewport(client, width, height = defaultViewportHeight) {
 	await client.command('Emulation.setDeviceMetricsOverride', {
-		width: viewportWidth,
-		height: 900,
+		width,
+		height,
 		deviceScaleFactor: 1,
 		mobile: false,
 	});
+}
+
+async function waitForPage(client, selector) {
+	for (let attempt = 0; attempt < 100; attempt++) {
+		if (await evaluate(client, `document.readyState === 'complete' && document.querySelector(${JSON.stringify(selector)}) !== null`)) {
+			await evaluate(client, 'document.fonts.ready.then(() => true)');
+			return;
+		}
+		await delay(100);
+	}
+	throw new Error(`Storefront page ${selector} did not load: ${await evaluate(client, 'location.href')}`);
+}
+
+async function pressKey(client, key, code, modifiers = 0) {
+	const parameters = { key, code: key, modifiers, windowsVirtualKeyCode: code };
+	await client.command('Input.dispatchKeyEvent', { type: 'keyDown', ...parameters });
+	await client.command('Input.dispatchKeyEvent', { type: 'keyUp', ...parameters });
+}
+
+async function measureHeader(client) {
+	const state = await evaluate(client, `(() => {
+		const nav = document.querySelector('#site-nav');
+		const toggle = document.querySelector('.mobile-nav-toggle');
+		const close = nav.querySelector('.site-nav__close');
+		const compact = toggle.getClientRects().length > 0;
+		const closedHeaderBottom = document.querySelector('.site-header').getBoundingClientRect().bottom;
+		if (compact) toggle.click();
+
+		const brand = document.querySelector('.site-brand').getBoundingClientRect();
+		const brandLogo = document.querySelector('.site-brand__logo');
+		const actions = document.querySelector('.site-actions').getBoundingClientRect();
+		const heading = document.querySelector('main h1, #content h1').getBoundingClientRect();
+		const menu = nav.getBoundingClientRect();
+		const middle = rect => (rect.top + rect.bottom) / 2;
+		const account = document.querySelector(compact ? '.site-nav__account' : '.site-account');
+
+		return {
+			width: innerWidth,
+			compact,
+			geometry: {
+				closedHeaderBottom,
+				brand: brand.toJSON(),
+				actions: actions.toJSON(),
+				menu: menu.toJSON(),
+				headingTop: heading.top
+			},
+			brandLogoLoaded: (brandLogo?.naturalWidth ?? 0) > 0,
+			brandAndActionsAligned: Math.abs(middle(brand) - middle(actions)) <= 1,
+			menuInHeaderRow: Math.abs(middle(menu) - middle(brand)) <= 1 && brand.right <= menu.left && menu.right <= actions.left,
+			headingBelowMenu: heading.top >= menu.bottom,
+			menuContained: getComputedStyle(nav).display !== 'none' && menu.left >= 0 && menu.right <= document.documentElement.clientWidth,
+			accountLabel: account.getAttribute('aria-label'),
+			accountRoute: new URL(account.href).searchParams.get('route'),
+			visibleLinks: Array.from(nav.querySelectorAll('a')).filter(link => link.getClientRects().length > 0).map(link => link.textContent.trim()),
+			menuBelowHeaderRow: menu.top >= closedHeaderBottom,
+			opened: toggle.getAttribute('aria-expanded') === 'true' && toggle.getAttribute('aria-controls') === nav.id
+				&& !document.querySelector('.site-nav-backdrop').hidden,
+			closeFocused: close !== null && document.activeElement === close && close.getAttribute('aria-label') === 'Закрыть меню',
+		};
+	})()`);
+
+	if (state.compact) {
+		state.closeRestoresFocus = await evaluate(client, `(() => {
+			const close = document.querySelector('.site-nav__close');
+			close?.click();
+			const toggle = document.querySelector('.mobile-nav-toggle');
+			const restored = document.activeElement === toggle && toggle.getAttribute('aria-expanded') === 'false';
+			if (toggle.getAttribute('aria-expanded') === 'true') toggle.click();
+			return restored;
+		})()`);
+	}
+	return state;
+}
+
+async function checkHeaderControls(client) {
+	const result = {};
+	result.cartOpens = await evaluate(client, `(() => {
+		const cartButton = document.querySelector('.site-cart #cart > button');
+		cartButton.click();
+		const visible = document.querySelector('.site-cart .mini-cart').getClientRects().length > 0;
+		cartButton.click();
+		return visible;
+	})()`);
+
+	if (viewportWidth > compactViewportWidth) {
+		result.desktopSearchOpens = await evaluate(client, `(() => {
+			const button = document.querySelector('.site-search button');
+			const input = document.querySelector('.site-search input');
+			button.click();
+			const open = button.getAttribute('aria-expanded') === 'true' && document.activeElement === input;
+			input.value = 'synthetic';
+			button.click();
+			return open;
+		})()`);
+		await waitForPage(client, '#product-search');
+		result.desktopSearchNavigates = await evaluate(client, `new URL(location.href).searchParams.get('search') === 'synthetic'`);
+		return result;
+	}
+
+	const openMenu = () => evaluate(client, `document.querySelector('.mobile-nav-toggle').click()`);
+	const menuClosed = `document.querySelector('.mobile-nav-toggle').getAttribute('aria-expanded') === 'false'
+		&& document.querySelector('.site-nav-backdrop').hidden && !document.querySelector('.site-nav').classList.contains('is-open')`;
+	const focusRestored = `(${menuClosed}) && document.activeElement === document.querySelector('.mobile-nav-toggle')`;
+	await openMenu();
+	await pressKey(client, 'Tab', tabKeyCode);
+	const tabReachesFirstLink = await evaluate(client, `document.activeElement === document.querySelector('#site-nav a')`);
+	await pressKey(client, 'Tab', tabKeyCode, shiftModifier);
+	const shiftTabReturnsToClose = await evaluate(client, `document.activeElement.matches('.site-nav__close')`);
+	await pressKey(client, 'Tab', tabKeyCode, shiftModifier);
+	const shiftTabWrapsToLastLink = await evaluate(client, `document.activeElement.matches('.site-nav__account')`);
+	await pressKey(client, 'Tab', tabKeyCode);
+	const tabWrapsToClose = await evaluate(client, `document.activeElement.matches('.site-nav__close')`);
+	result.keyboardCyclesThroughMenu = tabReachesFirstLink && shiftTabReturnsToClose && shiftTabWrapsToLastLink && tabWrapsToClose;
+	await pressKey(client, 'Escape', escapeKeyCode);
+	result.escapeRestoresFocus = await evaluate(client, focusRestored);
+
+	await openMenu();
+	result.backdropRestoresFocus = await evaluate(client, `(() => {
+		const backdrop = document.querySelector('.site-nav-backdrop');
+		const hitsBackdrop = document.elementFromPoint(1, innerHeight - 1) === backdrop;
+		backdrop.click();
+		return hitsBackdrop && (${focusRestored});
+	})()`);
+
+	if (viewportWidth === 320) {
+		await setViewport(client, viewportWidth, shortViewportHeight);
+		await openMenu();
+		result.shortMenuScrollable = await evaluate(client, `(() => {
+			const nav = document.querySelector('.site-nav');
+			const lastLink = nav.querySelector('.site-nav__account');
+			nav.scrollTop = nav.scrollHeight;
+			return nav.getBoundingClientRect().bottom <= innerHeight && nav.scrollTop > 0
+				&& lastLink.getBoundingClientRect().bottom <= innerHeight;
+		})()`);
+		await pressKey(client, 'Escape', escapeKeyCode);
+		await setViewport(client, viewportWidth);
+	}
+
+	if (viewportWidth === compactViewportWidth) {
+		await openMenu();
+		await setViewport(client, desktopViewportWidth);
+		await delay(120);
+		result.desktopResizeClosesMenu = await evaluate(client, menuClosed);
+		await setViewport(client, viewportWidth);
+		await delay(120);
+		result.menuRemainsClosedOnNarrowing = await evaluate(client, `(${menuClosed})
+			&& document.querySelector('.mobile-nav-toggle').getClientRects().length > 0`);
+		if (!result.menuRemainsClosedOnNarrowing) await pressKey(client, 'Escape', escapeKeyCode);
+	}
+
+	await openMenu();
+	await evaluate(client, `document.querySelector('.site-nav__cart').click()`);
+	await waitForPage(client, '#checkout-cart');
+	result.compactCartNavigates = true;
+	return result;
+}
+
+async function runHeaderScenario(client) {
+	await client.command('Network.enable');
+	await client.command('Network.setBlockedURLs', {
+		urls: ['https://*', 'http://localhost/*'],
+	});
+	const navigate = route => {
+		const url = new URL(targetUrl);
+		url.searchParams.set('route', route);
+		return client.command('Page.navigate', { url: url.href });
+	};
+
+	await navigate('common/home');
+	await waitForPage(client, '#common-home');
+	await evaluate(client, `document.querySelector('[data-cookie-consent="essential"]')?.click()`);
+	const home = await measureHeader(client);
+	const controls = await checkHeaderControls(client);
+
+	await navigate('account/login');
+	await waitForPage(client, '#account-login');
+	const login = await measureHeader(client);
+	await evaluate(client, `(() => {
+		const form = document.querySelector('#account-login form');
+		form.querySelector('[name="email"]').value = ${JSON.stringify(fixtureEmail)};
+		form.querySelector('[name="password"]').value = ${JSON.stringify(fixturePassword)};
+		if (!form.checkValidity()) throw new Error('Synthetic login form is invalid.');
+		form.requestSubmit();
+	})()`);
+	await waitForPage(client, '#account-account');
+	const account = await measureHeader(client);
+	return { home, login, account, ...controls };
+}
+
+async function runResponsiveScenario(client) {
 	await client.command('Emulation.setEmulatedMedia', {
 		features: [{ name: 'prefers-color-scheme', value: colorScheme }],
 	});
@@ -114,7 +313,7 @@ try {
 		});
 	}
 	await client.command('Page.navigate', { url: targetUrl });
-	await delay(1800);
+	await waitForPage(client, '#common-home');
 	await client.command('Emulation.setPageScaleFactor', { pageScaleFactor: pageScale });
 	await delay(100);
 	await evaluate(client, `(async () => {
@@ -339,6 +538,23 @@ try {
 	})()`);
 
 	process.stdout.write(`${state}\n`);
+}
+
+let client;
+
+try {
+	const port = await getDebuggingPort();
+	client = await connect(port);
+	await setViewport(client, viewportWidth);
+	if (headerScenario) {
+		const result = await runHeaderScenario(client);
+		if (measurementDirectory) {
+			await writeFile(join(measurementDirectory, `measurements-${viewportWidth}.json`), JSON.stringify(result, null, 2));
+		}
+		process.stdout.write(`${JSON.stringify(result)}\n`);
+	} else {
+		await runResponsiveScenario(client);
+	}
 } finally {
 	if (client) client.close();
 	const chromeExited = new Promise(resolve => chrome.once('exit', resolve));

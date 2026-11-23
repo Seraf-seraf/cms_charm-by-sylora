@@ -237,6 +237,22 @@ button.is-icon-only:not(.mobile-nav-toggle), a.is-icon-only, [role="button"].is-
 .site-nav { display: flex; align-items: center; gap: 18px; margin-left: auto; }
 .site-nav a { color: var(--color-text); white-space: nowrap; text-decoration: none; }
 .site-nav__account { display: none; gap: 8px; }
+.site-nav__heading { display: none; }
+.site-nav__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+.site-nav__close .atelier-icon { width: 20px; height: 20px; }
+.site-nav__close:focus { outline: 2px solid var(--color-focus-ring); outline-offset: -2px; }
 .site-actions { display: flex; align-items: center; gap: 10px; }
 .site-action-icon { display: inline-block; flex: none; vertical-align: middle; }
 .site-search { width: 150px; }
@@ -246,7 +262,7 @@ button.is-icon-only:not(.mobile-nav-toggle), a.is-icon-only, [role="button"].is-
 .site-account, .mobile-nav-toggle { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); }
 .mobile-nav-toggle { display: none; font-size: 16px; }
 .site-account__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
-.site-nav-backdrop:not([hidden]) { position: fixed; inset: 0; z-index: 999; background: rgba(0, 0, 0, .3); }
+.site-nav-backdrop:not([hidden]) { position: fixed; inset: 0; z-index: 999; }
 .site-notifications { position: fixed; top: 92px; left: 50%; z-index: 1080; width: min(760px, 95vw); transform: translateX(-50%); }
 body:has(#cart.open) .site-notifications { z-index: 999; }
 .cart-notice { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 14px 16px; }
@@ -440,6 +456,13 @@ body:has(#cart.open) .site-notifications { z-index: 999; }
  .sylora-category-grid, .sylora-benefits__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
  .sylora-about-teaser { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+.site-header__inner:has(> .site-nav.is-open) {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(var(--site-header-row-height, 66px), auto) minmax(0, 1fr);
+  max-height: 100dvh;
+  row-gap: 12px;
+}
+.site-header__inner:has(> .site-nav.is-open) .site-actions { grid-area: 1 / 2; }
 @media (max-width: 1200px) {
  .site-header__inner { min-height: 66px; }
  .site-brand { min-width: 0; }
@@ -449,19 +472,88 @@ body:has(#cart.open) .site-notifications { z-index: 999; }
  .site-cart #cart > .btn { width: 44px; height: 44px; padding: 0; }
  .site-cart #cart-total { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
  .mobile-nav-toggle { display: inline-flex; }
- .site-nav { position: fixed; top: var(--site-nav-top, 88px); right: 16px; left: 16px; z-index: 1002; display: none; flex-direction: column; align-items: stretch; margin: 0; padding: 10px; border: 1px solid var(--color-border); background: var(--color-surface); }
- .site-nav.is-open { display: flex; }
- .site-nav a, .site-nav__account { display: flex; align-items: center; min-height: 44px; padding: 10px; }
+ .site-nav { display: none; }
+ .site-nav.is-open, .site-nav.is-open .site-nav__heading, .site-nav.is-open a { display: flex; }
+ .site-header__inner:has(> .site-nav.is-open) { display: grid; }
+
+  .site-nav.is-open {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: stretch;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin: var(--site-header-row-padding-end, 0px) 0 0;
+    padding: 8px 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .site-nav.is-open .site-nav__heading { align-items: center; justify-content: space-between; flex: none; font-weight: 600; }
+  .site-nav.is-open a {
+    align-items: center;
+    flex: none;
+    gap: 8px;
+    min-height: 44px;
+    border-top: 1px solid var(--color-border);
+    font-size: 15px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .site-nav.is-open a::after {
+    flex: 0 0 16px;
+    height: 16px;
+    margin-left: auto;
+    background: url("../image/icons/atelier/chevron-right.svg") center / contain no-repeat;
+    content: '';
+  }
+  .site-nav.is-open a:focus-visible { outline-offset: -2px; }
 }
 @media (min-width: 1201px) {
  .site-header__inner.is-responsive-overflowing .site-search,
  .site-header__inner.is-responsive-overflowing .site-account { display: none; }
  .site-header__inner.is-responsive-overflowing .site-actions { margin-left: auto; }
  .site-header__inner.is-responsive-overflowing .mobile-nav-toggle { display: inline-flex; }
- .site-header__inner.is-responsive-overflowing .site-nav { position: fixed; top: var(--site-nav-top, 88px); right: 16px; left: 16px; z-index: 1002; display: none; flex-direction: column; align-items: stretch; margin: 0; padding: 10px; border: 1px solid var(--color-border); background: var(--color-surface); }
- .site-header__inner.is-responsive-overflowing .site-nav.is-open { display: flex; }
- .site-header__inner.is-responsive-overflowing .site-nav a,
- .site-header__inner.is-responsive-overflowing .site-nav__account { display: flex; align-items: center; min-height: 44px; padding: 10px; }
+ .site-header__inner.is-responsive-overflowing .site-nav { display: none; }
+ .site-header__inner.is-responsive-overflowing .site-nav.is-open,
+ .site-header__inner.is-responsive-overflowing .site-nav.is-open .site-nav__heading,
+ .site-header__inner.is-responsive-overflowing .site-nav.is-open a { display: flex; }
+ .site-header__inner.is-responsive-overflowing:has(> .site-nav.is-open) { display: grid; }
+
+  .site-header__inner.is-responsive-overflowing .site-nav.is-open {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: stretch;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin: var(--site-header-row-padding-end, 0px) 0 0;
+    padding: 8px 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .site-header__inner.is-responsive-overflowing .site-nav.is-open .site-nav__heading { align-items: center; justify-content: space-between; flex: none; font-weight: 600; }
+  .site-header__inner.is-responsive-overflowing .site-nav.is-open a {
+    align-items: center;
+    flex: none;
+    gap: 8px;
+    min-height: 44px;
+    border-top: 1px solid var(--color-border);
+    font-size: 15px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .site-header__inner.is-responsive-overflowing .site-nav.is-open a::after {
+    flex: 0 0 16px;
+    height: 16px;
+    margin-left: auto;
+    background: url("../image/icons/atelier/chevron-right.svg") center / contain no-repeat;
+    content: '';
+  }
+  .site-header__inner.is-responsive-overflowing .site-nav.is-open a:focus-visible { outline-offset: -2px; }
 }
 @media (max-width: 767px) {
  .container { padding-inline: 16px; }
@@ -695,9 +787,11 @@ body:has(#cart.open) .site-notifications { z-index: 999; }
 	.site-header__inner,
 	.site-header__inner.is-responsive-overflowing {
 		display: flex;
+		--site-header-row-height: 46px;
+		--site-header-row-padding-end: 10px;
 		gap: 8px;
 		padding-top: 10px;
-		padding-bottom: 10px;
+		padding-bottom: var(--site-header-row-padding-end);
 	}
 
 	.site-header__inner .site-brand,
@@ -746,7 +840,7 @@ body:has(#cart.open) .site-notifications { z-index: 999; }
 }
 
 @media (max-width: 767px) {
-	.site-header { border-bottom: 0; }
+	.site-header { --site-header-divider-top: 71px; border-bottom: 0; }
 	.site-header::after {
 		position: absolute;
 		right: 18px;
@@ -757,8 +851,14 @@ body:has(#cart.open) .site-notifications { z-index: 999; }
 	}
 	.site-header__inner,
 	.site-header__inner.is-responsive-overflowing {
-		padding-top: 19px;
-		padding-bottom: 25px;
+		--site-header-row-height: 44px;
+		--site-header-row-padding-end: 14px;
+		padding-top: 14px;
+		padding-bottom: var(--site-header-row-padding-end);
+	}
+	.site-header:has(.site-nav.is-open)::after {
+		top: var(--site-header-divider-top);
+		bottom: auto;
 	}
 	.site-header__inner .site-cart #cart > .btn,
 	.site-header__inner.is-responsive-overflowing .site-cart #cart > .btn {
@@ -3927,11 +4027,7 @@ body > footer .site-footer__bottom {
 	#account-newsletter .newsletter-form__back { display: none; }
 }
 
-/* Account desktop frames place the main links below the mark and reduce the header gap. */
 @media (max-width: 767px) {
-	body:has([id^="account-"]) .site-header::after { display: none; }
-	body:has(#account-login) .site-header::after { display: block; }
-	body:has([id^="account-"]) .site-header__inner { padding-bottom: 22px; }
 	:is(#account-address, #account-order, #account-return, #account-wishlist, #account-newsletter) #content { padding-top: 0; }
 	#account-address .atelier-account-page-content > h2 { margin-bottom: 18px; }
 	#account-address .address-empty { padding-block: 16px; }
@@ -3941,21 +4037,6 @@ body > footer .site-footer__bottom {
 }
 
 @media (min-width: 1201px) {
-	body:has([id^="account-"]) .site-header__inner {
-		min-height: 134px;
-		padding-bottom: 0;
-	}
-	body:has([id^="account-"]) .site-header__inner::after { display: none; }
-	body:has([id^="account-"]) .site-brand { position: relative; top: -10px; }
-	body:has([id^="account-"]) .site-brand__sub { display: none; }
-	body:has([id^="account-"]) .site-brand__mark { font-size: 34px; }
-	body:has([id^="account-"]) .site-nav {
-		position: absolute;
-		top: 112px;
-		left: 24px;
-		gap: 24px;
-		margin-left: 0;
-	}
 	body:has([id^="account-"]) .atelier-account-navigation { margin-bottom: 0; }
 	body:has([id^="account-"]) .atelier-account-navigation h1 { margin-bottom: 34px; }
 	body:has([id^="account-"]) .atelier-account-navigation ul { padding-bottom: 48px; border-bottom: 0; }

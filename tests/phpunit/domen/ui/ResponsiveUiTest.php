@@ -68,6 +68,114 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		}
 	}
 
+	/**
+	 * @return iterable<string, array{int}>
+	 */
+	public static function headerViewportProvider(): iterable {
+		foreach (array(320, 390, 1200, 1201, 1440) as $width) {
+			yield (string)$width => array($width);
+		}
+	}
+
+	#[PHPUnit\Framework\Attributes\DataProvider('headerViewportProvider')]
+	public function testMainMenuLayoutAndControlsAcrossStorefrontPages(int $width): void {
+		if (DB_DATABASE !== 'charm_functional' || !str_starts_with(DIR_IMAGE, sys_get_temp_dir() . '/sylora-functional-tests-')) {
+			throw new RuntimeException('Сценарию шапки нужна изолированная витрина TestBootstrap.');
+		}
+
+		$database = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, (int)DB_PORT);
+		$email = 'header-' . bin2hex(random_bytes(8)) . '@example.test';
+		$password = bin2hex(random_bytes(8));
+		$salt = bin2hex(random_bytes(4));
+		$passwordHash = sha1($salt . sha1($salt . sha1($password)));
+		$customer = $database->prepare(
+			"INSERT INTO `" . DB_PREFIX . "customer` (customer_group_id, language_id, firstname, lastname, email, telephone, fax, password, salt, custom_field, ip, status, safe, token, code, date_added) VALUES (1, 1, 'Тест', 'Шапка', ?, '', '', ?, ?, '', '', 1, 0, '', '', NOW())"
+		);
+		$customer->execute(array($email, $passwordHash, $salt));
+		$customerId = $database->insert_id;
+		$customer->close();
+
+		$logo = 'catalog/sylora/charm-by-sylora.png';
+		$fixtureLogo = DIR_IMAGE . $logo;
+		$copiedLogo = false;
+
+		try {
+			if (!is_file($fixtureLogo)) {
+				$copiedLogo = copy(dirname(__DIR__, 4) . '/upload/image/' . $logo, $fixtureLogo);
+				self::assertTrue($copiedLogo);
+			}
+
+			$scenario = 'header@' . $width . '@' . rawurlencode($email) . '@' . $password;
+			$result = $this->runBrowserScenario(
+				__DIR__ . '/support/responsive_ui_browser.mjs',
+				$scenario
+			);
+		} finally {
+			if ($copiedLogo) {
+				unlink($fixtureLogo);
+			}
+			foreach (array('customer_ip', 'customer') as $table) {
+				$delete = $database->prepare('DELETE FROM `' . DB_PREFIX . $table . '` WHERE customer_id = ?');
+				$delete->execute(array($customerId));
+				$delete->close();
+			}
+			$database->close();
+		}
+
+		$compact = $width <= 1200;
+		$expectedLinks = array('Главная', 'Каталог', 'Обо мне', 'Контакты');
+
+		foreach (array('home', 'login', 'account') as $page) {
+			$state = $result[$page] ?? array();
+			$accountLabel = $page === 'account' ? 'Личный кабинет' : 'Войти';
+			$accountRoute = $page === 'account' ? 'account/account' : 'account/login';
+			self::assertSame($width, $state['width'] ?? null, $page);
+			self::assertSame($compact, $state['compact'] ?? null, $page);
+			self::assertTrue($state['brandLogoLoaded'] ?? false, $page);
+			self::assertTrue($state['brandAndActionsAligned'] ?? false, $page);
+			self::assertTrue($state['headingBelowMenu'] ?? false, $page);
+			self::assertTrue($state['menuContained'] ?? false, $page);
+			self::assertSame($accountLabel, $state['accountLabel'] ?? null, $page);
+			self::assertSame($accountRoute, $state['accountRoute'] ?? null, $page);
+
+			if ($compact) {
+				self::assertSame(
+					array_merge($expectedLinks, array('Корзина', $accountLabel)),
+					$state['visibleLinks'] ?? null,
+					$page
+				);
+				self::assertTrue($state['opened'] ?? false, $page);
+				self::assertTrue($state['menuBelowHeaderRow'] ?? false, $page);
+				self::assertTrue($state['closeFocused'] ?? false, $page);
+				self::assertTrue($state['closeRestoresFocus'] ?? false, $page);
+			} else {
+				self::assertSame($expectedLinks, $state['visibleLinks'] ?? null, $page);
+				self::assertTrue($state['menuInHeaderRow'] ?? false, $page);
+			}
+		}
+
+		self::assertTrue($result['cartOpens'] ?? false);
+
+		if ($compact) {
+			self::assertTrue($result['escapeRestoresFocus'] ?? false);
+			self::assertTrue($result['backdropRestoresFocus'] ?? false);
+			self::assertTrue($result['keyboardCyclesThroughMenu'] ?? false);
+			self::assertTrue($result['compactCartNavigates'] ?? false);
+		} else {
+			self::assertTrue($result['desktopSearchOpens'] ?? false);
+			self::assertTrue($result['desktopSearchNavigates'] ?? false);
+		}
+
+		if ($width === 1200) {
+			self::assertTrue($result['desktopResizeClosesMenu'] ?? false);
+			self::assertTrue($result['menuRemainsClosedOnNarrowing'] ?? false);
+		}
+
+		if ($width === 320) {
+			self::assertTrue($result['shortMenuScrollable'] ?? false);
+		}
+	}
+
 	public function testResponsiveUiAtTwoHundredPercentScale(): void {
 		$result = $this->runBrowserScenario(
 			__DIR__ . '/support/responsive_ui_browser.mjs',

@@ -106,74 +106,102 @@
 		var nav = document.getElementById('site-nav');
 		var navButton = document.querySelector('.mobile-nav-toggle');
 		var backdrop = document.querySelector('.site-nav-backdrop');
-
-		function syncNavButton(isOpen) {
-			if (!navButton) {
-				return;
-			}
-
-			navButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-			navButton.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
-			var icon = navButton.querySelector('img.site-action-icon');
-			var iconName = isOpen ? 'close' : 'menu';
-			if (icon) {
-				icon.setAttribute('src', 'catalog/view/theme/charm_by_sylora/image/icons/atelier/' + iconName + '.svg');
-				icon.classList.remove('atelier-icon--menu', 'atelier-icon--close');
-				icon.classList.add('atelier-icon--' + iconName);
-			} else {
-				navButton.innerHTML = '<img class="site-action-icon atelier-icon atelier-icon--' + iconName + '" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/' + iconName + '.svg" alt="" aria-hidden="true">';
-			}
-		}
-
-		function closeNav() {
-			if (!nav || !navButton || !backdrop) {
-				return;
-			}
-
-			nav.classList.remove('is-open');
-			syncNavButton(false);
-			backdrop.hidden = true;
-		}
-
 		if (!navButton || !nav || !backdrop) {
 			return;
 		}
 
+		var closeButton = nav.querySelector('.site-nav__close');
+		// The default theme still uses the trigger itself to close the menu.
+		var toggleIcon = !closeButton && navButton.querySelector('img.site-action-icon');
+
+		function isOpen() {
+			return nav.classList.contains('is-open');
+		}
+
+		function setOpen(open, focusTarget) {
+			nav.classList.toggle('is-open', open);
+			navButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+			navButton.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+			backdrop.hidden = !open;
+
+			if (toggleIcon) {
+				var iconName = open ? 'close' : 'menu';
+				toggleIcon.setAttribute('src', 'catalog/view/theme/charm_by_sylora/image/icons/atelier/' + iconName + '.svg');
+				toggleIcon.classList.toggle('atelier-icon--menu', !open);
+				toggleIcon.classList.toggle('atelier-icon--close', open);
+			}
+
+			if (focusTarget) {
+				focusTarget.focus({ preventScroll: true });
+			}
+		}
+
+		function closeNav() {
+			if (isOpen()) {
+				setOpen(false, navButton);
+			}
+		}
+
+		function closeOnDesktop() {
+			if (isOpen() && navButton.getClientRects().length === 0) {
+				var activeElement = document.activeElement;
+				var focusTarget = nav.contains(activeElement) || activeElement === navButton
+					? nav.querySelector('a[href]')
+					: null;
+				setOpen(false, focusTarget);
+			}
+		}
+
 		navButton.addEventListener('click', function() {
-			var isOpen = nav.classList.toggle('is-open');
-			syncNavButton(isOpen);
-			backdrop.hidden = !isOpen;
+			if (isOpen()) {
+				closeNav();
+			} else {
+				setOpen(true, closeButton);
+			}
 		});
+		if (closeButton) {
+			closeButton.addEventListener('click', closeNav);
+		}
 		backdrop.addEventListener('click', closeNav);
 		nav.addEventListener('click', function(event) {
-			if (event.target.tagName === 'A') {
+			if (isOpen() && event.target.closest('a[href]')) {
 				closeNav();
 			}
 		});
+
+		window.addEventListener('resize', closeOnDesktop);
+		new MutationObserver(closeOnDesktop).observe(nav.parentElement, {
+			attributes: true,
+			attributeFilter: ['class']
+		});
+
 		document.addEventListener('keydown', function(event) {
+			if (!isOpen()) {
+				return;
+			}
+
 			if (event.key === 'Escape') {
+				event.preventDefault();
 				closeNav();
-			}
-
-			if (event.key !== 'Tab' || !nav.classList.contains('is-open')) {
 				return;
 			}
 
-			var focusable = Array.prototype.slice.call(nav.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')).concat(navButton);
-
-			if (!focusable.length) {
+			if (event.key !== 'Tab') {
 				return;
 			}
 
-			var first = focusable[0];
-			var last = focusable[focusable.length - 1];
+			var links = nav.querySelectorAll('a[href]');
+			var firstControl = closeButton || links[0];
+			var lastControl = closeButton ? links[links.length - 1] : navButton;
+			var activeElement = document.activeElement;
+			var focusOutsidePanel = closeButton && !nav.contains(activeElement);
 
-			if (event.shiftKey && document.activeElement === first) {
+			if (event.shiftKey && (activeElement === firstControl || focusOutsidePanel)) {
 				event.preventDefault();
-				last.focus();
-			} else if (!event.shiftKey && document.activeElement === last) {
+				lastControl.focus();
+			} else if (!event.shiftKey && (activeElement === lastControl || focusOutsidePanel)) {
 				event.preventDefault();
-				first.focus();
+				firstControl.focus();
 			}
 		});
 	}

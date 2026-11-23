@@ -22,21 +22,17 @@ final class HeaderUiContractTest extends TestCase {
 		);
 	}
 
-	public function testMobileMenuToggleSynchronizesVisibleState(): void {
-		$script = file_get_contents(
-			dirname(__DIR__, 4) . '/upload/catalog/view/javascript/storefront.js'
+	public function testCompactMenuHasSeparateAccessibleOpenAndCloseControls(): void {
+		$header = file_get_contents(
+			dirname(__DIR__, 4) . '/upload/catalog/view/theme/charm_by_sylora/template/common/header.twig'
 		);
 
-		self::assertIsString($script);
-		self::assertStringContainsString("navButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');", $script);
-		self::assertStringContainsString("isOpen ? 'Закрыть меню' : 'Открыть меню'", $script);
-		self::assertStringContainsString("var iconName = isOpen ? 'close' : 'menu';", $script);
-		self::assertStringContainsString(
-			"catalog/view/theme/charm_by_sylora/image/icons/atelier/' + iconName + '.svg'",
-			$script
+		self::assertIsString($header);
+		self::assertStringContainsString('aria-label="Открыть меню" aria-expanded="false" aria-controls="site-nav"', $header);
+		self::assertMatchesRegularExpression(
+			'/<nav class="site-nav" id="site-nav"[^>]*>.*?<button class="site-nav__close" type="button" aria-label="Закрыть меню">.*?<\/nav>/s',
+			$header
 		);
-		self::assertStringContainsString('syncNavButton(false);', $script);
-		self::assertStringContainsString('syncNavButton(isOpen);', $script);
 	}
 
 	public function testDesktopHeaderMatchesFigmaActionsAndKeepsSearchAvailable(): void {
