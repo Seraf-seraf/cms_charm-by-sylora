@@ -668,7 +668,7 @@ class ControllerProductCategory extends Controller {
 			}
 
 			$group_id = $group['filter_group_id'];
-			$groups[$group_id] = $groups[$group_id] ?? array('name' => $group['name'], 'filter' => array());
+			$groups[$group_id] ??= array('name' => $group['name'], 'filter' => array());
 			$groups[$group_id]['filter'] = array_merge($groups[$group_id]['filter'], $selected_options);
 		}
 

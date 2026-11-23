@@ -161,7 +161,9 @@ class ControllerCommonHome extends Controller {
 		$this->response->setOutput($this->load->view('common/home', $data));
 	}
 
-	/** @return array{name: string, image: array, href: string}|array{} */
+	/**
+	 * @return array{name: string, image: array, href: string}|array{}
+	 */
 	private function getHeroProduct(): array {
 		$this->load->model('setting/setting');
 		$store_id = (int)$this->config->get('config_store_id');
@@ -187,7 +189,7 @@ class ControllerCommonHome extends Controller {
 				self::HERO_PRODUCT_WIDTH_PX,
 				self::HERO_PRODUCT_HEIGHT_PX,
 			);
-		} catch (TypeError | ValueError) {
+		} catch (TypeError|ValueError) {
 			return array();
 		}
 

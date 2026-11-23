@@ -364,12 +364,16 @@ class ModelCatalogProduct extends Model {
 		return $query->row;
 	}
 
-	/** @return array{product_id: int|string, name: string, image: string}|array{} */
+	/**
+	 * @return array{product_id: int|string, name: string, image: string}|array{}
+	 */
 	public function getHeroProduct(int $product_id, int $store_id): array {
 		return $this->db->query($this->getHeroProductQuery($store_id) . " AND p.product_id = " . $product_id)->row;
 	}
 
-	/** @return list<array{product_id: int|string, name: string, image: string}> */
+	/**
+	 * @return list<array{product_id: int|string, name: string, image: string}>
+	 */
 	public function findHeroProducts(
 		int $store_id,
 		string $name,

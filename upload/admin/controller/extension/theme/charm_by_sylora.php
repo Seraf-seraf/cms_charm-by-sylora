@@ -459,7 +459,9 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 		return $id !== false && $id >= 0 && (string)$id === (string)$value ? $id : null;
 	}
 
-	/** @return array{product_id: int, name: string, thumb: string}|array{} */
+	/**
+	 * @return array{product_id: int, name: string, thumb: string}|array{}
+	 */
 	private function getHeroProduct(int $product_id, int $store_id): array {
 		if ($product_id === 0) {
 			return array();
@@ -488,7 +490,7 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 				self::HERO_THUMB_SIZE_PX,
 				self::HERO_THUMB_SIZE_PX,
 			);
-		} catch (TypeError | ValueError) {
+		} catch (TypeError|ValueError) {
 			return array();
 		}
 
