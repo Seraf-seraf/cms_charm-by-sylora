@@ -12,11 +12,17 @@ final class InformationUiContractTest extends TestCase {
 
 		self::assertIsString($controller);
 		self::assertIsString($template);
-		self::assertStringContainsString("resizeCoverWithSources(substr(\$data['about_image'], strlen('image/')), 840, 912)", $controller);
-		self::assertStringContainsString('width="420" height="456"', $template);
+		self::assertStringContainsString('ABOUT_DESKTOP_CROP_WIDTH_PX = 1272', $controller);
+		self::assertStringContainsString('ABOUT_DESKTOP_CROP_HEIGHT_PX = 600', $controller);
+		self::assertStringContainsString('ABOUT_MOBILE_CROP_WIDTH_PX = 708', $controller);
+		self::assertStringContainsString('ABOUT_MOBILE_CROP_HEIGHT_PX = 472', $controller);
+		self::assertMatchesRegularExpression('~class="about-hero__intro".*?<h1[^>]*>.*?Украшения с тёплым характером.*?Смотреть каталог.*?Связаться.*?<picture class="about-hero__image"~s', $template);
+		self::assertStringContainsString('media="(min-width: 768px)"', $template);
+		self::assertStringContainsString('width="{{ about_image_data.desktop.width }}" height="{{ about_image_data.desktop.height }}"', $template);
+		self::assertStringContainsString('width="{{ about_image_data.mobile.width }}" height="{{ about_image_data.mobile.height }}"', $template);
 		self::assertStringNotContainsString('sylora-eyebrow">О мастере</p>', $template);
 		self::assertStringContainsString('<h2>Украшения с тёплым характером</h2>', $template);
-		self::assertStringContainsString('{{ about_image_data.src }}', $template);
+		self::assertStringContainsString('{{ about_image_data.mobile.src }}', $template);
 		self::assertStringContainsString('{{ description }}', $template);
 		self::assertStringContainsString('href="{{ catalog_href }}"', $template);
 		self::assertStringContainsString('href="{{ contact_href }}"', $template);

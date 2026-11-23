@@ -1,5 +1,10 @@
 <?php
 class ControllerInformationInformation extends Controller {
+	private const ABOUT_DESKTOP_CROP_WIDTH_PX = 1272;
+	private const ABOUT_DESKTOP_CROP_HEIGHT_PX = 600;
+	private const ABOUT_MOBILE_CROP_WIDTH_PX = 708;
+	private const ABOUT_MOBILE_CROP_HEIGHT_PX = 472;
+
 	public function index() {
 		$this->load->language('information/information');
 
@@ -39,12 +44,24 @@ class ControllerInformationInformation extends Controller {
 			$data['content_page'] = !$is_about_page;
 			$data['catalog_href'] = $this->getCatalogUrl();
 			$data['contact_href'] = $this->url->link('information/contact');
-			$data['about_image'] = $this->getAboutImage();
+			$about_image = $is_about_page ? $this->getAboutImage() : '';
 			$data['about_image_data'] = array();
 
-			if ($data['about_image'] !== '') {
+			if ($about_image !== '') {
 				$this->load->model('tool/image');
-				$data['about_image_data'] = $this->model_tool_image->resizeCoverWithSources(substr($data['about_image'], strlen('image/')), 840, 912);
+				$image_filename = substr($about_image, strlen('image/'));
+				$data['about_image_data'] = array(
+					'desktop' => $this->model_tool_image->resizeCoverWithSources(
+						$image_filename,
+						self::ABOUT_DESKTOP_CROP_WIDTH_PX,
+						self::ABOUT_DESKTOP_CROP_HEIGHT_PX
+					),
+					'mobile' => $this->model_tool_image->resizeCoverWithSources(
+						$image_filename,
+						self::ABOUT_MOBILE_CROP_WIDTH_PX,
+						self::ABOUT_MOBILE_CROP_HEIGHT_PX
+					),
+				);
 			}
 
 			$data['about_schema'] = $is_about_page ? $this->getAboutSchema($information_info, $canonical) : '';
