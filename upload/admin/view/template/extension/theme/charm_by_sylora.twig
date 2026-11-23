@@ -56,6 +56,33 @@
               </div>
             </div>
           </fieldset>
+          <fieldset id="hero-product-setting">
+            <legend>{{ text_hero_home }}</legend>
+            <div class="form-group{% if error_hero_product %} has-error{% endif %}">
+              <label class="col-sm-2 control-label" for="input-hero-product">{{ entry_hero_product }}</label>
+              <div class="col-sm-10">
+                <input type="hidden" name="theme_charm_by_sylora_hero_product_id" value="{{ hero_product_id }}" id="hero-product-id">
+                <div class="well well-sm" id="hero-product-selection" {% if not hero_product_id %}hidden{% endif %}>
+                  <img id="hero-product-thumb" {% if hero_product %}src="{{ hero_product.thumb|e }}"{% else %}hidden{% endif %} alt="" width="40" height="40">
+                  <strong id="hero-product-name">{{ hero_product_name|e }}</strong>
+                  <button type="button" id="hero-product-clear" class="btn btn-default btn-sm"><i class="fa fa-times" aria-hidden="true"></i> {{ text_hero_clear }}</button>
+                </div>
+                <div class="dropdown">
+                  <input type="search" id="input-hero-product" class="form-control" placeholder="{{ hero_product_id ? text_hero_search_again : text_hero_search }}" autocomplete="off" aria-describedby="hero-product-help" aria-controls="hero-product-results"
+                    data-search-url="{{ hero_product_search_url }}"
+                    data-placeholder="{{ text_hero_search }}" data-placeholder-selected="{{ text_hero_search_again }}"
+                    data-empty="{{ text_hero_no_results }}" data-error="{{ text_hero_search_error }}">
+                  <ul class="dropdown-menu" id="hero-product-results" aria-label="{{ entry_hero_product }}"></ul>
+                </div>
+                <p class="help-block" id="hero-product-feedback" role="status" hidden></p>
+                <p class="alert alert-warning" id="hero-product-unavailable" {% if not hero_product_id or hero_product %}hidden{% endif %}>{{ text_hero_unavailable }}</p>
+                <p class="help-block" id="hero-product-help" data-default="{{ help_hero_product }}" data-selected="{{ help_hero_selected }}">{{ hero_product ? help_hero_selected : (hero_product_id ? help_hero_unavailable : help_hero_product) }}</p>
+                {% if error_hero_product %}
+                <div class="text-danger" role="alert">{{ error_hero_product }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </fieldset>
           <fieldset>
             <legend>{{ text_product }}</legend>
             <div class="form-group required">
@@ -245,4 +272,141 @@
     </div>
   </div>
 </div>
+<style>
+#input-hero-product { height: 38px; }
+#hero-product-selection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-color: #dcdcdc;
+  background: #f7f8f9;
+}
+#hero-product-name { overflow-wrap: anywhere; }
+#hero-product-clear { margin-left: auto; min-height: 34px; }
+#hero-product-unavailable {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-color: #e7c991;
+  background: #fff6e2;
+  color: #735020;
+}
+#hero-product-results { position: static; float: none; width: 100%; padding: 4px; }
+#hero-product-results > li > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 6px 12px;
+  color: #116282;
+  font-weight: 600;
+  white-space: normal;
+}
+#hero-product-results > li > a:hover,
+#hero-product-results > li > a:focus { background: #e8f3fa; }
+#hero-product-thumb, #hero-product-results img { flex: none; object-fit: contain; }
+</style>
+<script>
+(function() {
+  var $search = $('#input-hero-product');
+  var $id = $('#hero-product-id');
+  var $results = $('#hero-product-results');
+  var $feedback = $('#hero-product-feedback');
+  var $selection = $('#hero-product-selection');
+  var $thumb = $('#hero-product-thumb');
+  var $name = $('#hero-product-name');
+  var $unavailable = $('#hero-product-unavailable');
+  var $help = $('#hero-product-help');
+  var $clear = $('#hero-product-clear');
+  var timer;
+  var request;
+
+  function closeSearch() {
+    clearTimeout(timer);
+
+    if (request) {
+      request.abort();
+      request = null;
+    }
+
+    $results.empty().hide();
+    $feedback.prop('hidden', true);
+  }
+
+  function selectProduct(product) {
+    closeSearch();
+    $id.val(product ? product.product_id : 0);
+    $search.val('').attr('placeholder', $search.attr(product ? 'data-placeholder-selected' : 'data-placeholder'));
+    $help.text($help.attr(product ? 'data-selected' : 'data-default'));
+    $unavailable.prop('hidden', true);
+    $name.text(product ? product.name : '');
+    $selection.prop('hidden', !product);
+    $thumb.prop('hidden', !product);
+
+    if (product) {
+      $thumb.attr('src', product.thumb);
+      $clear.trigger('focus');
+    } else {
+      $thumb.removeAttr('src');
+      $search.trigger('focus');
+    }
+  }
+
+  $clear.on('click', function() {
+    selectProduct(null);
+  });
+
+  $search.on('input', function() {
+    closeSearch();
+    var query = $search.val().trim();
+    if (!query) return;
+
+    timer = setTimeout(function() {
+      request = $.getJSON($search.attr('data-search-url'), {filter_name: query})
+        .done(function(products) {
+          if (!products.length) {
+            $feedback.text($search.attr('data-empty')).prop('hidden', false);
+            return;
+          }
+
+          products.forEach(function(product) {
+            var $link = $('<a href="#"></a>').on('click', function(event) {
+              event.preventDefault();
+              selectProduct(product);
+            });
+            $link.append($('<img alt="" width="34" height="34">').attr('src', product.thumb));
+            $link.append($('<span></span>').text(product.name));
+            $results.append($('<li></li>').append($link));
+          });
+          $results.show();
+        })
+        .fail(function(xhr, status) {
+          if (status !== 'abort') {
+            $feedback.text($search.attr('data-error')).prop('hidden', false);
+          }
+        });
+    }, 200);
+  });
+
+  $search.add($results).on('keydown', function(event) {
+    if (event.key === 'Escape') {
+      closeSearch();
+      $search.trigger('focus');
+    } else if (event.key === 'ArrowDown' && event.target === $search[0] && $results.is(':visible')) {
+      event.preventDefault();
+      $results.find('a').first().trigger('focus');
+    } else if (event.key === 'Enter' && event.target === $search[0]) {
+      event.preventDefault();
+    }
+  });
+
+  $(document).on('focusin click', function(event) {
+    if (event.target !== $search[0] && !$.contains($results[0], event.target)) {
+      closeSearch();
+    }
+  });
+})();
+</script>
 {{ footer }}

@@ -1,5 +1,9 @@
 <?php
 class ControllerExtensionThemeCharmBySylora extends Controller {
+	private const HERO_PRODUCT_KEY = 'theme_charm_by_sylora_hero_product_id';
+	private const HERO_THUMB_SIZE_PX = 48;
+	private const HERO_SEARCH_LIMIT = 8;
+
 	private $error = array();
 
 	public function install() {
@@ -46,8 +50,19 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->model_setting_setting->editSetting('theme_charm_by_sylora', $this->request->post, $this->request->get['store_id']);
+		$store_id = $this->getThemeStoreId();
+		if ($store_id === null) {
+			$this->response->addHeader('HTTP/1.1 400 Bad Request');
+			$this->response->setOutput($this->language->get('error_hero_store'));
+
+			return;
+		}
+
+		$setting_info = $this->model_setting_setting->getSetting('theme_charm_by_sylora', $store_id);
+		$saved_hero = $setting_info[self::HERO_PRODUCT_KEY] ?? null;
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validate($store_id, $saved_hero)) {
+			$settings = array_replace($setting_info, $this->request->post);
+			$this->model_setting_setting->editSetting('theme_charm_by_sylora', $settings, $store_id);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -146,16 +161,29 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('extension/theme/charm_by_sylora', 'user_token=' . $this->session->data['user_token'] . '&store_id=' . $this->request->get['store_id'], true)
+			'href' => $this->url->link('extension/theme/charm_by_sylora', 'user_token=' . $this->session->data['user_token'] . '&store_id=' . $store_id, true)
 		);
 
-		$data['action'] = $this->url->link('extension/theme/charm_by_sylora', 'user_token=' . $this->session->data['user_token'] . '&store_id=' . $this->request->get['store_id'], true);
+		$data['action'] = $this->url->link('extension/theme/charm_by_sylora', 'user_token=' . $this->session->data['user_token'] . '&store_id=' . $store_id, true);
 
 		$data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=theme', true);
 
-		if (isset($this->request->get['store_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$setting_info = $this->model_setting_setting->getSetting('theme_charm_by_sylora', $this->request->get['store_id']);
+		$hero_value = isset($this->error['hero_product'])
+			? $saved_hero
+			: ($this->request->post[self::HERO_PRODUCT_KEY] ?? $saved_hero);
+		$data['hero_product_id'] = $this->parseNonnegativeId($hero_value ?? '') ?? 0;
+		$data['hero_product'] = $this->getHeroProduct($data['hero_product_id'], $store_id);
+		$data['hero_product_name'] = $data['hero_product']['name'] ?? '';
+		if ($data['hero_product_id'] > 0 && $data['hero_product_name'] === '') {
+			$this->load->model('catalog/product');
+			$descriptions = $this->model_catalog_product->getProductDescriptions($data['hero_product_id']);
+			$name = $descriptions[$this->config->get('config_language_id')]['name'] ?? '';
+			$data['hero_product_name'] = $name !== ''
+				? html_entity_decode($name, ENT_QUOTES, 'UTF-8')
+				: sprintf($this->language->get('text_hero_product_id'), $data['hero_product_id']);
 		}
+		$data['error_hero_product'] = $this->error['hero_product'] ?? '';
+		$data['hero_product_search_url'] = $this->url->link('extension/theme/charm_by_sylora/heroProductAutocomplete', 'user_token=' . $this->session->data['user_token'] . '&store_id=' . $store_id, true);
 
 		if (isset($this->request->post['theme_charm_by_sylora_directory'])) {
 			$data['theme_charm_by_sylora_directory'] = $this->request->post['theme_charm_by_sylora_directory'];
@@ -364,9 +392,130 @@ class ControllerExtensionThemeCharmBySylora extends Controller {
 		$this->response->setOutput($this->load->view('extension/theme/charm_by_sylora', $data));
 	}
 
-	protected function validate() {
+	public function heroProductAutocomplete(): void {
+		$this->response->addHeader('Content-Type: application/json; charset=utf-8');
+		$this->response->addHeader('Cache-Control: no-store');
+		$store_id = $this->getThemeStoreId();
+		$filter_name = $this->request->get['filter_name'] ?? '';
+		$products = array();
+
+		if ($store_id === null) {
+			$this->response->addHeader('HTTP/1.1 400 Bad Request');
+		} elseif (is_string($filter_name) && trim($filter_name) !== '') {
+			$this->load->model('catalog/product');
+			$filter_name = trim(html_entity_decode($filter_name, ENT_QUOTES, 'UTF-8'));
+			$offset = 0;
+
+			do {
+				$matches = $this->model_catalog_product->findHeroProducts(
+					$store_id,
+					$filter_name,
+					self::HERO_SEARCH_LIMIT,
+					$offset,
+				);
+
+				foreach ($matches as $match) {
+					$product = $this->formatHeroProduct($match);
+
+					if ($product !== array()) {
+						$products[] = $product;
+
+						if (count($products) === self::HERO_SEARCH_LIMIT) {
+							break 2;
+						}
+					}
+				}
+
+				$offset += self::HERO_SEARCH_LIMIT;
+			} while (count($matches) === self::HERO_SEARCH_LIMIT);
+		}
+
+		$this->response->setOutput(json_encode($products, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
+	}
+
+	private function getThemeStoreId(): ?int {
+		$raw_store_id = $this->request->get['store_id'] ?? '0';
+		$store_id = $raw_store_id === '' ? null : $this->parseNonnegativeId($raw_store_id);
+		if ($store_id === null || $store_id === 0) {
+			return $store_id;
+		}
+
+		$this->load->model('setting/store');
+
+		return $this->model_setting_store->getStore($store_id) ? $store_id : null;
+	}
+
+	private function parseNonnegativeId(mixed $value): ?int {
+		if ($value === '') {
+			return 0;
+		}
+
+		if (!is_string($value) && !is_int($value)) {
+			return null;
+		}
+
+		$id = filter_var($value, FILTER_VALIDATE_INT);
+
+		return $id !== false && $id >= 0 && (string)$id === (string)$value ? $id : null;
+	}
+
+	/** @return array{product_id: int, name: string, thumb: string}|array{} */
+	private function getHeroProduct(int $product_id, int $store_id): array {
+		if ($product_id === 0) {
+			return array();
+		}
+
+		$this->load->model('catalog/product');
+		$product = $this->model_catalog_product->getHeroProduct($product_id, $store_id);
+
+		return $product === array() ? array() : $this->formatHeroProduct($product);
+	}
+
+	/**
+	 * @param array{product_id: int|string, name: string, image: string} $product
+	 * @return array{product_id: int, name: string, thumb: string}|array{}
+	 */
+	private function formatHeroProduct(array $product): array {
+		$image = realpath(DIR_IMAGE . $product['image']);
+		if ($image === false || !is_file($image) || !str_starts_with($image, DIR_IMAGE) || @getimagesize($image) === false) {
+			return array();
+		}
+
+		$this->load->model('tool/image');
+		try {
+			$thumb = @$this->model_tool_image->resize(
+				$product['image'],
+				self::HERO_THUMB_SIZE_PX,
+				self::HERO_THUMB_SIZE_PX,
+			);
+		} catch (TypeError | ValueError) {
+			return array();
+		}
+
+		return $thumb ? array(
+			'product_id' => (int)$product['product_id'],
+			'name' => html_entity_decode($product['name'], ENT_QUOTES, 'UTF-8'),
+			'thumb' => str_replace(' ', '%20', $thumb),
+		) : array();
+	}
+
+	protected function validate(int $store_id, mixed $saved_hero): bool {
 		if (!$this->user->hasPermission('modify', 'extension/theme/charm_by_sylora')) {
 			$this->error['warning'] = $this->language->get('error_permission');
+
+			return false;
+		}
+
+		if (array_key_exists(self::HERO_PRODUCT_KEY, $this->request->post)) {
+			$submitted_hero = $this->request->post[self::HERO_PRODUCT_KEY];
+			$product_id = $this->parseNonnegativeId($submitted_hero);
+
+			if (
+				$product_id === null
+				|| ($product_id > 0 && $submitted_hero !== $saved_hero && $this->getHeroProduct($product_id, $store_id) === array())
+			) {
+				$this->error['hero_product'] = $this->language->get('error_hero_product');
+			}
 		}
 
 		if (!$this->request->post['theme_charm_by_sylora_product_limit']) {

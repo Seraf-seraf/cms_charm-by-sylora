@@ -364,6 +364,40 @@ class ModelCatalogProduct extends Model {
 		return $query->row;
 	}
 
+	/** @return array{product_id: int|string, name: string, image: string}|array{} */
+	public function getHeroProduct(int $product_id, int $store_id): array {
+		return $this->db->query($this->getHeroProductQuery($store_id) . " AND p.product_id = " . $product_id)->row;
+	}
+
+	/** @return list<array{product_id: int|string, name: string, image: string}> */
+	public function findHeroProducts(
+		int $store_id,
+		string $name,
+		int $limit,
+		int $offset,
+	): array {
+		$encoded_name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+		$pattern = $this->escapeHeroProductName($name);
+		$encoded_pattern = $this->escapeHeroProductName($encoded_name);
+
+		return $this->db->query($this->getHeroProductQuery($store_id) .
+			" AND (pd.name LIKE '%" . $pattern . "%' ESCAPE '!' OR pd.name LIKE '%" . $encoded_pattern . "%' ESCAPE '!')" .
+			" ORDER BY pd.name, p.product_id LIMIT " . $offset . ", " . $limit)->rows;
+	}
+
+	private function escapeHeroProductName(string $name): string {
+		return $this->db->escape(strtr($name, array('!' => '!!', '%' => '!%', '_' => '!_')));
+	}
+
+	private function getHeroProductQuery(int $store_id): string {
+		return "SELECT p.product_id, pd.name, p.image FROM " . DB_PREFIX . "product p" .
+			" INNER JOIN " . DB_PREFIX . "product_description pd ON pd.product_id = p.product_id" .
+			" INNER JOIN " . DB_PREFIX . "product_to_store p2s ON p2s.product_id = p.product_id" .
+			" WHERE pd.language_id = " . (int)$this->config->get('config_language_id') .
+			" AND p2s.store_id = " . $store_id .
+			" AND p.status = 1 AND p.date_available <= NOW() AND p.image <> ''";
+	}
+
 	public function getProducts($data = array()) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
