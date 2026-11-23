@@ -122,11 +122,11 @@ class ControllerExtensionAnalyticsYandexMetrica extends Controller {
 
 	private function getBannerDefaults() {
 		return array(
-			'title' => 'Аналитические cookies',
-			'description' => 'Мы используем Яндекс Метрику, чтобы понимать, как работает сайт. Подробнее — в',
-			'privacy' => 'Политике конфиденциальности',
-			'accept' => 'Разрешить аналитику',
-			'reject' => 'Продолжить без аналитики',
+			'title' => 'Файлы cookie',
+			'description' => 'Необходимые файлы помогают работе магазина. С вашего согласия мы используем аналитические cookie, чтобы улучшать сайт.',
+			'privacy' => 'Политика конфиденциальности',
+			'accept' => 'Принять все',
+			'reject' => 'Только необходимые',
 			'settings' => 'Настройки аналитики'
 		);
 	}

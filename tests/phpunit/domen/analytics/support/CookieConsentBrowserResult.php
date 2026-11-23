@@ -6,6 +6,9 @@ final class CookieConsentBrowserResult {
 	public function __construct(
 		public readonly bool $bannerHidden,
 		public readonly string $bannerTitle,
+		public readonly string $bannerDescription,
+		public readonly string $privacyText,
+		public readonly bool $privacyInOwnParagraph,
 		public readonly string $acceptText,
 		public readonly string $rejectText,
 		public readonly string $settingsText,
@@ -13,11 +16,14 @@ final class CookieConsentBrowserResult {
 		public readonly bool $settingsInCatalogCard,
 		public readonly int $extensionScriptCount,
 		public readonly bool $dataLayerExists,
+		public readonly bool $metricaTagMockLoaded,
 		public readonly string $consent,
 		public readonly int $metricaRequestCount,
 		public readonly int $ymCookieCount,
 		public readonly int $metricaScriptCount,
-		public readonly int $metricaRequestAfterRefusalCount
+		public readonly int $metricaRequestAfterRefusalCount,
+		public readonly int $blockedExternalRequestCount,
+		public readonly int $observedExternalRequestCount
 	) {
 	}
 
@@ -28,6 +34,9 @@ final class CookieConsentBrowserResult {
 		return new self(
 			self::readBool($result, 'bannerHidden'),
 			self::readString($result, 'bannerTitle'),
+			self::readString($result, 'bannerDescription'),
+			self::readString($result, 'privacyText'),
+			self::readBool($result, 'privacyInOwnParagraph'),
 			self::readString($result, 'acceptText'),
 			self::readString($result, 'rejectText'),
 			self::readString($result, 'settingsText'),
@@ -35,11 +44,14 @@ final class CookieConsentBrowserResult {
 			self::readBool($result, 'settingsInCatalogCard'),
 			self::readInt($result, 'extensionScriptCount'),
 			self::readBool($result, 'dataLayerExists'),
+			self::readBool($result, 'metricaTagMockLoaded'),
 			self::readString($result, 'consent'),
 			self::countStringList($result, 'metricaRequests'),
 			self::countStringList($result, 'ymCookies'),
 			self::countStringList($result, 'metricaScripts'),
-			self::countStringList($result, 'metricaRequestsAfterRefusal')
+			self::countStringList($result, 'metricaRequestsAfterRefusal'),
+			self::countStringList($result, 'blockedExternalRequests'),
+			self::countStringList($result, 'observedExternalNetworkRequests')
 		);
 	}
 

@@ -104,27 +104,81 @@ try {
 	const port = await getDebuggingPort();
 	client = await connect(port);
 	const requests = [];
+	const metricaMockRequests = [];
+	const blockedExternalRequests = [];
+	const interceptionErrors = [];
+	const interceptionTasks = [];
+	const localOrigin = new URL(targetUrl).origin;
 	client.on('Network.requestWillBeSent', params => requests.push(params.request.url));
 	await client.command('Network.enable');
+	client.on('Fetch.requestPaused', params => {
+		const task = (async () => {
+			const requestUrl = new URL(params.request.url);
+			const isMetricaTag = /^https:\/\/mc\.yandex\.ru\/metrika\/tag\.js(?:\?|$)/.test(params.request.url);
+
+			if (isMetricaTag) {
+				metricaMockRequests.push(params.request.url);
+				await client.command('Fetch.fulfillRequest', {
+					requestId: params.requestId,
+					responseCode: 200,
+					responseHeaders: [{ name: 'Content-Type', value: 'application/javascript; charset=utf-8' }],
+					body: Buffer.from('window.__syloraMetricaTagMockLoaded = true;').toString('base64'),
+				});
+				return;
+			}
+
+			if (requestUrl.origin === localOrigin) {
+				await client.command('Fetch.continueRequest', { requestId: params.requestId });
+				return;
+			}
+
+			blockedExternalRequests.push(params.request.url);
+			await client.command('Fetch.failRequest', { requestId: params.requestId, errorReason: 'BlockedByClient' });
+		})();
+		interceptionTasks.push(task.catch(async error => {
+			interceptionErrors.push(error);
+			try {
+				await client.command('Fetch.failRequest', { requestId: params.requestId, errorReason: 'BlockedByClient' });
+			} catch (failureError) {
+				interceptionErrors.push(failureError);
+			}
+		}));
+	});
+	await client.command('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
 	await client.command('Page.navigate', { url: targetUrl });
 	await delay(1800);
-	let refusalRequestOffset = requests.length;
+	let refusalRequestOffset = metricaMockRequests.length;
 
-	if (scenario === 'accept' || scenario === 'refuse') {
+	if (scenario === 'accept' || scenario === 'refuse' || scenario === 'settings-analytics') {
 		await evaluate(client, 'document.querySelector("[data-cookie-consent=analytics]").click()');
 		await delay(4000);
 	}
 
 	if (scenario === 'refuse') {
 		await evaluate(client, 'document.querySelector("[data-cookie-settings]").click()');
-		refusalRequestOffset = requests.length;
+		refusalRequestOffset = metricaMockRequests.length;
 		await evaluate(client, 'document.querySelector("[data-cookie-consent=essential]").click()');
 		await delay(2500);
+	}
+
+	if (scenario === 'settings-essential') {
+		await evaluate(client, 'document.querySelector("[data-cookie-consent=essential]").click()');
+	}
+
+	if (scenario === 'settings-analytics' || scenario === 'settings-essential') {
+		await evaluate(client, 'document.querySelector("[data-cookie-settings]").click()');
+	}
+	await Promise.all(interceptionTasks);
+	if (interceptionErrors.length > 0) {
+		throw new Error(`CDP request interception failed: ${interceptionErrors[0].message}`);
 	}
 
 	const state = JSON.parse(await evaluate(client, `JSON.stringify({
 		bannerHidden: document.getElementById('analytics-cookie-banner')?.hidden ?? true,
 		bannerTitle: document.getElementById('analytics-cookie-title')?.textContent ?? '',
+		bannerDescription: document.querySelector('#analytics-cookie-banner .ym-consent__description')?.textContent ?? '',
+		privacyText: document.querySelector('#analytics-cookie-banner .ym-consent__privacy a')?.textContent ?? '',
+		privacyInOwnParagraph: Boolean(document.querySelector('#analytics-cookie-banner .ym-consent__privacy a')?.parentElement?.classList.contains('ym-consent__privacy')),
 		acceptText: document.querySelector('[data-cookie-consent=analytics]')?.textContent ?? '',
 		rejectText: document.querySelector('[data-cookie-consent=essential]')?.textContent ?? '',
 		settingsText: document.querySelector('[data-cookie-settings]')?.textContent ?? '',
@@ -132,16 +186,26 @@ try {
 		settingsInCatalogCard: Boolean(document.querySelector('.catalog-card__actions .ym-consent-settings')),
 		extensionScriptCount: Array.from(document.scripts).filter(script => script.src.includes('yandex_metrica_consent.js')).length,
 		dataLayerExists: Array.isArray(window.dataLayer),
+		metricaTagMockLoaded: window.__syloraMetricaTagMockLoaded === true,
 		consent: (document.cookie.match(/(?:^|; )sylora_cookie_consent=([^;]*)/) || [,''])[1] ? decodeURIComponent((document.cookie.match(/(?:^|; )sylora_cookie_consent=([^;]*)/) || [,''])[1]) : '',
 		ymCookies: document.cookie.split(';').map(value => value.trim()).filter(value => value.startsWith('_ym_')),
 		metricaScripts: Array.from(document.scripts).map(script => script.src).filter(source => source.includes('mc.yandex.ru'))
 	})`));
 	const isMetricaRequest = url => /^https:\/\/mc\.yandex\.ru\//.test(url);
-	state.metricaRequests = requests.filter(isMetricaRequest);
-	state.metricaRequestsAfterRefusal = requests.slice(refusalRequestOffset).filter(isMetricaRequest);
+	state.metricaRequests = metricaMockRequests;
+	state.metricaRequestsAfterRefusal = metricaMockRequests.slice(refusalRequestOffset);
+	state.blockedExternalRequests = blockedExternalRequests;
+	state.observedExternalNetworkRequests = requests.filter(url => new URL(url).origin !== localOrigin && !isMetricaRequest(url));
 	process.stdout.write(`${JSON.stringify(state)}\n`);
 } finally {
-	if (client) client.close();
+	if (client) {
+		try {
+			await client.command('Fetch.disable');
+		} catch {
+			// Chrome may have exited before interception could be disabled.
+		}
+		client.close();
+	}
 	const chromeExited = new Promise(resolve => chrome.once('exit', resolve));
 	chrome.kill('SIGTERM');
 	await Promise.race([chromeExited, delay(2000)]);

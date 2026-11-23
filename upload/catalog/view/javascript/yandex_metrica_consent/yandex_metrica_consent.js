@@ -76,6 +76,8 @@
 	var cookieName = 'sylora_cookie_consent';
 	var analyticsChoice = 'v1:analytics';
 	var essentialChoice = 'v1:essential';
+	var settingsTitle = 'Настройки cookie';
+	var settingsDescription = 'Вы можете изменить выбор в любой момент. Аналитические cookie используются только с вашего согласия.';
 	var initialized = false;
 	var listenersBound = false;
 
@@ -201,11 +203,32 @@
 		}
 
 		banner.hidden = !visible;
+		banner.setAttribute('aria-modal', visible && banner.getAttribute('data-cookie-mode') === 'settings' ? 'true' : 'false');
 
 		if (visible && focusPrimary) {
 			var primary = banner.querySelector('[data-cookie-consent="analytics"]');
 			if (primary) primary.focus();
 		}
+	}
+
+	function openSettings() {
+		var banner = document.getElementById('analytics-cookie-banner');
+		var title = document.getElementById('analytics-cookie-title');
+		var description = document.getElementById('analytics-cookie-description');
+
+		if (banner) {
+			banner.setAttribute('data-cookie-mode', 'settings');
+		}
+
+		if (title) {
+			title.textContent = settingsTitle;
+		}
+
+		if (description) {
+			description.textContent = settingsDescription;
+		}
+
+		setBannerVisible(true, true);
 	}
 
 	function setChoice(choice) {
@@ -247,27 +270,45 @@
 
 		var inner = document.createElement('div');
 		inner.className = 'ym-consent__inner';
+		var brand = document.createElement('div');
+		brand.className = 'ym-consent__brand';
+		var brandName = document.createElement('div');
+		brandName.className = 'ym-consent__brand-name';
+		brandName.textContent = 'Charm by Sylora';
+		var brandTagline = document.createElement('p');
+		brandTagline.className = 'ym-consent__brand-tagline';
+		brandTagline.textContent = 'украшения ручной работы';
+		brand.appendChild(brandName);
+		brand.appendChild(brandTagline);
+		inner.appendChild(brand);
+
 		var copy = document.createElement('div');
 		copy.className = 'ym-consent__copy';
 		var title = document.createElement('h2');
 		title.id = 'analytics-cookie-title';
 		title.textContent = config.banner.title;
+		copy.appendChild(title);
 		var description = document.createElement('p');
-		description.appendChild(document.createTextNode(config.banner.description + ' '));
+		description.className = 'ym-consent__description';
+		description.id = 'analytics-cookie-description';
+		description.textContent = config.banner.description;
+		copy.appendChild(description);
 
 		if (config.privacyUrl) {
-			var privacy = document.createElement('a');
-			privacy.href = config.privacyUrl;
-			privacy.textContent = config.banner.privacy;
-			description.appendChild(privacy);
+			var privacyParagraph = document.createElement('p');
+			privacyParagraph.className = 'ym-consent__privacy';
+
+			var privacyLink = document.createElement('a');
+			privacyLink.href = config.privacyUrl;
+			privacyLink.textContent = config.banner.privacy;
+			privacyParagraph.appendChild(privacyLink);
+			copy.appendChild(privacyParagraph);
 		}
 
 		var actions = document.createElement('div');
 		actions.className = 'ym-consent__actions';
 		actions.appendChild(createButton(config.banner.accept, 'ym-consent__button ym-consent__button--primary', 'analytics'));
 		actions.appendChild(createButton(config.banner.reject, 'ym-consent__button', 'essential'));
-		copy.appendChild(title);
-		copy.appendChild(description);
 		inner.appendChild(copy);
 		inner.appendChild(actions);
 		banner.appendChild(inner);
@@ -297,7 +338,7 @@
 
 			if (trigger) {
 				event.preventDefault();
-				setBannerVisible(true, true);
+				openSettings();
 			}
 		});
 	}
@@ -314,7 +355,7 @@
 	window.SyloraCookieConsent = {
 		getChoice: getChoice,
 		isAnalyticsAllowed: function() { return getChoice() === analyticsChoice; },
-		open: function() { setBannerVisible(true, true); }
+		open: openSettings
 	};
 
 	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
