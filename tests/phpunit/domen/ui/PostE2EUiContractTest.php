@@ -37,7 +37,7 @@ final class PostE2EUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/\.site-header__inner \.site-brand,[^{]+\{[^}]*flex: 1 1 0;[^}]*min-width: 0;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card\s*\{[^}]*display: flex;[^}]*min-width: 0;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card \.caption\s*\{[^}]*flex: 1;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*display: grid;[^}]*gap: 8px;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*display: grid;[^}]*gap: 4px;/s', $css);
 		self::assertStringContainsString('class="catalog-filters__grid"', $category);
 		self::assertStringContainsString('class="row catalog-page-layout"', $category);
 		self::assertMatchesRegularExpression('/\.catalog-shell__sidebar, \.catalog-shell__main\s*\{[^}]*min-width: 0;/s', $css);
