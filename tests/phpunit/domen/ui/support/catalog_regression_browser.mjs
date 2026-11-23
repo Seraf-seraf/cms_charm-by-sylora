@@ -419,7 +419,22 @@ try {
 		})()`);
 		process.stdout.write(JSON.stringify(result));
 	} else {
-		const hero = await evaluate(client, `(() => { const slider = document.querySelector('.sylora-hero__banner .slideshow'); const images = Array.from(document.querySelectorAll('.sylora-hero__banner .swiper-slide img')).slice(0, 3); if (!slider || images.length < 2) throw new Error('Hero slideshow visual nodes were not found.'); const frames = images.map(image => ({ width: Math.round(image.getBoundingClientRect().width), height: Math.round(image.getBoundingClientRect().height) })); return { equalFrames: frames.every(frame => frame.width === frames[0].width && frame.height === frames[0].height), objectFits: [...new Set(images.map(image => getComputedStyle(image).objectFit))], beforeContent: getComputedStyle(slider, '::before').content, afterContent: getComputedStyle(slider, '::after').content }; })()`);
+		const hero = await evaluate(client, `(() => {
+			const media = document.querySelector('#common-home .sylora-hero__media');
+			if (!media) throw new Error('Hero media container was not found.');
+
+			const image = media.querySelector('.sylora-hero__fallback');
+			const product = media.querySelector('.sylora-hero__product');
+			const slider = media.querySelector('.sylora-hero__banner, .slideshow, .swiper-container, [data-slideshow]');
+			const rect = image?.getBoundingClientRect();
+
+			return {
+				fallbackBranch: !!image && !product,
+				imageLoaded: !!image && image.complete && image.naturalWidth > 0 && rect.width > 0 && rect.height > 0,
+				objectFit: image ? getComputedStyle(image).objectFit : null,
+				noSlider: !slider,
+			};
+		})()`);
 		const productUrl = await evaluate(client, `(async () => { const searchUrl = new URL(location.href); searchUrl.search = '?route=product/search&limit=100'; const catalog = new DOMParser().parseFromString(await (await fetch(searchUrl)).text(), 'text/html'); const productId = catalog.querySelector('[data-wishlist-add]')?.getAttribute('data-wishlist-add'); if (!productId) throw new Error('A real catalog product was not found.'); const url = new URL(location.href); url.search = '?route=product/product&product_id=' + productId; return url.href; })()`);
 		await navigate(client, productUrl);
 		const product = await evaluate(client, `(() => { const media = document.querySelector('.product-page__media'); const image = document.querySelector('.product-gallery__main img'); const metaLabel = document.querySelector('.product-meta__label'); if (!media || !image || !metaLabel) throw new Error('Product visual nodes were not found.'); const mediaRect = media.getBoundingClientRect(); const imageRect = image.getBoundingClientRect(); const labelRect = metaLabel.getBoundingClientRect(); return { widthOccupancy: imageRect.width / mediaRect.width, objectFit: getComputedStyle(image).objectFit, metaLabelSingleLine: labelRect.height <= parseFloat(getComputedStyle(metaLabel).lineHeight) + 1 }; })()`);

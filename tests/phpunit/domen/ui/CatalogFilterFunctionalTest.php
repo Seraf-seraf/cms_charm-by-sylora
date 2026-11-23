@@ -76,10 +76,10 @@ final class CatalogFilterFunctionalTest extends BrowserTestCase {
 	public function testRealPagesKeepImageAndAlignmentContracts(): void {
 		$result = $this->runBrowserScenario(__DIR__ . '/support/catalog_regression_browser.mjs', 'visual');
 
-		self::assertTrue($result['hero']['equalFrames'] ?? false);
-		self::assertSame(array('cover'), $result['hero']['objectFits'] ?? null);
-		self::assertSame('none', $result['hero']['beforeContent'] ?? null);
-		self::assertSame('none', $result['hero']['afterContent'] ?? null);
+		self::assertTrue($result['hero']['fallbackBranch'] ?? false);
+		self::assertTrue($result['hero']['imageLoaded'] ?? false);
+		self::assertSame('cover', $result['hero']['objectFit'] ?? null);
+		self::assertTrue($result['hero']['noSlider'] ?? false);
 		self::assertGreaterThanOrEqual(0.9, $result['product']['widthOccupancy'] ?? 0);
 		self::assertSame('contain', $result['product']['objectFit'] ?? null);
 		self::assertTrue($result['product']['metaLabelSingleLine'] ?? false);
