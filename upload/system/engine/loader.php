@@ -103,7 +103,11 @@ final class Loader {
 		// Sanitize the call
 		$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
 
-		$csp_nonce = $this->registry->get('config')->get('csp_nonce');
+		$csp_nonce = $this->registry->get('csp_fragment_nonce');
+
+		if (!is_string($csp_nonce) || $csp_nonce === '') {
+			$csp_nonce = $this->registry->get('config')->get('csp_nonce');
+		}
 
 		if (is_string($csp_nonce) && $csp_nonce !== '') {
 			$data['csp_nonce'] = $csp_nonce;

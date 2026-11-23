@@ -16,6 +16,22 @@ class ControllerStartupStartup extends Controller {
 		$csp_nonce = base64_encode(random_bytes(16));
 		$this->config->set('csp_nonce', $csp_nonce);
 		$this->response->addHeader('Content-Security-Policy: ' . $this->getContentSecurityPolicy($csp_nonce));
+
+		require_once DIR_SYSTEM . 'library/security/checkout_fragment_nonce.php';
+
+		$fragment_route = $this->request->get['route'] ?? null;
+		$fragment_method = $this->request->server['REQUEST_METHOD'] ?? null;
+
+		if (is_string($fragment_route) && is_string($fragment_method) && CheckoutFragmentNonce::isNoStoreHtmlResponse($fragment_route, $fragment_method)) {
+			$this->response->addHeader('Cache-Control: private, no-store');
+
+			$fragment_nonce = CheckoutFragmentNonce::getParentNonce($this->request->get, $this->request->server);
+
+			if ($fragment_nonce !== null) {
+				$this->registry->set('csp_fragment_nonce', $fragment_nonce);
+			}
+		}
+
 		$this->addSecurityHeaders();
 
 		// Store
