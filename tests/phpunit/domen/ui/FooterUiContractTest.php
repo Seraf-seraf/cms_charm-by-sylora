@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__) . '/support/TestBootstrap.php';
+
 final class FooterUiContractTest extends TestCase {
 	private string $root;
 
@@ -56,6 +58,23 @@ final class FooterUiContractTest extends TestCase {
 			'/\.site-footer__details > summary\s*\{[^}]*min-height: 44px;/s',
 			$css
 		);
+	}
+
+	public function testRenderedFooterKeepsCopyrightWithoutDeveloperCredit(): void {
+		$store = TestBootstrap::shared();
+		$html = file_get_contents($store->getRouteUrl('common/home'));
+
+		self::assertIsString($html);
+
+		$document = Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+		$bottom = $document->querySelector('footer .site-footer__bottom');
+
+		self::assertInstanceOf(Dom\Element::class, $bottom);
+		self::assertNull($bottom->querySelector('.site-footer__developer'));
+		self::assertStringNotContainsString('bastyle.tech', strtolower($bottom->textContent));
+		self::assertSame(1, $bottom->children->length);
+		self::assertSame('p', $bottom->firstElementChild?->localName);
+		self::assertStringContainsString('Charm by Sylora ©', $bottom->textContent);
 	}
 
 	private function read(string $path): string {
