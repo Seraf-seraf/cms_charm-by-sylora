@@ -53,7 +53,7 @@ final class CatalogUiContractTest extends TestCase {
 		foreach (array('product/category.twig', 'product/search.twig', 'product/special.twig') as $template) {
 			$source = $this->themeTemplate($template);
 			$sortLabel = $template === 'product/category.twig'
-				? '{% if is_catalog_root %}{{ text_catalog_root_sort }}{% else %}{{ text_sort }}{% endif %}'
+				? '{{ text_catalog_root_sort }}'
 				: '{{ text_sort }}';
 
 			self::assertStringContainsString('catalog-toolbar__field', $source, $template);
@@ -69,17 +69,18 @@ final class CatalogUiContractTest extends TestCase {
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
 		$storefront = $this->read('upload/catalog/view/javascript/storefront.js');
 
-		self::assertStringContainsString('<div class="catalog-shell{% if is_catalog_root %} catalog-shell--root{% endif %}">', $category);
+		self::assertStringContainsString('<div class="catalog-shell">', $category);
 		self::assertStringContainsString('<aside class="catalog-shell__sidebar">', $category);
-		self::assertStringContainsString('name="path" value="{{ category.category_id }}"', $category);
+		self::assertStringContainsString('name="path" value="{{ category.selected ? filter_path : category.category_id }}"', $category);
 		self::assertStringContainsString('{{ category.total }}', $category);
 		self::assertStringNotContainsString('{{ column_left }}', $category);
 		self::assertStringContainsString("\$data['filter_availability'] = \$availability_filter;", $categoryController);
-		self::assertStringContainsString("(\$availability_filter !== '' ? 1 : 0)", $categoryController);
-		self::assertStringContainsString('<span>{{ text_filters }}</span>', $category);
+		self::assertStringContainsString("count(\$applied_filters)", $categoryController);
+		self::assertStringContainsString('id="catalog-applied-filters"', $category);
+		self::assertStringContainsString('id="catalog-result-count">{{ catalog_results }}', $category);
 		self::assertStringContainsString("window.matchMedia('(min-width: 992px)')", $storefront);
-		self::assertStringContainsString('filterDetails.open = true;', $storefront);
-		self::assertMatchesRegularExpression('/#product-category \.catalog-shell\s*\{[^}]*grid-template-columns: 270px minmax\(0, 1fr\);/s', $css);
+		self::assertStringContainsString('filterDetails.open = desktopFilters.matches;', $storefront);
+		self::assertMatchesRegularExpression('/#product-category \.catalog-shell\s*\{[^}]*grid-template-columns: 236px minmax\(0, 1fr\);/s', $css);
 		self::assertStringContainsString('class="catalog-filters__grid"', $category);
 		self::assertMatchesRegularExpression('/\.catalog-toolbar\s*\{[^}]*flex-wrap: wrap;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-toolbar__controls\s*\{[^}]*flex-wrap: wrap;/s', $css);

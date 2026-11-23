@@ -43,6 +43,36 @@ final class CatalogFilterFunctionalTest extends BrowserTestCase {
 		self::assertSame($result['expectedProducts'] ?? null, $result['actualProducts'] ?? null);
 	}
 
+	public function testCategoryShowsAppliedPriceAndOffersResetInTheSameSection(): void {
+		$catalogUrl = $this->getRouteUrl('common/home');
+		$home = new DOMXPath($this->document($this->request($catalogUrl)));
+		$catalogLink = $home->query('//nav[@id="site-nav"]/a[normalize-space(.)="Каталог"]')->item(0);
+		self::assertInstanceOf(DOMElement::class, $catalogLink);
+		$categoryUrl = $catalogLink->getAttribute('href');
+		$baseline = $this->productLinks($this->request($categoryUrl));
+		self::assertNotEmpty($baseline);
+
+		$filteredUrl = $categoryUrl . (str_contains($categoryUrl, '?') ? '&' : '?') . 'price_max=1';
+		$html = $this->request($filteredUrl);
+		$xpath = new DOMXPath($this->document($html));
+		self::assertSame(array(), $this->productLinks($html));
+		self::assertStringContainsString('Цена до 1 ₽', $xpath->evaluate('string(//*[@id="catalog-applied-filters"])'));
+		self::assertSame('0 товаров', $xpath->evaluate('normalize-space(//*[@id="catalog-result-count"])'));
+		self::assertSame('Ничего не найдено', $xpath->evaluate('normalize-space(//*[@id="catalog-empty-title"])'));
+		$resetUrl = $xpath->evaluate('string(//*[@id="catalog-empty-title"]/following-sibling::a/@href)');
+		self::assertSame($categoryUrl, $resetUrl);
+		self::assertSame($baseline, $this->productLinks($this->request($resetUrl)));
+	}
+
+	public function testCategoryControlsKeepFiltersAndLayoutAcrossWidths(): void {
+		$result = $this->runBrowserScenario(__DIR__ . '/support/catalog_regression_browser.mjs', 'category');
+
+		self::assertSame(array(3, 2, 1), $result['columns'] ?? null);
+		self::assertSame('Ничего не найдено', $result['empty'] ?? null);
+		self::assertNotEmpty($result['resetPath'] ?? '');
+		self::assertTrue($result['longLegendFits'] ?? false);
+	}
+
 	public function testRealPagesKeepImageAndAlignmentContracts(): void {
 		$result = $this->runBrowserScenario(__DIR__ . '/support/catalog_regression_browser.mjs', 'visual');
 

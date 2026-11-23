@@ -241,26 +241,41 @@
 	function initializeCatalog() {
 		var lastQuickViewTrigger = null;
 		var filterDetails = document.querySelector('.catalog-filters');
-		var desktopFilters = window.matchMedia('(min-width: 992px)');
+		if (filterDetails) {
+			var desktopFilters = window.matchMedia('(min-width: 992px)');
+			var filterSummary = filterDetails.querySelector('.catalog-filters__summary');
+			var closeFiltersButton = filterDetails.querySelector('.catalog-filters__close');
 
-		function syncFilterDisclosure(event) {
-			if (!filterDetails) {
-				return;
-			}
-
-			if (desktopFilters.matches) {
-				filterDetails.open = true;
-			} else if (event && filterDetails.getAttribute('data-active-filters') !== 'true') {
+			function closeFilters() {
 				filterDetails.open = false;
+				filterSummary.focus();
 			}
-		}
 
-		syncFilterDisclosure();
+			function syncFilterDisclosure() {
+				var focused = document.activeElement;
+				filterDetails.open = desktopFilters.matches;
 
-		if (typeof desktopFilters.addEventListener === 'function') {
-			desktopFilters.addEventListener('change', syncFilterDisclosure);
-		} else if (typeof desktopFilters.addListener === 'function') {
-			desktopFilters.addListener(syncFilterDisclosure);
+				if (!desktopFilters.matches && filterDetails.contains(focused)) {
+					filterSummary.focus();
+				} else if (desktopFilters.matches && (focused === filterSummary || focused === closeFiltersButton)) {
+					filterDetails.querySelector('input[name="path"]:checked').focus();
+				}
+			}
+
+			filterDetails.classList.add('catalog-filters--enhanced');
+			syncFilterDisclosure();
+			closeFiltersButton.addEventListener('click', closeFilters);
+			filterDetails.addEventListener('toggle', function () {
+				if (!desktopFilters.matches && filterDetails.open) {
+					closeFiltersButton.focus();
+				}
+			});
+
+			if (typeof desktopFilters.addEventListener === 'function') {
+				desktopFilters.addEventListener('change', syncFilterDisclosure);
+			} else if (typeof desktopFilters.addListener === 'function') {
+				desktopFilters.addListener(syncFilterDisclosure);
+			}
 		}
 
 		document.addEventListener('click', function(event) {

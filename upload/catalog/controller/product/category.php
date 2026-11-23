@@ -487,6 +487,14 @@ class ControllerProductCategory extends Controller {
 			$data['limit'] = $limit;
 			$data['filter_groups'] = $this->model_catalog_category->getCategoryProductFilters($category_id);
 			$data['filter_category'] = $filter !== '' ? array_values(array_filter(explode(',', $filter), 'strlen')) : array();
+			if ($catalog_category && !$data['is_catalog_root'] && $data['filter_category']) {
+				$data['filter_groups'] = $this->includeSelectedCatalogFilters(
+					$data['filter_groups'],
+					$data['filter_category'],
+					(int)$catalog_category['category_id']
+				);
+			}
+
 			$data['filter_price_min'] = $price_min;
 			$data['filter_price_max'] = $price_max;
 			$data['filter_availability'] = $availability_filter;
@@ -495,7 +503,63 @@ class ControllerProductCategory extends Controller {
 			$data['filter_path'] = isset($this->request->get['path']) ? $this->request->get['path'] : '';
 			$data['filter_action'] = 'index.php';
 			$data['filter_reset'] = $this->url->link('product/category', 'path=' . $this->request->get['path']);
-			$data['active_filter_count'] = count($data['filter_category']) + ($price_min !== '' ? 1 : 0) + ($price_max !== '' ? 1 : 0) + ($availability_filter !== '' ? 1 : 0) + ($filter_is_new ? 1 : 0) + ($filter_is_sale ? 1 : 0);
+			$applied_filters = array();
+			$display_price_min = str_replace('.', ',', (string)$price_min);
+			$display_price_max = str_replace('.', ',', (string)$price_max);
+
+			if ($price_min !== '' && $price_max !== '') {
+				$applied_filters[] = sprintf(
+					$this->language->get('text_filter_applied_price_range'),
+					$display_price_min,
+					$display_price_max
+				);
+			} elseif ($price_min !== '') {
+				$applied_filters[] = sprintf($this->language->get('text_filter_applied_price_min'), $display_price_min);
+			} elseif ($price_max !== '') {
+				$applied_filters[] = sprintf($this->language->get('text_filter_applied_price_max'), $display_price_max);
+			}
+
+			if ($availability_filter !== '') {
+				$applied_filters[] = $this->language->get('text_filter_' . $availability_filter);
+			}
+
+			if ($filter_is_new) {
+				$applied_filters[] = $this->language->get('text_filter_new');
+			}
+
+			if ($filter_is_sale) {
+				$applied_filters[] = $this->language->get('text_filter_sale');
+			}
+
+			foreach ($data['filter_groups'] as $filter_group) {
+				foreach ($filter_group['filter'] as $filter_option) {
+					if (in_array($filter_option['filter_id'], $data['filter_category'])) {
+						$applied_filters[] = sprintf(
+							$this->language->get('text_filter_applied_attribute'),
+							$filter_group['name'],
+							$filter_option['name']
+						);
+					}
+				}
+			}
+
+			$data['applied_filters'] = $applied_filters;
+			$data['active_filter_count'] = count($applied_filters);
+			$data['catalog_reset_available'] = $filter_url !== '' || $page > 1;
+
+			if (!$product_total) {
+				$data['catalog_results'] = $this->language->get('text_catalog_zero_results');
+			} elseif (!$data['products']) {
+				$data['catalog_results'] = sprintf($this->language->get('text_catalog_empty_page_count'), $product_total);
+			} else {
+				$data['catalog_results'] = sprintf(
+					$this->language->get('text_catalog_results'),
+					(($page - 1) * $limit) + 1,
+					min($page * $limit, $product_total),
+					$product_total
+				);
+			}
+
 			$schema_breadcrumbs = array(
 				array(
 					'text' => $this->language->get('text_breadcrumb_home'),
@@ -578,5 +642,36 @@ class ControllerProductCategory extends Controller {
 
 			$this->response->setOutput($this->load->view('error/not_found', $data));
 		}
+	}
+
+	private function includeSelectedCatalogFilters(array $groups, array $selected_filters, int $catalog_category_id): array {
+		$groups = array_column($groups, null, 'filter_group_id');
+		$missing_filters = array_fill_keys(array_map('intval', $selected_filters), true);
+
+		foreach ($groups as $group) {
+			foreach ($group['filter'] as $option) {
+				unset($missing_filters[$option['filter_id']]);
+			}
+		}
+
+		if (!$missing_filters) {
+			return $groups;
+		}
+
+		foreach ($this->model_catalog_category->getCategoryProductFilters($catalog_category_id) as $group) {
+			$selected_options = array_filter($group['filter'], function ($option) use ($missing_filters) {
+				return isset($missing_filters[$option['filter_id']]);
+			});
+
+			if (!$selected_options) {
+				continue;
+			}
+
+			$group_id = $group['filter_group_id'];
+			$groups[$group_id] = $groups[$group_id] ?? array('name' => $group['name'], 'filter' => array());
+			$groups[$group_id]['filter'] = array_merge($groups[$group_id]['filter'], $selected_options);
+		}
+
+		return $groups;
 	}
 }
