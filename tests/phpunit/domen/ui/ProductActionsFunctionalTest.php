@@ -43,6 +43,18 @@ final class ProductActionsFunctionalTest extends BrowserTestCase {
 		self::assertStringEndsWith('/heart.svg', $result['heartIcon'] ?? '');
 	}
 
+	public function testCatalogCardActionsWorkWithKeyboardAndPointer(): void {
+		$result = $this->runBrowserScenario(__DIR__ . '/support/product_actions_browser.mjs', 'card-actions');
+
+		foreach (array(
+			'wishlistTooltip', 'quickViewTooltip', 'keyboardDialog', 'pointerDialog', 'scrollableDialog',
+			'wishlistSelected', 'wishlistLabelUpdated', 'loading', 'restoredAfterError', 'detailsWithoutQuickView'
+		) as $state) {
+			self::assertTrue($result[$state] ?? false, $state . ': ' . json_encode($result, JSON_UNESCAPED_UNICODE));
+		}
+		$this->assertCartResult($result, (int)$result['minimum']);
+	}
+
 	public function testProductBreadcrumbsFollowCategoryAndHandleMissingOrInvalidPath(): void {
 		$result = $this->runBrowserScenario(__DIR__ . '/support/product_actions_browser.mjs', 'breadcrumbs');
 

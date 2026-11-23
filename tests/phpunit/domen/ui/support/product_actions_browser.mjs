@@ -5,14 +5,14 @@ import { join } from 'node:path';
 
 const [, , targetUrl, scenarioValue, chromeBinary] = process.argv;
 const scenario = scenarioValue || '';
-const scenarios = ['search', 'add-to-cart', 'quantity-three', 'wishlist', 'breadcrumbs', 'compare'];
+const scenarios = ['search', 'add-to-cart', 'quantity-three', 'wishlist', 'card-actions', 'breadcrumbs', 'compare'];
 
 if (
   !targetUrl
   || !scenarios.includes(scenario)
   || !chromeBinary
 ) {
-  throw new Error('Usage: product_actions_browser.mjs <url> <search|add-to-cart|quantity-three|wishlist|compare> <chrome-binary>');
+  throw new Error(`Usage: product_actions_browser.mjs <url> <${scenarios.join('|')}> <chrome-binary>`);
 }
 
 const searchTerm = 'Розовый рассвет';
@@ -24,6 +24,7 @@ const localOrigin = new URL(targetUrl).origin;
 const blockedExternalRequests = [];
 const interceptionErrors = [];
 const interceptionTasks = [];
+let rejectNextCartRequest = false;
 
 async function debuggingPort() {
   for (let attempt = 0; attempt < 100; attempt++) {
@@ -108,6 +109,11 @@ function installExternalRequestBlocker() {
       const requestOrigin = new URL(params.request.url).origin;
 
       if (requestOrigin === localOrigin) {
+        if (rejectNextCartRequest && new URL(params.request.url).searchParams.get('route') === 'checkout/cart/add') {
+          rejectNextCartRequest = false;
+          await client.command('Fetch.failRequest', { requestId: params.requestId, errorReason: 'Failed' });
+          return;
+        }
         await client.command('Fetch.continueRequest', { requestId: params.requestId });
         return;
       }
@@ -165,18 +171,23 @@ async function openSyntheticProduct(client) {
 
 async function addProductAndReadCart(client, quantityValue) {
   const product = await openSyntheticProduct(client);
-  const addState = await evaluate(client, `(() => {
+  if (!await waitForBrowserState(`document.readyState === 'complete'`, 10000)) {
+    throw new Error('The product page did not finish loading before the cart action.');
+  }
+  await evaluate(client, `(() => {
     const quantity = document.querySelector('#input-quantity');
     const button = document.querySelector('#button-cart');
     if (!quantity || !button) throw new Error('Product page add-to-cart control is unavailable.');
     quantity.value = ${JSON.stringify(String(quantityValue))};
     quantity.dispatchEvent(new Event('input', { bubbles: true }));
     quantity.dispatchEvent(new Event('change', { bubbles: true }));
-    button.click();
-    return true;
   })()`);
 
-  if (!addState) throw new Error('Product page add-to-cart action was not submitted.');
+  // The quantity request clears alerts when its response arrives.
+  if (!await waitForBrowserState('window.jQuery.active === 0', 10000)) {
+    throw new Error('The quantity update did not finish before the cart action.');
+  }
+  await evaluate(client, `document.querySelector('#button-cart').click()`);
   const notice = await evaluate(client, `(async () => {
     for (let attempt = 0; attempt < 100; attempt++) {
       const current = document.querySelector('#content .cart-notice[role="status"]');
@@ -192,7 +203,11 @@ async function addProductAndReadCart(client, quantityValue) {
   if (!notice.visible || !notice.href) throw new Error('Add-to-cart notification does not expose the cart action.');
   await navigate(client, notice.href);
 
-  const cart = await evaluate(client, `(() => {
+  return { ...await readCart(client), expectedProductId: product.id, expectedProductName: product.name, noticeVisible: notice.visible, noticeText: notice.text };
+}
+
+async function readCart(client) {
+  return evaluate(client, `(() => {
     const item = document.querySelector('#checkout-cart .cart-item:not(.cart-item--voucher)');
     if (!item) throw new Error('The added product was not rendered in the cart.');
     const quantity = item.querySelector('input[name^="quantity["]');
@@ -209,8 +224,170 @@ async function addProductAndReadCart(client, quantityValue) {
       lineTotalDigits: digits(lineTotal),
     };
   })()`);
+}
 
-  return { ...cart, expectedProductId: product.id, expectedProductName: product.name, noticeVisible: notice.visible, noticeText: notice.text };
+async function pressKey(key, code, windowsVirtualKeyCode) {
+  const keyEvent = { key, code, windowsVirtualKeyCode };
+  const downEvent = key === 'Enter' ? { type: 'keyDown', text: '\r' } : { type: 'rawKeyDown' };
+  await client.command('Input.dispatchKeyEvent', { ...keyEvent, ...downEvent });
+  await client.command('Input.dispatchKeyEvent', { ...keyEvent, type: 'keyUp' });
+}
+
+async function clickCardControl(selector, click = true) {
+  const point = await evaluate(client, `(() => {
+    const button = document.querySelector(${JSON.stringify(selector)});
+    button.scrollIntoView({ block: 'center' });
+    const { x, y, width, height } = button.getBoundingClientRect();
+    return { x: x + width / 2, y: y + height / 2 };
+  })()`);
+  await client.command('Input.dispatchMouseEvent', { ...point, type: 'mouseMoved' });
+  if (click) {
+    await client.command('Input.dispatchMouseEvent', { ...point, type: 'mousePressed', button: 'left', clickCount: 1 });
+    await client.command('Input.dispatchMouseEvent', { ...point, type: 'mouseReleased', button: 'left', clickCount: 1 });
+  }
+}
+
+async function waitForBrowserState(condition, timeoutMilliseconds = 1000) {
+  const deadline = performance.now() + timeoutMilliseconds;
+  while (performance.now() < deadline) {
+    if (await evaluate(client, condition)) return true;
+    await delay(50);
+  }
+  return false;
+}
+
+async function exerciseCardActions() {
+  await client.command('Emulation.setDeviceMetricsOverride', { width: 320, height: 600, deviceScaleFactor: 1, mobile: false });
+  const catalogLink = `[...document.querySelectorAll('#site-nav a')].find(link => link.textContent.trim() === 'Каталог')?.href`;
+  if (!await waitForBrowserState(catalogLink, 10000)) throw new Error('The storefront catalog link was not found.');
+  const catalogHref = await evaluate(client, catalogLink);
+  const catalogUrl = new URL(catalogHref);
+  catalogUrl.searchParams.set('limit', '100');
+  await navigate(client, catalogUrl.href);
+  if (!await waitForBrowserState(`document.readyState === 'complete' && document.querySelector('#product-category .catalog-card') !== null`, 10000)) {
+    throw new Error('The catalog did not render synthetic product cards.');
+  }
+  const consentChoice = '#analytics-cookie-banner:not([hidden]) [data-cookie-consent="essential"]';
+  if (await evaluate(client, `document.querySelector(${JSON.stringify(consentChoice)}) !== null`)) {
+    await clickCardControl(consentChoice);
+    if (!await waitForBrowserState(`document.querySelector(${JSON.stringify(consentChoice)}) === null`)) {
+      throw new Error('Cookie banner still covers the catalog controls.');
+    }
+  }
+  const product = await evaluate(client, `(() => {
+    const card = [...document.querySelectorAll('.catalog-card')].find(card => card.querySelector('.catalog-card__title').textContent.trim() === ${JSON.stringify(productName)});
+    const cart = card?.querySelector('.catalog-card__actions [data-cart-add]');
+    if (!cart) throw new Error('Synthetic category card with cart button was not found.');
+    card.dataset.testCard = '';
+    return { id: cart.dataset.cartAdd, minimum: Number(cart.dataset.quantity), name: card.querySelector('.catalog-card__title').textContent.trim() };
+  })()`);
+  await evaluate(client, `document.querySelector('[data-test-card] .catalog-card__image').focus()`);
+  await pressKey('Tab', 'Tab', 9);
+  const wishlistTooltip = await evaluate(client, `(() => {
+    const button = document.querySelector('[data-test-card] .catalog-card__wishlist');
+    const tip = button.querySelector('.catalog-card__tooltip');
+    return Boolean(document.activeElement === button && tip && getComputedStyle(tip).visibility === 'visible'
+      && tip.getBoundingClientRect().top < button.getBoundingClientRect().top
+      && tip.textContent.trim() === button.getAttribute('aria-label') && !button.hasAttribute('data-toggle'));
+  })()`);
+
+  const quick = '[data-test-card] .js-quick-view-open';
+  await clickCardControl(quick, false);
+  const quickViewTooltip = await evaluate(client, `(() => {
+    const button = document.querySelector('${quick}');
+    const tip = button.querySelector('.catalog-card__tooltip');
+    return Boolean(tip && getComputedStyle(tip).visibility === 'visible'
+      && tip.getBoundingClientRect().left >= 0 && tip.getBoundingClientRect().right <= innerWidth
+      && tip.textContent.trim() === button.getAttribute('aria-label') && !button.hasAttribute('data-toggle'));
+  })()`);
+
+  await evaluate(client, `document.querySelector('${quick}').focus()`);
+  await pressKey('Enter', 'Enter', 13);
+  const keyboardOpened = await evaluate(client, `(() => {
+    const button = document.querySelector('${quick}');
+    const dialog = document.querySelector('[data-test-card] .quick-view');
+    return dialog.matches(':modal') && button.getAttribute('aria-expanded') === 'true'
+      && dialog.querySelector('.quick-view__close button') === document.activeElement;
+  })()`);
+  await pressKey('Escape', 'Escape', 27);
+  const dialogClosed = `!document.querySelector('[data-test-card] .quick-view').open
+    && document.activeElement === document.querySelector('${quick}')
+    && document.activeElement.getAttribute('aria-expanded') === 'false'`;
+  const keyboardDialog = keyboardOpened && await waitForBrowserState(dialogClosed);
+
+  await clickCardControl(quick);
+  const scrollableDialog = await evaluate(client, `(() => {
+    const dialog = document.querySelector('[data-test-card] .quick-view');
+    const actions = dialog.querySelector('.quick-view__actions');
+    const dialogRect = dialog.getBoundingClientRect();
+    dialog.scrollTop = dialog.scrollHeight;
+    return dialog.open && dialog.scrollTop > 0
+      && actions.getBoundingClientRect().bottom <= dialogRect.bottom
+      && dialogRect.width <= innerWidth && dialogRect.height <= innerHeight;
+  })()`);
+  await evaluate(client, `document.querySelector('[data-test-card] .quick-view').scrollTop = 0`);
+  await clickCardControl('[data-test-card] .quick-view__close button');
+  const pointerDialog = await waitForBrowserState(dialogClosed);
+
+  const wishlist = await evaluate(client, `(async () => {
+    const button = document.querySelector('[data-test-card] .catalog-card__wishlist');
+    const previousLabel = button.getAttribute('aria-label');
+    button.click();
+    for (let attempt = 0; attempt < 100; attempt++) {
+      const notice = document.querySelector('#site-notifications [role="status"]');
+      if (button.getAttribute('aria-pressed') === 'true' && !button.disabled && notice) {
+        const label = button.getAttribute('aria-label');
+        return {
+          wishlistSelected: button.classList.contains('is-selected') && notice.getBoundingClientRect().height > 0,
+          wishlistLabelUpdated: label !== previousLabel && label === button.querySelector('.catalog-card__tooltip')?.textContent.trim()
+            && !button.hasAttribute('title') && !button.hasAttribute('data-original-title'),
+        };
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    throw new Error('Wishlist result did not reach the card.');
+  })()`);
+
+  rejectNextCartRequest = true;
+  const loading = await evaluate(client, `(() => {
+    const button = document.querySelector('[data-test-card] .catalog-card__actions [data-cart-add]');
+    window.alert = () => {};
+    button.click();
+    const label = button.querySelector('.catalog-card__cart-loading');
+    return button.disabled && button.getAttribute('aria-busy') === 'true'
+      && button.classList.contains('is-loading') && Boolean(label?.getBoundingClientRect().height);
+  })()`);
+  const restoredAfterError = await evaluate(client, `(async () => {
+    const button = document.querySelector('[data-test-card] .catalog-card__actions [data-cart-add]');
+    for (let attempt = 0; attempt < 100 && button.disabled; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    return !button.disabled && !button.hasAttribute('aria-busy') && !button.classList.contains('is-loading');
+  })()`);
+
+  const notice = await evaluate(client, `(async () => {
+    document.querySelector('[data-test-card] .catalog-card__actions [data-cart-add]').click();
+    for (let attempt = 0; attempt < 100; attempt++) {
+      const notice = document.querySelector('#site-notifications .cart-notice[role="status"]');
+      if (notice) return notice.getBoundingClientRect().height > 0;
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    return false;
+  })()`);
+  await navigate(client, new URL('?route=checkout/cart', targetUrl).href);
+  const cart = await readCart(client);
+  await navigate(client, new URL('?route=product/search&search=' + encodeURIComponent(searchTerm), targetUrl).href);
+  const detailsWithoutQuickView = await evaluate(client, `(() => {
+    const card = document.querySelector('.catalog-card');
+    return Boolean(card.querySelector('.price')?.textContent.trim()
+      && card.querySelector('.catalog-card__more')?.href === card.querySelector('.catalog-card__title a')?.href
+      && !card.querySelector('.js-quick-view-open, dialog'));
+  })()`);
+  return {
+    ...cart, ...wishlist, wishlistTooltip, quickViewTooltip, keyboardDialog, pointerDialog, scrollableDialog,
+    loading, restoredAfterError, detailsWithoutQuickView, minimum: product.minimum,
+    expectedProductId: product.id, expectedProductName: product.name, noticeVisible: notice,
+  };
 }
 
 let client;
@@ -285,6 +462,8 @@ try {
       throw new Error('Wishlist state or notification was not updated.');
     })()`);
     await writeResult({ ...result, productId: product.id, productName: product.name, buttonProductId: clicked.buttonProductId, heartIcon: clicked.icon });
+  } else if (scenario === 'card-actions') {
+    await writeResult(await exerciseCardActions());
   } else if (scenario === 'breadcrumbs') {
     const productUrl = new URL('?route=product/product', targetUrl);
     productUrl.searchParams.set('product_id', '1');

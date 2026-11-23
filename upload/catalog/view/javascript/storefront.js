@@ -315,22 +315,17 @@
 
 			var dialog = document.getElementById(trigger.getAttribute('data-dialog-id'));
 
-			if (!dialog || typeof dialog.showModal !== 'function') {
+			if (!dialog || dialog.open || typeof dialog.showModal !== 'function') {
 				return;
 			}
 
+			dialog.showModal();
+			dialog.scrollTop = 0;
 			lastQuickViewTrigger = trigger;
 			trigger.setAttribute('aria-expanded', 'true');
-			dialog.showModal();
-
-			var focusable = dialog.querySelector('a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])');
-
-			if (focusable) {
-				focusable.focus();
-			}
 		});
 		document.addEventListener('close', function(event) {
-			if (!event.target.classList || !event.target.classList.contains('quick-view') || !lastQuickViewTrigger) {
+			if (!lastQuickViewTrigger || event.target.id !== lastQuickViewTrigger.getAttribute('data-dialog-id') || event.target.open) {
 				return;
 			}
 

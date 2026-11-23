@@ -365,12 +365,21 @@ function confirmProductAction(trigger, action) {
 	var element = $(trigger);
 
 	if (action === 'wishlist') {
-		element.attr({
-			'aria-label': 'Товар в избранном',
-			'aria-pressed': 'true',
-			'data-original-title': 'В избранном',
-			'title': 'В избранном'
-		}).addClass('is-selected');
+		var tooltip = element.find('.catalog-card__tooltip');
+		var selectedLabel = element.attr('data-wishlist-selected-label');
+
+		if (tooltip.length && selectedLabel) {
+			tooltip.text(selectedLabel);
+			element.attr('aria-label', selectedLabel);
+		} else {
+			element.attr({
+				'aria-label': 'Товар в избранном',
+				'data-original-title': 'В избранном',
+				'title': 'В избранном'
+			});
+		}
+
+		element.attr('aria-pressed', 'true').addClass('is-selected');
 	} else {
 		element.addClass('is-confirmed');
 		window.setTimeout(function() {

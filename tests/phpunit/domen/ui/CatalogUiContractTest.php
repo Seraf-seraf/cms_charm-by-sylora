@@ -45,6 +45,10 @@ final class CatalogUiContractTest extends TestCase {
 		self::assertStringContainsString('{{ button_details }}', $card);
 		self::assertStringContainsString('{{ button_quick_view }}', $card);
 		self::assertStringContainsString('{{ text_out_of_stock }}', $card);
+		self::assertStringNotContainsString('data-toggle="tooltip"', $card);
+		self::assertStringContainsString('aria-controls="quick-view-{{ product.product_id }}"', $card);
+		self::assertStringContainsString('aria-labelledby="quick-view-title-{{ product.product_id }}"', $card);
+		self::assertStringContainsString('method="dialog"', $card);
 		self::assertStringNotContainsString('index.php?', $card);
 		self::assertDoesNotMatchRegularExpression('/[А-Яа-яЁё]/u', $card);
 	}
@@ -103,7 +107,7 @@ final class CatalogUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/\.catalog-card__image img\s*\{[^}]*object-fit: contain;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card \.caption\s*\{[^}]*flex: 1;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card\s*\{[^}]*display: flex;[^}]*min-width: 0;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card__media\s*\{[^}]*aspect-ratio: 1;[^}]*overflow: hidden;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__media\s*\{[^}]*aspect-ratio: 1;[^}]*border: 1px solid/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-card__image, \.catalog-card__image picture\s*\{[^}]*width: 100%;[^}]*height: 100%;/s', $css);
 		self::assertMatchesRegularExpression('/\.pagination\s*\{[^}]*display: flex;[^}]*gap: 8px;/s', $css);
 		self::assertMatchesRegularExpression('/\.pagination > li > a,[^{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s', $css);
