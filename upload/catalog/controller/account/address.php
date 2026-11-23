@@ -32,7 +32,6 @@ class ControllerAccountAddress extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
-		$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 
 		$this->load->model('account/address');
 
@@ -61,7 +60,6 @@ class ControllerAccountAddress extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
-		$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 
 		$this->load->model('account/address');
 
@@ -187,6 +185,7 @@ class ControllerAccountAddress extends Controller {
 
 			$data['addresses'][] = array(
 				'address_id' => $result['address_id'],
+				'is_default' => (int)$result['address_id'] === (int)$this->customer->getAddressId(),
 				'address'    => str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))),
 				'update'     => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], true),
 				'delete'     => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], true)
@@ -195,6 +194,7 @@ class ControllerAccountAddress extends Controller {
 
 		$data['add'] = $this->url->link('account/address/add', '', true);
 		$data['back'] = $this->url->link('account/account', '', true);
+		$data['account_navigation'] = $this->load->controller('account/navigation', array('active_route' => 'account/address'));
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
@@ -209,6 +209,7 @@ class ControllerAccountAddress extends Controller {
 	protected function getForm() {
 
 		$data['text_address'] = !isset($this->request->get['address_id']) ? $this->language->get('text_address_add') : $this->language->get('text_address_edit');
+		$data['error_summary'] = $this->error ? $this->language->get('error_fields') : '';
 
 		if (isset($this->error['firstname'])) {
 			$data['error_firstname'] = $this->error['firstname'];
@@ -391,6 +392,7 @@ class ControllerAccountAddress extends Controller {
 		}
 
 		$data['back'] = $this->url->link('account/address', '', true);
+		$data['account_navigation'] = $this->load->controller('account/navigation', array('active_route' => 'account/address'));
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

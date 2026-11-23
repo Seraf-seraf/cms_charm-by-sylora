@@ -25,9 +25,9 @@
           {% if transactions %}
           {% for transaction in transactions %}
           <tr>
-            <td class="text-left">{{ transaction.date_added }}</td>
-            <td class="text-left">{{ transaction.description }}</td>
-            <td class="text-right">{{ transaction.amount }}</td>
+            <td class="text-left" data-label="{{ column_date_added|e('html_attr') }}">{{ transaction.date_added }}</td>
+            <td class="text-left" data-label="{{ column_description|e('html_attr') }}">{{ transaction.description }}</td>
+            <td class="text-right" data-label="{{ column_amount|e('html_attr') }}">{{ transaction.amount }}</td>
           </tr>
           {% endfor %}
           {% else %}

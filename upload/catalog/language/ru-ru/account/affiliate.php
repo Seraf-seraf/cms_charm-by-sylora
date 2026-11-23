@@ -20,7 +20,7 @@ $_['text_cheque']               = 'Чек';
 $_['text_paypal']               = 'PayPal';
 $_['text_bank']                 = 'Банковский перевод';
 $_['text_success']              = 'Успешно: Ваша учетная запись была успешно обновлена.';
-$_['text_agree']                = 'Я прочитал и согласен с <a href="%s" class="agree"><b>%s</b></a>';
+$_['text_agree']                = 'Я прочитал(-а) и согласен с <a href="%s" class="agree"><b>%s</b></a>';
 
 // Entry
 $_['entry_company']             = 'Компания';

@@ -327,6 +327,7 @@ class ControllerCheckoutCart extends Controller {
 				$this->cart->add($this->request->post['product_id'], $quantity, $option, $recurring_id);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
+				$json['success_text'] = html_entity_decode(strip_tags($json['success']), ENT_QUOTES, 'UTF-8');
 				$json['cart_url'] = str_replace('&amp;', '&', $this->url->link('checkout/cart'));
 				$json['continue_url'] = str_replace('&amp;', '&', $this->getCatalogUrl());
 				$json['text_cart_action'] = $this->language->get('text_cart_action');

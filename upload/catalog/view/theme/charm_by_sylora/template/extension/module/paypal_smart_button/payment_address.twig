@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fal fa-close"></i></button>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img class="atelier-icon atelier-icon--close" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" alt="" aria-hidden="true"></button>
 				<h4 class="modal-title">{{ text_checkout_payment_address }}</h4>
 			</div>
 			<div class="modal-body">
@@ -103,7 +103,7 @@
 								<div id="payment_custom_field{{ custom_field['custom_field_id'] }}" class="form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
 									<label class="control-label">{{ custom_field['name'] }}</label>
 									<br />
-									<button type="button" id="button_payment_custom_field{{ custom_field['custom_field_id'] }}" data-loading-text="{{ text_loading }}" class="btn btn-default"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+									<button type="button" id="button_payment_custom_field{{ custom_field['custom_field_id'] }}" data-loading-text="{{ text_loading }}" class="btn btn-default"> {{ button_upload }}</button>
 									<input type="hidden" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{% if guest['custom_field'][custom_field['custom_field_id']] %} {{ guest['custom_field'][custom_field['custom_field_id']] }} {% endif %}" id="input_payment_custom_field{{ custom_field['custom_field_id'] }}" />
 								</div>
 								{% endif %}
@@ -113,7 +113,7 @@
 									<div class="input-group date">
 										<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{% if guest['custom_field'][custom_field['custom_field_id']] %} {{ guest['custom_field'][custom_field['custom_field_id']] }} {% else %} {{ custom_field['value'] }} {% endif %}" placeholder="{{ custom_field['name'] }}" data-date-format="YYYY-MM-DD" id="input_payment_custom_field{{ custom_field['custom_field_id'] }}" class="form-control" />
 										<span class="input-group-btn">
-											<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+											<button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
 										</span>
 									</div>
 								</div>
@@ -124,7 +124,7 @@
 									<div class="input-group time">
 										<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{% if guest['custom_field'][custom_field['custom_field_id']] %} {{ guest['custom_field'][custom_field['custom_field_id']] }} {% else %} {{ custom_field['value'] }} {% endif %}" placeholder="{{ custom_field['name'] }}" data-date-format="HH:mm" id="input_payment_custom_field{{ custom_field['custom_field_id'] }}" class="form-control" />
 										<span class="input-group-btn">
-											<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+											<button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
 										</span>
 									</div>
 								</div>
@@ -135,7 +135,7 @@
 									<div class="input-group datetime">
 										<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{% if guest['custom_field'][custom_field['custom_field_id']] %} {{ guest['custom_field'][custom_field['custom_field_id']] }} {% else %} {{ custom_field['value'] }} {% endif %}" placeholder="{{ custom_field['name'] }}" data-date-format="YYYY-MM-DD HH:mm" id="input_payment_custom_field{{ custom_field['custom_field_id'] }}" class="form-control" />
 										<span class="input-group-btn">
-											<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+											<button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
 										</span>
 									</div>
 								</div>
@@ -260,7 +260,7 @@
 								<div id="payment_custom_field{{ custom_field['custom_field_id'] }}" class="form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
 									<label class="control-label">{{ custom_field['name'] }}</label>
 									<br />
-									<button type="button" id="button_payment_custom_field{{ custom_field['custom_field_id'] }}" data-loading-text="{{ text_loading }}" class="btn btn-default"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+									<button type="button" id="button_payment_custom_field{{ custom_field['custom_field_id'] }}" data-loading-text="{{ text_loading }}" class="btn btn-default"> {{ button_upload }}</button>
 									<input type="hidden" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{% if payment_address['custom_field'][custom_field['custom_field_id']] %} {{ payment_address['custom_field'][custom_field['custom_field_id']] }} {% endif %}" id="input_payment_custom_field{{ custom_field['custom_field_id'] }}" />
 								</div>
 								{% endif %}
@@ -270,7 +270,7 @@
 									<div class="input-group date">
 										<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{% if payment_address['custom_field'][custom_field['custom_field_id']] %} {{ payment_address['custom_field'][custom_field['custom_field_id']] }} {% else %} {{ custom_field['value'] }} {% endif %}" placeholder="{{ custom_field['name'] }}" data-date-format="YYYY-MM-DD" id="input_payment_custom_field{{ custom_field['custom_field_id'] }}" class="form-control" />
 										<span class="input-group-btn">
-											<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+											<button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
 										</span>
 									</div>
 								</div>
@@ -281,7 +281,7 @@
 									<div class="input-group time">
 										<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{% if payment_address['custom_field'][custom_field['custom_field_id']] %} {{ payment_address['custom_field'][custom_field['custom_field_id']] }} {% else %} {{ custom_field['value'] }} {% endif %}" placeholder="{{ custom_field['name'] }}" data-date-format="HH:mm" id="input_payment_custom_field{{ custom_field['custom_field_id'] }}" class="form-control" />
 										<span class="input-group-btn">
-											<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+											<button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
 										</span>
 									</div>
 								</div>
@@ -292,7 +292,7 @@
 									<div class="input-group datetime">
 										<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{% if payment_address['custom_field'][custom_field['custom_field_id']] %} {{ payment_address['custom_field'][custom_field['custom_field_id']] }} {% else %} {{ custom_field['value'] }} {% endif %}" placeholder="{{ custom_field['name'] }}" data-date-format="YYYY-MM-DD HH:mm" id="input_payment_custom_field{{ custom_field['custom_field_id'] }}" class="form-control" />
 										<span class="input-group-btn">
-											<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+											<button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
 										</span>
 									</div>
 								</div>

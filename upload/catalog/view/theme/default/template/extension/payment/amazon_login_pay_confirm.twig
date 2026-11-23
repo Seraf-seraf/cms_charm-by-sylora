@@ -1,6 +1,6 @@
-<div id="amazonContainer">
+<div id="amazonContainer" class="amazon-confirm">
     {% if success %}
-        <div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button><i class="fa fa-exclamation-circle"></i> {{ success }}
+        <div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ success }}
         </div>
     {% endif %}
     <h3 class="text-center">{{ heading_confirm }}</h3>
@@ -20,12 +20,12 @@
             {% if coupon %}
                 <input id="coupon" class="form-control" type="text" disabled value="{{ coupon }}" />
                 <span class="input-group-btn">
-                    <a id="couponDiscard" href="{{ coupon_discard }}" class="btn btn-danger"><i class="fa fa-times"></i></a>
+                    <a id="couponDiscard" href="{{ coupon_discard }}" class="btn btn-danger"><img class="atelier-icon atelier-icon--close" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" alt="" aria-hidden="true"></a>
                 </span>
             {% else %}
                 <input id="coupon" class="form-control" type="text" value="" />
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" id="couponApply"><i class="fa fa-tick"></i> {{ button_coupon }}</button>
+                    <button class="btn btn-primary" id="couponApply"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> {{ button_coupon }}</button>
                 </span>
             {% endif %}
         </div>
@@ -81,7 +81,7 @@
                 {% else %}
                     {% if is_amount_converted %}
                         <div class="alert alert-warning">
-                            <i class="fa fa-exclamation-circle"></i> {{ text_amount_converted }}
+                            <img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ text_amount_converted }}
                             <hr />
                             <div class="text-right">
                                 <a class="btn btn-primary" id="confirm-button">{{ text_confirm }}</a>
@@ -93,7 +93,7 @@
                 {% endif %}
             {% else %}
                 <div class="alert alert-warning">
-                    <i class="fa fa-exclamation-circle"></i> {{ error_order_total_zero }}
+                    <img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_order_total_zero }}
                     <hr />
                     <div class="text-right">
                         <a class="btn btn-primary" href="{{ standard_checkout }}" id="confirm-button">{{ text_continue_checkout }}</a>
@@ -106,31 +106,10 @@
         </div>
     </div>
 </div>
-<style type="text/css">
-    #amazonContainer {
-        width: 100%;
-        margin: 0 auto;
-    }
-
-    #comment {
-        height: 150px;
-    }
-    
-    #coupon {
-        font-size: 1.5em;
-        font-family: Courier;
-    }
-
-    .amazonWidget {
-        margin: 0 0 10px 0;
-        width: 100%;
-        height: 230px;
-    }
-</style>
 <script>
 (function($) {
     var showCouponError = function(message) {
-        $('#couponContainer').before('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;' + message + '</div>');
+        $('#couponContainer').before('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true">&nbsp;&nbsp;' + message + '</div>');
     }
 
     var typewatch = (function() {

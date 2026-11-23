@@ -1,15 +1,20 @@
 {{ header }}
 <main id="account-register" class="container account-auth account-auth--register">
-  {% if error_warning %}
-  <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
-  {% endif %}
   <div id="content" class="account-auth__content">{{ content_top }}
-    <section class="account-auth__card">
-      <h1>{{ heading_title }}</h1>
-      <p>{{ text_account_already }}</p>
+    <header class="account-auth__header">
+      <h1>
+        <span class="account-auth__title--mobile">{{ heading_title }}</span>
+        <span class="account-auth__title--desktop">{{ text_account }}</span>
+      </h1>
+    </header>
+    <section class="account-auth__card account-auth__card--register-form">
+      <h2 class="account-auth__register-title">{{ heading_title }}</h2>
+      {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible" role="alert"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_warning }}</div>
+      {% endif %}
       <form action="{{ action }}" method="post" enctype="multipart/form-data" class="account-auth__form account-auth__register-form">
         <fieldset id="account">
-          <legend>{{ text_your_details }}</legend>
+          <legend class="sr-only">{{ text_your_details }}</legend>
           <div class="form-group required" style="display: {% if customer_groups|length > 1 %} block {% else %} none {% endif %};">
             <label class="col-sm-2 control-label">{{ entry_customer_group }}</label>
             <div class="col-sm-10">{% for customer_group in customer_groups %}
@@ -31,7 +36,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-firstname">{{ entry_firstname }}</label>
             <div class="col-sm-10">
-              <input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control" />
+              <input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ text_form_value_placeholder }}" id="input-firstname" class="form-control" />
               {% if error_firstname %}
               <div class="text-danger">{{ error_firstname }}</div>
               {% endif %} </div>
@@ -39,7 +44,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-lastname">{{ entry_lastname }}</label>
             <div class="col-sm-10">
-              <input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="form-control" />
+              <input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ text_form_value_placeholder }}" id="input-lastname" class="form-control" />
               {% if error_lastname %}
               <div class="text-danger">{{ error_lastname }}</div>
               {% endif %} </div>
@@ -47,7 +52,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-email">{{ entry_email }}</label>
             <div class="col-sm-10">
-              <input type="email" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+              <input type="email" name="email" value="{{ email }}" placeholder="{{ text_form_value_placeholder }}" id="input-email" class="form-control" autocomplete="email" />
               {% if error_email %}
               <div class="text-danger">{{ error_email }}</div>
               {% endif %} </div>
@@ -55,7 +60,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-telephone">{{ entry_telephone }}</label>
             <div class="col-sm-10">
-              <input type="tel" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-telephone" class="form-control" />
+              <input type="tel" name="telephone" value="{{ telephone }}" placeholder="{{ text_form_value_placeholder }}" id="input-telephone" class="form-control" autocomplete="tel" />
               {% if error_telephone %}
               <div class="text-danger">{{ error_telephone }}</div>
               {% endif %} </div>
@@ -173,7 +178,7 @@
           <div id="custom-field{{ custom_field.custom_field_id }}" class="form-group custom-field" data-sort="{{ custom_field.sort_order }}">
             <label class="col-sm-2 control-label">{{ custom_field.name }}</label>
             <div class="col-sm-10">
-              <button type="button" id="button-custom-field{{ custom_field.custom_field_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+              <button type="button" id="button-custom-field{{ custom_field.custom_field_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default"> {{ button_upload }}</button>
               <input type="hidden" name="custom_field[{{ custom_field.location }}][{{ custom_field.custom_field_id }}]" value="{% if register_custom_field[custom_field.custom_field_id] %}  {{ register_custom_field[custom_field.custom_field_id] }} {% endif %}" />
               {% if error_custom_field[custom_field.custom_field_id] %}
               <div class="text-danger">{{ error_custom_field[custom_field.custom_field_id] }}</div>
@@ -187,7 +192,7 @@
               <div class="input-group date">
                 <input type="text" name="custom_field[{{ custom_field.location }}][{{ custom_field.custom_field_id }}]" value="{% if register_custom_field[custom_field.custom_field_id] %}{{ register_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" data-date-format="YYYY-MM-DD" id="input-custom-field{{ custom_field.custom_field_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
               {% if error_custom_field[custom_field.custom_field_id] %}
               <div class="text-danger">{{ error_custom_field[custom_field.custom_field_id] }}</div>
@@ -201,7 +206,7 @@
               <div class="input-group time">
                 <input type="text" name="custom_field[{{ custom_field.location }}][{{ custom_field.custom_field_id }}]" value="{% if register_custom_field[custom_field.custom_field_id] %}{{ register_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" data-date-format="HH:mm" id="input-custom-field{{ custom_field.custom_field_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
               {% if error_custom_field[custom_field.custom_field_id] %}
               <div class="text-danger">{{ error_custom_field[custom_field.custom_field_id] }}</div>
@@ -215,7 +220,7 @@
               <div class="input-group datetime">
                 <input type="text" name="custom_field[{{ custom_field.location }}][{{ custom_field.custom_field_id }}]" value="{% if register_custom_field[custom_field.custom_field_id] %}{{ register_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" data-date-format="YYYY-MM-DD HH:mm" id="input-custom-field{{ custom_field.custom_field_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
               {% if error_custom_field[custom_field.custom_field_id] %}
               <div class="text-danger">{{ error_custom_field[custom_field.custom_field_id] }}</div>
@@ -225,11 +230,11 @@
           {% endfor %}
         </fieldset>
         <fieldset>
-          <legend>{{ text_your_password }}</legend>
+          <legend class="sr-only">{{ text_your_password }}</legend>
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-password">{{ entry_password }}</label>
             <div class="col-sm-10">
-              <input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
+              <input type="password" name="password" value="{{ password }}" placeholder="{{ text_form_value_placeholder }}" id="input-password" class="form-control" autocomplete="new-password" />
               {% if error_password %}
               <div class="text-danger">{{ error_password }}</div>
               {% endif %} </div>
@@ -237,14 +242,14 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-confirm">{{ entry_confirm }}</label>
             <div class="col-sm-10">
-              <input type="password" name="confirm" value="{{ confirm }}" placeholder="{{ entry_confirm }}" id="input-confirm" class="form-control" />
+              <input type="password" name="confirm" value="{{ confirm }}" placeholder="{{ text_form_value_placeholder }}" id="input-confirm" class="form-control" autocomplete="new-password" />
               {% if error_confirm %}
               <div class="text-danger">{{ error_confirm }}</div>
               {% endif %} </div>
           </div>
         </fieldset>
-        <fieldset>
-          <legend>{{ text_newsletter }}</legend>
+        <fieldset class="account-auth__register-newsletter">
+          <legend class="sr-only">{{ text_newsletter }}</legend>
           <div class="form-group">
             <label class="col-sm-2 control-label">{{ entry_newsletter }}</label>
             <div class="col-sm-10"> {% if newsletter %}
@@ -267,25 +272,28 @@
         {{ captcha }}
         {% if text_agree %}
         <div class="buttons">
-          <div class="pull-right">{{ text_agree }}
+          <div class="account-auth__register-actions">
+            <label class="account-auth__consent">
             {% if agree %}
             <input type="checkbox" name="agree" value="1" checked="checked" />
             {% else %}
             <input type="checkbox" name="agree" value="1" />
             {% endif %}
-            &nbsp;
-            <input type="submit" value="{{ button_continue }}" class="btn btn-primary" />
+            <span>{{ text_agree }}</span>
+            </label>
+            <input type="submit" value="{{ button_register }}" class="btn btn-primary" />
           </div>
         </div>
         {% else %}
         <div class="buttons">
-          <div class="pull-right">
-            <input type="submit" value="{{ button_continue }}" class="btn btn-primary" />
+          <div class="account-auth__register-actions">
+            <input type="submit" value="{{ button_register }}" class="btn btn-primary" />
           </div>
         </div>
         {% endif %}
       </form>
     </section>
+    <p class="account-auth__register-return">{{ text_account_already }}</p>
     {{ content_bottom }}
   </div>
 </main>

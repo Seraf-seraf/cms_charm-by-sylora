@@ -6,12 +6,12 @@
     {% endfor %}
   </ul>
   {% if success %}
-  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+  <div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> {{ success }}
     <button type="button" class="close" data-dismiss="alert">&times;</button>
   </div>
   {% endif %}
   {% if error_warning %}
-  <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+  <div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_warning }}
     <button type="button" class="close" data-dismiss="alert">&times;</button>
   </div>
   {% endif %}
@@ -25,7 +25,7 @@
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
       <h2>{{ heading_title }}</h2>
-      <table class="table table-bordered table-hover">
+      <table class="table table-bordered table-hover order-detail-meta">
         <thead>
           <tr>
             <td class="text-left" colspan="2">{{ text_order_detail }}</td>
@@ -33,28 +33,28 @@
         </thead>
         <tbody>
           <tr>
-            <td class="text-left" style="width: 50%;">{% if invoice_no %} <b>{{ text_invoice_no }}</b> {{ invoice_no }}<br/>
+            <td class="text-left table-cell-half">{% if invoice_no %} <b>{{ text_invoice_no }}</b> {{ invoice_no }}<br/>
               {% endif %} <b>{{ text_order_id }}</b> #{{ order_id }}<br/>
               <b>{{ text_date_added }}</b> {{ date_added }}</td>
-            <td class="text-left" style="width: 50%;">{% if payment_method %} <b>{{ text_payment_method }}</b> {{ payment_method }}<br/>
+            <td class="text-left table-cell-half">{% if payment_method %} <b>{{ text_payment_method }}</b> {{ payment_method }}<br/>
               {% endif %}
               {% if shipping_method %} <b>{{ text_shipping_method }}</b> {{ shipping_method }} {% endif %}</td>
           </tr>
         </tbody>
       </table>
-      <table class="table table-bordered table-hover">
+      <table class="table table-bordered table-hover order-detail-address">
         <thead>
           <tr>
-            <td class="text-left" style="width: 50%; vertical-align: top;">{{ text_payment_address }}</td>
+            <td class="text-left table-cell-half">{{ text_payment_address }}</td>
             {% if shipping_address %}
-            <td class="text-left" style="width: 50%; vertical-align: top;">{{ text_shipping_address }}</td>
+            <td class="text-left table-cell-half">{{ text_shipping_address }}</td>
             {% endif %} </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="text-left">{{ payment_address }}</td>
+            <td class="text-left" data-label="{{ text_payment_address|e('html_attr') }}">{{ payment_address }}</td>
             {% if shipping_address %}
-            <td class="text-left">{{ shipping_address }}</td>
+            <td class="text-left" data-label="{{ text_shipping_address|e('html_attr') }}">{{ shipping_address }}</td>
             {% endif %} </tr>
         </tbody>
       </table>
@@ -68,7 +68,7 @@
               <td class="text-right">{{ column_price }}</td>
               <td class="text-right">{{ column_total }}</td>
               {% if products %}
-              <td style="width: 20px;"></td>
+              <td class="table-cell-icon"></td>
               {% endif %} </tr>
           </thead>
           <tbody>
@@ -82,7 +82,7 @@
             <td class="text-right">{{ product.quantity }}</td>
             <td class="text-right">{{ product.price }}</td>
             <td class="text-right">{{ product.total }}</td>
-            <td class="text-right" style="white-space: nowrap;">{% if product.reorder %} <a href="{{ product.reorder }}" data-toggle="tooltip" title="{{ button_reorder }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i></a> {% endif %} <a href="{{ product.return }}" data-toggle="tooltip" title="{{ button_return }}" class="btn btn-danger"><i class="fa fa-reply"></i></a></td>
+            <td class="text-right order-detail-products__actions">{% if product.reorder %} <a href="{{ product.reorder }}" data-toggle="tooltip" title="{{ button_reorder }}" class="btn btn-primary"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"></a> {% endif %} <a href="{{ product.return }}" data-toggle="tooltip" title="{{ button_return }}" class="btn btn-danger"><img class="atelier-icon atelier-icon--arrow-left" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/arrow-left.svg" alt="" aria-hidden="true"></a></td>
           </tr>
           {% endfor %}
           {% for voucher in vouchers %}

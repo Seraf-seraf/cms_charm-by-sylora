@@ -1,7 +1,7 @@
 {{ header }}
 <div id="account-voucher" class="container">
   {% if error_warning %}
-  <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+  <div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_warning }}</div>
   {% endif %}
   <div class="row">{{ column_left }}
     {% if column_left and column_right %}
@@ -89,16 +89,12 @@
             {% endif %}
           </div>
         </div>
-        <div class="buttons clearfix">
-          <div class="pull-right"> {{ text_agree }}
-            {% if agree %}
-            <input type="checkbox" name="agree" value="1" checked="checked" />
-            {% else %}
-            <input type="checkbox" name="agree" value="1" />
-            {% endif %}
-            &nbsp;
-            <input type="submit" value="{{ button_continue }}" class="btn btn-primary" />
-          </div>
+        <div class="voucher-form__actions">
+          <label class="voucher-form__consent">
+            <input type="checkbox" name="agree" value="1"{% if agree %} checked="checked"{% endif %} />
+            <span>{{ text_agree }}</span>
+          </label>
+          <input type="submit" value="{{ button_continue }}" class="btn btn-primary" />
         </div>
       </form>
       {{ content_bottom }}</div>

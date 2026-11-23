@@ -16,8 +16,8 @@ $_['text_account']       = 'Личный кабинет';
 $_['text_return']        = 'Информация возврата';
 $_['text_return_detail'] = 'Детали возврата';
 $_['text_description']   = 'Пожалуйста, заполните форму ниже, чтобы создать заявку на возврат.';
-$_['text_order']         = 'Информация о заказе';
-$_['text_product']       = 'Информация о продукции';
+$_['text_order']         = 'Данные покупателя';
+$_['text_product']       = 'Информация о товаре';
 $_['text_reason']        = 'Причина возврата';
 $_['text_message']       = '<p>Спасибо за отправку Вашего запроса на возврат. Ваш запрос был отправлен в соответствующий отдел для обработки.</p><p>Вы получите уведомление по электронной почте о статусе вашего запроса.</p>';
 $_['text_return_id']     = 'Номер возврата:';
@@ -27,8 +27,17 @@ $_['text_status']        = 'Статус:';
 $_['text_date_added']    = 'Дата добавления:';
 $_['text_comment']       = 'Комментарии возврата';
 $_['text_history']       = 'История возврата';
-$_['text_empty']         = 'У Вас не было возвратов!';
-$_['text_agree']         = 'Я прочитал и согласен с <a href="%s" class="agree"><b>%s</b></a>';
+$_['text_empty']         = 'У вас пока нет заявок на возврат.';
+$_['text_return_list_title'] = 'Возвраты';
+$_['text_atelier_return_summary'] = 'Возврат № %s · заказ № %s';
+$_['text_atelier_return_detail_title'] = 'Возврат № %s';
+$_['text_atelier_return_information'] = 'Информация о возврате';
+$_['text_atelier_return_customer'] = 'Данные покупателя';
+$_['text_atelier_return_products'] = 'Товары';
+$_['text_atelier_return_history'] = 'История обращения';
+$_['text_atelier_return_details'] = 'Подробнее';
+$_['button_return_to_account'] = 'Вернуться в кабинет';
+$_['text_agree']         = 'Я прочитал(-а) и согласен с <a href="%s" class="agree"><b>%s</b></a>';
 
 // Column
 $_['column_return_id']   = 'Номер возврата';
@@ -53,11 +62,11 @@ $_['entry_lastname']     = 'Фамилия';
 $_['entry_email']        = 'Эл. почта';
 $_['entry_telephone']    = 'Телефон';
 $_['entry_product']      = 'Название товара';
-$_['entry_model']        = 'Код товара';
+$_['entry_model']        = 'Модель';
 $_['entry_quantity']     = 'Количество';
 $_['entry_reason']       = 'Причина возврата';
-$_['entry_opened']       = 'Товар открыт';
-$_['entry_fault_detail'] = 'Неисправные или другие детали';
+$_['entry_opened']       = 'Товар был вскрыт?';
+$_['entry_fault_detail'] = 'Комментарий';
 
 // Error
 $_['text_error']         = 'Запрошенные Вам и возвраты не найдены!';

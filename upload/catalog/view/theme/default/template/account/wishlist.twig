@@ -6,7 +6,7 @@
     {% endfor %}
   </ul>
   {% if success %}
-  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+  <div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> {{ success }}
     <button type="button" class="close" data-dismiss="alert">&times;</button>
   </div>
   {% endif %}
@@ -46,8 +46,8 @@
                 {{ product.price }}
                 {% else %} <b>{{ product.special }}</b> <s>{{ product.price }}</s> {% endif %} </div>
               {% endif %}</td>
-            <td class="text-right"><button type="button" onclick="cart.add('{{ product.product_id }}');" data-toggle="tooltip" title="{{ button_cart }}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i></button>
-              <a href="{{ product.remove }}" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-times"></i></a></td>
+            <td class="text-right"><button type="button" onclick="cart.add('{{ product.product_id }}');" data-toggle="tooltip" title="{{ button_cart }}" class="btn btn-primary"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"></button>
+              <a href="{{ product.remove }}" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><img class="atelier-icon atelier-icon--close" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" alt="" aria-hidden="true"></a></td>
           </tr>
           {% endfor %}
             </tbody>

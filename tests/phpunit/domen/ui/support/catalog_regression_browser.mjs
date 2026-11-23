@@ -5,7 +5,7 @@ import { join } from 'node:path';
 
 const [, , targetUrl, scenario, chromeBinary] = process.argv;
 
-if (!targetUrl || !['filter', 'visual'].includes(scenario) || !chromeBinary) throw new Error('Usage: catalog_regression_browser.mjs <url> <filter|visual> <chrome-binary>');
+if (!targetUrl || !['filter', 'visual', 'cart'].includes(scenario) || !chromeBinary) throw new Error('Usage: catalog_regression_browser.mjs <url> <filter|visual|cart> <chrome-binary>');
 
 const profile = await mkdtemp(join(tmpdir(), 'sylora-catalog-regression-'));
 const chrome = spawn(chromeBinary, ['--headless=new', '--no-sandbox', '--disable-gpu', '--disable-background-networking', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { stdio: 'ignore' });
@@ -94,6 +94,75 @@ try {
 		const actual = await evaluate(client, `(() => ({ selected: document.querySelector('select[name="category_id"]')?.value || '', category: new URL(location.href).searchParams.get('category_id') || '', products: Array.from(document.querySelectorAll('.catalog-card__title a'), item => item.href) }))()`);
 		const productKey = href => { const url = new URL(href); return url.searchParams.get('product_id') ? 'product:' + url.searchParams.get('product_id') : url.pathname; };
 		process.stdout.write(JSON.stringify({ submitted, expectedCategory: candidate.category, selectedCategory: actual.selected, urlCategory: actual.category, expectedProducts: candidate.products.map(productKey), actualProducts: actual.products.map(productKey) }));
+	} else if (scenario === 'cart') {
+		await client.command('Emulation.setDeviceMetricsOverride', { width: 320, height: 900, deviceScaleFactor: 1, mobile: false });
+		await navigate(client, new URL('?route=product/search&limit=100', targetUrl).href);
+		const result = await evaluate(client, `(async () => {
+			const waitFor = async (predicate, timeoutDetails) => {
+				for (let attempt = 0; attempt < 100; attempt++) {
+					if (predicate()) return;
+					await new Promise(resolve => setTimeout(resolve, 100));
+				}
+				throw new Error('Timed out waiting for cart state' + (typeof timeoutDetails === 'function' ? ': ' + JSON.stringify(timeoutDetails()) : ''));
+			};
+			const totalGroups = total => (String(total).match(/[0-9]+/g) || []).map(Number);
+			const sameTotalGroups = (left, right) => left.length >= 2 && left.length === right.length && left.every((value, index) => value === right[index]);
+			const zeroTotalGroups = values => values.length >= 2 && values.every(value => value === 0);
+			const ids = [...new Set(Array.from(document.querySelectorAll('[data-cart-add]'), item => item.getAttribute('data-cart-add')))];
+			let selected = null;
+			for (const id of ids) {
+				const response = await fetch('index.php?route=checkout/cart/add', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams({product_id:id,quantity:'1'})});
+				const data = await response.json();
+				if (data.success) { selected = id; break; }
+			}
+			if (!selected) throw new Error('No available product without required options in the test catalog');
+			const button = document.querySelector('#cart > button');
+			const initialTotal = button.querySelector('#cart-total').textContent;
+			const initialTotalGroups = totalGroups(initialTotal);
+			if (!zeroTotalGroups(initialTotalGroups)) throw new Error('Cart test expected an empty starting total: ' + JSON.stringify({initialTotal, initialTotalGroups}));
+			// A fresh product with the same options merges into the session cart.
+			cart.add(selected, 1);
+			await waitFor(() => document.querySelector('#site-notifications .cart-notice') && document.querySelector('#cart [data-cart-remove]') && button.querySelector('#cart-total')?.textContent !== initialTotal);
+			const icon = button.querySelector(':scope > .site-action-icon');
+			const iconVisible = !!icon && icon.getBoundingClientRect().width > 0 && getComputedStyle(icon).visibility === 'visible';
+			const noticeVisible = document.querySelector('#site-notifications .cart-notice').getBoundingClientRect().height > 0;
+			button.click();
+			const remove = document.querySelector('#cart [data-cart-remove]');
+			const rect = remove.getBoundingClientRect();
+			const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+			const removeReachable = hit === remove || remove.contains(hit);
+			if (!removeReachable) return {iconVisible, noticeVisible, removeReachable, removed: false, iconAfterRemove: false};
+			let removeResponse = null;
+			$(document).on('ajaxComplete.cartLifecycleTest', (event, xhr, settings) => {
+				const route = new URL(settings.url, location.href).searchParams.get('route') || '';
+				if (route !== 'checkout/cart/remove') return;
+				let json = {};
+				try { json = JSON.parse(xhr.responseText || '{}'); } catch {}
+				removeResponse = {status: xhr.status, total: typeof json.total === 'string' ? json.total : ''};
+			});
+			remove.click();
+			await waitFor(() => {
+				const currentTotal = button.querySelector('#cart-total')?.textContent || '';
+				const currentTotalGroups = totalGroups(currentTotal);
+				const responseTotalGroups = totalGroups(removeResponse?.total || '');
+				return removeResponse?.status === 200
+					&& removeResponse.total !== ''
+					&& currentTotal === removeResponse.total
+					&& sameTotalGroups(initialTotalGroups, currentTotalGroups)
+					&& zeroTotalGroups(responseTotalGroups)
+					&& document.querySelectorAll('#cart [data-cart-remove]').length === 0
+					&& !!document.querySelector('#cart .mini-cart__empty');
+			}, () => ({
+				initialTotal,
+				currentTotal: button.querySelector('#cart-total')?.textContent || '',
+				removeCount: document.querySelectorAll('#cart [data-cart-remove]').length,
+				miniCartEmpty: !!document.querySelector('#cart .mini-cart__empty'),
+				removeResponse,
+			}));
+			const after = button.querySelector(':scope > .site-action-icon');
+			return {iconVisible, noticeVisible, removeReachable, removed: true, iconAfterRemove: !!after && after.getBoundingClientRect().width > 0};
+		})()`);
+		process.stdout.write(JSON.stringify(result));
 	} else {
 		const hero = await evaluate(client, `(() => { const slider = document.querySelector('.sylora-hero__banner .slideshow'); const images = Array.from(document.querySelectorAll('.sylora-hero__banner .swiper-slide img')).slice(0, 3); if (!slider || images.length < 2) throw new Error('Hero slideshow visual nodes were not found.'); const frames = images.map(image => ({ width: Math.round(image.getBoundingClientRect().width), height: Math.round(image.getBoundingClientRect().height) })); return { equalFrames: frames.every(frame => frame.width === frames[0].width && frame.height === frames[0].height), objectFits: [...new Set(images.map(image => getComputedStyle(image).objectFit))], beforeContent: getComputedStyle(slider, '::before').content, afterContent: getComputedStyle(slider, '::after').content }; })()`);
 		const productUrl = await evaluate(client, `(async () => { const searchUrl = new URL(location.href); searchUrl.search = '?route=product/search&limit=100'; const catalog = new DOMParser().parseFromString(await (await fetch(searchUrl)).text(), 'text/html'); const productId = catalog.querySelector('[data-wishlist-add]')?.getAttribute('data-wishlist-add'); if (!productId) throw new Error('A real catalog product was not found.'); const url = new URL(location.href); url.search = '?route=product/product&product_id=' + productId; return url.href; })()`);
@@ -103,7 +172,7 @@ try {
 		await navigate(client, categoryUrl);
 		const catalog = await evaluate(client, `(() => { const cards = Array.from(document.querySelectorAll('.catalog-card')).slice(0, 3); const media = cards.map(card => card.querySelector('.catalog-card__media')?.getBoundingClientRect()).filter(Boolean); const images = cards.map(card => card.querySelector('.catalog-card__image-primary')).filter(Boolean); const bottoms = cards.map(card => Math.round(card.querySelector('.catalog-card__actions')?.getBoundingClientRect().bottom || 0)); if (cards.length !== 3 || media.length !== 3 || images.length !== 3) throw new Error('Catalog visual nodes were not found.'); return { equalMedia: media.every(rect => Math.round(rect.width) === Math.round(media[0].width) && Math.round(rect.height) === Math.round(media[0].height)), maxMediaHeight: Math.max(...media.map(rect => rect.height)), objectFits: [...new Set(images.map(image => getComputedStyle(image).objectFit))], actionsAligned: bottoms.every(bottom => Math.abs(bottom - bottoms[0]) <= 1) }; })()`);
 		await navigate(client, new URL('?route=product/search', targetUrl).href);
-		const pagination = await evaluate(client, `(() => { const root = document.querySelector('.catalog-pagination .pagination'); const control = root?.querySelector('li:not(.active):not(.disabled) > a'); const active = root?.querySelector('.active > a, .active > span'); if (!root || !control || !active) return { exists: false }; const controlStyle = getComputedStyle(control); const activeStyle = getComputedStyle(active); const rect = control.getBoundingClientRect(); const probe = document.createElement('span'); probe.style.color = 'var(--color-accent)'; document.body.appendChild(probe); const accent = getComputedStyle(probe).color; probe.remove(); return { exists: true, minimumTouchTarget: rect.width >= 44 && rect.height >= 44, rounded: parseFloat(controlStyle.borderTopLeftRadius) >= 8, activeUsesThemeAccent: activeStyle.backgroundColor === accent, notBootstrapBlue: activeStyle.backgroundColor !== 'rgb(51, 122, 183)' }; })()`);
+		const pagination = await evaluate(client, `(() => { const root = document.querySelector('.catalog-pagination .pagination'); const control = root?.querySelector('li:not(.active):not(.disabled) > a'); const active = root?.querySelector('.active > a, .active > span'); if (!root || !control || !active) return { exists: false }; const controlStyle = getComputedStyle(control); const activeStyle = getComputedStyle(active); const rect = control.getBoundingClientRect(); const probe = document.createElement('span'); probe.style.color = 'var(--color-accent)'; document.body.appendChild(probe); const accent = getComputedStyle(probe).color; probe.remove(); return { exists: true, minimumTouchTarget: rect.width >= 44 && rect.height >= 44, atelierCorners: parseFloat(controlStyle.borderTopLeftRadius) <= 3, activeUsesThemeAccent: activeStyle.backgroundColor === accent, notBootstrapBlue: activeStyle.backgroundColor !== 'rgb(51, 122, 183)' }; })()`);
 		process.stdout.write(JSON.stringify({ hero, product, catalog, pagination }));
 	}
 } finally {

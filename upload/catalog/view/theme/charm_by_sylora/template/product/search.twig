@@ -107,8 +107,11 @@
       </div>
       <nav class="catalog-pagination" aria-label="{{ text_pagination_navigation }}">{{ pagination }}</nav>
       {% else %}
-      <p class="catalog-empty">{{ text_catalog_search_empty }}</p>
-      <p><a class="btn btn-primary" href="{{ search_url }}">{{ button_open_catalog }}</a></p>
+      <section class="catalog-empty" aria-labelledby="catalog-empty-title">
+        <h2 id="catalog-empty-title">{{ text_catalog_no_results_title }}</h2>
+        <p>{{ text_catalog_search_empty }}</p>
+      </section>
+      <p><a class="btn btn-primary catalog-search-panel__browse" href="{{ catalog_url }}">{{ button_open_catalog }}</a></p>
       {% endif %}
       {{ content_bottom }}</div>
     {{ column_right }}</div>

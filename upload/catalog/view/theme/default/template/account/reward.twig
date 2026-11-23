@@ -30,11 +30,11 @@
           {% if rewards %}
           {% for reward in rewards %}
           <tr>
-            <td class="text-left">{{ reward.date_added }}</td>
-            <td class="text-left">{% if reward.order_id %} <a href="{{ reward.href }}">{{ reward.description }}</a> {% else %}
+            <td class="text-left" data-label="{{ column_date_added|e('html_attr') }}">{{ reward.date_added }}</td>
+            <td class="text-left" data-label="{{ column_description|e('html_attr') }}">{% if reward.order_id %} <a href="{{ reward.href }}">{{ reward.description }}</a> {% else %}
               {{ reward.description }}
               {% endif %}</td>
-            <td class="text-right">{{ reward.points }}</td>
+            <td class="text-right" data-label="{{ column_points|e('html_attr') }}">{{ reward.points }}</td>
           </tr>
           {% endfor %}
           {% else %}

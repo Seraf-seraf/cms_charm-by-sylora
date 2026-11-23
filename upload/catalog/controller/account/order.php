@@ -64,6 +64,36 @@ class ControllerAccountOrder extends Controller {
 
 		$data['continue'] = $this->url->link('account/account', '', true);
 
+		$this->load->model('catalog/category');
+		$catalog_category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+		if (!$catalog_category) {
+			$catalog_category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+		$data['catalog'] = $catalog_category
+			? $this->url->link('product/category', 'path=' . (int)$catalog_category['category_id'])
+			: $this->url->link('product/search');
+		$data['text_empty_title'] = $this->language->get('text_empty_title');
+		if ($data['text_empty_title'] === 'text_empty_title') {
+			$data['text_empty_title'] = $this->language->get('text_empty');
+		}
+		$data['button_open_catalog'] = $this->language->get('button_open_catalog');
+		if ($data['button_open_catalog'] === 'button_open_catalog') {
+			$data['button_open_catalog'] = $this->language->get('button_search');
+		}
+		$data['button_open_catalog_desktop'] = $this->language->get('button_open_catalog_desktop');
+		if ($data['button_open_catalog_desktop'] === 'button_open_catalog_desktop') {
+			$data['button_open_catalog_desktop'] = $data['button_open_catalog'];
+		}
+		$data['button_return_to_account'] = $this->language->get('button_return_to_account');
+		if ($data['button_return_to_account'] === 'button_return_to_account') {
+			$data['button_return_to_account'] = $this->language->get('button_continue');
+		}
+		$data['text_order_empty_desktop'] = $this->language->get('text_order_empty_desktop');
+		if ($data['text_order_empty_desktop'] === 'text_order_empty_desktop') {
+			$data['text_order_empty_desktop'] = $this->language->get('text_empty');
+		}
+		$data['account_navigation'] = $this->load->controller('account/navigation', array('active_route' => 'account/order'));
+
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
@@ -131,6 +161,7 @@ class ControllerAccountOrder extends Controller {
 
 			$data['order_id'] = (int)$this->request->get['order_id'];
 			$data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
+			$data['order_status'] = $this->model_account_order->getOrderStatusName((int)$order_info['order_status_id']);
 
 			if ($order_info['payment_address_format']) {
 				$format = $order_info['payment_address_format'];
@@ -296,6 +327,7 @@ class ControllerAccountOrder extends Controller {
 			}
 
 			$data['continue'] = $this->url->link('account/order', '', true);
+			$data['account_navigation'] = $this->load->controller('account/navigation', array('active_route' => 'account/order'));
 
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');

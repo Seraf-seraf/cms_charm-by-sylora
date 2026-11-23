@@ -100,6 +100,12 @@ class ModelAccountOrder extends Model {
 		}
 	}
 
+	public function getOrderStatusName($order_status_id) {
+		$query = $this->db->query("SELECT name FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+		return $query->num_rows ? $query->row['name'] : '';
+	}
+
 	public function getOrders($start = 0, $limit = 20) {
 		if ($start < 0) {
 			$start = 0;

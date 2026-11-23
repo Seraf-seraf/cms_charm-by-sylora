@@ -9,7 +9,7 @@
  */
 
 // Heading
-$_['heading_title']        = 'Регистрация';
+$_['heading_title']        = 'Создать аккаунт';
 
 // Text
 $_['text_account']         = 'Личный кабинет';
@@ -18,13 +18,15 @@ $_['text_account_already'] = 'Если у Вас уже есть учетная 
 $_['text_your_details']    = 'Ваши персональные данные';
 $_['text_newsletter']      = 'Новостная рассылка';
 $_['text_your_password']   = 'Ваш пароль';
-$_['text_agree']           = 'Я прочитал и согласен с <a href="%s" class="agree"><b>%s</b></a>';
+$_['text_form_value_placeholder'] = 'Введите значение';
+$_['button_register']        = 'Зарегистрироваться';
+$_['text_agree']           = 'Я прочитал(-а) и согласен с <a href="%s" class="agree"><b>%s</b></a>';
 
 // Entry
 $_['entry_customer_group'] = 'Группа покупателей';
 $_['entry_firstname']      = 'Имя';
 $_['entry_lastname']       = 'Фамилия';
-$_['entry_email']          = 'Эл. почта';
+$_['entry_email']          = 'Электронная почта';
 $_['entry_telephone']      = 'Телефон';
 $_['entry_newsletter']     = 'Подписаться';
 $_['entry_password']       = 'Пароль';

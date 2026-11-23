@@ -32,6 +32,32 @@ final class FooterUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
 	}
 
+	public function testCartAndCheckoutUseCompactFooterWithoutDroppingConfiguredLinks(): void {
+		$controller = $this->read('upload/catalog/controller/common/footer.php');
+		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/footer.twig');
+		$language = array();
+		$_ = &$language;
+		require $this->root . '/upload/catalog/language/ru-ru/common/footer.php';
+		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
+
+		self::assertStringContainsString(
+			"\$data['checkout_page'] = in_array(\$route, array('checkout/cart', 'checkout/checkout'), true);",
+			$controller
+		);
+		self::assertStringContainsString("if (\$title === 'Charm by Sylora')", $controller);
+		self::assertStringContainsString("\$this->config->get('config_name')", $controller);
+		self::assertSame('Разделы сайта и контакты', $language['text_footer_navigation'] ?? null);
+		self::assertStringContainsString('site-footer--checkout', $template);
+		self::assertStringContainsString('<details class="site-footer__details">', $template);
+		self::assertStringContainsString('<summary>{{ text_footer_navigation }}</summary>', $template);
+		self::assertStringContainsString('site-footer__grid--{{ footer_column_count }}', $template);
+		self::assertStringContainsString('{{ powered }}', $template);
+		self::assertMatchesRegularExpression(
+			'/\.site-footer__details > summary\s*\{[^}]*min-height: 44px;/s',
+			$css
+		);
+	}
+
 	private function read(string $path): string {
 		$content = file_get_contents($this->root . '/' . $path);
 

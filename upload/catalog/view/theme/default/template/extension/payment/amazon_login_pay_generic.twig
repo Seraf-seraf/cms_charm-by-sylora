@@ -6,33 +6,9 @@
 {% set class = 'col-sm-12' %}
 {% endif %}
 {{ header }}
-<style type="text/css">
-    .breadcrumb {
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .breadcrumb > li {
-        height: 38px;
-        line-height: 38px;
-    }
-
-    .breadcrumb > li:after {
-        top: 6px;
-    }
-
-    .breadcrumb > li.current {
-        text-decoration: underline;
-    }
-
-    .breadcrumb > li.disabled {
-        cursor: not-allowed;
-        color: #aaa;
-    }
-</style>
 <div class="container">
     {% if breadcrumbs %}
-    <ul class="breadcrumb">
+    <ul class="breadcrumb amazon-payment-breadcrumb">
         {% for breadcrumb in breadcrumbs %}
             {% if breadcrumb.href and not breadcrumb.current %}
             <li><a href="{{ breadcrumb.href }}">

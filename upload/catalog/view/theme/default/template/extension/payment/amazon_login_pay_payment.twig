@@ -1,6 +1,6 @@
 <div id="amazonContainer">
     {% if error %}
-        <div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><i class="fa fa-exclamation-circle"></i> {{ error }}
+        <div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error }}
         </div>
     {% endif %}
     <h3 class="text-center">{{ heading_payment }}</h3>
@@ -14,21 +14,6 @@
         </div>
     </div>
 </div>
-<style type="text/css">
-    #amazonContainer {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    .amazonWidget {
-        margin: 0 0 10px 0;
-        width: 100%;
-    }
-
-    #walletWidget {
-        height: 350px;
-    }
-</style>
 <input type="hidden" name="payment_method" value="" />
 <script type="text/javascript">
 (function($) {
@@ -36,7 +21,7 @@
         var showError = function(message) {
             $('#continue-button').button('reset');
 
-            $('#walletWidget').before('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;' + message + '</div>');
+            $('#walletWidget').before('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true">&nbsp;&nbsp;' + message + '</div>');
         }
 
         amazon.Login.setClientId('{{ client_id }}');

@@ -6,17 +6,17 @@
 		{% endfor %}
 	</ul>
 	{% if attention %}
-	<div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ attention }}
+	<div class="alert alert-info">{{ attention }}
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 	</div>
 	{% endif %}
 	{% if success %}
-    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+    <div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> {{ success }}
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
 	{% endif %}
 	{% if error_warning %}
-    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+    <div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_warning }}
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
 	{% endif %}
@@ -32,7 +32,7 @@
 			<h1>{{ heading_title }}</h1>
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="panel-title">{{ text_checkout_payment_address }}<div class="button-payment-address pull-right" role="button"><i class="fa fa-pencil"></i></div></h4>
+					<h4 class="panel-title">{{ text_checkout_payment_address }}<div class="button-payment-address pull-right" role="button">{{ button_edit }}</div></h4>
 				</div>
 				<div class="panel-body">
 					<div class="row">
@@ -77,7 +77,7 @@
 			{% if has_shipping %}
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="panel-title">{{ text_checkout_shipping_address }}<div class="button-shipping-address pull-right" role="button"><i class="fa fa-pencil"></i></div></h4>
+					<h4 class="panel-title">{{ text_checkout_shipping_address }}<div class="button-shipping-address pull-right" role="button">{{ button_edit }}</div></h4>
 				</div>
 				<div class="panel-body">
 					<table class="table table-bordered">
@@ -101,7 +101,7 @@
 			{% endif %}
 			{% if has_shipping %}
 			{% if not shipping_methods %}
-			<div class="alert alert-warning alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_no_shipping }}</div>
+			<div class="alert alert-warning alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_no_shipping }}</div>
 			{% else %}
 			<form action="{{ action_shipping }}" method="post" id="shipping_form">
 				<div class="panel panel-default">

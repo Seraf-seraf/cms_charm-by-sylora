@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace CartTests;
+
 use PHPUnit\Framework\TestCase;
 
 final class CartUiContractTest extends TestCase {
@@ -37,13 +39,13 @@ final class CartUiContractTest extends TestCase {
 		self::assertStringNotContainsString('width="47"', $miniCart . $cart);
 
 		$stylesheet = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
-		self::assertStringContainsString('#cart .mini-cart li > .mini-cart__items', $stylesheet);
-		self::assertStringContainsString('overflow-x: hidden;', $stylesheet);
+		self::assertStringContainsString('class="mini-cart__items"', $miniCart);
+		self::assertMatchesRegularExpression('/\.mini-cart__items\s*\{[^}]*overflow:\s*auto;/s', $stylesheet);
 		self::assertStringContainsString('grid-template-columns: 64px minmax(0, 1fr) 44px;', $stylesheet);
-		self::assertMatchesRegularExpression('/\.cart-items\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
-		self::assertMatchesRegularExpression('/\.cart-main\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
-		self::assertMatchesRegularExpression('/\.cart-item\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
-		self::assertMatchesRegularExpression('/@media \(max-width: 991px\).*?\.cart-layout\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/s', $stylesheet);
+		self::assertMatchesRegularExpression('/\.cart-items\s*\{[^}]*display:\s*grid;/s', $stylesheet);
+		self::assertMatchesRegularExpression('/\.cart-main,[^{]+\{[^}]*min-width:\s*0;/s', $stylesheet);
+		self::assertMatchesRegularExpression('/\.cart-item__body\s*\{[^}]*min-width:\s*0;/s', $stylesheet);
+		self::assertMatchesRegularExpression('/\.cart-layout,[^{]+\{[^}]*display:\s*grid;/s', $stylesheet);
 	}
 
 	public function testRussianCartActionsHaveAccessibleTranslations(): void {

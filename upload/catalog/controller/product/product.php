@@ -22,10 +22,16 @@ class ControllerProductProduct extends Controller {
 
 		//check product page open from cateory page
 		if (isset($this->request->get['path'])) {
-			$parts = explode('_', (string)$this->request->get['path']);
-						
-			if(empty($this->model_catalog_product->checkProductCategory($product_id, $parts))) {
+			$path = $this->request->get['path'];
+
+			if (!is_scalar($path)) {
 				$product_info = array();
+			} else {
+				$parts = explode('_', (string)$path);
+
+				if (empty($this->model_catalog_product->checkProductCategory($product_id, $parts))) {
+					$product_info = array();
+				}
 			}
 		}
 
@@ -37,6 +43,11 @@ class ControllerProductProduct extends Controller {
 		}
 
 		if ($product_info) {
+			$breadcrumb_data = $this->buildProductBreadcrumbs($product_id, $product_info);
+			$data['breadcrumbs'] = $breadcrumb_data['default'];
+			$data['product_breadcrumbs'] = $breadcrumb_data['product'];
+			$data['text_breadcrumb_navigation'] = $this->language->get('text_breadcrumb_navigation');
+
 			$url = '';
 
 			if (isset($this->request->get['path'])) {
@@ -93,7 +104,6 @@ class ControllerProductProduct extends Controller {
 			$this->document->setKeywords($product_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
 			$this->document->addScript('catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js');
-			$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific-popup.css');
 
 			$data['heading_title'] = $product_info['name'];
 
@@ -259,7 +269,6 @@ class ControllerProductProduct extends Controller {
 			if ($has_datetime_option) {
 				$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
 				$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
-				$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 			}
 
 			$data['has_datetime_option'] = $has_datetime_option;
@@ -640,6 +649,233 @@ class ControllerProductProduct extends Controller {
 
 			$this->response->setOutput($this->load->view('error/not_found', $data));
 		}
+	}
+
+	private function buildProductBreadcrumbs(int $product_id, array $product_info): array {
+		$this->load->model('catalog/category');
+
+		$catalog_category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$catalog_category) {
+			$catalog_category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+
+		$catalog_category_id = $catalog_category ? (int)$catalog_category['category_id'] : 0;
+		$catalog_href = $catalog_category
+			? $this->url->link('product/category', 'path=' . $catalog_category_id)
+			: $this->url->link('product/search');
+
+		$breadcrumbs = array(
+			array(
+				'text' => $this->language->get('text_home'),
+				'href' => $this->url->link('common/home')
+			)
+		);
+		$product_breadcrumbs = array(
+			array(
+				'text' => $this->language->get('text_breadcrumb_catalog'),
+				'href' => $catalog_href
+			)
+		);
+
+		$category_path = $this->getProductBreadcrumbCategoryPath();
+		$path_ids = array();
+
+		foreach ($category_path as $index => $category_info) {
+			$path_ids[] = (int)$category_info['category_id'];
+			$category_parameters = array(
+				'path' => implode('_', $path_ids)
+			);
+
+			if ($index === count($category_path) - 1) {
+				$category_parameters = array_merge(
+					$category_parameters,
+					$this->getProductBreadcrumbParameters(array(
+						'filter', 'price_min', 'price_max', 'availability', 'is_new', 'is_sale',
+						'sort', 'order', 'page', 'limit'
+					))
+				);
+			}
+
+			$category_breadcrumb = array(
+				'text' => $category_info['name'],
+				'href' => $this->url->link('product/category', http_build_query($category_parameters))
+			);
+
+			$breadcrumbs[] = $category_breadcrumb;
+			$product_breadcrumbs[] = $category_breadcrumb;
+		}
+
+		if (isset($this->request->get['manufacturer_id']) && (int)$this->request->get['manufacturer_id'] > 0) {
+			$manufacturer_id = (int)$this->request->get['manufacturer_id'];
+			$manufacturer_parameters = $this->getProductBreadcrumbParameters(array('sort', 'order', 'page', 'limit'));
+
+			$brand_breadcrumb = array(
+				'text' => $this->language->get('text_brand'),
+				'href' => $this->url->link('product/manufacturer')
+			);
+
+			$breadcrumbs[] = $brand_breadcrumb;
+			$product_breadcrumbs[] = $brand_breadcrumb;
+
+			$this->load->model('catalog/manufacturer');
+			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+
+			if ($manufacturer_info) {
+				$manufacturer_parameters['manufacturer_id'] = $manufacturer_id;
+				$manufacturer_breadcrumb = array(
+					'text' => $manufacturer_info['name'],
+					'href' => $this->url->link('product/manufacturer/info', http_build_query($manufacturer_parameters))
+				);
+
+				$breadcrumbs[] = $manufacturer_breadcrumb;
+				$product_breadcrumbs[] = $manufacturer_breadcrumb;
+			}
+		}
+
+		if (isset($this->request->get['search']) || isset($this->request->get['tag'])) {
+			$search_parameters = $this->getProductBreadcrumbParameters(array(
+				'search', 'tag', 'description', 'category_id', 'sub_category',
+				'filter', 'sort', 'order', 'page', 'limit'
+			));
+			$search_breadcrumb_href = $this->url->link('product/search', http_build_query($search_parameters));
+
+			$breadcrumbs[] = array(
+				'text' => $this->language->get('text_search'),
+				'href' => $search_breadcrumb_href
+			);
+			$product_breadcrumbs[] = array(
+				'text' => $this->language->get('text_breadcrumb_search'),
+				'href' => $search_breadcrumb_href
+			);
+		}
+
+		$product_parameters = $this->getProductBreadcrumbParameters(array(
+			'filter', 'price_min', 'price_max', 'availability', 'is_new', 'is_sale',
+			'manufacturer_id', 'search', 'tag', 'description', 'category_id', 'sub_category',
+			'sort', 'order', 'page', 'limit'
+		));
+
+		if ($category_path) {
+			$product_parameters['path'] = implode('_', array_map(function (array $category_info): int {
+				return (int)$category_info['category_id'];
+			}, $category_path));
+		}
+
+		$product_parameters['product_id'] = $product_id;
+
+		$breadcrumbs[] = array(
+			'text' => $product_info['name'],
+			'href' => $this->url->link('product/product', http_build_query($product_parameters))
+		);
+
+		return array(
+			'default' => $breadcrumbs,
+			'product' => $product_breadcrumbs
+		);
+	}
+
+	private function getProductBreadcrumbCategoryPath(): array {
+		if (!isset($this->request->get['path']) || !is_scalar($this->request->get['path'])) {
+			return array();
+		}
+
+		$segments = explode('_', (string)$this->request->get['path']);
+		$category_path = array();
+		$previous_category_id = null;
+
+		foreach ($segments as $segment) {
+			if ($segment === '' || !ctype_digit($segment) || (int)$segment <= 0) {
+				return array();
+			}
+
+			$category_info = $this->model_catalog_category->getCategory((int)$segment);
+
+			if (!$category_info) {
+				return array();
+			}
+
+			if ($previous_category_id !== null && (int)$category_info['parent_id'] !== $previous_category_id) {
+				return array();
+			}
+
+			$category_path[] = $category_info;
+			$previous_category_id = (int)$category_info['category_id'];
+		}
+
+		return $category_path;
+	}
+
+	private function getProductBreadcrumbParameters(array $keys): array {
+		$parameters = array();
+
+		foreach ($keys as $key) {
+			if (!isset($this->request->get[$key])) {
+				continue;
+			}
+
+			$value = $this->request->get[$key];
+
+			if ($key === 'filter' && is_array($value)) {
+				$filter_ids = array();
+
+				foreach ($value as $filter_id) {
+					if (is_scalar($filter_id) && is_numeric($filter_id) && (int)$filter_id > 0) {
+						$filter_ids[] = (int)$filter_id;
+					}
+				}
+
+				if ($filter_ids) {
+					$parameters[$key] = implode(',', array_values(array_unique($filter_ids)));
+				}
+
+				continue;
+			}
+
+			if (!is_scalar($value)) {
+				continue;
+			}
+
+			if (in_array($key, array('manufacturer_id', 'category_id', 'page', 'limit'), true)) {
+				if (!is_numeric($value)) {
+					continue;
+				}
+
+				$value = (int)$value;
+
+				if (in_array($key, array('manufacturer_id', 'page', 'limit'), true) && $value <= 0) {
+					continue;
+				}
+			} elseif (in_array($key, array('price_min', 'price_max'), true)) {
+				if (!is_numeric($value) || (float)$value < 0) {
+					continue;
+				}
+
+				$value = (float)$value;
+			} elseif (in_array($key, array('availability'), true)) {
+				if (!in_array($value, array('in_stock', 'out_of_stock'), true)) {
+					continue;
+				}
+			} elseif (in_array($key, array('is_new', 'is_sale', 'description', 'sub_category'), true)) {
+				if ((string)$value !== '1') {
+					continue;
+				}
+
+				$value = 1;
+			} elseif ($key === 'filter') {
+				$value = trim((string)$value);
+
+				if ($value === '' || !preg_match('/^\d+(,\d+)*$/', $value)) {
+					continue;
+				}
+			} else {
+				$value = html_entity_decode(trim((string)$value), ENT_QUOTES, 'UTF-8');
+			}
+
+			$parameters[$key] = $value;
+		}
+
+		return $parameters;
 	}
 
 	public function review() {

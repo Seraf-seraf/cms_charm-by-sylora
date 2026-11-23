@@ -9,19 +9,21 @@
  */
 
 // Heading
-$_['heading_title']  = 'Связаться с нами';
+$_['heading_title']  = 'Контакты';
 
 // Text
 $_['text_location']  = 'Наше местонахождение';
 $_['text_store']     = 'Наши магазины';
-$_['text_contact']   = 'Форма обратной связи';
+$_['text_contact']   = 'Написать сообщение';
 $_['text_address']   = 'Адрес';
 $_['text_telephone'] = 'Телефон';
 $_['text_fax']       = 'Факс';
 $_['text_open']      = 'Режим работы';
 $_['text_comment']   = 'Комментарии';
 $_['text_message']   = '<p>Ваш запрос был успешно отправлен владельцу магазина!</p>';
-$_['text_intro']     = 'Задайте вопрос или уточните детали заказа — мы ответим по указанным контактам.';
+$_['text_intro']     = 'Напишите нам, если хотите уточнить детали украшения или доставки.';
+$_['text_contact_section_title'] = 'Как связаться';
+$_['text_contact_section_intro'] = 'Напишите нам через форму обратной связи.';
 $_['text_region']    = 'Регион работы';
 $_['text_delivery']  = 'Доставка и оплата';
 $_['text_privacy']   = 'Я принимаю';
@@ -33,9 +35,13 @@ $_['text_response']  = 'Время ответа';
 $_['text_contact_method'] = 'Укажите email или телефон — достаточно одного способа связи.';
 
 // Entry
-$_['entry_name']     = 'Ваше имя';
-$_['entry_email']    = 'Адрес эл. почты';
-$_['entry_enquiry']  = 'Запрос';
+$_['entry_name']     = 'Имя';
+$_['entry_email']    = 'Электронная почта';
+$_['entry_enquiry']  = 'Сообщение';
+$_['entry_name_placeholder'] = 'Введите имя';
+$_['entry_email_placeholder'] = 'Введите email';
+$_['entry_enquiry_placeholder'] = 'Напишите сообщение';
+$_['button_submit']  = 'Отправить сообщение';
 $_['entry_telephone'] = 'Телефон';
 
 // Email

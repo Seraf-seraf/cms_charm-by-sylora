@@ -1,7 +1,7 @@
 {{ header }}
 <div id="product-compare" class="container">
   {% if success %}
-  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+  <div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> {{ success }}
     <button type="button" class="close" data-dismiss="alert">&times;</button>
   </div>
   {% endif %}
@@ -14,8 +14,9 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-      <h1>{{ heading_title }}</h1>
+      <h1 id="product-compare-title">{{ heading_title }}</h1>
       {% if products %}
+      <div class="table-responsive" role="region" aria-labelledby="product-compare-title" tabindex="0">
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -63,7 +64,7 @@
           <td>{{ text_rating }}</td>
           {% for product in products %}
           <td class="rating"> {% for i in 1..5 %}
-            {% if product.rating < i %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span> {% endif %}
+            {% if product.rating < i %}<span class="rating-star" aria-hidden="true">☆</span>{% else %}<span class="rating-star" aria-hidden="true">★</span>{% endif %}
             {% endfor %} <br/>
             {{ product.reviews }}</td>
           {% endfor %} </tr>
@@ -113,6 +114,7 @@
             <a href="{{ product.remove }}" class="btn btn-danger btn-block">{{ button_remove }}</a></td>
           {% endfor %} </tr>
       </table>
+      </div>
       {% else %}
       <p>{{ text_empty }}</p>
       <div class="buttons">

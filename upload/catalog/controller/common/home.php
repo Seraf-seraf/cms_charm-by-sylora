@@ -142,7 +142,7 @@ class ControllerCommonHome extends Controller {
 
 			$data['featured_products'][] = $product_data;
 
-			if (count($data['featured_products']) >= 3) {
+			if (count($data['featured_products']) >= 4) {
 				break;
 			}
 		}

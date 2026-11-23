@@ -31,11 +31,11 @@
           
           {% for recurring in recurrings %}
           <tr>
-            <td class="text-right">#{{ recurring.order_recurring_id }}</td>
-            <td class="text-left">{{ recurring.product }}</td>
-            <td class="text-left">{{ recurring.status }}</td>
-            <td class="text-left">{{ recurring.date_added }}</td>
-            <td class="text-right"><a href="{{ recurring.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
+            <td class="text-right" data-label="{{ column_order_recurring_id|e('html_attr') }}">#{{ recurring.order_recurring_id }}</td>
+            <td class="text-left" data-label="{{ column_product|e('html_attr') }}">{{ recurring.product }}</td>
+            <td class="text-left" data-label="{{ column_status|e('html_attr') }}">{{ recurring.status }}</td>
+            <td class="text-left" data-label="{{ column_date_added|e('html_attr') }}">{{ recurring.date_added }}</td>
+            <td class="text-right"><a href="{{ recurring.view }}" data-toggle="tooltip" title="{{ button_view }}" aria-label="{{ button_view|e('html_attr') }}" class="btn btn-info"><img class="atelier-icon atelier-icon--eye" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/eye.svg" alt="" aria-hidden="true"></a></td>
           </tr>
           {% endfor %}
           

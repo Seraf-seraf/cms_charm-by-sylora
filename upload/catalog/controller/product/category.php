@@ -121,6 +121,13 @@ class ControllerProductCategory extends Controller {
 			$this->document->setKeywords($category_info['meta_keyword']);
 
 			$data['heading_title'] = $category_info['name'];
+			$catalog_category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+			if (!$catalog_category) {
+				$catalog_category = $this->model_catalog_category->getCategoryByName('Все украшения');
+			}
+
+			$data['is_catalog_root'] = $catalog_category && (int)$catalog_category['category_id'] === $category_id;
 
 			$data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
 
@@ -173,11 +180,26 @@ class ControllerProductCategory extends Controller {
 					'filter_sub_category' => true
 				);
 
+				$category_href = 'path=' . (int)$filter_category['category_id'];
+
+				if (isset($this->request->get['sort'])) {
+					$category_href .= '&sort=' . $this->request->get['sort'];
+				}
+
+				if (isset($this->request->get['order'])) {
+					$category_href .= '&order=' . $this->request->get['order'];
+				}
+
+				if (isset($this->request->get['limit'])) {
+					$category_href .= '&limit=' . $this->request->get['limit'];
+				}
+
 				$data['filter_categories'][] = array(
 					'category_id' => (int)$filter_category['category_id'],
 					'name' => $filter_category['name'],
 					'total' => $this->model_catalog_product->getTotalProducts($filter_category_data),
-					'selected' => (int)$filter_category['category_id'] === $category_id
+					'selected' => (int)$filter_category['category_id'] === $category_id,
+					'href' => $this->url->link('product/category', $category_href)
 				);
 			}
 

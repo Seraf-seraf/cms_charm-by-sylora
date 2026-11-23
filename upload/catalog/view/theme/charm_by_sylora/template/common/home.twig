@@ -2,10 +2,11 @@
 <main id="common-home">
   <section class="sylora-hero">
     <div class="container sylora-hero__grid">
-      <div class="sylora-hero__content">
-        <p class="sylora-eyebrow">Charm by Sylora</p>
-        <h1>{{ heading_title }}</h1>
-        <p>Серьги, браслеты, подвески и комплекты для повседневных образов, подарков и небольших личных ритуалов.</p>
+      <div class="sylora-hero__copy">
+        <div class="sylora-hero__content">
+          <h1>{{ heading_title }}</h1>
+          <p>Серьги, браслеты, подвески и комплекты для повседневных образов, подарков и небольших личных ритуалов.</p>
+        </div>
         <div class="sylora-actions">
           <a class="btn btn-primary btn-lg" href="{{ catalog }}">Смотреть каталог</a>
           <a class="sylora-link" href="{{ about }}">О бренде</a>
@@ -28,7 +29,7 @@
 
   <section class="container sylora-section">
     <div class="sylora-section__head">
-      <h2>Категории</h2>
+      <h2>Выберите украшение</h2>
       <a href="{{ catalog }}">Все украшения</a>
     </div>
     {% if home_categories %}

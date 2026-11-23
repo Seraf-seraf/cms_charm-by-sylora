@@ -1,11 +1,5 @@
 {{ header }}
 <div id="account-address" class="container">
-  {% if success %}
-  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}</div>
-  {% endif %}
-  {% if error_warning %}
-  <div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
-  {% endif %}
   <div class="row">{{ column_left }}
     {% if column_left and column_right %}
     {% set class = 'col-sm-6' %}
@@ -15,29 +9,41 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
+      {{ account_navigation }}
+      <main class="atelier-account-page-content">
       <h2>{{ text_address_book }}</h2>
+      {% if success %}
+      <div class="address-status" role="status">{{ success }}</div>
+      {% endif %}
+      {% if error_warning %}
+      <div class="address-status address-status--error" role="alert">{{ error_warning }}</div>
+      {% endif %}
       {% if addresses %}
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-          {% for result in addresses %}
-           <form  action="{{ result.delete }}" method="post" enctype="multipart/form-data" id="form-address-{{ result.address_id }}">
-          <tr>
-            <td class="text-left">{{ result.address }}</td>
-            <td class="text-right"><a href="{{ result.update }}" class="btn btn-info">{{ button_edit }}</a> &nbsp;
-            <a href = "{{ result.delete }}" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" data-confirm="{{ text_confirm }}">{{ button_delete }}</a></td>
-          </tr>
+      <div class="address-list">
+        {% for result in addresses %}
+        <div class="address-list__item">
+          <article class="address-card">
+            {% if result.is_default %}<h3 class="address-card__title">{{ text_primary_address }}</h3>{% endif %}
+            <div class="address-card__content">{{ result.address }}</div>
+          </article>
+          <form action="{{ result.delete }}" method="post" enctype="multipart/form-data" id="form-address-{{ result.address_id }}">
+            <div class="address-list__actions">
+              <a href="{{ result.update }}" class="btn btn-default">{{ button_edit }}</a>
+              <a href="{{ result.delete }}" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-default" data-confirm="{{ text_confirm }}">{{ button_delete }}</a>
+            </div>
           </form>
-          {% endfor %}
-        </table>
+        </div>
+        {% endfor %}
       </div>
       {% else %}
-      <p>{{ text_empty }}</p>
+      <div class="address-empty"><p>{{ text_empty }}</p></div>
       {% endif %}
 
-      <div class="buttons clearfix">
-        <div class="pull-left"><a href="{{ back }}" class="btn btn-default">{{ button_back }}</a></div>
-        <div class="pull-right"><a href="{{ add }}" class="btn btn-primary">{{ button_new_address }}</a></div>
+      <div class="buttons address-list__buttons">
+        <div class="pull-left"><a href="{{ back }}" class="btn btn-default">{{ button_return_to_account }}</a></div>
+        <div class="pull-right"><a href="{{ add }}" class="btn btn-primary">{{ button_address_add }}</a></div>
       </div>
+      </main>
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>

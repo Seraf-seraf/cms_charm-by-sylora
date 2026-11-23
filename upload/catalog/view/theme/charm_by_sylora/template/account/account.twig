@@ -1,8 +1,5 @@
 {{ header }}
-<div id="account-account" class="container">
-  {% if success %}
-  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}</div>
-  {% endif %}
+<div id="account-account" class="container atelier-account{% if success %} atelier-account--saved{% endif %}">
   <div class="row">{{ column_left }}
     {% if column_left and column_right %}
     {% set class = 'col-sm-6' %}
@@ -12,46 +9,78 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
-      <h2>{{ text_my_account }}</h2>
-      <ul class="list-unstyled">
-        <li><a href="{{ edit }}">{{ text_edit }}</a></li>
-        <li><a href="{{ password }}">{{ text_password }}</a></li>
-        <li><a href="{{ address }}">{{ text_address }}</a></li>
-        <li><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
-      </ul>
-      {% if credit_cards %}
-      <h2>{{ text_credit_card }}</h2>
-      <ul class="list-unstyled">
-        {% for credit_card in credit_cards %}
-        <li><a href="{{ credit_card.href }}">{{ credit_card.name }}</a></li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-      <h2>{{ text_my_orders }}</h2>
-      <ul class="list-unstyled">
-        <li><a href="{{ order }}">{{ text_order }}</a></li>
-        <li><a href="{{ download }}">{{ text_download }}</a></li>
-        {% if reward %}
-        <li><a href="{{ reward }}">{{ text_reward }}</a></li>
+      {{ account_navigation }}
+      <header class="atelier-account__heading">
+        <h1>{{ text_my_account }}</h1>
+        {% if not success %}
+        <p>{{ text_atelier_intro }}</p>
         {% endif %}
-        <li><a href="{{ return }}">{{ text_return }}</a></li>
-        <li><a href="{{ transaction }}">{{ text_transaction }}</a></li>
-        <li><a href="{{ recurring }}">{{ text_recurring }}</a></li>
-      </ul>
-      <h2>{{ text_my_affiliate }}</h2>
-      <ul class="list-unstyled">
-        {% if not tracking %}
-        <li><a href="{{ affiliate }}">{{ text_affiliate_add }}</a></li>
-        {% else %}
-        <li><a href="{{ affiliate }}">{{ text_affiliate_edit }}</a></li>
-        <li><a href="{{ tracking }}">{{ text_tracking }}</a></li>
+      </header>
+      {% set main_links = [
+        {href: edit, label: text_atelier_personal, description: text_atelier_personal_description},
+        {href: address, label: text_atelier_address, description: text_atelier_address_description},
+        {href: wishlist, label: text_atelier_wishlist, description: text_atelier_wishlist_description},
+        {href: order, label: text_order, description: text_atelier_order_description},
+        {href: return, label: text_atelier_returns},
+        {href: password, label: text_atelier_password},
+        {href: newsletter, label: text_atelier_newsletter}
+      ] %}
+      <div class="atelier-account__layout">
+        {% if not success %}
+        <nav class="atelier-account__navigation" aria-label="{{ text_my_account }}">
+          {% for link in main_links %}
+          <a href="{{ link.href }}"><span>{{ link.label }}</span><span class="atelier-account__chevron" aria-hidden="true"><img src="catalog/view/theme/charm_by_sylora/image/atelier-chevron-right.svg" alt=""></span></a>
+          {% endfor %}
+        </nav>
         {% endif %}
-      </ul>
-      <h2>{{ text_my_newsletter }}</h2>
-      <ul class="list-unstyled">
-        <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
-      </ul>
-      {{ content_bottom }}</div>
+        <div class="atelier-account__body">
+          {% if success %}
+          <div class="alert alert-success atelier-account__status" role="status">{{ success }}</div>
+          {% set tile_links = [
+            {href: edit, label: text_atelier_personal, description: text_atelier_saved_personal_description},
+            {href: address, label: text_atelier_address, description: text_atelier_saved_address_description},
+            {href: order, label: text_my_orders, description: text_atelier_saved_order_description},
+            main_links[2]
+          ] %}
+          {% else %}
+          <div class="atelier-account__summary">
+            <h2>{{ text_atelier_details }}</h2>
+            <p>{{ text_atelier_description }}</p>
+          </div>
+          {% set tile_links = main_links|slice(0, 4) %}
+          {% endif %}
+          <div class="atelier-account__tiles">
+            {% for link in tile_links %}
+            <a href="{{ link.href }}"><span class="atelier-account__tile-title">{{ link.label }}</span><span class="atelier-account__tile-description">{{ link.description }}</span>{% if not success %}<span class="atelier-account__tile-more">{{ text_atelier_tile_more }}</span>{% endif %}</a>
+            {% endfor %}
+          </div>
+          {% if success %}
+          <nav class="atelier-account__navigation atelier-account__navigation--saved" aria-label="{{ text_my_account }}">
+            {% for link in main_links|slice(4) %}
+            <a href="{{ link.href }}"><span>{{ link.label }}</span><span class="atelier-account__chevron" aria-hidden="true"><img src="catalog/view/theme/charm_by_sylora/image/atelier-chevron-right.svg" alt=""></span></a>
+            {% endfor %}
+          </nav>
+          {% endif %}
+          <section class="atelier-account__additional" aria-labelledby="account-additional-title">
+            <h2 id="account-additional-title">{{ text_atelier_more }}</h2>
+            <ul class="list-unstyled">
+              <li><a href="{{ download }}">{{ text_download }}</a></li>
+              {% if reward %}<li><a href="{{ reward }}">{{ text_reward }}</a></li>{% endif %}
+              <li><a href="{{ transaction }}">{{ text_transaction }}</a></li>
+              <li><a href="{{ recurring }}">{{ text_recurring }}</a></li>
+              {% for credit_card in credit_cards %}<li><a href="{{ credit_card.href }}">{{ credit_card.name }}</a></li>{% endfor %}
+              {% if not tracking %}
+              <li><a href="{{ affiliate }}">{{ text_affiliate_add }}</a></li>
+              {% else %}
+              <li><a href="{{ affiliate }}">{{ text_affiliate_edit }}</a></li>
+              <li><a href="{{ tracking }}">{{ text_tracking }}</a></li>
+              {% endif %}
+            </ul>
+          </section>
+        </div>
+      </div>
+      {{ content_bottom }}
+    </div>
     {{ column_right }}</div>
 </div>
 {{ footer }}

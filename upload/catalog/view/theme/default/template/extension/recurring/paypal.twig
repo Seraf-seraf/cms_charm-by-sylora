@@ -24,13 +24,13 @@ $('#paypal_recurring').on('click', '.button-enable-recurring', function() {
 			$('.alert-dismissible').remove();
 			
 			if (json['error'] && json['error']['warning']) {
-				$('#content').parent().before('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#content').parent().before('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				
 				$('html, body').animate({scrollTop: 0}, 'slow');
 			}
 			
 			if (json['success']) {
-				$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#content').parent().before('<div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				
 				$('html, body').animate({scrollTop: 0}, 'slow');
 				
@@ -59,13 +59,13 @@ $('#paypal_recurring').on('click', '.button-disable-recurring', function() {
 			$('.alert-dismissible').remove();
 			
 			if (json['error'] && json['error']['warning']) {
-				$('#content').parent().before('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#content').parent().before('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				
 				$('html, body').animate({scrollTop: 0}, 'slow');
 			}
 			
 			if (json['success']) {
-				$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#content').parent().before('<div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				
 				$('html, body').animate({scrollTop: 0}, 'slow');
 				

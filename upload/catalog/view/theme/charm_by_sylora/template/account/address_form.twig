@@ -9,8 +9,13 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
+      {{ account_navigation }}
+      <main class="atelier-account-page-content">
       <h2>{{ text_address }}</h2>
-      <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+      {% if error_summary %}
+      <div class="address-status address-status--error" role="alert">{{ error_summary }}</div>
+      {% endif %}
+      <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal address-form">
         <fieldset>
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-firstname">{{ entry_firstname }}</label>
@@ -196,7 +201,7 @@
           <div class="form-group{% if custom_field.required %} required {% endif %} custom-field" data-sort="{{ custom_field.sort_order }}">
             <label class="col-sm-2 control-label">{{ custom_field.name }}</label>
             <div class="col-sm-10">
-              <button type="button" id="button-custom-field{{ custom_field.custom_field_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+              <button type="button" id="button-custom-field{{ custom_field.custom_field_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default">{{ button_upload }}</button>
               <input type="hidden" name="custom_field[{{ custom_field.location }}][{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id]['code'] %}{{ address_custom_field[custom_field.custom_field_id]['code'] }}{% endif %}" />
               <span>{{ address_custom_field[custom_field.custom_field_id]['name'] }}</span>
               {% if error_custom_field[custom_field.custom_field_id] %}
@@ -211,7 +216,7 @@
               <div class="input-group date">
                 <input type="text" name="custom_field[{{ custom_field.location }}][{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" data-date-format="YYYY-MM-DD" id="input-custom-field{{ custom_field.custom_field_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default"><span aria-hidden="true"></span></button>
                 </span></div>
               {% if error_custom_field[custom_field.custom_field_id] %}
               <div class="text-danger">{{ error_custom_field[custom_field.custom_field_id] }}</div>
@@ -225,7 +230,7 @@
               <div class="input-group time">
                 <input type="text" name="custom_field[{{ custom_field.location }}][{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" data-date-format="HH:mm" id="input-custom-field{{ custom_field.custom_field_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default"><span aria-hidden="true"></span></button>
                 </span></div>
               {% if error_custom_field[custom_field.custom_field_id] %}
               <div class="text-danger">{{ error_custom_field[custom_field.custom_field_id] }}</div>
@@ -239,7 +244,7 @@
               <div class="input-group datetime">
                 <input type="text" name="custom_field[{{ custom_field.location }}][{{ custom_field.custom_field_id }}]" value="{% if address_custom_field[custom_field.custom_field_id] %}{{ address_custom_field[custom_field.custom_field_id] }}{% else %}{{ custom_field.value }}{% endif %}" placeholder="{{ custom_field.name }}" data-date-format="YYYY-MM-DD HH:mm" id="input-custom-field{{ custom_field.custom_field_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default"><span aria-hidden="true"></span></button>
                 </span></div>
               {% if error_custom_field[custom_field.custom_field_id] %}
               <div class="text-danger">{{ error_custom_field[custom_field.custom_field_id] }}</div>
@@ -247,32 +252,22 @@
           </div>
           {% endif %}
           {% endfor %}
-          <div class="form-group">
-            <label class="col-sm-2 control-label">{{ entry_default }}</label>
-            <div class="col-sm-10"> {% if default %}
-              <label class="radio-inline">
-                <input type="radio" name="default" value="1" checked="checked" />
-                {{ text_yes }}</label>
-              <label class="radio-inline">
-                <input type="radio" name="default" value="0" />
-                {{ text_no }}</label>
-              {% else %}
-              <label class="radio-inline">
-                <input type="radio" name="default" value="1" />
-                {{ text_yes }}</label>
-              <label class="radio-inline">
-                <input type="radio" name="default" value="0" checked="checked" />
-                {{ text_no }}</label>
-              {% endif %} </div>
+          <div class="form-group address-form__default">
+            <input type="hidden" name="default" value="0" />
+            <label class="address-form__checkbox" for="input-default">
+              <input type="checkbox" name="default" value="1" id="input-default"{% if default %} checked="checked"{% endif %} />
+              <span>{{ entry_default }}</span>
+            </label>
           </div>
         </fieldset>
         <div class="buttons clearfix">
           <div class="pull-left"><a href="{{ back }}" class="btn btn-default">{{ button_back }}</a></div>
           <div class="pull-right">
-            <input type="submit" value="{{ button_continue }}" class="btn btn-primary" />
+            <input type="submit" value="{{ button_address_save }}" class="btn btn-primary" />
           </div>
         </div>
       </form>
+      </main>
       {{ content_bottom }}</div>
     {{ column_right }}</div>
 </div>
@@ -352,18 +347,36 @@ $('button[id^=\'button-custom-field\']').on('click', function() {
 <script type="text/javascript"><!--
 $('.date').datetimepicker({
 	language: '{{ datepicker }}',
-	pickTime: false
+	pickTime: false,
+	icons: {
+		time: 'atelier-picker-icon atelier-picker-icon--time',
+		date: 'atelier-picker-icon atelier-picker-icon--date',
+		up: 'atelier-picker-icon atelier-picker-icon--up',
+		down: 'atelier-picker-icon atelier-picker-icon--down'
+	}
 });
 
 $('.datetime').datetimepicker({
 	language: '{{ datepicker }}',
 	pickDate: true,
-	pickTime: true
+	pickTime: true,
+	icons: {
+		time: 'atelier-picker-icon atelier-picker-icon--time',
+		date: 'atelier-picker-icon atelier-picker-icon--date',
+		up: 'atelier-picker-icon atelier-picker-icon--up',
+		down: 'atelier-picker-icon atelier-picker-icon--down'
+	}
 });
 
 $('.time').datetimepicker({
 	language: '{{ datepicker }}',
-	pickDate: false
+	pickDate: false,
+	icons: {
+		time: 'atelier-picker-icon atelier-picker-icon--time',
+		date: 'atelier-picker-icon atelier-picker-icon--date',
+		up: 'atelier-picker-icon atelier-picker-icon--up',
+		down: 'atelier-picker-icon atelier-picker-icon--down'
+	}
 });
 //--></script>
 <script type="text/javascript"><!--

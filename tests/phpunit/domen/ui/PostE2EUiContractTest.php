@@ -23,23 +23,26 @@ final class PostE2EUiContractTest extends TestCase {
 		self::assertSame(1, substr_count($template, 'class="site-nav__account"'));
 		self::assertStringContainsString("logged ? 'Личный кабинет' : 'Войти'", $template);
 		self::assertSame(2, substr_count($template, 'aria-label="{{ account_label }}"'));
-		self::assertMatchesRegularExpression('/\.site-account\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s', $css);
-		self::assertStringContainsString('.site-account:focus-visible', $css);
-		self::assertMatchesRegularExpression('/<div class="site-actions">[\s\S]*class="theme-toggle"[\s\S]*class="site-cart"[\s\S]*class="site-account"/', $template);
+		self::assertMatchesRegularExpression('/\.site-account,\s*\.mobile-nav-toggle\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s', $css);
+		self::assertStringContainsString('a:focus-visible', $css);
+		self::assertMatchesRegularExpression('/<div class="site-actions">[\s\S]*class="site-cart"[\s\S]*class="site-account"/', $template);
+		self::assertStringNotContainsString('class="theme-toggle"', $template);
 	}
 
 	public function testBrandAndCatalogLayoutContractsAreStable(): void {
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
 		$category = $this->read('upload/catalog/view/theme/charm_by_sylora/template/product/category.twig');
 
-		self::assertMatchesRegularExpression('/\.site-brand\s*\{[^}]*flex: none;[^}]*min-width: max-content;[^}]*white-space: nowrap;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card__body\s*\{[^}]*padding: 16px;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card \.caption\s*\{[^}]*padding: 0 0 12px;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*padding: 0;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*display: flex;[^}]*flex-direction: column;/s', $css);
+		self::assertMatchesRegularExpression('/\.site-brand\s*\{[^}]*flex: none;/s', $css);
+		self::assertMatchesRegularExpression('/\.site-header__inner \.site-brand,[^{]+\{[^}]*flex: 1 1 0;[^}]*min-width: 0;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card\s*\{[^}]*display: flex;[^}]*min-width: 0;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card \.caption\s*\{[^}]*flex: 1;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*display: grid;[^}]*gap: 8px;/s', $css);
+		self::assertStringContainsString('class="catalog-filters__grid"', $category);
 		self::assertStringContainsString('class="row catalog-page-layout"', $category);
-		self::assertMatchesRegularExpression('/\.catalog-page-layout > #column-left,[^{]+\{[^}]*float: none;[^}]*width: 100%;/s', $css);
-		self::assertMatchesRegularExpression('/@media \(max-width: 420px\).*?\.catalog-filters__price\s*\{[^}]*grid-template-columns: minmax\(0, 1fr\);/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-shell__sidebar, \.catalog-shell__main\s*\{[^}]*min-width: 0;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-filters__price\s*\{[^}]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-filters__price input\s*\{[^}]*width: 100%;[^}]*min-height: 44px;/s', $css);
 		self::assertStringContainsString('overflow-wrap: anywhere;', $css);
 	}
 
@@ -62,12 +65,10 @@ final class PostE2EUiContractTest extends TestCase {
 		self::assertStringContainsString('type="radio" name="shipping_method" value="', $cart);
 		self::assertStringContainsString('shipping-method-card__marker', $template . $cart);
 		self::assertStringNotContainsString('shipping-method-card', $payment);
-		self::assertMatchesRegularExpression('/\.shipping-method-card\s*\{[^}]*grid-template-columns: 22px minmax\(0, 1fr\) auto;/s', $css);
-		self::assertStringContainsString('.shipping-method-card:active', $css);
-		self::assertStringContainsString('.shipping-method-card__control:checked', $css);
+		self::assertMatchesRegularExpression('/\.shipping-method-card\s*\{[^}]*grid-template-columns: auto minmax\(0, 1fr\) auto;/s', $css);
+		self::assertMatchesRegularExpression('/\.shipping-method-card__control\s*\{[^}]*accent-color: var\(--color-text\);/s', $css);
 		self::assertStringContainsString('.shipping-method-card__control:focus-visible', $css);
 		self::assertStringContainsString('.shipping-method-card__control:disabled', $css);
-		self::assertStringContainsString('@media (hover: hover) and (pointer: fine)', $css);
 		self::assertStringNotContainsString('display: none;', $this->shippingControlRule($css));
 	}
 

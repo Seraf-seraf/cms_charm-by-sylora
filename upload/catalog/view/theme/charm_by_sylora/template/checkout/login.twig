@@ -1,39 +1,53 @@
-<div class="row">
-  <div class="col-sm-6">
-    <h2>{{ text_new_customer }}</h2>
-    <p>{{ text_checkout }}</p>
-    <div class="radio">
-      <label> {% if account == 'register' %}
-        <input type="radio" name="account" value="register" checked="checked" />
-        {% else %}
-        <input type="radio" name="account" value="register" />
-        {% endif %}
-        {{ text_register }}</label>
-    </div>
-    {% if checkout_guest %}
-    <div class="radio">
-      <label> {% if account == 'guest' %}
-        <input type="radio" name="account" value="guest" checked="checked" />
-        {% else %}
-        <input type="radio" name="account" value="guest" />
-        {% endif %}
-        {{ text_guest }}</label>
-    </div>
-    {% endif %}
-    <p>{{ text_register_account }}</p>
-    <input type="button" value="{{ button_continue }}" id="button-account" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
+<div id="checkout-buyer" class="checkout-buyer">
+  <p class="checkout-buyer__prompt">
+    <button type="button" id="button-buyer-login" class="checkout-buyer__login-toggle" aria-controls="checkout-buyer-options" aria-expanded="false">
+      <span class="checkout-buyer__copy--mobile">{{ text_checkout_buyer_login_mobile }}</span>
+      <span class="checkout-buyer__copy--desktop">{{ text_checkout_buyer_login_desktop }}</span>
+    </button>
+    <span class="checkout-buyer__copy--mobile">{{ text_checkout_buyer_guest_mobile }}</span>
+    <span class="checkout-buyer__copy--desktop">{{ text_checkout_buyer_guest_desktop }}</span>
+  </p>
+  <div class="form-group checkout-buyer__email">
+    <label class="control-label" for="input-email">{{ text_checkout_buyer_email }}</label>
+    <input type="text" name="email" value="" placeholder="{{ text_checkout_buyer_email_placeholder }}" id="input-email" class="form-control" autocomplete="email" />
   </div>
-  <div class="col-sm-6">
-    <h2>{{ text_returning_customer }}</h2>
-    <p>{{ text_i_am_returning_customer }}</p>
-    <div class="form-group">
-      <label class="control-label" for="input-email">{{ entry_email }}</label>
-      <input type="text" name="email" value="" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+  <input type="button" value="{{ button_continue }}" id="button-buyer-continue" data-loading-text="{{ text_loading }}" aria-controls="checkout-buyer-options" aria-expanded="false" class="btn btn-primary checkout-buyer__continue" />
+  <div id="checkout-buyer-options" class="checkout-buyer__options" hidden>
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>{{ text_new_customer }}</h2>
+        <p>{{ text_checkout }}</p>
+        <div class="radio">
+          <label> {% if account == 'register' %}
+            <input type="radio" name="account" value="register" checked="checked" />
+            {% else %}
+            <input type="radio" name="account" value="register" />
+            {% endif %}
+            {{ text_register }}</label>
+        </div>
+        {% if checkout_guest %}
+        <div class="radio">
+          <label> {% if account == 'guest' %}
+            <input type="radio" name="account" value="guest" checked="checked" />
+            {% else %}
+            <input type="radio" name="account" value="guest" />
+            {% endif %}
+            {{ text_guest }}</label>
+        </div>
+        {% endif %}
+        <p>{{ text_register_account }}</p>
+        <input type="button" value="{{ button_continue }}" id="button-account" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
+      </div>
+      <div class="col-sm-6">
+        <h2>{{ text_returning_customer }}</h2>
+        <p>{{ text_i_am_returning_customer }}</p>
+        <div class="form-group">
+          <label class="control-label" for="input-password">{{ entry_password }}</label>
+          <input type="password" name="password" value="" placeholder="{{ entry_password }}" id="input-password" class="form-control" autocomplete="current-password" />
+          <a href="{{ forgotten }}">{{ text_forgotten }}</a>
+        </div>
+        <input type="button" value="{{ button_login }}" id="button-login" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
+      </div>
     </div>
-    <div class="form-group">
-      <label class="control-label" for="input-password">{{ entry_password }}</label>
-      <input type="password" name="password" value="" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
-      <a href="{{ forgotten }}">{{ text_forgotten }}</a></div>
-    <input type="button" value="{{ button_login }}" id="button-login" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
   </div>
 </div>

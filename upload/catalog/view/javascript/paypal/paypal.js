@@ -9,9 +9,9 @@ var PayPalAPI = (function () {
 		
 		if (data['error'] && data['error']['warning']) {
 			if ($('#paypal_form').length) {
-				$('#paypal_form').prepend('<div class="alert alert-danger alert-dismissible alert-paypal"><i class="fa fa-exclamation-circle"></i> ' + data['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#paypal_form').prepend('<div class="alert alert-danger alert-dismissible alert-paypal"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + data['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 			} else {
-				$('#content').parent().before('<div class="alert alert-danger alert-dismissible alert-paypal"><i class="fa fa-exclamation-circle"></i> ' + data['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#content').parent().before('<div class="alert alert-danger alert-dismissible alert-paypal"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + data['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				
 				$('html, body').animate({scrollTop: 0}, 'slow');
 			}
@@ -326,7 +326,7 @@ var PayPalAPI = (function () {
 			}
 			
 			$.each(paypal_data['card_customer_tokens'], function(index, card_customer_token) {
-				html = '<div class="paypal-card-token"><div type="button" class="btn card-token-button" index="' + index + '"><i class="card-icon card-icon-' + card_customer_token['card_type'] + '"></i><span class="card-number">' + card_customer_token['card_number'] + '</span></div><div type="button" class="btn card-token-delete-button" index="' + index + '"><i class="fa fal fa-close"></i></div></div></div>';
+				html = '<div class="paypal-card-token"><div type="button" class="btn card-token-button" index="' + index + '"><i class="card-icon card-icon-' + card_customer_token['card_type'] + '"></i><span class="card-number">' + card_customer_token['card_number'] + '</span></div><div type="button" class="btn card-token-delete-button" index="' + index + '"><img class="atelier-icon atelier-icon--close" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" alt="" aria-hidden="true"></div></div></div>';
 					
 				$('#paypal_card_tokens_container').append(html);
 			});
@@ -669,7 +669,7 @@ var PayPalAPI = (function () {
 							$('#fastlane_modal #fastlane_collapse_shipping .panel-body').load('index.php?route=extension/payment/paypal/fastlaneShipping', {'authentication_state': authenticationState, 'profile_data': profileData}, function() {
 								var panel_title = $('#fastlane_modal #fastlane_collapse_shipping').parent().find('.panel-heading .panel-title');
 				
-								panel_title.html('<a href="#fastlane_collapse_shipping" data-toggle="collapse" data-parent="#fastlane_accordion" class="accordion-toggle">' + panel_title.attr('data-original-title') + ' <i class="fa fa-caret-down"></i></a>');
+								panel_title.html('<a href="#fastlane_collapse_shipping" data-toggle="collapse" data-parent="#fastlane_accordion" class="accordion-toggle">' + panel_title.attr('data-original-title') + ' <img class="atelier-icon atelier-icon--chevron-down" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/chevron-down.svg" alt="" aria-hidden="true"></a>');
 
 								$('a[href=\'#fastlane_collapse_shipping\']').trigger('click');
 							});
@@ -677,7 +677,7 @@ var PayPalAPI = (function () {
 							$('#fastlane_modal #fastlane_collapse_payment .panel-body').load('index.php?route=extension/payment/paypal/fastlanePayment', function() {
 								var panel_title = $('#fastlane_modal #fastlane_collapse_payment').parent().find('.panel-heading .panel-title');
 				
-								panel_title.html('<a href="#fastlane_collapse_payment" data-toggle="collapse" data-parent="#fastlane_accordion" class="accordion-toggle">' + panel_title.attr('data-original-title') + ' <i class="fa fa-caret-down"></i></a>');
+								panel_title.html('<a href="#fastlane_collapse_payment" data-toggle="collapse" data-parent="#fastlane_accordion" class="accordion-toggle">' + panel_title.attr('data-original-title') + ' <img class="atelier-icon atelier-icon--chevron-down" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/chevron-down.svg" alt="" aria-hidden="true"></a>');
 
 								$('a[href=\'#fastlane_collapse_payment\']').trigger('click');
 						
@@ -724,7 +724,7 @@ var PayPalAPI = (function () {
 				$('#fastlane_modal #fastlane_collapse_payment .panel-body').load('index.php?route=extension/payment/paypal/fastlanePayment', function() {
 					var panel_title = $('#fastlane_modal #fastlane_collapse_payment').parent().find('.panel-heading .panel-title');
 			
-					panel_title.html('<a href="#fastlane_collapse_payment" data-toggle="collapse" data-parent="#fastlane_accordion" class="accordion-toggle">' + panel_title.attr('data-original-title') + ' <i class="fa fa-caret-down"></i></a>');
+					panel_title.html('<a href="#fastlane_collapse_payment" data-toggle="collapse" data-parent="#fastlane_accordion" class="accordion-toggle">' + panel_title.attr('data-original-title') + ' <img class="atelier-icon atelier-icon--chevron-down" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/chevron-down.svg" alt="" aria-hidden="true"></a>');
 
 					$('a[href=\'#fastlane_collapse_payment\']').trigger('click');
 					

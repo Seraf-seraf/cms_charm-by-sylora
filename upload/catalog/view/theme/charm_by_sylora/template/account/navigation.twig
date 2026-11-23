@@ -1,0 +1,10 @@
+<header class="atelier-account-navigation">
+  <h1>{{ text_my_account }}</h1>
+  <nav aria-label="{{ text_my_account }}">
+    <ul>
+      {% for link in links %}
+      <li{% if link.active %} class="is-active"{% endif %}><a href="{{ link.href }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.label }}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+</header>

@@ -20,7 +20,9 @@ class ControllerAccountAccount extends Controller {
 			unset($this->session->data['success']);
 		} else {
 			$data['success'] = '';
-		} 
+		}
+
+		$data['account_navigation'] = $data['success'] ? $this->load->controller('account/navigation') : '';
 		
 		$data['edit'] = $this->url->link('account/edit', '', true);
 		$data['password'] = $this->url->link('account/password', '', true);

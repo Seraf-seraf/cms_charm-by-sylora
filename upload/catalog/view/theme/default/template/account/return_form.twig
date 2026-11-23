@@ -6,7 +6,7 @@
     {% endfor %}
   </ul>
   {% if error_warning %}
-  <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+  <div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_warning }}</div>
   {% endif %}
   <div class="row"> {{ column_left }}
     {% if column_left and column_right %}
@@ -68,7 +68,7 @@
               <div class="input-group date">
                 <input type="text" name="date_ordered" value="{{ date_ordered }}" placeholder="{{ entry_date_ordered }}" data-date-format="YYYY-MM-DD" id="input-date-ordered" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
             </div>
           </div>
@@ -146,13 +146,14 @@
         </fieldset>
         {% if text_agree %}
         <div class="buttons clearfix">
-          <div class="pull-left"><a href="{{ back }}" class="btn btn-danger">{{ button_back }}</a></div>
-          <div class="pull-right">{{ text_agree }}
+          <div class="pull-left"><a href="{{ back }}" class="btn btn-default">{{ button_back }}</a></div>
+          <div class="pull-right return-form__actions"><label class="return-form__consent">
             {% if agree %}
             <input type="checkbox" name="agree" value="1" checked="checked" />
             {% else %}
             <input type="checkbox" name="agree" value="1" />
             {% endif %}
+            <span>{{ text_agree }}</span></label>
             <input type="submit" value="{{ button_submit }}" class="btn btn-primary" />
           </div>
         </div>
@@ -173,5 +174,5 @@ $('.date').datetimepicker({
 	language: '{{ datepicker }}',
 	pickTime: false
 });
-//--></script> 
-{{ footer }} 
+//--></script>
+{{ footer }}

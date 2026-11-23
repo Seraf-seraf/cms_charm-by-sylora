@@ -1,6 +1,6 @@
 {% if not redirect %}
 <div class="table-responsive">
-  <table class="table table-bordered table-hover">
+  <table class="table table-bordered table-hover checkout-confirm__table">
     <thead>
       <tr>
         <td class="text-left">{{ column_name }}</td>
@@ -14,23 +14,23 @@
 
     {% for product in products %}
     <tr>
-      <td class="text-left"><a href="{{ product.href }}">{{ product.name }}</a> {% for option in product.option %} <br/>
+      <td class="text-left" data-label="{{ column_name|e('html_attr') }}"><a href="{{ product.href }}">{{ product.name }}</a> {% for option in product.option %} <br/>
         &nbsp;<small> - {{ option.name }}: {{ option.value }}</small> {% endfor %}
         {% if product.recurring %} <br/>
         <span class="label label-info">{{ text_recurring_item }}</span> <small>{{ product.recurring }}</small> {% endif %}</td>
-      <td class="text-left">{{ product.model }}</td>
-      <td class="text-right">{{ product.quantity }}</td>
-      <td class="text-right">{{ product.price }}</td>
-      <td class="text-right">{{ product.total }}</td>
+      <td class="text-left" data-label="{{ column_model|e('html_attr') }}">{{ product.model }}</td>
+      <td class="text-right" data-label="{{ column_quantity|e('html_attr') }}">{{ product.quantity }}</td>
+      <td class="text-right" data-label="{{ column_price|e('html_attr') }}">{{ product.price }}</td>
+      <td class="text-right" data-label="{{ column_total|e('html_attr') }}">{{ product.total }}</td>
     </tr>
     {% endfor %}
     {% for voucher in vouchers %}
     <tr>
-      <td class="text-left">{{ voucher.description }}</td>
-      <td class="text-left"></td>
-      <td class="text-right">1</td>
-      <td class="text-right">{{ voucher.amount }}</td>
-      <td class="text-right">{{ voucher.amount }}</td>
+      <td class="text-left" data-label="{{ column_name|e('html_attr') }}">{{ voucher.description }}</td>
+      <td class="text-left" data-label="{{ column_model|e('html_attr') }}"></td>
+      <td class="text-right" data-label="{{ column_quantity|e('html_attr') }}">1</td>
+      <td class="text-right" data-label="{{ column_price|e('html_attr') }}">{{ voucher.amount }}</td>
+      <td class="text-right" data-label="{{ column_total|e('html_attr') }}">{{ voucher.amount }}</td>
     </tr>
     {% endfor %}
       </tbody>

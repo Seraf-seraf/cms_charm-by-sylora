@@ -44,7 +44,7 @@ class ControllerInformationInformation extends Controller {
 
 			if ($data['about_image'] !== '') {
 				$this->load->model('tool/image');
-				$data['about_image_data'] = $this->model_tool_image->resizeWithSources(substr($data['about_image'], strlen('image/')), 840, 630);
+				$data['about_image_data'] = $this->model_tool_image->resizeCoverWithSources(substr($data['about_image'], strlen('image/')), 840, 912);
 			}
 
 			$data['about_schema'] = $is_about_page ? $this->getAboutSchema($information_info, $canonical) : '';

@@ -1,23 +1,26 @@
 {{ header }}
 <main id="account-forgotten" class="container account-auth account-auth--narrow">
-  {% if error_warning %}
-  <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
-  {% endif %}
   <div id="content" class="account-auth__content">{{ content_top }}
-    <section class="account-auth__card">
-      <h1>{{ heading_title }}</h1>
-      <p>{{ text_email }}</p>
+    <header class="account-auth__header">
+      <h1>
+        <span class="account-auth__title--mobile">{{ heading_title }}</span>
+        <span class="account-auth__title--desktop">{{ text_account }}</span>
+      </h1>
+    </header>
+    <section class="account-auth__card account-auth__card--forgotten">
+      <h2 class="account-auth__card-title">{{ heading_title }}</h2>
+      {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible" role="alert"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_warning }}</div>
+      {% endif %}
+      <p class="account-auth__intro" id="forgotten-email-help">{{ text_email }}</p>
       <form action="{{ action }}" method="post" enctype="multipart/form-data" class="account-auth__form">
-        <fieldset>
-          <legend>{{ text_your_email }}</legend>
-          <div class="form-group required">
-            <label class="control-label" for="input-email">{{ entry_email }}</label>
-            <input type="email" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" autocomplete="email" />
-          </div>
-        </fieldset>
+        <div class="form-group required">
+          <label class="control-label" for="input-email">{{ entry_email }}</label>
+          <input type="email" name="email" value="{{ email }}" placeholder="{{ text_form_value_placeholder }}" id="input-email" class="form-control" autocomplete="email" aria-describedby="forgotten-email-help" />
+        </div>
         <div class="account-auth__actions">
           <input type="submit" value="{{ button_continue }}" class="btn btn-primary" />
-          <a href="{{ back }}" class="btn btn-default">{{ button_back }}</a>
+          <a href="{{ back }}" class="btn btn-default">{{ text_back_to_login }}</a>
         </div>
       </form>
     </section>

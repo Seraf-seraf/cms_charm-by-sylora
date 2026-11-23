@@ -30,7 +30,7 @@ $('#button-quote').on('click', function() {
 
 			if (json['error']) {
 				if (json['error']['warning']) {
-					$('#content').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('#content').prepend('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
 					$('html, body').animate({ scrollTop: 0 }, 'slow');
 				}
@@ -124,7 +124,6 @@ $('#button-quote').on('click', function() {
 	});
 });
 
-})(window, document, window.jQuery);
 $(document).delegate('#button-shipping', 'click', function() {
 	$.ajax({
 		url: 'index.php?route=extension/total/shipping/shipping',
@@ -141,7 +140,7 @@ $(document).delegate('#button-shipping', 'click', function() {
 			$('.alert-dismissible').remove();
 
 			if (json['error']) {
-				$('#content').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#content').prepend('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 			}
@@ -215,7 +214,7 @@ $('#button-voucher').on('click', function() {
 			$('.alert-dismissible').remove();
 
 			if (json['error']) {
-				$('#content').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('#content').prepend('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 			}
@@ -229,3 +228,4 @@ $('#button-voucher').on('click', function() {
 		}
 	});
 });
+})(window, document, window.jQuery);

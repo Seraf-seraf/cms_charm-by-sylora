@@ -19,7 +19,7 @@ $_['decimal_point']         = '.';
 $_['thousand_point']        = '\'';
 
 // Text
-$_['text_home']             = '<i class="fa fa-home"></i>';
+$_['text_home']             = 'Главная';
 $_['text_yes']              = 'Да';
 $_['text_no']               = 'Нет';
 $_['text_none']             = ' --- Нечего выбрать --- ';
@@ -52,6 +52,7 @@ $_['text_all_categories']     = 'Все категории';
 $_['text_search_subcategories'] = 'Искать в подкатегориях';
 $_['text_search_description'] = 'Искать в описании';
 $_['text_catalog_search_empty'] = 'По вашему запросу ничего не найдено. Попробуйте изменить запрос или открыть весь каталог.';
+$_['text_catalog_no_results_title'] = 'Нет результатов';
 $_['text_breadcrumb_home']    = 'Главная';
 
 // Buttons
@@ -71,6 +72,7 @@ $_['button_edit']           = 'Редактировать';
 $_['button_filter']         = 'Уточнить поиск';
 $_['button_new_address']    = 'Новый адрес';
 $_['button_change_address'] = 'Изменить адрес';
+$_['button_contact']        = 'Связаться с нами';
 $_['button_reviews']        = 'Отзывы';
 $_['button_write']          = 'Написать отзыв';
 $_['button_login']          = 'Войти';
@@ -81,7 +83,7 @@ $_['button_return']         = 'Вернуть';
 $_['button_shopping']       = 'Продолжить покупки';
 $_['button_search']         = 'Искать';
 $_['button_shipping']       = 'Применить доставку';
-$_['button_submit']         = 'Отправить';
+$_['button_submit']         = 'Отправить заявку';
 $_['button_guest']          = 'К оформлению заказа без регистрации';
 $_['button_view']           = 'Просмотр';
 $_['button_voucher']        = 'Применить подарочный сертификат';

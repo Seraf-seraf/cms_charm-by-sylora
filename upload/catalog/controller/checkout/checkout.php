@@ -30,7 +30,6 @@ class ControllerCheckoutCheckout extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
-		$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 
 		// Required by klarna
 		if ($this->config->get('payment_klarna_account') || $this->config->get('payment_klarna_invoice')) {
@@ -41,19 +40,35 @@ class ControllerCheckoutCheckout extends Controller {
 
 
 
-		$data['text_checkout_option'] = sprintf($this->language->get('text_checkout_option'), 1);
-		$data['text_checkout_account'] = sprintf($this->language->get('text_checkout_account'), 2);
-		$data['text_checkout_payment_address'] = sprintf($this->language->get('text_checkout_payment_address'), 2);
-		$data['text_checkout_shipping_address'] = sprintf($this->language->get('text_checkout_shipping_address'), 3);
-		$data['text_checkout_shipping_method'] = sprintf($this->language->get('text_checkout_shipping_method'), 4);
+		$data['text_checkout_option'] = sprintf($this->language->get('text_checkout_option'), '01');
+		$data['text_checkout_account'] = $this->language->get('text_checkout_account');
+		$data['text_checkout_payment_address'] = $this->language->get('text_checkout_payment_address');
+		$data['text_checkout_shipping_address'] = sprintf($this->language->get('text_checkout_shipping_address'), '02');
+		$data['text_checkout_shipping_method'] = sprintf($this->language->get('text_checkout_shipping_method'), '03');
+		$data['text_shipping_loading'] = $this->language->get('text_shipping_loading');
+		$data['text_shipping_loading_wait'] = $this->language->get('text_shipping_loading_wait');
+		$data['text_shipping_load_error'] = $this->language->get('text_shipping_load_error');
+		$data['button_shipping_retry'] = $this->language->get('button_shipping_retry');
+		$data['button_change_address'] = $this->language->get('button_change_address');
 		$data['text_checkout_intro'] = $this->language->get('text_checkout_intro');
+		$data['text_checkout_intro_mobile'] = $this->language->get('text_checkout_intro_mobile');
+		$data['text_checkout_intro_desktop'] = $this->language->get('text_checkout_intro_desktop');
+		$data['text_checkout_summary'] = $this->language->get('text_checkout_summary');
+		$data['text_checkout_summary_note'] = $this->language->get('text_checkout_summary_note');
+		$data['text_checkout_summary_note_mobile'] = $this->language->get('text_checkout_summary_note_mobile');
+		$data['text_checkout_summary_note_desktop'] = $this->language->get('text_checkout_summary_note_desktop');
+		$data['text_checkout_summary_loading'] = $this->language->get('text_checkout_summary_loading');
+		$data['text_checkout_summary_pending'] = $this->language->get('text_checkout_summary_pending');
+		$data['text_checkout_summary_error'] = $this->language->get('text_checkout_summary_error');
+		$data['text_checkout_summary_retry'] = $this->language->get('text_checkout_summary_retry');
+		$data['cart_url'] = $this->url->link('checkout/cart');
 		
 		if ($this->cart->hasShipping()) {
-			$data['text_checkout_payment_method'] = sprintf($this->language->get('text_checkout_payment_method'), 5);
-			$data['text_checkout_confirm'] = sprintf($this->language->get('text_checkout_confirm'), 6);
+			$data['text_checkout_payment_method'] = sprintf($this->language->get('text_checkout_payment_method'), '04');
+			$data['text_checkout_confirm'] = sprintf($this->language->get('text_checkout_confirm'), '05');
 		} else {
-			$data['text_checkout_payment_method'] = sprintf($this->language->get('text_checkout_payment_method'), 3);
-			$data['text_checkout_confirm'] = sprintf($this->language->get('text_checkout_confirm'), 4);	
+			$data['text_checkout_payment_method'] = sprintf($this->language->get('text_checkout_payment_method'), '02');
+			$data['text_checkout_confirm'] = sprintf($this->language->get('text_checkout_confirm'), '03');
 		}
 
 		if (isset($this->session->data['error'])) {

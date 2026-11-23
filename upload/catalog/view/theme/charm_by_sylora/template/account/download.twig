@@ -26,11 +26,11 @@
 
           {% for download in downloads %}
           <tr>
-            <td class="text-right">{{ download.order_id }}</td>
-            <td class="text-left">{{ download.name }}</td>
-            <td class="text-left">{{ download.size }}</td>
-            <td class="text-left">{{ download.date_added }}</td>
-            <td><a href="{{ download.href }}" data-toggle="tooltip" title="{{ button_download }}" class="btn btn-primary"><i class="fa fa-cloud-download"></i></a></td>
+            <td class="text-right" data-label="{{ column_order_id|e('html_attr') }}">{{ download.order_id }}</td>
+            <td class="text-left" data-label="{{ column_name|e('html_attr') }}">{{ download.name }}</td>
+            <td class="text-left" data-label="{{ column_size|e('html_attr') }}">{{ download.size }}</td>
+            <td class="text-left" data-label="{{ column_date_added|e('html_attr') }}">{{ download.date_added }}</td>
+            <td><a href="{{ download.href }}" data-toggle="tooltip" title="{{ button_download }}" aria-label="{{ button_download|e('html_attr') }}" class="btn btn-primary">{{ button_download }}</a></td>
           </tr>
           {% endfor %}
           </tbody>

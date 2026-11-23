@@ -18,6 +18,26 @@ class ControllerCommonFooter extends Controller {
 		$data['footer_columns'] = $this->prepareFooterColumns($columns, $column_count);
 		$data['footer_column_count'] = count($data['footer_columns']);
 		$data['legal_name'] = trim((string)$this->config->get('config_sylora_legal_name'));
+		$route = isset($this->request->get['route']) ? (string)$this->request->get['route'] : '';
+		$data['checkout_page'] = in_array($route, array('checkout/cart', 'checkout/checkout'), true);
+		$data['checkout_footer_title'] = '';
+
+		foreach ($data['footer_columns'] as $column) {
+			$title = isset($column['title']) ? trim((string)$column['title']) : '';
+
+			if ($title === 'Charm by Sylora') {
+				$data['checkout_footer_title'] = $title;
+				break;
+			}
+		}
+
+		if ($data['checkout_footer_title'] === '') {
+			$data['checkout_footer_title'] = trim((string)$this->config->get('config_name'));
+		}
+
+		if ($data['checkout_footer_title'] === '') {
+			$data['checkout_footer_title'] = 'Charm by Sylora';
+		}
 
 		if ($data['legal_name'] === '') {
 			$data['legal_name'] = 'Индивидуальный предприниматель Глава крестьянского (фермерского) хозяйства Кравчук Серафим Сергеевич';

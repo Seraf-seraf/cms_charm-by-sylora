@@ -52,9 +52,13 @@ final class CatalogUiContractTest extends TestCase {
 	public function testToolbarFiltersPaginationAndBreakpointsHaveExplicitContracts(): void {
 		foreach (array('product/category.twig', 'product/search.twig', 'product/special.twig') as $template) {
 			$source = $this->themeTemplate($template);
+			$sortLabel = $template === 'product/category.twig'
+				? '{% if is_catalog_root %}{{ text_catalog_root_sort }}{% else %}{{ text_sort }}{% endif %}'
+				: '{{ text_sort }}';
 
 			self::assertStringContainsString('catalog-toolbar__field', $source, $template);
-			self::assertStringContainsString('<label for="input-sort">{{ text_sort }}</label>', $source, $template);
+			self::assertStringContainsString('<label for="input-sort">' . $sortLabel . '</label>', $source, $template);
+			self::assertStringContainsString('<select id="input-sort"', $source, $template);
 			self::assertStringContainsString('<label for="input-limit">{{ text_limit }}</label>', $source, $template);
 			self::assertStringContainsString('<nav class="catalog-pagination" aria-label="{{ text_pagination_navigation }}">', $source, $template);
 			self::assertStringNotContainsString('input-group', $source, $template);
@@ -65,7 +69,7 @@ final class CatalogUiContractTest extends TestCase {
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
 		$storefront = $this->read('upload/catalog/view/javascript/storefront.js');
 
-		self::assertStringContainsString('<div class="catalog-shell">', $category);
+		self::assertStringContainsString('<div class="catalog-shell{% if is_catalog_root %} catalog-shell--root{% endif %}">', $category);
 		self::assertStringContainsString('<aside class="catalog-shell__sidebar">', $category);
 		self::assertStringContainsString('name="path" value="{{ category.category_id }}"', $category);
 		self::assertStringContainsString('{{ category.total }}', $category);
@@ -75,13 +79,15 @@ final class CatalogUiContractTest extends TestCase {
 		self::assertStringContainsString('<span>{{ text_filters }}</span>', $category);
 		self::assertStringContainsString("window.matchMedia('(min-width: 992px)')", $storefront);
 		self::assertStringContainsString('filterDetails.open = true;', $storefront);
-		self::assertStringContainsString('grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);', $css);
-		self::assertMatchesRegularExpression('/\.catalog-filters__grid\s*\{[^}]*display: flex;[^}]*flex-direction: column;/s', $css);
+		self::assertMatchesRegularExpression('/#product-category \.catalog-shell\s*\{[^}]*grid-template-columns: 270px minmax\(0, 1fr\);/s', $css);
+		self::assertStringContainsString('class="catalog-filters__grid"', $category);
 		self::assertMatchesRegularExpression('/\.catalog-toolbar\s*\{[^}]*flex-wrap: wrap;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-toolbar__controls\s*\{[^}]*flex-wrap: wrap;[^}]*max-width: 100%;/s', $css);
-		self::assertMatchesRegularExpression('/@media \(max-width: 1199px\).*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/s', $css);
-		self::assertMatchesRegularExpression('/@media \(max-width: 767px\).*?\.catalog-grid\s*\{\s*grid-template-columns: minmax\(0, 1fr\);/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card__wishlist\s*\{[^}]*position: absolute;[^}]*top: 12px;[^}]*right: 12px;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-toolbar__controls\s*\{[^}]*flex-wrap: wrap;/s', $css);
+		self::assertMatchesRegularExpression('/@media \(min-width: 768px\) and \(max-width: 1199px\).*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/s', $css);
+		self::assertMatchesRegularExpression('/@media \(max-width: 767px\).*?\.catalog-grid\s*\{\s*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/s', $css);
+		self::assertMatchesRegularExpression('/@media \(max-width: 350px\).*?\.catalog-grid\s*\{\s*grid-template-columns: 1fr;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__badge, \.catalog-card__wishlist\s*\{[^}]*position: absolute;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__wishlist\s*\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s', $css);
 
 		$search = $this->themeTemplate('product/search.twig');
 		self::assertStringContainsString('<form class="catalog-search-panel" action="{{ search_url }}" method="get"', $search);
@@ -94,14 +100,14 @@ final class CatalogUiContractTest extends TestCase {
 		self::assertStringContainsString('value="{{ category_2.category_id }}">', $search);
 		self::assertStringContainsString('value="{{ category_3.category_id }}">', $search);
 		self::assertMatchesRegularExpression('/\.catalog-card__image img\s*\{[^}]*object-fit: contain;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card__actions\s*\{[^}]*margin-top: auto;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card\s*\{[^}]*display: flex;[^}]*height: 100%;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card__media\s*\{[^}]*width: 100%;[^}]*max-height: 480px;[^}]*aspect-ratio: 4 \/ 5;[^}]*overflow: hidden;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-card__image\s*\{[^}]*position: relative;[^}]*width: 100%;[^}]*height: 100%;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination\s*\{[^}]*display: flex;[^}]*gap: 8px;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination > li > a,[^{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;[^}]*border-radius: 8px;/s', $css);
-		self::assertMatchesRegularExpression('/\.catalog-pagination \.pagination > \.active > a,[\s\S]*?\{[^}]*background: var\(--color-accent\);[^}]*color: var\(--color-on-accent\);/s', $css);
-		self::assertMatchesRegularExpression('/main \.btn,\s*main select\.form-control,\s*main textarea\.form-control,\s*main input\.form-control\s*\{[^}]*min-height: 44px;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card \.caption\s*\{[^}]*flex: 1;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card\s*\{[^}]*display: flex;[^}]*min-width: 0;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__media\s*\{[^}]*aspect-ratio: 1;[^}]*overflow: hidden;/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__image, \.catalog-card__image picture\s*\{[^}]*width: 100%;[^}]*height: 100%;/s', $css);
+		self::assertMatchesRegularExpression('/\.pagination\s*\{[^}]*display: flex;[^}]*gap: 8px;/s', $css);
+		self::assertMatchesRegularExpression('/\.pagination > li > a,[^{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s', $css);
+		self::assertMatchesRegularExpression('/\.pagination > \.active > span,[^{]+\{[^}]*background: var\(--color-text\);[^}]*color: var\(--color-surface\);/s', $css);
+		self::assertMatchesRegularExpression('/\.catalog-card__cart, \.catalog-card__more, \.catalog-card__icon\s*\{[^}]*min-height: 44px;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-filters__price input\s*\{[^}]*min-height: 44px;/s', $css);
 		self::assertMatchesRegularExpression('/\.catalog-filters__option\s*\{[^}]*align-items: center;[^}]*min-height: 44px;/s', $css);
 		self::assertStringContainsString('product-meta__label', $this->themeTemplate('product/product.twig'));

@@ -31,9 +31,14 @@ class Seo {
 	}
 
 	public function heading($name, $type) {
-		$defaults = array('home' => 'Ручные украшения {store}');
+		$defaults = array('home' => 'Украшения с тёплым характером');
+		$template = $this->template($type, 'h1', $defaults[$type]);
 
-		return $this->render($this->template($type, 'h1', $defaults[$type]), $name);
+		if ($type === 'home' && $template === 'Ручные украшения {store}') {
+			$template = $defaults[$type];
+		}
+
+		return $this->render($template, $name);
 	}
 
 	private function template($type, $field, $default) {

@@ -22,6 +22,19 @@ function getURLVar(key) {
 	}
 }
 
+(function($) {
+	if (!$ || !$.fn.datetimepicker || !$.fn.datetimepicker.defaults) {
+		return;
+	}
+
+	$.fn.datetimepicker.defaults.icons = {
+		time: 'atelier-picker-icon atelier-picker-icon--time',
+		date: 'atelier-picker-icon atelier-picker-icon--date',
+		up: 'atelier-picker-icon atelier-picker-icon--up',
+		down: 'atelier-picker-icon atelier-picker-icon--down'
+	};
+})(window.jQuery);
+
 (function() {
 	var overflowClass = 'is-responsive-overflowing';
 	var frame = null;
@@ -98,7 +111,7 @@ function getURLVar(key) {
 		for (var index = 0; index < controls.length; index++) {
 			var control = controls[index];
 			var copy = control.cloneNode(true);
-			var hiddenNodes = copy.querySelectorAll('i, svg, .fa, .glyphicon, [aria-hidden="true"], .sr-only, .visually-hidden');
+			var hiddenNodes = copy.querySelectorAll('i, img.atelier-icon, svg, [aria-hidden="true"], .sr-only, .visually-hidden');
 			var rawText = (control.textContent || '').replace(/\s+/g, ' ').trim();
 
 			for (var hiddenIndex = 0; hiddenIndex < hiddenNodes.length; hiddenIndex++) {
@@ -106,7 +119,7 @@ function getURLVar(key) {
 			}
 
 			var visibleText = (copy.textContent || '').replace(/\s+/g, ' ').trim();
-			var hasIcon = control.querySelector('i, svg, .fa, .glyphicon, [class*="icon-"]') !== null;
+			var hasIcon = control.querySelector('i, img.atelier-icon, svg, [class*="icon-"]') !== null;
 			var isCloseSymbol = /^[×✕✖✗✘]+$/.test(rawText);
 			var isIconOnly = (hasIcon && visibleText === '') || isCloseSymbol;
 
@@ -397,7 +410,7 @@ var cart = {
 					var continueText = json['text_continue_action'] || 'Продолжить покупки';
 					var notification = '<div class="alert alert-success alert-dismissible cart-notice" role="status">';
 
-					notification += '<div class="cart-notice__message"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>';
+					notification += '<div class="cart-notice__message"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + '</div>';
 					notification += '<div class="cart-notice__actions">';
 					notification += '<a class="btn btn-primary btn-sm" href="' + cartUrl + '">' + cartText + '</a>';
 					notification += '<a class="btn btn-default btn-sm" href="' + continueUrl + '">' + continueText + '</a>';
@@ -409,7 +422,7 @@ var cart = {
 
 					// Need to set timeout otherwise it wont update the total
 					setTimeout(function () {
-						$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+						$('#cart > button #cart-total').text(json['total']);
 					}, 100);
 
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
@@ -435,7 +448,7 @@ var cart = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+					$('#cart > button #cart-total').text(json['total']);
 				}, 100);
 
 				if ($('#checkout-cart').length || getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
@@ -465,7 +478,7 @@ var cart = {
 				document.dispatchEvent(new CustomEvent('sylora:cart-remove', {detail: {key: key, product_id: product_id, quantity: quantity}}));
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+					$('#cart > button #cart-total').text(json['total']);
 				}, 100);
 
 				if ($('#checkout-cart').length || getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
@@ -500,7 +513,7 @@ var voucher = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+					$('#cart > button #cart-total').text(json['total']);
 				}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
@@ -537,7 +550,7 @@ var wishlist = {
 				}
 
 				if (json['success']) {
-					showSiteNotification('<div class="alert alert-success alert-dismissible" role="status"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					showSiteNotification('<div class="alert alert-success alert-dismissible" role="status"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 					confirmProductAction(trigger, 'wishlist');
 					document.dispatchEvent(new CustomEvent('sylora:wishlist-add', {detail: {product_id: product_id}}));
 				}
@@ -567,7 +580,7 @@ var compare = {
 				$('.alert-dismissible').remove();
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
 					$('#compare-total').html(json['total']);
 

@@ -117,7 +117,7 @@
         {% endif %}
         <div class="{{ class }}">
           <div class="product-summary__tools">
-            <button type="button" data-toggle="tooltip" class="btn btn-default" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product_id }}');"><i class="fa fa-heart"></i></button>
+            <button type="button" data-toggle="tooltip" class="btn btn-default" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product_id }}');"><img class="atelier-icon atelier-icon--heart" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/heart.svg" alt="" aria-hidden="true"></button>
           </div>
           <p class="sylora-eyebrow">Украшение ручной работы</p>
           <h1>{{ heading_title }}</h1>
@@ -233,7 +233,7 @@
             {% if option.type == 'file' %}
             <div class="form-group{% if option.required %} required {% endif %}">
               <label class="control-label">{{ option.name }}</label>
-              <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+              <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block"> {{ button_upload }}</button>
               <input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option{{ option.product_option_id }}" />
             </div>
             {% endif %}
@@ -243,7 +243,7 @@
               <div class="input-group date">
                 <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD" id="input-option{{ option.product_option_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                <button class="btn btn-default" type="button"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
             </div>
             {% endif %}
@@ -253,7 +253,7 @@
               <div class="input-group datetime">
                 <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD HH:mm" id="input-option{{ option.product_option_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
             </div>
             {% endif %}
@@ -263,7 +263,7 @@
               <div class="input-group time">
                 <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="HH:mm" id="input-option{{ option.product_option_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
             </div>
             {% endif %}
@@ -290,7 +290,7 @@
               <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block">В корзину</button>
             </div>
             {% if minimum > 1 %}
-            <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_minimum }}</div>
+            <div class="alert alert-info">{{ text_minimum }}</div>
             {% endif %}</div>
           <div class="product-trust">
             <div><strong>Бережная упаковка</strong><span>Подходит для подарка без дополнительной подготовки.</span></div>
@@ -318,7 +318,7 @@
           {% if review_status %}
           <div class="rating">
             <p>{% for i in 1..5 %}
-              {% if rating < i %}<span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>{% else %}<span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>{% endif %}
+              {% if rating < i %}<span class="rating-star" aria-hidden="true">☆</span>{% else %}<span class="rating-star" aria-hidden="true">★</span>{% endif %}
               {% endfor %} <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;">{{ reviews }}</a> / <a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;">{{ text_write }}</a></p>
           </div>
           {% endif %} </div>
@@ -345,7 +345,7 @@
               <p class="catalog-card__description">{{ product.description }}</p>
               {% if product.rating %}
               <div class="rating"> {% for j in 1..5 %}
-                {% if product.rating < j %} <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span> {% else %} <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span> {% endif %}
+                {% if product.rating < j %}<span class="rating-star" aria-hidden="true">☆</span>{% else %}<span class="rating-star" aria-hidden="true">★</span>{% endif %}
                 {% endfor %} </div>
               {% endif %}
               {% if product.price %}
@@ -355,9 +355,9 @@
                 {% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span> {% endif %} </p>
               {% endif %} </div>
             <div class="button-group catalog-card__actions">
-              <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><i class="fa fa-shopping-cart"></i> <span>В корзину</span></button>
+              <button type="button" class="catalog-card__cart" onclick="cart.add('{{ product.product_id }}', '{{ product.minimum }}');"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"> <span>В корзину</span></button>
               <a class="catalog-card__more" href="{{ product.href }}">Подробнее</a>
-              <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+              <button type="button" class="catalog-card__icon" data-toggle="tooltip" title="В избранное" aria-label="В избранное" onclick="wishlist.add('{{ product.product_id }}');"><img class="atelier-icon atelier-icon--heart" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/heart.svg" alt="" aria-hidden="true"></button>
             </div>
             </div>
           </div>
@@ -447,7 +447,7 @@ $('#button-cart').on('click', function() {
 				var continueText = json['text_continue_action'] || 'Продолжить покупки';
 				var notification = '<div class="alert alert-success alert-dismissible cart-notice" role="status">';
 
-				notification += '<div class="cart-notice__message"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>';
+				notification += '<div class="cart-notice__message"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + '</div>';
 				notification += '<div class="cart-notice__actions">';
 				notification += '<a class="btn btn-primary btn-sm" href="' + cartUrl + '">' + cartText + '</a>';
 				notification += '<a class="btn btn-default btn-sm" href="' + continueUrl + '">' + continueText + '</a>';
@@ -456,7 +456,7 @@ $('#button-cart').on('click', function() {
 
 				$('.breadcrumb').after(notification);
 
-				$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+				$('#cart > button').html('<span id="cart-total"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"> ' + json['total'] + '</span>');
 
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
 
@@ -567,11 +567,11 @@ $('#button-review').on('click', function() {
 			$('.alert-dismissible').remove();
 
 			if (json['error']) {
-				$('#review').after('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
+				$('#review').after('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error'] + '</div>');
 			}
 
 			if (json['success']) {
-				$('#review').after('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>');
+				$('#review').after('<div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + '</div>');
 
 				$('input[name=\'name\']').val('');
 				$('textarea[name=\'text\']').val('');

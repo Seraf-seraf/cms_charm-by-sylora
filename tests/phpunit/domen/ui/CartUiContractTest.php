@@ -16,7 +16,11 @@ final class CartUiContractTest extends TestCase {
 		$header = $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/header.twig');
 
 		self::assertMatchesRegularExpression(
-			'/\.cart-page \.is-icon-only\s*\{[^}]*width: 44px;[^}]*min-width: 44px;[^}]*height: 44px;[^}]*min-height: 44px;/s',
+			'/\.cart-item__remove\s*\{[^}]*width: 44px;[^}]*height: 44px;/s',
+			$css
+		);
+		self::assertMatchesRegularExpression(
+			'/button\.is-icon-only[^\{]+\{[^}]*min-width: 44px;[^}]*min-height: 44px;/s',
 			$css
 		);
 		self::assertMatchesRegularExpression(
@@ -47,6 +51,14 @@ final class CartUiContractTest extends TestCase {
 			"if ($('#checkout-cart').length || getURLVar('route') == 'checkout/cart'",
 			$removeFunction
 		);
+	}
+
+	public function testCartHeaderMatchesAtelierWithoutRemovingStoreHelpCopy(): void {
+		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/checkout/cart.twig');
+
+		self::assertStringContainsString('<h1>{{ heading_title }}</h1>', $template);
+		self::assertStringContainsString('{{ text_cart_intro }}', $template);
+		self::assertStringNotContainsString('Оформление заказа', $template);
 	}
 
 	/**

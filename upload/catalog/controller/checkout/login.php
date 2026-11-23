@@ -3,7 +3,19 @@ class ControllerCheckoutLogin extends Controller {
 	public function index() {
 		$this->load->language('checkout/checkout');
 
+		$data['text_checkout_buyer_login_mobile'] = $this->language->get('text_checkout_buyer_login_mobile');
+		$data['text_checkout_buyer_login_desktop'] = $this->language->get('text_checkout_buyer_login_desktop');
+		$data['text_checkout_buyer_email'] = $this->language->get('text_checkout_buyer_email');
+		$data['text_checkout_buyer_email_placeholder'] = $this->language->get('text_checkout_buyer_email_placeholder');
+
 		$data['checkout_guest'] = ($this->config->get('config_checkout_guest') && !$this->config->get('config_customer_price') && !$this->cart->hasDownload());
+		if ($data['checkout_guest']) {
+			$data['text_checkout_buyer_guest_mobile'] = $this->language->get('text_checkout_buyer_guest_mobile');
+			$data['text_checkout_buyer_guest_desktop'] = $this->language->get('text_checkout_buyer_guest_desktop');
+		} else {
+			$data['text_checkout_buyer_guest_mobile'] = $this->language->get('text_checkout_buyer_account_mobile');
+			$data['text_checkout_buyer_guest_desktop'] = $this->language->get('text_checkout_buyer_account_desktop');
+		}
 
 		if (isset($this->session->data['account'])) {
 			$data['account'] = $this->session->data['account'];

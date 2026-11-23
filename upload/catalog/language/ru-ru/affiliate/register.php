@@ -23,7 +23,7 @@ $_['text_your_password']        = 'Ваш пароль';
 $_['text_cheque']               = 'Чек';
 $_['text_paypal']               = 'PayPal';
 $_['text_bank']                 = 'Банковский перевод';
-$_['text_agree']                = 'Я прочитал и согласен с <a href="%s" class="agree"><b>%s</b></a>';
+$_['text_agree']                = 'Я прочитал(-а) и согласен с <a href="%s" class="agree"><b>%s</b></a>';
 
 // Entry
 $_['entry_customer_group']      = 'Группа покупателей';

@@ -1,12 +1,31 @@
 {{ header }}
-<main id="product-category" class="container">
+<main id="product-category" class="container{% if is_catalog_root %} catalog-root{% endif %}">
   <div class="row catalog-page-layout">
     <div id="content" class="col-sm-12">{{ content_top }}
-      <header class="catalog-head">
+      <header class="catalog-head{% if is_catalog_root %} catalog-head--root{% endif %}">
+        {% if is_catalog_root %}
+        <h1 class="catalog-head__title catalog-head__title--mobile">{{ text_catalog_root_title_mobile }}</h1>
+        <h1 class="catalog-head__title catalog-head__title--desktop">{{ text_catalog_root_title_desktop }}</h1>
+        {% if description %}
+        <div class="catalog-head__subtitle">{{ description }}</div>
+        {% else %}
+        <div class="catalog-head__subtitle">
+          <span class="catalog-head__subtitle--mobile">{{ text_catalog_root_subtitle_mobile }}</span>
+          <span class="catalog-head__subtitle--desktop">{{ text_catalog_root_subtitle_desktop }}</span>
+        </div>
+        {% endif %}
+        {% else %}
         <p class="sylora-eyebrow">Каталог</p>
         <h1>{{ heading_title }}</h1>
+        {% endif %}
       </header>
-      {% if thumb or description %}
+      {% if is_catalog_root and thumb %}
+      <div class="catalog-root__thumb">
+        <img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" width="80" height="80" loading="lazy" decoding="async" />
+      </div>
+      {% endif %}
+      {% if is_catalog_root %}<hr class="catalog-root__separator" />{% endif %}
+      {% if not is_catalog_root and (thumb or description) %}
       <div class="row"> {% if thumb %}
         <div class="col-sm-2"><img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" width="80" height="80" loading="lazy" decoding="async" /></div>
         {% endif %}
@@ -15,7 +34,7 @@
         {% endif %}</div>
       <hr>
       {% endif %}
-      <div class="catalog-shell">
+      <div class="catalog-shell{% if is_catalog_root %} catalog-shell--root{% endif %}">
       <aside class="catalog-shell__sidebar">
       {% if filter_categories or filter_groups or products or active_filter_count %}
       <details class="catalog-filters" data-active-filters="{% if active_filter_count %}true{% else %}false{% endif %}"{% if active_filter_count %} open{% endif %}>
@@ -26,6 +45,7 @@
           {% endif %}
         </summary>
         <form class="catalog-filters__form" action="{{ filter_action }}" method="get">
+          <h2 class="catalog-filters__heading">{{ text_filters }}</h2>
           <input type="hidden" name="route" value="product/category" />
           <input type="hidden" name="sort" value="{{ sort }}" />
           <input type="hidden" name="order" value="{{ order }}" />
@@ -108,7 +128,7 @@
         <div class="catalog-toolbar__count">{{ results }}</div>
         <div class="catalog-toolbar__controls">
           <div class="catalog-toolbar__field">
-            <label for="input-sort">{{ text_sort }}</label>
+            <label for="input-sort">{% if is_catalog_root %}{{ text_catalog_root_sort }}{% else %}{{ text_sort }}{% endif %}</label>
             <select id="input-sort" class="form-control" data-location-select>
               {% for sorts in sorts %}
               {% if sorts.value == '%s-%s'|format(sort, order) %}
@@ -133,6 +153,11 @@
           </div>
         </div>
       </div>
+      <nav class="catalog-category-chips" aria-label="{{ text_filter_categories }}">
+        {% for category in filter_categories %}
+        <a class="catalog-category-chips__item" href="{{ category.href }}"{% if category.selected %} aria-current="page"{% endif %}>{{ category.name }}</a>
+        {% endfor %}
+      </nav>
       <div class="catalog-grid"> {% for product in products %}
         {% set heading_level = 'h2' %}
         {% set enable_quick_view = true %}

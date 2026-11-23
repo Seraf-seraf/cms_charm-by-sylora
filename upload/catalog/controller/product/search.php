@@ -510,6 +510,13 @@ class ControllerProductSearch extends Controller {
 
 		$data['search'] = $search;
 		$data['search_url'] = $this->url->link('product/search');
+		$catalog_category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+		if (!$catalog_category) {
+			$catalog_category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+		$data['catalog_url'] = $catalog_category
+			? $this->url->link('product/category', 'path=' . (int)$catalog_category['category_id'])
+			: $data['search_url'];
 		$data['description'] = $description;
 		$data['category_id'] = $category_id;
 		$data['sub_category'] = $sub_category;

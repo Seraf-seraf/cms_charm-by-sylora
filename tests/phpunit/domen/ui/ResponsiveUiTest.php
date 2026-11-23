@@ -26,7 +26,7 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		self::assertSame('Charm by Sylora', $result['brand']['text'] ?? null);
 		self::assertTrue($result['brand']['fullyVisible'] ?? false);
 		self::assertLessThanOrEqual(1, $result['brand']['overflow'] ?? null);
-		self::assertSame('light', $result['theme'] ?? null);
+		self::assertSame(0, $result['themeToggleCount'] ?? null);
 		self::assertSame($width > 1050, $result['account']['desktopVisible'] ?? null);
 		self::assertSame($width <= 1050, $result['account']['mobileVisible'] ?? null);
 		self::assertSame('Войти', $result['account']['desktopLabel'] ?? null);
@@ -39,19 +39,32 @@ final class ResponsiveUiTest extends BrowserTestCase {
 			self::assertGreaterThanOrEqual(44, $result['account']['mobileWidth'] ?? 0);
 			self::assertGreaterThanOrEqual(44, $result['account']['mobileHeight'] ?? 0);
 		}
-		self::assertStringContainsString('Rubik', (string)($result['fonts']['body'] ?? ''));
-		self::assertStringContainsString('Rubik', (string)($result['fonts']['brand'] ?? ''));
-		self::assertStringContainsString('Montserrat', (string)($result['fonts']['display'] ?? ''));
-		self::assertSame(18, $result['sizes']['body'] ?? null);
-		self::assertSame($width <= 767 ? 34 : ($width <= 991 ? 44 : 56), $result['sizes']['hero'] ?? null);
-		self::assertSame($width <= 767 ? 28 : ($width <= 991 ? 32 : 36), $result['sizes']['section'] ?? null);
+		self::assertStringContainsString('Atelier Noto', (string)($result['fonts']['body'] ?? ''));
+		self::assertStringContainsString('Atelier Cormorant', (string)($result['fonts']['brand'] ?? ''));
+		self::assertStringContainsString('Atelier Cormorant', (string)($result['fonts']['display'] ?? ''));
+		self::assertGreaterThanOrEqual(17, $result['sizes']['heroDescription'] ?? 0);
+		self::assertLessThanOrEqual(21, $result['sizes']['heroDescription'] ?? PHP_INT_MAX);
+		if ($width === 390 || $width === 1440) {
+			self::assertSame($width === 390 ? 17 : 21, $result['sizes']['heroDescription'] ?? null);
+		}
+		self::assertGreaterThanOrEqual(51, $result['sizes']['hero'] ?? 0);
+		self::assertLessThanOrEqual(81, $result['sizes']['hero'] ?? PHP_INT_MAX);
+		if ($width === 390 || $width === 1440) {
+			self::assertSame($width === 390 ? 51 : 81, $result['sizes']['hero'] ?? null);
+		}
+		self::assertGreaterThanOrEqual(37, $result['sizes']['section'] ?? 0);
+		self::assertLessThanOrEqual(49, $result['sizes']['section'] ?? PHP_INT_MAX);
+		if ($width === 390 || $width === 1440) {
+			self::assertSame($width === 390 ? 37 : 49, $result['sizes']['section'] ?? null);
+		}
 		self::assertTrue($result['dynamic']['iconOnly'] ?? false);
 		self::assertFalse($result['dynamic']['iconWithText'] ?? true);
 		$this->assertFixtureIcons($result['fixtures'] ?? array());
 		$this->assertVisualContracts($result['visualContracts'] ?? array(), $width);
 
 		foreach ($result['icons'] ?? array() as $icon) {
-			$this->assertCenteredIcon($icon, null);
+			$wideQuickView = $width <= 767 && str_starts_with((string)($icon['selector'] ?? ''), 'catalog-card__icon ');
+			$this->assertCenteredIcon($icon, null, $wideQuickView);
 		}
 	}
 
@@ -70,14 +83,21 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		$this->assertVisualContracts($result['visualContracts'] ?? array(), 320);
 	}
 
-	public function testResponsiveUiUsesDarkThemeAt320Pixels(): void {
+	public function testResponsiveUiRemainsLightWithSavedAndSystemDarkPreferences(): void {
 		$result = $this->runBrowserScenario(
 			__DIR__ . '/support/responsive_ui_browser.mjs',
 			'320@1@dark'
 		);
 
+		$lightResult = $this->runBrowserScenario(
+			__DIR__ . '/support/responsive_ui_browser.mjs',
+			'320@1@light'
+		);
+
 		self::assertSame(320, $result['viewportWidth'] ?? null);
-		self::assertSame('dark', $result['theme'] ?? null);
+		self::assertNotEmpty($lightResult['pageColors'] ?? array());
+		self::assertSame($lightResult['pageColors'], $result['pageColors'] ?? null);
+		self::assertSame(0, $result['themeToggleCount'] ?? null);
 		self::assertLessThanOrEqual(1, $result['documentOverflow'] ?? null);
 		self::assertTrue($result['brand']['fullyVisible'] ?? false);
 		self::assertTrue($result['account']['mobileVisible'] ?? false);
@@ -91,13 +111,13 @@ final class ResponsiveUiTest extends BrowserTestCase {
 	 */
 	private function assertFixtureIcons(array $fixtures): void {
 		$expectedSizes = array(
-			'dynamic' => 40,
+			'dynamic' => 44,
 			'catalog' => 44,
 			'quickView' => 44,
 			'cartRemove' => 44,
 			'miniCartRemove' => 44,
 			'productTools' => 44,
-			'search' => 40,
+			'search' => 44,
 			'miniItemRemove' => 44,
 			'cartItemRemove' => 44,
 		);
@@ -113,15 +133,14 @@ final class ResponsiveUiTest extends BrowserTestCase {
 	 */
 	private function assertVisualContracts(array $contracts, int $width): void {
 		$miniSize = $width <= 767 ? 64 : 80;
-		$cartSize = $width <= 767 ? 96 : ($width <= 991 ? 112 : 160);
+		$cartWidth = $width <= 767 ? 112 : ($width <= 991 ? 96 : 150);
+		$cartHeight = $width <= 767 ? 136 : ($width <= 991 ? 120 : 170);
 
 		$this->assertResponsiveImage($contracts['miniImage'] ?? array(), $miniSize, 'mini cart image');
-		$this->assertResponsiveImage($contracts['cartImage'] ?? array(), $cartSize, 'cart image');
+		$this->assertResponsiveImage($contracts['cartImage'] ?? array(), $cartWidth, 'cart image', $cartHeight);
 		$this->assertResponsiveImage($contracts['contactImage'] ?? array(), 160, 'contact image');
 
-		$wishlistOffset = $width <= 767 ? 18 : 22;
-		self::assertSame($wishlistOffset, $contracts['wishlist']['right'] ?? null, 'wishlist right');
-		self::assertSame($wishlistOffset, $contracts['wishlist']['top'] ?? null, 'wishlist top');
+		self::assertSame('right', $contracts['wishlist']['float'] ?? null, 'wishlist alignment');
 		self::assertTrue($contracts['wishlist']['contained'] ?? false, 'wishlist must remain inside product summary');
 		self::assertFalse($contracts['captcha']['hasVisibleTitle'] ?? true);
 		self::assertSame('Подтвердите, что вы не робот', $contracts['captcha']['label'] ?? null);
@@ -147,14 +166,13 @@ final class ResponsiveUiTest extends BrowserTestCase {
 		}
 
 		$catalog = $contracts['catalog'] ?? array();
-		$expectedColumns = $width <= 767 ? 1 : ($width <= 1199 ? 2 : 3);
+		$expectedColumns = $width <= 350 ? 1 : ($width <= 1199 ? 2 : 3);
 		self::assertSame($expectedColumns, $catalog['columns'] ?? null, 'catalog columns');
 		self::assertTrue($catalog['equalHeights'] ?? false, 'catalog cards must have equal heights');
 		self::assertSame(0, $catalog['overflow'] ?? null, 'catalog grid overflow');
 		self::assertSame(44, $catalog['wishlistWidth'] ?? null, 'catalog wishlist width');
 		self::assertSame(44, $catalog['wishlistHeight'] ?? null, 'catalog wishlist height');
-		self::assertSame(12, $catalog['wishlistTop'] ?? null, 'catalog wishlist top');
-		self::assertSame(12, $catalog['wishlistRight'] ?? null, 'catalog wishlist right');
+		self::assertTrue($catalog['wishlistContained'] ?? false, 'catalog wishlist must remain inside the image');
 		self::assertTrue($catalog['overlaysSeparate'] ?? false, 'badge and wishlist must not overlap');
 		self::assertSame(0, $catalog['toolbarOverflow'] ?? null, 'catalog toolbar overflow');
 		self::assertSame(array(44, 44), $catalog['controlHeights'] ?? null, 'catalog toolbar control heights');
@@ -163,11 +181,12 @@ final class ResponsiveUiTest extends BrowserTestCase {
 	/**
 	 * @param array<string, mixed> $image
 	 */
-	private function assertResponsiveImage(array $image, int $expectedSize, string $message): void {
+	private function assertResponsiveImage(array $image, int $expectedSize, string $message, ?int $expectedHeight = null): void {
+		$expectedHeight = $expectedHeight ?? $expectedSize;
 		self::assertSame($expectedSize, $image['containerWidth'] ?? null, $message);
-		self::assertSame($expectedSize, $image['containerHeight'] ?? null, $message);
+		self::assertSame($expectedHeight, $image['containerHeight'] ?? null, $message);
 		self::assertLessThanOrEqual($expectedSize, $image['imageWidth'] ?? PHP_INT_MAX, $message);
-		self::assertLessThanOrEqual($expectedSize, $image['imageHeight'] ?? PHP_INT_MAX, $message);
+		self::assertLessThanOrEqual($expectedHeight, $image['imageHeight'] ?? PHP_INT_MAX, $message);
 		self::assertGreaterThanOrEqual($image['imageWidth'] ?? PHP_INT_MAX, $image['naturalWidth'] ?? 0, $message);
 		self::assertGreaterThanOrEqual($image['imageHeight'] ?? PHP_INT_MAX, $image['naturalHeight'] ?? 0, $message);
 		self::assertSame('contain', $image['objectFit'] ?? null, $message);
@@ -176,18 +195,23 @@ final class ResponsiveUiTest extends BrowserTestCase {
 	/**
 	 * @param array<string, mixed> $icon
 	 */
-	private function assertCenteredIcon(array $icon, ?int $expectedSize): void {
+	private function assertCenteredIcon(array $icon, ?int $expectedSize, bool $wide = false): void {
 		$message = (string)($icon['selector'] ?? 'icon');
 
 		self::assertTrue($icon['hasGlyph'] ?? false, $message);
 
-		if ($expectedSize === null) {
+		if ($wide) {
+			self::assertGreaterThanOrEqual(44, $icon['width'] ?? 0, $message);
+			self::assertSame(44, $icon['height'] ?? null, $message);
+		} elseif ($expectedSize === null) {
 			self::assertContains($icon['width'] ?? null, array(40, 44), $message);
 		} else {
 			self::assertSame($expectedSize, $icon['width'] ?? null, $message);
 		}
 
-		self::assertSame($icon['width'] ?? null, $icon['height'] ?? null, $message);
+		if (!$wide) {
+			self::assertSame($icon['width'] ?? null, $icon['height'] ?? null, $message);
+		}
 		self::assertLessThanOrEqual(1, $icon['deltaX'] ?? null, $message);
 		self::assertLessThanOrEqual(1, $icon['deltaY'] ?? null, $message);
 		self::assertSame(16, $icon['glyphSize'] ?? null, $message);

@@ -7,16 +7,26 @@ require_once dirname(__DIR__) . '/support/BrowserTestCase.php';
 final class PostE2EBrowserContractTest extends BrowserTestCase {
 	public function testReversePriceRangeIsNormalizedWithoutJavaScript(): void {
 		$catalogUrl = $this->catalogUrl();
-		$html = $this->request($catalogUrl . (str_contains($catalogUrl, '?') ? '&' : '?') . 'price_min=900&price_max=100');
+		$html = $this->request($catalogUrl . (str_contains($catalogUrl, '?') ? '&' : '?') . 'price_min=3000&price_max=900');
 		$xpath = new DOMXPath($this->document($html));
 
-		self::assertSame('100', self::attribute($xpath, '//input[@name="price_min"]', 'value'));
-		self::assertSame('900', self::attribute($xpath, '//input[@name="price_max"]', 'value'));
+		self::assertSame('900', self::attribute($xpath, '//input[@name="price_min"]', 'value'));
+		self::assertSame('3000', self::attribute($xpath, '//input[@name="price_max"]', 'value'));
 
+		$unfiltered = new DOMXPath($this->document($this->request($catalogUrl)));
 		$canonical = html_entity_decode(self::attribute($xpath, '//link[@rel="canonical"]', 'href'));
-		self::assertStringContainsString('price_min=100', $canonical);
-		self::assertStringContainsString('price_max=900', $canonical);
-		self::assertStringNotContainsString('price_min=900', $canonical);
+		self::assertSame(html_entity_decode(self::attribute($unfiltered, '//link[@rel="canonical"]', 'href')), $canonical);
+		self::assertSame('noindex, follow', self::attribute($xpath, '//meta[@name="robots"]', 'content'));
+
+		$products = $xpath->query('//div[contains(concat(" ", normalize-space(@class), " "), " catalog-grid ")]/article[contains(concat(" ", normalize-space(@class), " "), " catalog-card ")]');
+		self::assertInstanceOf(DOMNodeList::class, $products);
+		self::assertGreaterThan(0, $products->length, 'Обратный диапазон 3000/900 должен оставить товар из синтетической витрины.');
+
+		$sortUrl = html_entity_decode(self::attribute($xpath, '//select[@id="input-sort"]/option[1]', 'value'));
+		self::assertStringContainsString('price_min=900', $sortUrl);
+		self::assertStringContainsString('price_max=3000', $sortUrl);
+		self::assertStringNotContainsString('price_min=3000', $sortUrl);
+		self::assertStringNotContainsString('price_max=900', $sortUrl);
 	}
 
 	public function testInvalidAndNegativePriceRulesRemainUnchanged(): void {

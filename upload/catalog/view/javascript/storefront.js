@@ -1,18 +1,6 @@
 (function(window, document) {
 	'use strict';
 
-	function getStoredTheme() {
-		try {
-			return window.localStorage ? window.localStorage.getItem('sylora-theme') : null;
-		} catch (error) {
-			return null;
-		}
-	}
-
-	var storedTheme = getStoredTheme();
-	var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-	document.documentElement.setAttribute('data-theme', storedTheme || (systemDark ? 'dark' : 'light'));
-
 	document.addEventListener('click', function(event) {
 		var target = event.target.closest ? event.target.closest('[data-cart-add], [data-cart-remove], [data-voucher-remove], [data-wishlist-add], [data-compare-add], [data-confirm], [data-paypal-modal], [data-payment-confirm]') : null;
 
@@ -50,7 +38,7 @@
 	});
 
 	function showPaymentError(message) {
-		var alert = $('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> <span></span><button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+		var alert = $('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> <span></span><button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 		alert.find('span').text(message);
 		$('#collapse-checkout-confirm .panel-body').prepend(alert);
 	}
@@ -115,30 +103,9 @@
 	});
 
 	function initializeHeader() {
-		var root = document.documentElement;
-		var themeButton = document.querySelector('.theme-toggle');
 		var nav = document.getElementById('site-nav');
 		var navButton = document.querySelector('.mobile-nav-toggle');
 		var backdrop = document.querySelector('.site-nav-backdrop');
-
-		function setStoredTheme(theme) {
-			try {
-				if (window.localStorage) {
-					window.localStorage.setItem('sylora-theme', theme);
-				}
-			} catch (error) {
-				return;
-			}
-		}
-
-		function syncThemeButton() {
-			var dark = root.getAttribute('data-theme') === 'dark';
-
-			if (themeButton) {
-				themeButton.setAttribute('aria-pressed', dark ? 'true' : 'false');
-				themeButton.innerHTML = '<i class="fa ' + (dark ? 'fa-sun-o' : 'fa-moon-o') + '" aria-hidden="true"></i>';
-			}
-		}
 
 		function syncNavButton(isOpen) {
 			if (!navButton) {
@@ -147,7 +114,15 @@
 
 			navButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 			navButton.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
-			navButton.innerHTML = '<i class="fa ' + (isOpen ? 'fa-times' : 'fa-bars') + '" aria-hidden="true"></i>';
+			var icon = navButton.querySelector('img.site-action-icon');
+			var iconName = isOpen ? 'close' : 'menu';
+			if (icon) {
+				icon.setAttribute('src', 'catalog/view/theme/charm_by_sylora/image/icons/atelier/' + iconName + '.svg');
+				icon.classList.remove('atelier-icon--menu', 'atelier-icon--close');
+				icon.classList.add('atelier-icon--' + iconName);
+			} else {
+				navButton.innerHTML = '<img class="site-action-icon atelier-icon atelier-icon--' + iconName + '" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/' + iconName + '.svg" alt="" aria-hidden="true">';
+			}
 		}
 
 		function closeNav() {
@@ -158,16 +133,6 @@
 			nav.classList.remove('is-open');
 			syncNavButton(false);
 			backdrop.hidden = true;
-		}
-
-		if (themeButton) {
-			syncThemeButton();
-			themeButton.addEventListener('click', function() {
-				var nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-				root.setAttribute('data-theme', nextTheme);
-				setStoredTheme(nextTheme);
-				syncThemeButton();
-			});
 		}
 
 		if (!navButton || !nav || !backdrop) {
@@ -211,6 +176,66 @@
 				first.focus();
 			}
 		});
+	}
+
+	function initializeHeaderSearch() {
+		var searchContainer = document.querySelector('.site-search');
+		var input = document.querySelector('.site-search #search input[name="search"]');
+		var button = document.querySelector('.site-search #search button');
+		var desktopSearch = window.matchMedia('(min-width: 1201px)');
+
+		if (!searchContainer || !input || !button) {
+			return;
+		}
+
+		function setOpen(isOpen, focusInput) {
+			searchContainer.classList.toggle('is-open', isOpen);
+			button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+			if (isOpen && focusInput) {
+				input.focus();
+			}
+		}
+
+		document.addEventListener('click', function(event) {
+			var target = event.target;
+			var searchButton = target.closest ? target.closest('.site-search #search button') : null;
+
+			if (searchButton === button && desktopSearch.matches) {
+				if (!searchContainer.classList.contains('is-open') || !input.value.trim()) {
+					event.preventDefault();
+					event.stopImmediatePropagation();
+					setOpen(true, true);
+				}
+
+				return;
+			}
+
+			if (!searchContainer.contains(target) && searchContainer.classList.contains('is-open')) {
+				setOpen(false, false);
+			}
+		}, true);
+
+		document.addEventListener('keydown', function(event) {
+			if (event.key === 'Escape' && desktopSearch.matches && searchContainer.classList.contains('is-open')) {
+				setOpen(false, false);
+				button.focus();
+			}
+		});
+
+		if (typeof desktopSearch.addEventListener === 'function') {
+			desktopSearch.addEventListener('change', function(event) {
+				if (!event.matches) {
+					setOpen(false, false);
+				}
+			});
+		} else if (typeof desktopSearch.addListener === 'function') {
+			desktopSearch.addListener(function(event) {
+				if (!event.matches) {
+					setOpen(false, false);
+				}
+			});
+		}
 	}
 
 	function initializeCatalog() {
@@ -363,6 +388,7 @@
 
 	function initialize() {
 		initializeHeader();
+		initializeHeaderSearch();
 		initializeCatalog();
 		initializeContact();
 		initializeCarousels();

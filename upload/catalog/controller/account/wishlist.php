@@ -1,5 +1,8 @@
 <?php
 class ControllerAccountWishList extends Controller {
+	private const ATELIER_WISHLIST_IMAGE_MIN_WIDTH_PX = 320;
+	private const ATELIER_WISHLIST_IMAGE_MIN_HEIGHT_PX = 390;
+
 	public function index() {
 		if (!$this->customer->isLogged()) {
 			$this->session->data['redirect'] = $this->url->link('account/wishlist', '', true);
@@ -47,7 +50,14 @@ class ControllerAccountWishList extends Controller {
 
 			if ($product_info) {
 				if ($product_info['image']) {
-					$image = $this->model_tool_image->resize($product_info['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_wishlist_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_wishlist_height'));
+					$theme = $this->config->get('config_theme');
+					$width = (int)$this->config->get('theme_' . $theme . '_image_wishlist_width');
+					$height = (int)$this->config->get('theme_' . $theme . '_image_wishlist_height');
+					if ($theme === 'charm_by_sylora') {
+						$width = max(self::ATELIER_WISHLIST_IMAGE_MIN_WIDTH_PX, $width);
+						$height = max(self::ATELIER_WISHLIST_IMAGE_MIN_HEIGHT_PX, $height);
+					}
+					$image = $this->model_tool_image->resize($product_info['image'], $width, $height);
 				} else {
 					$image = false;
 				}
@@ -89,6 +99,16 @@ class ControllerAccountWishList extends Controller {
 		}
 
 		$data['continue'] = $this->url->link('account/account', '', true);
+
+		$this->load->model('catalog/category');
+		$catalog_category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+		if (!$catalog_category) {
+			$catalog_category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+		$data['catalog'] = $catalog_category
+			? $this->url->link('product/category', 'path=' . (int)$catalog_category['category_id'])
+			: $this->url->link('product/search');
+		$data['account_navigation'] = $this->load->controller('account/navigation', array('active_route' => 'account/wishlist'));
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

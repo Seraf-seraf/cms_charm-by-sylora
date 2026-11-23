@@ -84,15 +84,15 @@
 				var cartUrl = json.cart_url || 'index.php?route=checkout/cart';
 				var continueUrl = json.continue_url || 'index.php?route=product/search';
 				var notification = $('<div class="alert alert-success alert-dismissible cart-notice" role="status"></div>');
-				var message = $('<div class="cart-notice__message"><i class="fa fa-check-circle"></i> </div>');
+				var message = $('<div class="cart-notice__message"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> </div>');
 				var actions = $('<div class="cart-notice__actions"></div>');
 
-				message.append(document.createTextNode(json.success));
+				message.append(document.createTextNode(json.success_text || json.success));
 				actions.append($('<a class="btn btn-primary btn-sm"></a>').attr('href', cartUrl).text(json.text_cart_action || 'Перейти в корзину'));
 				actions.append($('<a class="btn btn-default btn-sm"></a>').attr('href', continueUrl).text(json.text_continue_action || 'Продолжить покупки'));
 				notification.append(message, actions, '<button type="button" class="close" data-dismiss="alert">&times;</button>');
 				$('#content').prepend(notification);
-				$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json.total + '</span>');
+				$('#cart > button #cart-total').text(json.total);
 				$('html, body').animate({scrollTop: 0}, 'slow');
 				$('#cart > ul').load('index.php?route=common/cart/info ul li');
 			}
@@ -178,11 +178,11 @@
 				$('.alert-dismissible').remove();
 
 				if (json.error) {
-					$('#review').after($('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> </div>').append(document.createTextNode(json.error)));
+					$('#review').after($('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> </div>').append(document.createTextNode(json.error)));
 				}
 
 				if (json.success) {
-					$('#review').after($('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> </div>').append(document.createTextNode(json.success)));
+					$('#review').after($('<div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> </div>').append(document.createTextNode(json.success)));
 					$('input[name="name"], textarea[name="text"]').val('');
 					$('input[name="rating"]:checked, input[name="publication_consent"]').prop('checked', false);
 				}

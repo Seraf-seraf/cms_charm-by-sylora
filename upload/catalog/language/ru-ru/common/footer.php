@@ -26,3 +26,4 @@ $_['text_order']        = 'История заказов';
 $_['text_wishlist']     = 'Закладки';
 $_['text_newsletter']   = 'Рассылка';
 $_['text_powered']      = 'Charm by Sylora &copy; %s';
+$_['text_footer_navigation'] = 'Разделы сайта и контакты';

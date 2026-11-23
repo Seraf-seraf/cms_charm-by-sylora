@@ -1,5 +1,12 @@
 <footer>
-  <div class="container site-footer">
+  <div class="container site-footer{% if checkout_page %} site-footer--checkout{% endif %}">
+    {% if checkout_page %}
+    <div class="site-footer__checkout-brand">
+      <h2>{{ checkout_footer_title }}</h2>
+    </div>
+    <details class="site-footer__details">
+      <summary>{{ text_footer_navigation }}</summary>
+    {% endif %}
     <div class="site-footer__grid site-footer__grid--{{ footer_column_count }}">
       {% for column in footer_columns %}
       <div class="site-footer__column">
@@ -22,6 +29,9 @@
       </div>
       {% endfor %}
     </div>
+    {% if checkout_page %}
+    </details>
+    {% endif %}
     <div class="site-footer__bottom">
       <p>{{ powered }}</p>
       <p class="site-footer__developer">Разработано <a href="https://bastyle.tech" target="_blank" rel="noopener">Bastyle.tech</a></p>

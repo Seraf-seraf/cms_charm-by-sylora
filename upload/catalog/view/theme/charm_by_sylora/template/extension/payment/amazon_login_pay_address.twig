@@ -11,21 +11,6 @@
         </div>
     </div>
 </div>
-<style type="text/css">
-    #amazonContainer {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .amazonWidget {
-        margin: 0 0 10px 0;
-        width: 100%;
-    }
-
-    #addressBookWidget {
-        height: 350px;
-    }
-</style>
 <input type="hidden" name="addressSelected" value="0" />
 <script type="text/javascript">
 (function($) {
@@ -35,7 +20,7 @@
         var showError = function(message) {
             $('#continue-button').button('reset');
 
-            $('#addressBookWidget').before('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;' + message + '</div>');
+            $('#addressBookWidget').before('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true">&nbsp;&nbsp;' + message + '</div>');
         }
 
         amazon.Login.setClientId('{{ client_id }}');
@@ -83,7 +68,7 @@
                     $('#shippingMethods').empty();
 
                     if (data.error) {
-                        $('#addressBookWidget').before('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;' + data.error + '</div>');
+                        $('#addressBookWidget').before('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true">&nbsp;&nbsp;' + data.error + '</div>');
                     } else if (data.quotes) {
                         var html = '';
 

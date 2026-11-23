@@ -61,6 +61,7 @@ class ControllerAccountReturn extends Controller {
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($return_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($return_total - $limit)) ? $return_total : ((($page - 1) * $limit) + $limit), $return_total, ceil($return_total / $limit));
 
 		$data['continue'] = $this->url->link('account/account', '', true);
+		$data['account_navigation'] = $this->load->controller('account/navigation', array('active_route' => 'account/return'));
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
@@ -118,6 +119,7 @@ class ControllerAccountReturn extends Controller {
 			$data['quantity'] = $return_info['quantity'];
 			$data['reason'] = $return_info['reason'];
 			$data['opened'] = $return_info['opened'] ? $this->language->get('text_yes') : $this->language->get('text_no');
+			$data['status'] = $return_info['status'];
 			$data['comment'] = nl2br($return_info['comment']);
 			$data['action'] = $return_info['action'];
 
@@ -134,6 +136,7 @@ class ControllerAccountReturn extends Controller {
 			}
 
 			$data['continue'] = $this->url->link('account/return', $url, true);
+			$data['account_navigation'] = $this->load->controller('account/navigation', array('active_route' => 'account/return'));
 
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['column_right'] = $this->load->controller('common/column_right');
@@ -185,7 +188,6 @@ class ControllerAccountReturn extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
-		$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 
 
 
@@ -387,6 +389,7 @@ class ControllerAccountReturn extends Controller {
 		}
 
 		$data['back'] = $this->url->link('account/account', '', true);
+		$data['account_navigation'] = $this->load->controller('account/navigation', array('active_route' => 'account/return'));
 
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');

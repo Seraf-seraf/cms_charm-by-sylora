@@ -9,6 +9,19 @@
     {% set class = 'col-sm-12' %}
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
+      {% if product_breadcrumbs %}
+      <nav class="product-breadcrumbs" aria-label="{{ text_breadcrumb_navigation }}">
+        <ol class="product-breadcrumbs__list">
+          {% for breadcrumb in product_breadcrumbs %}
+          <li class="product-breadcrumbs__item">
+            {% if not loop.first %}<span class="product-breadcrumbs__separator" aria-hidden="true">/</span>{% endif %}
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+          </li>
+          {% endfor %}
+          <li class="sr-only"><span aria-current="page">{{ heading_title }}</span></li>
+        </ol>
+      </nav>
+      {% endif %}
       <div class="product-page">
         <div class="product-page__media"> {% if thumb or images %}
           <ul class="thumbnails">
@@ -39,9 +52,8 @@
         </div>
         <div class="product-page__summary">
           <div class="product-summary__tools">
-            <button type="button" data-toggle="tooltip" class="btn btn-default" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}" aria-pressed="false" data-wishlist-add="{{ product_id }}"><i class="fa fa-heart"></i></button>
+            <button type="button" data-toggle="tooltip" class="btn btn-default" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}" aria-pressed="false" data-wishlist-add="{{ product_id }}"><img class="atelier-icon atelier-icon--heart" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/heart.svg" alt="" aria-hidden="true"></button>
           </div>
-          <p class="sylora-eyebrow">Украшение ручной работы</p>
           <h1>{{ heading_title }}</h1>
           {% if price %}
           <div class="product-price">
@@ -122,7 +134,7 @@
             {% if option.type == 'file' %}
             <div class="form-group{% if option.required %} required {% endif %}">
               <label class="control-label">{{ option.name }}</label>
-              <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+              <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block"> {{ button_upload }}</button>
               <input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option{{ option.product_option_id }}" />
             </div>
             {% endif %}
@@ -132,7 +144,7 @@
               <div class="input-group date">
                 <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD" id="input-option{{ option.product_option_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button class="btn btn-default" type="button"><i class="fa fa-calendar"></i></button>
+                <button class="btn btn-default" type="button" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
             </div>
             {% endif %}
@@ -142,7 +154,7 @@
               <div class="input-group datetime">
                 <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD HH:mm" id="input-option{{ option.product_option_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
             </div>
             {% endif %}
@@ -152,7 +164,7 @@
               <div class="input-group time">
                 <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="HH:mm" id="input-option{{ option.product_option_id }}" class="form-control" />
                 <span class="input-group-btn">
-                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
                 </span></div>
             </div>
             {% endif %}
@@ -184,7 +196,7 @@
               {% endif %}
             </div>
             {% if minimum > 1 %}
-            <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_minimum }}</div>
+            <div class="alert alert-info">{{ text_minimum }}</div>
             {% endif %}</div>
           {% if points or discounts %}
           <ul class="list-unstyled product-price__details">
@@ -240,7 +252,7 @@
           {% if review_status %}
           <div class="rating">
             <p class="product-review__links"><span class="product-review__stars" role="img" aria-label="Оценка: {{ rating }} из 5">{% for i in 1..5 %}
-              {% if rating < i %}<span class="fa fa-stack" aria-hidden="true"><i class="fa fa-star-o fa-stack-1x"></i></span>{% else %}<span class="fa fa-stack" aria-hidden="true"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>{% endif %}
+              {% if rating < i %}<span class="rating-star" aria-hidden="true">☆</span>{% else %}<span class="rating-star" aria-hidden="true">★</span>{% endif %}
               {% endfor %}</span> <a href="{{ share }}#product-reviews">{{ reviews }}</a> <span aria-hidden="true">/</span> <a href="{{ share }}#form-review">{{ text_write }}</a></p>
           </div>
           {% endif %} </div>
@@ -353,7 +365,7 @@
 </main>
 {% if product_schema %}
 <script nonce="{{ csp_nonce }}" type="application/ld+json">{{ product_schema|raw }}</script>
-<script src="catalog/view/javascript/product.js?v=20260815-csp-v1"></script>
+<script src="catalog/view/javascript/product.js?v=20261114-cart-icon-v2"></script>
 {% endif %}
 {% if has_datetime_option %}
 {% endif %}

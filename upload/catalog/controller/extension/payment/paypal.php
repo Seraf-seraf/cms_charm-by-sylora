@@ -2291,14 +2291,13 @@ class ControllerExtensionPaymentPayPal extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/moment/moment-with-locales.min.js');
 		$this->document->addScript('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
-		$this->document->addStyle('catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 		
 		$theme = $this->config->get('theme_' . $this->config->get('config_theme') . '_directory');
 				
 		if (file_exists(DIR_TEMPLATE . $theme . '/stylesheet/paypal/paypal.css')) {
-			$this->document->addStyle('catalog/view/theme/' . $theme . '/stylesheet/paypal/paypal.css');
+			$this->document->addStyle('catalog/view/theme/' . $theme . '/stylesheet/paypal/paypal.css?v=20261114-atelier-reset-v1');
 		} else {
-			$this->document->addStyle('catalog/view/theme/default/stylesheet/paypal/paypal.css');
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/paypal/paypal.css?v=20261114-atelier-reset-v1');
 		}
 
 		$data['heading_title'] = $text_title;
@@ -5465,9 +5464,9 @@ class ControllerExtensionPaymentPayPal extends Controller {
 				$theme = $this->config->get('theme_' . $this->config->get('config_theme') . '_directory');
 				
 				if (file_exists(DIR_TEMPLATE . $theme . '/stylesheet/paypal/paypal.css')) {
-					$this->document->addStyle('catalog/view/theme/' . $theme . '/stylesheet/paypal/paypal.css');
+					$this->document->addStyle('catalog/view/theme/' . $theme . '/stylesheet/paypal/paypal.css?v=20261114-atelier-reset-v1');
 				} else {
-					$this->document->addStyle('catalog/view/theme/default/stylesheet/paypal/paypal.css');
+					$this->document->addStyle('catalog/view/theme/default/stylesheet/paypal/paypal.css?v=20261114-atelier-reset-v1');
 				}
 				
 				if (!empty($setting['googlepay_button'][$params['page_code']]['status'])) {
@@ -5481,9 +5480,9 @@ class ControllerExtensionPaymentPayPal extends Controller {
 				if ($params['page_code'] == 'checkout') {			
 					if ($setting['card']['status']) {
 						if (file_exists(DIR_TEMPLATE . $theme . '/stylesheet/paypal/card.css')) {
-							$this->document->addStyle('catalog/view/theme/' . $theme . '/stylesheet/paypal/card.css');
+							$this->document->addStyle('catalog/view/theme/' . $theme . '/stylesheet/paypal/card.css?v=20261114-atelier-reset-v1');
 						} else {
-							$this->document->addStyle('catalog/view/theme/default/stylesheet/paypal/card.css');
+							$this->document->addStyle('catalog/view/theme/default/stylesheet/paypal/card.css?v=20261114-atelier-reset-v1');
 						}
 					}
 				}

@@ -5,6 +5,19 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/support/BrowserTestCase.php';
 
 final class CatalogFilterFunctionalTest extends BrowserTestCase {
+	public function testEmptySearchOffersTheSameCatalogAsTheHeader(): void {
+		$html = $this->request($this->getRouteUrl('product/search', array('search' => 'no-matching-product-atelier-987654321')));
+		$xpath = new DOMXPath($this->document($html));
+		$emptyHeading = $xpath->query('//*[@id="catalog-empty-title"]');
+		$catalogAction = $xpath->query('//a[contains(concat(" ", normalize-space(@class), " "), " catalog-search-panel__browse ")]');
+		$headerCatalog = $xpath->query('//nav[@id="site-nav"]/a[normalize-space(.)="Каталог"]');
+
+		self::assertSame(1, $emptyHeading->length);
+		self::assertSame(1, $catalogAction->length);
+		self::assertSame(1, $headerCatalog->length);
+		self::assertSame($headerCatalog->item(0)->getAttribute('href'), $catalogAction->item(0)->getAttribute('href'));
+	}
+
 	public function testHttpSearchRouteFiltersRealCatalogData(): void {
 		$unfilteredHtml = $this->request($this->getRouteUrl('product/search', array('limit' => 100)));
 		$unfilteredProducts = $this->productLinks($unfilteredHtml);
@@ -34,7 +47,7 @@ final class CatalogFilterFunctionalTest extends BrowserTestCase {
 		$result = $this->runBrowserScenario(__DIR__ . '/support/catalog_regression_browser.mjs', 'visual');
 
 		self::assertTrue($result['hero']['equalFrames'] ?? false);
-		self::assertSame(array('fill'), $result['hero']['objectFits'] ?? null);
+		self::assertSame(array('cover'), $result['hero']['objectFits'] ?? null);
 		self::assertSame('none', $result['hero']['beforeContent'] ?? null);
 		self::assertSame('none', $result['hero']['afterContent'] ?? null);
 		self::assertGreaterThanOrEqual(0.9, $result['product']['widthOccupancy'] ?? 0);
@@ -46,9 +59,19 @@ final class CatalogFilterFunctionalTest extends BrowserTestCase {
 		self::assertLessThanOrEqual(480, $result['catalog']['maxMediaHeight'] ?? PHP_INT_MAX);
 		self::assertTrue($result['pagination']['exists'] ?? false);
 		self::assertTrue($result['pagination']['minimumTouchTarget'] ?? false);
-		self::assertTrue($result['pagination']['rounded'] ?? false);
+		self::assertTrue($result['pagination']['atelierCorners'] ?? false);
 		self::assertTrue($result['pagination']['activeUsesThemeAccent'] ?? false);
 		self::assertTrue($result['pagination']['notBootstrapBlue'] ?? false);
+	}
+
+	public function testMobileCartRemainsUsableAfterAddingProduct(): void {
+		$result = $this->runBrowserScenario(__DIR__ . '/support/catalog_regression_browser.mjs', 'cart');
+
+		self::assertTrue($result['iconVisible'] ?? false, 'Cart icon must remain visible after adding a product.');
+		self::assertTrue($result['noticeVisible'] ?? false, 'Adding a product must show a notification.');
+		self::assertTrue($result['removeReachable'] ?? false, 'The notification must not block the mini cart.');
+		self::assertTrue($result['removed'] ?? false, 'The product must be removable from the mini cart.');
+		self::assertTrue($result['iconAfterRemove'] ?? false, 'Cart icon must remain visible after removal.');
 	}
 
 	private function request(string $url): string {

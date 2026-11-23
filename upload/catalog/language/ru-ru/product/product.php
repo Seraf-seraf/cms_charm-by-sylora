@@ -11,6 +11,9 @@
 // Text
 $_['text_search']              = 'Искать';
 $_['text_brand']               = 'Бренд';
+$_['text_breadcrumb_catalog']    = 'Каталог';
+$_['text_breadcrumb_navigation'] = 'Навигация по каталогу';
+$_['text_breadcrumb_search']     = 'Поиск';
 $_['text_manufacturer']        = 'Бренд:';
 $_['text_model']               = 'Модель:';
 $_['text_reward']              = 'Бонусные баллы:';
@@ -28,7 +31,7 @@ $_['text_no_reviews']          = 'Нет отзывов об этом товар
 $_['text_note']                = '<span class="text-danger">Примечание:</span> HTML запрещен! Только обычный текст';
 $_['text_success']             = 'Спасибо за Ваш отзыв. Он был передан на модерацию.';
 $_['text_related']             = 'Сопутствующие товары';
-$_['text_tags']                = '<i class="fas fa-tags"></i>';
+$_['text_tags']                = 'Теги:';
 $_['text_error']               = 'Товар не найден!';
 $_['text_payment_recurring']   = 'Платежный профиль';
 $_['text_trial_description']   = '%s периодичность %d %s для %d платеж(а)(ей) затем';

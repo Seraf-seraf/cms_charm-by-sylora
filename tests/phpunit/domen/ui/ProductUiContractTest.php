@@ -40,20 +40,34 @@ final class ProductUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
 	}
 
-	public function testMainProductImageFitsViewportWithoutThumbnailUpscaling(): void {
+	public function testMainProductImageUsesResponsiveGallerySource(): void {
 		$controller = $this->read('upload/catalog/controller/product/product.php');
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
 
 		self::assertStringContainsString('private const GALLERY_IMAGE_SIZE = 1200;', $controller);
 		self::assertStringContainsString('resizeWithSources($image_filename, $gallery_width, $gallery_height)', $controller);
 		self::assertMatchesRegularExpression(
-			'/\.product-page__media\s*\{[^}]*max-width: 720px;/s',
+			'/\.product-page__media,[^{]+\{[^}]*min-width: 0;/s',
 			$css
 		);
 		self::assertMatchesRegularExpression(
-			'/\.product-gallery__main \.thumbnail\s*\{[^}]*height: min\(720px, calc\(100vh - 140px\)\);/s',
+			'/\.product-page \.thumbnail img\s*\{[^}]*object-fit: contain;/s',
 			$css
 		);
+		self::assertMatchesRegularExpression(
+			'/@media \(max-width: 767px\).*?#product-product \.product-gallery__main \.thumbnail\s*\{[^}]*aspect-ratio: 7 \/ 8;/s',
+			$css
+		);
+	}
+
+	public function testProductTitleHasNoExtraEyebrowAndWishlistActionRemainsAvailable(): void {
+		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/product/product.twig');
+		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
+
+		self::assertStringContainsString('<h1>{{ heading_title }}</h1>', $template);
+		self::assertStringNotContainsString('class="sylora-eyebrow">Украшение ручной работы</p>', $template);
+		self::assertStringContainsString('data-wishlist-add="{{ product_id }}"', $template);
+		self::assertStringNotContainsString('#product-product .product-page__summary > .sylora-eyebrow', $css);
 	}
 
 	private function read(string $path): string {

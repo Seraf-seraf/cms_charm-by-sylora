@@ -1,8 +1,16 @@
+<div data-shipping-method-form>
 {% if error_warning %}
-<div class="alert alert-warning alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+<p class="alert shipping-methods__unavailable" role="alert">{{ error_warning }}</p>
+{% if not shipping_methods %}
+<div class="shipping-methods__empty-actions">
+  <a href="{{ contact }}" class="btn btn-default shipping-methods__contact">{{ button_contact }}</a>
+  <a href="#collapse-shipping-address" data-toggle="collapse" data-parent="#accordion" class="btn btn-default shipping-methods__change-address">{{ button_change_address }}</a>
+</div>
+{% endif %}
 {% endif %}
 {% if shipping_methods %}
-<p>{{ text_shipping_method }}</p>
+<p class="shipping-methods__save-status" data-shipping-save-status role="status" hidden>{{ text_shipping_method_saving }}</p>
+<p class="shipping-methods__intro">{{ text_shipping_method }}</p>
 <div class="shipping-methods" data-shipping-methods aria-busy="false">
 {% for shipping_method in shipping_methods %}
 <section class="shipping-methods__group">
@@ -28,13 +36,12 @@
 </section>
 {% endfor %}
 </div>
+<div class="shipping-methods__comment">
+  <label for="input-shipping-comment">{{ text_comments }}</label>
+  <textarea id="input-shipping-comment" name="comment" rows="1" class="form-control">{{ comment }}</textarea>
+</div>
+<div class="buttons shipping-methods__actions">
+  <input type="button" value="{{ button_continue }}" id="button-shipping-method" data-loading-text="{{ button_continue }}" class="btn btn-primary" />
+</div>
 {% endif %}
-<p><strong>{{ text_comments }}</strong></p>
-<p>
-  <textarea name="comment" rows="8" class="form-control">{{ comment }}</textarea>
-</p>
-<div class="buttons">
-  <div class="pull-right">
-    <input type="button" value="{{ button_continue }}" id="button-shipping-method" data-loading-text="{{ text_loading }}" class="btn btn-primary" />
-  </div>
 </div>

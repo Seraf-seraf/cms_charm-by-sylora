@@ -16,18 +16,13 @@ final class HomeUiContractTest extends TestCase {
 		$header = $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/header.twig');
 
 		self::assertMatchesRegularExpression(
-			'/\.sylora-link\s*\{[^}]*display: inline-flex;[^}]*align-items: center;[^}]*min-height: 44px;/s',
-			$css
-		);
-		self::assertMatchesRegularExpression(
-			'/\.sylora-section__head > a\s*\{[^}]*display: inline-flex;[^}]*align-items: center;[^}]*min-height: 44px;/s',
+			'/\.sylora-link,\s*\.sylora-section__head > a,[^{]+\{[^}]*display: inline-flex;[^}]*align-items: center;[^}]*min-height: 44px;/s',
 			$css
 		);
 		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
 	}
 
 	public function testHeroUsesAdminManagedAutomaticSlideshow(): void {
-		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
 		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/home.twig');
 		$controller = $this->read('upload/catalog/controller/common/home.php');
 		$slideshow = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/module/slideshow.twig');
@@ -43,7 +38,33 @@ final class HomeUiContractTest extends TestCase {
 		self::assertStringContainsString('autoplay: 5000', $storefront);
 		self::assertStringContainsString('autoplayDisableOnInteraction: false', $storefront);
 		self::assertStringContainsString('loop: true', $storefront);
-		self::assertMatchesRegularExpression('/\.sylora-hero__banner \.swiper-pager,[^{]+\{\s*display: none;/s', $css);
+		self::assertStringContainsString('class="swiper-pagination', $slideshow);
+		self::assertStringContainsString('class="swiper-button-next', $slideshow);
+		self::assertStringContainsString('class="swiper-button-prev', $slideshow);
+	}
+
+	public function testHomeCategorySectionUsesFigmaHeading(): void {
+		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/home.twig');
+		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
+
+		self::assertStringContainsString('<h2>Выберите украшение</h2>', $template);
+		self::assertMatchesRegularExpression('/@media \(min-width: 1200px\)\s*\{.*?#common-home \.sylora-hero h1 \{ max-width: 560px; \}/s', $css);
+	}
+
+	public function testHeroMediaUsesResponsiveFigmaFrameWithoutReplacingTheConfiguredSlideshow(): void {
+		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
+		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/module/slideshow.twig');
+
+		self::assertStringContainsString('aspect-ratio: 624 / 560;', $css);
+		self::assertStringContainsString('aspect-ratio: 354 / 386;', $css);
+		self::assertStringContainsString('object-fit: cover;', $css);
+		self::assertStringContainsString('#common-home .sylora-actions { margin-top: 4px; }', $css);
+		self::assertStringContainsString('#common-home .sylora-hero + .sylora-section { padding-top: 44px; }', $css);
+		self::assertStringContainsString('#common-home .sylora-hero__media { transform: translateX(8px); }', $css);
+		self::assertStringContainsString('class="sylora-hero__copy"', $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/home.twig'));
+		self::assertStringContainsString('#common-home .sylora-hero__copy { display: contents; }', $css);
+		self::assertStringContainsString('data-slideshow', $template);
+		self::assertStringContainsString('{{ banner.link }}', $template);
 	}
 
 	private function read(string $path): string {

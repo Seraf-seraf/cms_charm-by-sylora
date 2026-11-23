@@ -22,7 +22,7 @@
       {% if product.badge %}
       <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
       {% endif %}
-      <button type="button" class="catalog-card__icon catalog-card__wishlist" data-toggle="tooltip" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}" aria-pressed="false" data-wishlist-add="{{ product.product_id }}"><i class="fa fa-heart" aria-hidden="true"></i></button>
+      <button type="button" class="catalog-card__icon catalog-card__wishlist" data-toggle="tooltip" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}" aria-pressed="false" data-wishlist-add="{{ product.product_id }}"><img class="atelier-icon atelier-icon--heart" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/heart.svg" alt="" aria-hidden="true"></button>
     </div>
     <div class="catalog-card__body">
       <div class="caption">
@@ -35,19 +35,19 @@
         <p class="catalog-card__description">{{ product.description }}</p>
         {% endif %}
         {% if product.rating %}
-        <div class="rating" aria-label="{{ product.rating }} / 5">{% for i in 1..5 %}{% if product.rating < i %}<span class="fa fa-stack"><i class="fa fa-star-o fa-stack-2x"></i></span>{% else %}<span class="fa fa-stack"><i class="fa fa-star fa-stack-2x"></i><i class="fa fa-star-o fa-stack-2x"></i></span>{% endif %}{% endfor %}</div>
+        <div class="rating" aria-label="{{ product.rating }} / 5">{% for i in 1..5 %}{% if product.rating < i %}<span class="rating-star" aria-hidden="true">☆</span>{% else %}<span class="rating-star" aria-hidden="true">★</span>{% endif %}{% endfor %}</div>
         {% endif %}
       </div>
       <footer class="catalog-card__actions">
         {% if product.can_buy %}
-        <button type="button" class="catalog-card__cart" data-cart-add="{{ product.product_id }}" data-quantity="{{ product.minimum }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>{{ button_cart }}</span></button>
+        <button type="button" class="catalog-card__cart" data-cart-add="{{ product.product_id }}" data-quantity="{{ product.minimum }}"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"> <span>{{ button_cart }}</span></button>
         {% else %}
-        <button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban" aria-hidden="true"></i> <span>{{ text_out_of_stock }}</span></button>
+        <button type="button" class="catalog-card__cart" disabled aria-disabled="true"> <span>{{ text_out_of_stock }}</span></button>
         {% endif %}
         <div class="catalog-card__secondary{% if not has_quick_view %} catalog-card__secondary--single{% endif %}">
           <a class="catalog-card__more" href="{{ product.href }}">{{ button_details }}</a>
           {% if has_quick_view %}
-          <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" data-toggle="tooltip" title="{{ button_quick_view }}" aria-label="{{ button_quick_view }}" aria-haspopup="dialog" aria-expanded="false"><i class="fa fa-eye" aria-hidden="true"></i></button>
+          <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" data-toggle="tooltip" title="{{ button_quick_view }}" aria-label="{{ button_quick_view }}" aria-haspopup="dialog" aria-expanded="false"><img class="atelier-icon atelier-icon--eye" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/eye.svg" alt="" aria-hidden="true"></button>
           {% endif %}
         </div>
       </footer>
@@ -56,7 +56,7 @@
   {% if has_quick_view %}
   <dialog class="quick-view" id="quick-view-{{ product.product_id }}" aria-labelledby="quick-view-title-{{ product.product_id }}">
     <form class="quick-view__close" method="dialog">
-      <button type="submit" aria-label="{{ button_close }}"><i class="fa fa-times" aria-hidden="true"></i></button>
+      <button type="submit" aria-label="{{ button_close }}"><img class="atelier-icon atelier-icon--close" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" alt="" aria-hidden="true"></button>
     </form>
     <div class="quick-view__grid">
       <picture>
@@ -72,7 +72,7 @@
         <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
         {% if product.quick_description %}<p>{{ product.quick_description }}</p>{% elseif product.description %}<p>{{ product.description }}</p>{% endif %}
         <div class="quick-view__actions">
-          {% if product.can_buy %}<button type="button" class="catalog-card__cart" data-cart-add="{{ product.product_id }}" data-quantity="{{ product.minimum }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>{{ button_cart }}</span></button>{% else %}<button type="button" class="catalog-card__cart" disabled aria-disabled="true"><i class="fa fa-ban" aria-hidden="true"></i> <span>{{ text_out_of_stock }}</span></button>{% endif %}
+          {% if product.can_buy %}<button type="button" class="catalog-card__cart" data-cart-add="{{ product.product_id }}" data-quantity="{{ product.minimum }}"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"> <span>{{ button_cart }}</span></button>{% else %}<button type="button" class="catalog-card__cart" disabled aria-disabled="true"> <span>{{ text_out_of_stock }}</span></button>{% endif %}
           <a class="catalog-card__more" href="{{ product.href }}">{{ button_details }}</a>
         </div>
       </div>

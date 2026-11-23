@@ -1,43 +1,48 @@
 {{ header }}
-<div id="account-reset" class="container">
-  <div class="row">{{ column_left }}
+<main id="account-reset" class="container account-auth account-auth--narrow">
+  <div{% if column_left or column_right %} class="row"{% endif %}>
+    {{ column_left }}
+    {% set column_class = '' %}
     {% if column_left and column_right %}
-    {% set class = 'col-sm-6' %}
+      {% set column_class = ' col-sm-6' %}
     {% elseif column_left or column_right %}
-    {% set class = 'col-sm-9' %}
-    {% else %}
-    {% set class = 'col-sm-12' %}
+      {% set column_class = ' col-sm-9' %}
     {% endif %}
-    <div id="content" class="{{ class }}">{{ content_top }}
-      <h1>{{ heading_title }}</h1>
-      <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
-        <fieldset>
-          <legend>{{ text_password }}</legend>
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-password">{{ entry_password }}</label>
-            <div class="col-sm-10">
-              <input type="password" name="password" value="{{ password }}" id="input-password" class="form-control" />
-              {% if error_password %}
-              <div class="text-danger">{{ error_password }}</div>
-              {% endif %} </div>
+    <div id="content" class="account-auth__content{{ column_class }}">
+      {{ content_top }}
+      <header class="account-auth__header">
+        <h1>
+          <span class="account-auth__title--mobile">{{ heading_title }}</span>
+          <span class="account-auth__title--desktop">{{ text_account }}</span>
+        </h1>
+      </header>
+      <section class="account-auth__card">
+        <h2 class="account-auth__card-title">{{ heading_title }}</h2>
+        <p class="account-auth__intro" id="reset-password-help">{{ text_password }}</p>
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" class="account-auth__form">
+          <div class="form-group{% if error_password %} has-error{% endif %}">
+            <label class="control-label" for="input-password">{{ entry_password }}</label>
+            <input type="password" name="password" value="{{ password }}" id="input-password" class="form-control" autocomplete="new-password" aria-describedby="reset-password-help{% if error_password %} reset-password-error{% endif %}"{% if error_password %} aria-invalid="true"{% endif %} />
+            {% if error_password %}
+            <p class="text-danger" id="reset-password-error" role="alert">{{ error_password }}</p>
+            {% endif %}
           </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-confirm">{{ entry_confirm }}</label>
-            <div class="col-sm-10">
-              <input type="password" name="confirm" value="{{ confirm }}" id="input-confirm" class="form-control" />
-              {% if error_confirm %}
-              <div class="text-danger">{{ error_confirm }}</div>
-              {% endif %}</div>
+          <div class="form-group{% if error_confirm %} has-error{% endif %}">
+            <label class="control-label" for="input-confirm">{{ entry_confirm }}</label>
+            <input type="password" name="confirm" value="{{ confirm }}" id="input-confirm" class="form-control" autocomplete="new-password"{% if error_confirm %} aria-invalid="true" aria-describedby="reset-confirm-error"{% endif %} />
+            {% if error_confirm %}
+            <p class="text-danger" id="reset-confirm-error" role="alert">{{ error_confirm }}</p>
+            {% endif %}
           </div>
-        </fieldset>
-        <div class="buttons clearfix">
-          <div class="pull-left"><a href="{{ back }}" class="btn btn-default">{{ button_back }}</a></div>
-          <div class="pull-right">
+          <div class="account-auth__actions">
             <button type="submit" class="btn btn-primary">{{ button_continue }}</button>
+            <a href="{{ back }}" class="btn btn-default">{{ button_back }}</a>
           </div>
-        </div>
-      </form>
-      {{ content_bottom }}</div>
-    {{ column_right }}</div>
-</div>
+        </form>
+      </section>
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</main>
 {{ footer }}

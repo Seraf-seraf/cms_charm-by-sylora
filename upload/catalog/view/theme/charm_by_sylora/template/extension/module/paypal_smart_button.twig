@@ -1,32 +1,3 @@
-<style type="text/css">
-
-#paypal_form {
-	position: relative;
-}
-
-#paypal_smart_button {
-	text-align: {{ button_align }};
-}
-
-#paypal_smart_button_container {
-	{% if button_width %}
-	display: inline-block;
-	width: {{ button_width }};
-	{% endif %}
-}
-
-#paypal_message {
-	text-align: {{ message_align }};
-}
-
-#paypal_message_container {
-	{% if message_width %}
-	display: inline-block;
-	width: {{ message_width }};
-	{% endif %}
-}
-
-</style>
 <script type="text/javascript">
 
 function setupPayPalSmartButton() {
@@ -119,6 +90,11 @@ window.addEventListener('load', function () {
 		html += '</div>';
 
 		$('{{ insert_tag }}').{{ insert_type }}(html);
+
+		$('#paypal_smart_button').css('text-align', '{{ button_align|escape('js') }}');
+		$('#paypal_message').css('text-align', '{{ message_align|escape('js') }}');
+		{% if button_width %}$('#paypal_smart_button_container').css({display: 'inline-block', width: '{{ button_width|escape('js') }}'});{% endif %}
+		{% if message_width %}$('#paypal_message_container').css({display: 'inline-block', width: '{{ message_width|escape('js') }}'});{% endif %}
 
 		if (typeof paypal_sdk === 'undefined') {
 			var script = document.createElement('script');
