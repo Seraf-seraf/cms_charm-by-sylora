@@ -11,7 +11,8 @@
     <div id="content" class="{{ class }}">{{ content_top }}
       {{ account_navigation }}
       <main class="atelier-account-page-content">
-      <h2>{{ text_address_book }}</h2>
+      {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+      <{{ heading_tag }}>{{ text_address_book }}</{{ heading_tag }}>
       {% if success %}
       <div class="address-status" role="status">{{ success }}</div>
       {% endif %}

@@ -15,7 +15,8 @@
         <div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_warning }}</div>
         {% endif %}
       <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal account-profile-form">
-        <h1>{{ heading_title }}</h1>
+        {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+        <{{ heading_tag }}>{{ heading_title }}</{{ heading_tag }}>
         <p class="account-profile-form__intro">{{ text_your_details }}</p>
         <fieldset>
           <legend class="sr-only">{{ heading_title }}</legend>

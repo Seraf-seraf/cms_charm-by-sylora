@@ -22,10 +22,13 @@
         </div>
         {% endif %}
 
-        <h1>{{ text_order }} № {{ order_id }}</h1>
+        {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+        {% set subheading_tag = account_navigation ? 'h3' : 'h2' %}
+        {% set detail_heading_tag = account_navigation ? 'h4' : 'h3' %}
+        <{{ heading_tag }}>{{ text_order }} № {{ order_id }}</{{ heading_tag }}>
         <div class="order-detail-cards">
           <section class="order-detail-card order-detail-card--information">
-            <h2>{{ text_order_information }}</h2>
+            <{{ subheading_tag }}>{{ text_order_information }}</{{ subheading_tag }}>
             <p class="order-detail-card__description">{{ text_order_date_status }}</p>
             <dl class="order-detail-data">
               {% if invoice_no %}
@@ -43,7 +46,7 @@
               {% endif %}
             </dl>
             <div class="order-detail-history">
-              <h3>{{ text_history }}</h3>
+              <{{ detail_heading_tag }}>{{ text_history }}</{{ detail_heading_tag }}>
               {% if histories %}
               <ol>
                 {% for history in histories %}
@@ -60,28 +63,28 @@
           </section>
 
           <section class="order-detail-card order-detail-card--delivery">
-            <h2>{{ text_delivery }}</h2>
+            <{{ subheading_tag }}>{{ text_delivery }}</{{ subheading_tag }}>
             <p class="order-detail-card__description">{{ text_delivery_recipient }}</p>
             {% if shipping_address %}
             <div class="order-detail-address">
-              <h3>{{ text_shipping_address }}</h3>
+              <{{ detail_heading_tag }}>{{ text_shipping_address }}</{{ detail_heading_tag }}>
               <p>{{ shipping_address }}</p>
             </div>
             {% endif %}
             {% if payment_address %}
             <div class="order-detail-address">
-              <h3>{{ text_payment_address }}</h3>
+              <{{ detail_heading_tag }}>{{ text_payment_address }}</{{ detail_heading_tag }}>
               <p>{{ payment_address }}</p>
             </div>
             {% endif %}
           </section>
 
           <section class="order-detail-card order-detail-card--products">
-            <h2>{{ text_order_products }}</h2>
+            <{{ subheading_tag }}>{{ text_order_products }}</{{ subheading_tag }}>
             <p class="order-detail-card__description">{{ text_product_summary }}</p>
             {% for product in products %}
             <article class="order-detail-product">
-              <h3>{{ product.name }}</h3>
+              <{{ detail_heading_tag }}>{{ product.name }}</{{ detail_heading_tag }}>
               {% if product.model %}<p class="order-detail-product__model">{{ column_model }}: {{ product.model }}</p>{% endif %}
               {% if product.option %}
               <ul class="order-detail-product__options">
@@ -103,7 +106,7 @@
             {% endfor %}
             {% for voucher in vouchers %}
             <article class="order-detail-product order-detail-product--voucher">
-              <h3>{{ voucher.description }}</h3>
+              <{{ detail_heading_tag }}>{{ voucher.description }}</{{ detail_heading_tag }}>
               <dl class="order-detail-product__data">
                 <div><dt>{{ column_quantity }}</dt><dd>1</dd></div>
                 <div><dt>{{ column_price }}</dt><dd>{{ voucher.amount }}</dd></div>
@@ -114,7 +117,7 @@
           </section>
 
           <section class="order-detail-card order-detail-card--totals">
-            <h2>{{ text_order_totals }}</h2>
+            <{{ subheading_tag }}>{{ text_order_totals }}</{{ subheading_tag }}>
             <p class="order-detail-card__description">{{ text_total_summary }}</p>
             <dl class="order-detail-totals">
               {% for total in totals %}
@@ -123,7 +126,7 @@
             </dl>
             {% if comment %}
             <div class="order-detail-comment">
-              <h3>{{ text_comment }}</h3>
+              <{{ detail_heading_tag }}>{{ text_comment }}</{{ detail_heading_tag }}>
               <p>{{ comment }}</p>
             </div>
             {% endif %}

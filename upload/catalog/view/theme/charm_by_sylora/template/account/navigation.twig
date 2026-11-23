@@ -1,10 +1,35 @@
+{% macro link_item(link) %}
+  <li><a href="{{ link.href }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.label }}</a></li>
+{% endmacro %}
+{% import _self as navigation %}
+
 <header class="atelier-account-navigation">
   <h1>{{ text_my_account }}</h1>
-  <nav aria-label="{{ text_my_account }}">
-    <ul>
-      {% for link in links %}
-      <li{% if link.active %} class="is-active"{% endif %}><a href="{{ link.href }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.label }}</a></li>
+  <nav class="atelier-account-navigation__desktop" aria-label="{{ text_my_account }}">
+    <ul class="atelier-account-navigation__main">
+      {% for link in main_links %}
+      {{ navigation.link_item(link) }}
       {% endfor %}
+      <li>
+        <details class="atelier-account-navigation__more">
+          <summary>{{ text_more }}</summary>
+          <ul class="atelier-account-navigation__items">
+            {% for link in more_links %}
+            {{ navigation.link_item(link) }}
+            {% endfor %}
+          </ul>
+        </details>
+      </li>
     </ul>
   </nav>
+  <details class="atelier-account-navigation__mobile">
+    <summary>{{ current_label }}</summary>
+    <nav aria-label="{{ text_my_account }}">
+      <ul class="atelier-account-navigation__items">
+        {% for link in links %}
+        {{ navigation.link_item(link) }}
+        {% endfor %}
+      </ul>
+    </nav>
+  </details>
 </header>

@@ -256,9 +256,9 @@ REGEX;
 			self::assertStringContainsString($preservedDetailData, $detailTemplate, $preservedDetailData);
 		}
 		self::assertSame(4, substr_count($detailTemplate, 'class="return-detail__card"'), 'return details follow the four-section Atelier layout');
-		self::assertStringContainsString('<h3>{{ text_atelier_return_customer }}</h3>', $detailTemplate);
-		self::assertStringContainsString('<h2>{{ text_atelier_return_products }}</h2>', $detailTemplate);
-		self::assertStringContainsString('<h2>{{ text_atelier_return_history }}</h2>', $detailTemplate);
+		self::assertStringContainsString('<{{ detail_heading_tag }}>{{ text_atelier_return_customer }}</{{ detail_heading_tag }}>', $detailTemplate);
+		self::assertStringContainsString('<{{ subheading_tag }}>{{ text_atelier_return_products }}</{{ subheading_tag }}>', $detailTemplate);
+		self::assertStringContainsString('<{{ subheading_tag }}>{{ text_atelier_return_history }}</{{ subheading_tag }}>', $detailTemplate);
 		self::assertStringContainsString('class="return-detail__facts"', $detailTemplate);
 
 		foreach (array('text_atelier_return_summary', 'text_atelier_return_detail_title', 'text_atelier_return_information', 'text_atelier_return_customer', 'text_atelier_return_products', 'text_atelier_return_history') as $languageKey) {
@@ -427,6 +427,19 @@ PATTERN;
 		parse_str($query, $parsed);
 
 		return $parsed['default'];
+	}
+
+	public function testAccountNavigationRendersNativeDisclosureWithLocalizedLabels(): void {
+		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/account/navigation.twig');
+		$russian = $this->read('upload/catalog/language/ru-ru/account/navigation.php');
+		$english = $this->read('upload/catalog/language/en-gb/account/navigation.php');
+
+		self::assertSame(2, substr_count($template, '<details '));
+		self::assertStringContainsString('<summary>{{ text_more }}</summary>', $template);
+		self::assertStringContainsString('<summary>{{ current_label }}</summary>', $template);
+		self::assertStringContainsString('aria-current="page"', $template);
+		self::assertStringContainsString("['text_atelier_nav_more'] = 'Ещё';", $russian);
+		self::assertStringContainsString("['text_atelier_nav_more'] = 'More';", $english);
 	}
 
 	private function read(string $path): string {

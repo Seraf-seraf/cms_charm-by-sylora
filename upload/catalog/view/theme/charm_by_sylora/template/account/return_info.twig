@@ -12,9 +12,12 @@
       {{ account_navigation }}
       <main class="atelier-account-page-content">
       <div class="return-detail">
-        <h1>{{ text_atelier_return_detail_title|format(return_id) }}</h1>
+        {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+        {% set subheading_tag = account_navigation ? 'h3' : 'h2' %}
+        {% set detail_heading_tag = account_navigation ? 'h4' : 'h3' %}
+        <{{ heading_tag }}>{{ text_atelier_return_detail_title|format(return_id) }}</{{ heading_tag }}>
         <section class="return-detail__card">
-          <h2>{{ text_atelier_return_information }}</h2>
+          <{{ subheading_tag }}>{{ text_atelier_return_information }}</{{ subheading_tag }}>
           <dl class="return-detail__facts">
             <div><dt>{{ text_return_id }}</dt><dd>#{{ return_id }}</dd></div>
             <div><dt>{{ text_date_added }}</dt><dd>{{ date_added }}</dd></div>
@@ -23,7 +26,7 @@
             <div><dt>{{ text_date_ordered }}</dt><dd>{{ date_ordered }}</dd></div>
           </dl>
           <div class="return-detail__subsection">
-            <h3>{{ text_atelier_return_customer }}</h3>
+            <{{ detail_heading_tag }}>{{ text_atelier_return_customer }}</{{ detail_heading_tag }}>
             <dl class="return-detail__facts">
               <div><dt>{{ entry_firstname }}</dt><dd>{{ firstname }} {{ lastname }}</dd></div>
               <div><dt>{{ entry_email }}</dt><dd>{{ email }}</dd></div>
@@ -32,7 +35,7 @@
           </div>
         </section>
         <section class="return-detail__card">
-          <h2>{{ text_reason }}</h2>
+          <{{ subheading_tag }}>{{ text_reason }}</{{ subheading_tag }}>
           <dl>
             <div><dt>{{ column_reason }}</dt><dd>{{ reason }}</dd></div>
             <div><dt>{{ column_opened }}</dt><dd>{{ opened }}</dd></div>
@@ -40,7 +43,7 @@
           </dl>
         </section>
         <section class="return-detail__card">
-          <h2>{{ text_atelier_return_products }}</h2>
+          <{{ subheading_tag }}>{{ text_atelier_return_products }}</{{ subheading_tag }}>
           <dl>
             <div><dt>{{ column_product }}</dt><dd>{{ product }}</dd></div>
             <div><dt>{{ column_model }}</dt><dd>{{ model }}</dd></div>
@@ -48,10 +51,10 @@
           </dl>
         </section>
         <section class="return-detail__card">
-          <h2>{{ text_atelier_return_history }}</h2>
+          <{{ subheading_tag }}>{{ text_atelier_return_history }}</{{ subheading_tag }}>
           {% if comment %}
           <div class="return-detail__comment">
-            <h3>{{ text_comment }}</h3>
+            <{{ detail_heading_tag }}>{{ text_comment }}</{{ detail_heading_tag }}>
             <p>{{ comment }}</p>
           </div>
           {% endif %}

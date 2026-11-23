@@ -11,7 +11,8 @@
     <div id="content" class="{{ class }}">{{ content_top }}
       {{ account_navigation }}
       <main class="atelier-account-page-content">
-      <h1>{{ text_return_list_title }}</h1>
+      {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+      <{{ heading_tag }}>{{ text_return_list_title }}</{{ heading_tag }}>
       {% if returns %}
       <div class="return-list">
         {% for return in returns %}

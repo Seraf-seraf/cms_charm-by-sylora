@@ -3034,8 +3034,8 @@ body > footer .site-footer__bottom {
 	background: var(--account-section-paper);
 	box-shadow: none;
 }
-:is(#account-edit, #account-password) .atelier-account-page-content > h1,
-#account-edit .account-profile-form > h1 {
+:is(#account-edit, #account-password) .atelier-account-page-content > :is(h1, h2),
+#account-edit .account-profile-form > :is(h1, h2) {
 	margin: 0 0 20px;
 	color: var(--account-section-ink);
 	font-family: 'Atelier Cormorant', Georgia, serif;
@@ -3091,7 +3091,7 @@ body > footer .site-footer__bottom {
 	border: 1px solid var(--account-section-rule);
 	background: var(--account-section-card);
 }
-#account-edit .account-profile-form > h1 {
+#account-edit .account-profile-form > :is(h1, h2) {
 	margin: 0 0 4px;
 	font-size: 24px;
 	line-height: 1.2;
@@ -3106,7 +3106,7 @@ body > footer .site-footer__bottom {
 	:is(#account-edit, #account-password) .account-form-actions { align-items: stretch; }
 	:is(#account-edit, #account-password) .account-form-actions .btn { width: 100%; }
 	#account-edit .account-profile-form { padding: 0; border: 0; background: transparent; }
-	#account-edit .account-profile-form > h1 { margin-bottom: 18px; font-size: clamp(38px, 9.75vw, 42px); }
+	#account-edit .account-profile-form > :is(h1, h2) { margin-bottom: 18px; font-size: clamp(38px, 9.75vw, 42px); }
 	#account-edit .account-profile-form__intro { display: none; }
 }
 .account-module .list-group-item {
@@ -3247,7 +3247,8 @@ body > footer .site-footer__bottom {
 	background: var(--account-section-card);
 }
 .order-empty__note { max-width: 800px; margin: 18px 0 0; color: var(--color-muted); }
-.order-empty h2 { margin: 0; font: 300 37px / 1.12 'Atelier Cormorant', Georgia, serif; }
+.order-empty h2,
+.order-empty h3 { margin: 0; font: 300 37px / 1.12 'Atelier Cormorant', Georgia, serif; }
 .order-empty p,
 .wishlist-empty p,
 .return-empty p { margin: 0; }
@@ -3328,7 +3329,7 @@ body > footer .site-footer__bottom {
 	#account-address .address-form .buttons .pull-right > .btn-primary { width: min(280px, 100%); }
 }
 #account-return .return-detail { max-width: 764px; }
-#account-return .return-detail > h1 {
+#account-return .return-detail > :is(h1, h2) {
 	margin: 0 0 18px;
 	color: var(--account-section-ink);
 	font-family: 'Atelier Cormorant', Georgia, serif;
@@ -3403,7 +3404,7 @@ body > footer .site-footer__bottom {
 	line-height: 1.5;
 	overflow-wrap: anywhere;
 }
-#account-return .return-detail__card h2 {
+#account-return .return-detail__card > :is(h2, h3) {
 	margin: 0 0 8px;
 	color: var(--account-section-ink);
 	font-family: 'Atelier Cormorant', Georgia, serif;
@@ -3424,7 +3425,8 @@ body > footer .site-footer__bottom {
 #account-return .return-detail__card dt { margin-right: .35em; font-weight: 600; }
 #account-return .return-detail__subsection,
 #account-return .return-detail__comment { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--account-section-rule); }
-#account-return .return-detail__card h3 { margin: 0 0 6px; font-size: 14px; font-weight: 600; }
+#account-return .return-detail__subsection > :is(h3, h4),
+#account-return .return-detail__comment > :is(h3, h4) { margin: 0 0 6px; font-size: 14px; font-weight: 600; }
 #account-return .return-detail__back { width: 100%; }
 @media (max-width: 767px) {
 	#account-return .return-form .buttons {
@@ -3698,8 +3700,85 @@ body > footer .site-footer__bottom {
 	#information-information .about-grid { column-gap: 32px; }
 }
 
-/* Desktop account shell confirmed in Figma nodes 85:597, 85:1682 and 85:1716. */
-.atelier-account-navigation { display: none; }
+/* Account section navigation */
+.atelier-account-navigation {
+	max-width: 1304px;
+	margin: 0 auto 24px;
+	color: var(--account-section-ink, #30251e);
+}
+.atelier-account-navigation h1 {
+	margin: 0 0 16px;
+	color: inherit;
+	font: 300 clamp(34px, 11.3vw, 44px) / 1.05 var(--font-display);
+}
+.atelier-account-navigation__desktop { display: none; }
+.atelier-account-navigation a,
+.atelier-account-navigation summary {
+	color: inherit;
+	font: 400 15px / 22px var(--font-body);
+	text-decoration: none;
+}
+.atelier-account-navigation a:focus-visible,
+.atelier-account-navigation summary:focus-visible {
+	outline: 2px solid #526f7b;
+	outline-offset: 2px;
+}
+.atelier-account-navigation summary {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	list-style: none;
+}
+.atelier-account-navigation summary::-webkit-details-marker { display: none; }
+.atelier-account-navigation summary::after {
+	width: 16px;
+	height: 16px;
+	flex: none;
+	background: url('../image/icons/atelier/chevron-down.svg') center / contain no-repeat;
+	content: '';
+}
+.atelier-account-navigation__mobile summary {
+	justify-content: space-between;
+	min-height: 44px;
+	padding: 8px 12px;
+	border: 1px solid currentColor;
+	border-radius: 3px;
+	background: var(--account-section-card, var(--color-surface));
+	font-weight: 500;
+}
+.atelier-account-navigation__mobile summary::after {
+	width: 18px;
+	height: 18px;
+}
+.atelier-account-navigation__mobile[open] summary::after {
+	background-image: url('../image/icons/atelier/close.svg');
+}
+.atelier-account-navigation__items {
+	margin: 0;
+	padding: 4px 16px;
+	border: 1px solid var(--account-section-rule, #c8bfb2);
+	background: var(--account-section-card, var(--color-surface));
+	list-style: none;
+}
+.atelier-account-navigation__mobile .atelier-account-navigation__items { margin-top: 16px; }
+.atelier-account-navigation__items li + li { border-top: 1px solid var(--account-section-rule, #c8bfb2); }
+.atelier-account-navigation__items a {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	min-height: 44px;
+	font-size: 14px;
+}
+.atelier-account-navigation [aria-current="page"] { font-weight: 600; }
+.atelier-account-navigation__items [aria-current="page"]::after {
+	width: 17px;
+	height: 17px;
+	flex: none;
+	background: url('../image/icons/atelier/check.svg') center / contain no-repeat;
+	content: '';
+}
 .atelier-account-page-content { max-width: 1268px; min-width: 0; margin-inline: auto; }
 .atelier-account-page-content > :is(h1, h2) {
 	margin: 0 0 20px;
@@ -3716,7 +3795,7 @@ body > footer .site-footer__bottom {
 .order-empty__desktop-message { display: none; }
 
 @media (max-width: 767px) {
-	.atelier-account-navigation { display: none; }
+	.atelier-account--saved .atelier-account-navigation { display: none; }
 	#information-contact .contact-form-card textarea.form-control { height: 112px; min-height: 112px; }
 	.order-empty__actions { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 	.order-empty__actions .btn { width: 100%; }
@@ -3731,31 +3810,51 @@ body > footer .site-footer__bottom {
 }
 
 @media (min-width: 768px) {
-	.atelier-account-navigation {
-		display: block;
-		max-width: 1304px;
-		margin: 12px auto 48px;
-	}
+	.atelier-account-navigation { margin-block: 12px 28px; }
 	.atelier-account-navigation h1 {
-		margin: 0 0 24px;
-		color: var(--account-section-ink);
-		font: 300 clamp(52px, 5vw, 60px) / 1.08 'Atelier Cormorant', Georgia, serif;
+		margin-bottom: 12px;
+		font-size: clamp(48px, 5vw, 62px);
+		line-height: 1.033;
 	}
-	.atelier-account-navigation ul {
+	.atelier-account-navigation__mobile { display: none; }
+	.atelier-account-navigation__desktop {
+		position: relative;
+		display: block;
+		padding-bottom: 12px;
+		border-bottom: 1px solid var(--account-section-rule, #c8bfb2);
+	}
+	.atelier-account-navigation__main {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0 28px;
+		gap: 0 20px;
 		margin: 0;
-		padding: 0 0 18px;
-		border-bottom: 1px solid var(--account-section-rule);
+		padding: 0;
 		list-style: none;
 	}
-	.atelier-account-navigation a {
-		color: var(--account-section-ink);
-		font-size: 15px;
-		text-decoration: none;
+	.atelier-account-navigation__main > li > a,
+	.atelier-account-navigation__more summary {
+		display: flex;
+		align-items: center;
+		min-height: 44px;
 	}
-	.atelier-account-navigation .is-active a { text-decoration: underline; text-underline-offset: 6px; }
+	.atelier-account-navigation__main > li > a[aria-current="page"] {
+		text-decoration: underline;
+		text-decoration-color: #526f7b;
+		text-underline-offset: 9px;
+	}
+	.atelier-account-navigation__more summary { gap: 4px; }
+	.atelier-account-navigation__more[open] summary {
+		font-weight: 600;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.atelier-account-navigation__more .atelier-account-navigation__items {
+		position: absolute;
+		z-index: 3;
+		inset-inline-end: 0;
+		width: min(270px, 100%);
+		margin-top: -12px;
+	}
 	.order-empty__mobile-title,
 	.order-empty__description,
 	.order-empty__note { display: none; }
@@ -3870,8 +3969,8 @@ body > footer .site-footer__bottom {
 		padding: 2px var(--account-order-content-padding) var(--account-order-content-padding);
 	}
 }
-#account-order.account-order-list #content > .atelier-account-page-content > h1,
-#account-order.order-info-page .order-detail-page__content > h1 {
+#account-order.account-order-list #content > .atelier-account-page-content > :is(h1, h2),
+#account-order.order-info-page .order-detail-page__content > :is(h1, h2) {
 	margin: 0 0 18px;
 	font-size: 38px;
 }
@@ -3886,8 +3985,8 @@ body > footer .site-footer__bottom {
 	background: var(--account-section-card);
 	overflow-wrap: anywhere;
 }
-#account-order .order-history-card h2,
-#account-order .order-detail-card h2 {
+#account-order .order-history-card > :is(h2, h3),
+#account-order .order-detail-card > :is(h2, h3) {
 	margin: 0;
 	color: var(--account-section-ink);
 	font: 300 21px / 1.2 'Atelier Cormorant', Georgia, serif;
@@ -3952,9 +4051,9 @@ body > footer .site-footer__bottom {
 #account-order .order-detail-history,
 #account-order .order-detail-address,
 #account-order .order-detail-comment { min-width: 0; }
-#account-order .order-detail-history h3,
-#account-order .order-detail-address h3,
-#account-order .order-detail-comment h3 {
+#account-order .order-detail-history > :is(h3, h4),
+#account-order .order-detail-address > :is(h3, h4),
+#account-order .order-detail-comment > :is(h3, h4) {
 	margin: 8px 0 6px;
 	color: var(--account-section-ink);
 	font: 300 18px / 1.2 'Atelier Cormorant', Georgia, serif;
@@ -3967,7 +4066,7 @@ body > footer .site-footer__bottom {
 #account-order .order-detail-address p,
 #account-order .order-detail-comment p { margin: 0; overflow-wrap: anywhere; }
 #account-order .order-detail-product { display: grid; gap: 8px; min-width: 0; padding-top: 12px; border-top: 1px solid var(--account-section-rule); }
-#account-order .order-detail-product h3 { margin: 0; font: 300 19px / 1.2 'Atelier Cormorant', Georgia, serif; overflow-wrap: anywhere; }
+#account-order .order-detail-product > :is(h3, h4) { margin: 0; font: 300 19px / 1.2 'Atelier Cormorant', Georgia, serif; overflow-wrap: anywhere; }
 #account-order .order-detail-product__model,
 #account-order .order-detail-product__options { margin: 0; color: var(--color-muted); font-size: 13px; }
 #account-order .order-detail-product__options { padding-left: 20px; }
@@ -3984,7 +4083,11 @@ body > footer .site-footer__bottom {
 
 /* The newsletter screen follows the mobile Figma copy and card controls. */
 #account-newsletter .newsletter-page { max-width: 800px; margin-inline: 0; }
-#account-newsletter .newsletter-page > h1 { margin-bottom: 18px; font-size: 38px; }
+#account-newsletter .newsletter-page > :is(h1, h2) {
+	margin-bottom: 16px;
+	font-size: 36px;
+	line-height: 37px;
+}
 #account-newsletter .newsletter-form { max-width: 800px; }
 #account-newsletter .newsletter-form fieldset { margin: 0; padding: 0; border: 0; background: transparent; }
 #account-newsletter .newsletter-form legend { margin: 0; padding: 0; border: 0; color: var(--account-section-ink); font-size: 14px; font-weight: 400; }
@@ -4007,7 +4110,17 @@ body > footer .site-footer__bottom {
 #account-newsletter .newsletter-option input { position: static; flex: none; margin: 0; }
 #account-newsletter .newsletter-form__actions { display: grid; gap: 12px; max-width: 800px; }
 #account-newsletter .newsletter-form__save { width: 100%; min-height: 47px; }
-#account-newsletter .newsletter-form__back { justify-self: center; color: var(--color-muted); text-decoration: underline; text-underline-offset: 3px; }
+#account-newsletter .newsletter-form__back {
+	display: inline-flex;
+	align-items: center;
+	justify-self: start;
+	min-height: 44px;
+	color: var(--account-section-ink);
+	font-size: 15px;
+	line-height: 22px;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
 
 @media (min-width: 768px) {
 	#account-order .order-detail-data { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -4020,16 +4133,20 @@ body > footer .site-footer__bottom {
 	#account-address .address-list__buttons .pull-right { float: none !important; }
 	#account-address .address-list__buttons .btn { width: 280px; min-height: 47px; }
 	#account-newsletter .newsletter-page { max-width: 1268px; margin-inline: auto; }
+	#account-newsletter .newsletter-page > :is(h1, h2) { font-size: 42px; line-height: 44px; }
 	#account-newsletter .newsletter-form { max-width: 764px; }
 	#account-newsletter .newsletter-form__options { margin-top: 17px; }
-	#account-newsletter .newsletter-form__actions { max-width: 280px; }
+	#account-newsletter .newsletter-form__actions {
+		grid-template-columns: minmax(0, 225px) auto;
+		align-items: center;
+		gap: 16px;
+	}
 	#account-newsletter .newsletter-form__save { min-height: 48px; }
-	#account-newsletter .newsletter-form__back { display: none; }
 }
 
 @media (max-width: 767px) {
 	:is(#account-address, #account-order, #account-return, #account-wishlist, #account-newsletter) #content { padding-top: 0; }
-	#account-address .atelier-account-page-content > h2 { margin-bottom: 18px; }
+	#account-address .atelier-account-page-content > :is(h1, h2) { margin-bottom: 18px; }
 	#account-address .address-empty { padding-block: 16px; }
 	#account-address .address-empty p { font-size: 14px; line-height: 1.35; }
 	#account-address .address-list__buttons { margin-top: 18px; }
@@ -4037,7 +4154,18 @@ body > footer .site-footer__bottom {
 }
 
 @media (min-width: 1201px) {
-	body:has([id^="account-"]) .atelier-account-navigation { margin-bottom: 0; }
-	body:has([id^="account-"]) .atelier-account-navigation h1 { margin-bottom: 34px; }
-	body:has([id^="account-"]) .atelier-account-navigation ul { padding-bottom: 48px; border-bottom: 0; }
+	.atelier-account-navigation__main > li:nth-child(1) { min-inline-size: 124px; }
+	.atelier-account-navigation__main > li:nth-child(2) { min-inline-size: 72px; }
+	.atelier-account-navigation__main > li:nth-child(3) { min-inline-size: 98px; }
+	.atelier-account-navigation__main > li:nth-child(4) { min-inline-size: 70px; }
+	.atelier-account-navigation__main > li:nth-child(5) { min-inline-size: 84px; }
+	.atelier-account-navigation__main > li:nth-child(6) { min-inline-size: 74px; }
+	.atelier-account-navigation__main > li:nth-child(7) { min-inline-size: 96px; }
+	.atelier-account-navigation__main > li:nth-child(8) { min-inline-size: 72px; }
+	.atelier-account-navigation__more { position: relative; }
+	.atelier-account-navigation__more .atelier-account-navigation__items {
+		inset-inline-start: 0;
+		inset-inline-end: auto;
+		width: 270px;
+	}
 }

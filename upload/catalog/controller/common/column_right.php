@@ -1,6 +1,6 @@
 <?php
 class ControllerCommonColumnRight extends Controller {
-	public function index() {
+	public function index(mixed $settings = array()) {
 		$this->load->model('design/layout');
 
 		if (isset($this->request->get['route'])) {
@@ -42,11 +42,16 @@ class ControllerCommonColumnRight extends Controller {
 		$this->load->model('setting/module');
 
 		$data['modules'] = array();
+		$exclude_account = is_array($settings) && ($settings['exclude_account'] ?? false) === true;
 
 		$modules = $this->model_design_layout->getLayoutModules($layout_id, 'column_right');
 
 		foreach ($modules as $module) {
 			$part = explode('.', $module['code']);
+
+			if ($exclude_account && $part[0] === 'account') {
+				continue;
+			}
 
 			if (isset($part[0]) && $this->config->get('module_' . $part[0] . '_status')) {
 				$module_data = $this->load->controller('extension/module/' . $part[0]);

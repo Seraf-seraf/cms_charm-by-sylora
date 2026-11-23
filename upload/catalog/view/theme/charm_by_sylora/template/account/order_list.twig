@@ -11,12 +11,14 @@
     <div id="content" class="{{ class }}">{{ content_top }}
       {{ account_navigation }}
       <main class="atelier-account-page-content">
-      <h1>{{ heading_title }}</h1>
+      {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+      {% set subheading_tag = account_navigation ? 'h3' : 'h2' %}
+      <{{ heading_tag }}>{{ heading_title }}</{{ heading_tag }}>
       {% if orders %}
       <div class="order-history-list">
         {% for order in orders %}
         <article class="order-history-card" aria-label="{{ column_customer }}: {{ order.name }}">
-          <h2>{{ text_order }} № {{ order.order_id }}</h2>
+          <{{ subheading_tag }}>{{ text_order }} № {{ order.order_id }}</{{ subheading_tag }}>
           <div class="order-history-card__summary">
             <p aria-label="{{ text_order_date_status }}">{{ order.date_added }} · {{ order.status }}</p>
             <p>{{ text_order_items_count }}: {{ order.products }} · {{ text_order_amount }}: {{ order.total }}</p>
@@ -36,7 +38,7 @@
       {% endif %}
       {% else %}
       <div class="order-empty">
-        <h2 class="order-empty__mobile-title">{{ text_empty_title }}</h2>
+        <{{ subheading_tag }} class="order-empty__mobile-title">{{ text_empty_title }}</{{ subheading_tag }}>
         <p class="order-empty__description">{{ text_empty }}</p>
         <p class="order-empty__desktop-message">{{ text_order_empty_desktop }}</p>
         <div class="order-empty__actions">

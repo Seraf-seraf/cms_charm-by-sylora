@@ -16,7 +16,8 @@
     <div id="content" class="{{ class }}">{{ content_top }}
       {{ account_navigation }}
       <main class="atelier-account-page-content">
-      <h2>{{ heading_title }}</h2>
+      {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+      <{{ heading_tag }}>{{ heading_title }}</{{ heading_tag }}>
       {% if products %}
       <div class="wishlist-intro"><p>{{ text_saved_items }}</p></div>
       <div class="wishlist-grid">
