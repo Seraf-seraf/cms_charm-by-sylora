@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
+use Dom\HTMLDocument;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 final class HomeUiContractTest extends TestCase {
 	private string $root;
@@ -65,6 +69,66 @@ final class HomeUiContractTest extends TestCase {
 		self::assertStringContainsString('#common-home .sylora-hero__copy { display: contents; }', $css);
 		self::assertStringContainsString('data-slideshow', $template);
 		self::assertStringContainsString('{{ banner.link }}', $template);
+	}
+
+	/**
+	 * @return iterable<string, array{list<string>, ?string}>
+	 */
+	public static function layoutSlotsProvider(): iterable {
+		yield 'empty' => array(array(), null);
+		yield 'top' => array(array('content_top'), 'col-sm-12');
+		yield 'bottom' => array(array('content_bottom'), 'col-sm-12');
+		yield 'left' => array(array('column_left'), 'col-sm-9');
+		yield 'right' => array(array('column_right'), 'col-sm-9');
+		yield 'all slots' => array(array('column_left', 'content_top', 'content_bottom', 'column_right'), 'col-sm-6');
+	}
+
+	/**
+	 * @param list<string> $slots
+	 */
+	#[DataProvider('layoutSlotsProvider')]
+	public function testHomeRendersLayoutOnlyWhenASlotHasContent(array $slots, ?string $expectedClass): void {
+		$twig = new Environment(
+			new FilesystemLoader($this->root . '/upload/catalog/view/theme/charm_by_sylora/template'),
+			array('autoescape' => false)
+		);
+		$data = array(
+			'column_left' => '',
+			'content_top' => '',
+			'content_bottom' => '',
+			'column_right' => '',
+			'footer' => '<footer>Footer fixture</footer>',
+		);
+
+		foreach ($slots as $slot) {
+			$data[$slot] = '<div data-fixture-slot="' . $slot . '"></div>';
+		}
+
+		$html = $twig->render('common/home.twig', $data);
+		$page = HTMLDocument::createFromString('<!doctype html>' . $html, overrideEncoding: 'UTF-8');
+
+		self::assertSame('Авторские украшения ручной работы', $page->querySelector('#common-home .sylora-seo h2')?->textContent);
+		self::assertStringContainsString('В интернет-магазине Charm by Sylora', $page->querySelector('#common-home .sylora-seo p')?->textContent ?? '');
+		self::assertNotNull($page->querySelector('#common-home + footer'));
+
+		if ($expectedClass === null) {
+			self::assertNull($page->querySelector('#common-home .sylora-seo + *'));
+			self::assertNull($page->getElementById('content'));
+
+			return;
+		}
+
+		self::assertSame($expectedClass, $page->querySelector('#common-home .sylora-seo + .container > .row > #content')?->className);
+		$renderedSlots = array();
+
+		foreach ($page->querySelectorAll('#common-home [data-fixture-slot]') as $node) {
+			$slot = $node->getAttribute('data-fixture-slot');
+			$parent = str_starts_with($slot ?? '', 'column_') ? '.row' : '#content';
+			self::assertTrue($node->matches($parent . ' > [data-fixture-slot]'));
+			$renderedSlots[] = $slot;
+		}
+
+		self::assertSame($slots, $renderedSlots);
 	}
 
 	private function read(string $path): string {
