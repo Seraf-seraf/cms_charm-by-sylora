@@ -26,17 +26,19 @@ final class HomeUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/stylesheet\.min\.css\?v=[^"\s]+/', $header);
 	}
 
-	public function testHeroUsesAdminManagedAutomaticSlideshow(): void {
+	public function testHeroUsesSelectedStoreProductAndKeepsSlideshowModule(): void {
 		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/home.twig');
 		$controller = $this->read('upload/catalog/controller/common/home.php');
 		$slideshow = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/module/slideshow.twig');
 		$storefront = $this->read('upload/catalog/view/javascript/storefront.js');
 
-		self::assertStringContainsString("getLayoutModules(\$layout_id, 'content_top')", $controller);
-		self::assertStringContainsString("\$code[0] !== 'slideshow'", $controller);
-		self::assertStringContainsString("load->controller('extension/module/slideshow', \$setting)", $controller);
-		self::assertStringContainsString('{% if hero_banner %}', $template);
-		self::assertStringContainsString('{{ hero_banner }}', $template);
+		self::assertStringContainsString("getSettingValue('theme_charm_by_sylora_hero_product_id', \$store_id)", $controller);
+		self::assertStringContainsString('getProduct($product_id)', $controller);
+		self::assertStringNotContainsString('extension/module/slideshow', $controller);
+		self::assertStringContainsString('{% if hero_product %}', $template);
+		self::assertStringContainsString('{{ hero_product.href|e }}', $template);
+		self::assertStringContainsString('{{ hero_product.name|e }}', $template);
+		self::assertStringContainsString('class="sylora-hero__fallback"', $template);
 		self::assertStringContainsString('data-slideshow', $slideshow);
 		self::assertStringNotContainsString('<script', $slideshow);
 		self::assertStringContainsString('autoplay: 5000', $storefront);
@@ -55,16 +57,19 @@ final class HomeUiContractTest extends TestCase {
 		self::assertMatchesRegularExpression('/@media \(min-width: 1200px\)\s*\{.*?#common-home \.sylora-hero h1 \{ max-width: 560px; \}/s', $css);
 	}
 
-	public function testHeroMediaUsesResponsiveFigmaFrameWithoutReplacingTheConfiguredSlideshow(): void {
+	public function testHeroMediaUsesResponsiveProductAndCollectionFrames(): void {
 		$css = $this->read('upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.css');
 		$template = $this->read('upload/catalog/view/theme/charm_by_sylora/template/extension/module/slideshow.twig');
 
-		self::assertStringContainsString('aspect-ratio: 624 / 560;', $css);
-		self::assertStringContainsString('aspect-ratio: 354 / 386;', $css);
+		self::assertStringContainsString('.sylora-hero__product picture { aspect-ratio: 572 / 460; }', $css);
+		self::assertStringContainsString('.sylora-hero__product picture { aspect-ratio: 1; }', $css);
+		self::assertStringContainsString('.sylora-hero__media > picture { aspect-ratio: 572 / 420; }', $css);
+		self::assertStringContainsString('.sylora-hero__media > picture { aspect-ratio: 338 / 225; }', $css);
+		self::assertStringContainsString("grid-template-areas: 'content' 'actions' 'media';", $css);
 		self::assertStringContainsString('object-fit: cover;', $css);
 		self::assertStringContainsString('#common-home .sylora-actions { margin-top: 4px; }', $css);
 		self::assertStringContainsString('#common-home .sylora-hero + .sylora-section { padding-top: 44px; }', $css);
-		self::assertStringContainsString('#common-home .sylora-hero__media { transform: translateX(8px); }', $css);
+		self::assertStringContainsString('#common-home .sylora-hero__media { grid-column: 2; grid-row: 1; width: 100%; max-width: 604px; justify-self: end; }', $css);
 		self::assertStringContainsString('class="sylora-hero__copy"', $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/home.twig'));
 		self::assertStringContainsString('#common-home .sylora-hero__copy { display: contents; }', $css);
 		self::assertStringContainsString('data-slideshow', $template);

@@ -1,5 +1,7 @@
 <?php
 class ControllerCommonHome extends Controller {
+	private const HERO_PRODUCT_WIDTH_PX = 1144;
+	private const HERO_PRODUCT_HEIGHT_PX = 920;
 	public function index() {
 		$this->document->setTitle($this->config->get('config_meta_title') ?: 'Авторские украшения ручной работы — Charm by Sylora');
 		$this->document->setDescription($this->config->get('config_meta_description') ?: 'Авторские украшения ручной работы небольшими партиями. Колье, брелоки и другие изделия с бережной упаковкой и доставкой по России.');
@@ -147,7 +149,7 @@ class ControllerCommonHome extends Controller {
 			}
 		}
 
-		$data['hero_banner'] = $this->getHeroBanner();
+		$data['hero_product'] = $this->getHeroProduct();
 		$data['collection_image'] = $this->model_tool_image->resizeWithSources('catalog/sylora/jewelry-collection.png', 840, 630);
 		$data['column_left'] = '';
 		$data['column_right'] = '';
@@ -159,31 +161,41 @@ class ControllerCommonHome extends Controller {
 		$this->response->setOutput($this->load->view('common/home', $data));
 	}
 
-	private function getHeroBanner() {
-		$this->load->model('design/layout');
-		$this->load->model('setting/module');
+	/** @return array{name: string, image: array, href: string}|array{} */
+	private function getHeroProduct(): array {
+		$this->load->model('setting/setting');
+		$store_id = (int)$this->config->get('config_store_id');
+		$product_id = filter_var($this->model_setting_setting->getSettingValue('theme_charm_by_sylora_hero_product_id', $store_id), FILTER_VALIDATE_INT);
 
-		$layout_id = $this->model_design_layout->getLayout('common/home');
-
-		if (!$layout_id) {
-			$layout_id = (int)$this->config->get('config_layout_id');
+		if ($product_id === false || $product_id <= 0) {
+			return array();
 		}
 
-		foreach ($this->model_design_layout->getLayoutModules($layout_id, 'content_top') as $module) {
-			$code = explode('.', $module['code'], 2);
-
-			if ($code[0] !== 'slideshow' || !isset($code[1])) {
-				continue;
-			}
-
-			$setting = $this->model_setting_module->getModule((int)$code[1]);
-
-			if (is_array($setting) && !empty($setting['status'])) {
-				return trim($this->load->controller('extension/module/slideshow', $setting));
-			}
+		$product = $this->model_catalog_product->getProduct($product_id);
+		if (!$product || !$product['image']) {
+			return array();
 		}
 
-		return '';
+		$image_path = realpath(DIR_IMAGE . $product['image']);
+		if ($image_path === false || !is_file($image_path) || !str_starts_with($image_path, DIR_IMAGE) || @getimagesize($image_path) === false) {
+			return array();
+		}
+
+		try {
+			$image = @$this->model_tool_image->resizeCoverWithSources(
+				$product['image'],
+				self::HERO_PRODUCT_WIDTH_PX,
+				self::HERO_PRODUCT_HEIGHT_PX,
+			);
+		} catch (TypeError | ValueError) {
+			return array();
+		}
+
+		return $image['src'] === '' ? array() : array(
+			'name' => html_entity_decode($product['name'], ENT_QUOTES, 'UTF-8'),
+			'image' => $image,
+			'href' => str_replace('&amp;', '&', $this->url->link('product/product', 'product_id=' . $product_id)),
+		);
 	}
 
 	private function getCategorySummary($description) {

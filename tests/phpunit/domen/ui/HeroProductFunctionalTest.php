@@ -126,6 +126,100 @@ final class HeroProductFunctionalTest extends TestCase {
 		}
 	}
 
+	public function testStorefrontSelectedProductAndFallback(): void {
+		$fixture = $this->fixture;
+		$editor = $fixture->login();
+		$product = $fixture->product('SYLORA-TEST-001');
+		$otherProduct = $fixture->product('SYLORA-TEST-002');
+		$secondStore = HeroProductAdminFixture::SECOND_STORE_ID;
+		$fixture->database->execute_query('INSERT INTO product_to_store (product_id, store_id) VALUES (?, ?), (?, ?)', array(
+			$product['id'], $secondStore, $otherProduct['id'], $secondStore,
+		));
+
+		$slideshow = $fixture->database->query("SELECT COUNT(*) AS total FROM layout_module WHERE position = 'content_top' AND code LIKE 'slideshow.%'")->fetch_assoc();
+		self::assertGreaterThan(0, (int)$slideshow['total']);
+		$this->assertCollectionHero();
+		$form = $this->form($editor->theme()['body']);
+		self::assertSame(302, $editor->theme(0, array_replace($form, array(self::KEY => (string)$product['id'])))['status']);
+		$this->assertSelectedHero($product);
+		$this->assertCollectionHero($secondStore);
+
+		$secondForm = $this->form($editor->theme($secondStore)['body']);
+		self::assertSame(302, $editor->theme($secondStore, array_replace($secondForm, array(self::KEY => (string)$otherProduct['id'])))['status']);
+		$this->assertSelectedHero($otherProduct, $secondStore);
+		$this->assertSelectedHero($product);
+
+		$database = $fixture->database;
+		$original = $database->execute_query('SELECT status, date_available, image FROM product WHERE product_id = ?', array($product['id']))->fetch_assoc();
+		try {
+			foreach (array(
+				array(0, $original['date_available'], $original['image']),
+				array(1, '2099-01-01', $original['image']),
+				array(1, $original['date_available'], ''),
+				array(1, $original['date_available'], 'catalog/hero-no-such-image.png'),
+			) as $fields) {
+				$database->execute_query('UPDATE product SET status = ?, date_available = ?, image = ? WHERE product_id = ?', array_merge($fields, array($product['id'])));
+				$this->assertCollectionHero();
+			}
+		} finally {
+			$database->execute_query('UPDATE product SET status = ?, date_available = ?, image = ? WHERE product_id = ?', array_merge(array_values($original), array($product['id'])));
+		}
+
+		$database->execute_query('DELETE FROM product_to_store WHERE product_id = ? AND store_id = 0', array($product['id']));
+		try {
+			$this->assertCollectionHero();
+		} finally {
+			$database->execute_query('INSERT INTO product_to_store (product_id, store_id) VALUES (?, 0)', array($product['id']));
+		}
+
+		$database->execute_query('UPDATE setting SET value = ? WHERE store_id = 0 AND `key` = ?', array('999999', self::KEY));
+		$this->assertCollectionHero();
+		self::assertSame(302, $editor->theme(0, array_replace($form, array(self::KEY => '0')))['status']);
+		$this->assertCollectionHero();
+		$this->assertSelectedHero($otherProduct, $secondStore);
+	}
+
+	private function hero(int $storeId): Dom\Element {
+		$url = TestBootstrap::shared()->getRouteUrl('common/home', array('store_id' => $storeId));
+		$html = file_get_contents($url);
+		self::assertIsString($html);
+		$dom = Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR, 'UTF-8');
+		$media = $dom->querySelector('.sylora-hero__media');
+		self::assertNotNull($media);
+		self::assertNull($media->querySelector('[data-slideshow]'));
+
+		return $media;
+	}
+
+	/** @param array{id: int, name: string, image: string} $product */
+	private function assertSelectedHero(array $product, int $storeId = 0): void {
+		$media = $this->hero($storeId);
+		$link = $media->querySelector('a.sylora-hero__product');
+		self::assertNotNull($link);
+		self::assertSame($product['name'], trim($link->textContent));
+		$image = $link->querySelector('img');
+		self::assertNotNull($image);
+		$src = $image->getAttribute('src');
+		self::assertStringContainsString(pathinfo($product['image'], PATHINFO_FILENAME), $src);
+		self::assertNotFalse(@getimagesize($src));
+		$url = $link->getAttribute('href');
+		self::assertStringStartsWith($this->fixture->baseUrl . '/', $url);
+		$html = file_get_contents($url);
+		self::assertIsString($html);
+		self::assertStringContainsString('id="product-product"', $html);
+		self::assertStringContainsString($product['name'], $html);
+		self::assertNull($media->querySelector('.sylora-hero__fallback'));
+	}
+
+	private function assertCollectionHero(int $storeId = 0): void {
+		$media = $this->hero($storeId);
+		$image = $media->querySelector('img.sylora-hero__fallback');
+		self::assertNotNull($image);
+		self::assertStringContainsString('jewelry-collection', $image->getAttribute('src'));
+		self::assertNotFalse(@getimagesize($image->getAttribute('src')));
+		self::assertNull($media->querySelector('a'));
+	}
+
 	/** @return array<string, string> */
 	private function form(string $body): array {
 		$document = Dom\HTMLDocument::createFromString($body, LIBXML_NOERROR, 'UTF-8');

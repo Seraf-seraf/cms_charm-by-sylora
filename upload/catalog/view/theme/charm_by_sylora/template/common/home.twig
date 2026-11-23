@@ -13,8 +13,16 @@
         </div>
       </div>
       <div class="sylora-hero__media" aria-label="Украшения ручной работы">
-        {% if hero_banner %}
-        <div class="sylora-hero__banner">{{ hero_banner }}</div>
+        {% if hero_product %}
+        <a class="sylora-hero__product" href="{{ hero_product.href|e }}">
+          <picture>
+            {% for source in hero_product.image.sources %}
+            <source srcset="{{ source.src|e }}" type="{{ source.type|e }}">
+            {% endfor %}
+            <img src="{{ hero_product.image.src|e }}" alt="" width="{{ hero_product.image.width }}" height="{{ hero_product.image.height }}" loading="eager" decoding="async">
+          </picture>
+          <span class="sylora-hero__product-name">{{ hero_product.name|e }}</span>
+        </a>
         {% else %}
         <picture>
           {% for source in collection_image.sources %}

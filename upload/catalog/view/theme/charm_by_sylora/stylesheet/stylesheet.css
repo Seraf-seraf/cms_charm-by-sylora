@@ -400,7 +400,7 @@ body:has(#cart.open) .site-notifications { z-index: 999; }
 .sylora-hero__grid::before, .sylora-hero__grid::after,
 .sylora-benefits__grid::before, .sylora-benefits__grid::after,
 .sylora-about-teaser::before, .sylora-about-teaser::after { display: none; }
-.sylora-hero__media, .sylora-hero__banner, .sylora-hero__media picture { min-width: 0; max-width: 100%; }
+.sylora-hero__media, .sylora-hero__media picture { min-width: 0; max-width: 100%; }
 .sylora-hero__media img, .sylora-about-teaser img { max-width: 100%; height: auto; }
 .sylora-actions { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
 .sylora-link, .sylora-section__head > a, .sitemap-list a { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; }
@@ -946,7 +946,7 @@ body:has(#cart.open) .site-notifications { z-index: 999; }
 	}
 }
 
-/* Atelier home keeps the configured banner, category descriptions and cards. */
+/* Atelier home */
 #common-home {
 	--home-paper: #f1eee6;
 	--home-ink: #30251e;
@@ -979,27 +979,38 @@ body:has(#cart.open) .site-notifications { z-index: 999; }
 #common-home .sylora-hero__content,
 #common-home .sylora-hero__media,
 #common-home .sylora-actions { grid-area: auto; align-self: auto; }
-#common-home .sylora-hero__media { min-width: 0; }
-#common-home .sylora-hero__media .swiper-container,
-#common-home .sylora-hero__media > picture {
-	width: 100%;
-	aspect-ratio: 624 / 560;
+#common-home .sylora-hero__media {
+	min-width: 0;
+	padding: 15px;
+	border: 1px solid var(--home-rule);
+	background: var(--home-card);
 }
-#common-home .sylora-hero__media .swiper-slide > a { display: block; width: 100%; height: 100%; }
-#common-home .sylora-hero__media .swiper-slide img,
-#common-home .sylora-hero__fallback {
+#common-home .sylora-hero__media picture { display: block; width: 100%; }
+#common-home .sylora-hero__media > picture { aspect-ratio: 572 / 420; }
+#common-home .sylora-hero__product picture { aspect-ratio: 572 / 460; }
+#common-home .sylora-hero__media img {
 	display: block;
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 }
-#common-home .sylora-hero__media .swiper-pagination {
-	position: absolute;
-	right: 0;
-	bottom: 12px;
-	left: 0;
-	z-index: 2;
-	margin: 0;
+#common-home .sylora-hero__product { display: block; color: var(--home-ink); }
+#common-home .sylora-hero__product-name {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	min-height: 44px;
+	margin-top: 8px;
+	overflow-wrap: anywhere;
+	text-decoration: underline;
+}
+#common-home .sylora-hero__product-name::after {
+	content: "";
+	flex: 0 0 auto;
+	width: 18px;
+	height: 18px;
+	background: url('../image/atelier-chevron-right.svg') center / contain no-repeat;
 }
 
 #common-home .sylora-hero h1,
@@ -1353,7 +1364,6 @@ body:has(> #product-category) { background: #f1eee6; }
 	#product-category.container { max-width: 1352px; }
 	#product-category .catalog-grid { gap: 24px; }
 	#product-product.container { max-width: 1352px; }
-	#common-home .sylora-hero__media { transform: translateX(8px); }
 	#product-product .product-page {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 58px;
@@ -1361,7 +1371,7 @@ body:has(> #product-category) { background: #f1eee6; }
 }
 
 #common-home .sylora-actions .btn-primary {
-	width: 260px;
+	width: 225px;
 	min-height: 52px;
 	border: 1px solid var(--home-ink);
 	border-radius: 3px;
@@ -1370,24 +1380,19 @@ body:has(> #product-category) { background: #f1eee6; }
 	text-shadow: none;
 }
 
-#common-home .sylora-hero__banner,
-#common-home .sylora-hero__fallback {
-	border-radius: 2px;
-	box-shadow: none;
-}
-
 @media (max-width: 991px) {
 	#common-home .container { padding-inline: 18px; }
-	#common-home .sylora-hero { padding-top: 20px; }
-	#common-home .sylora-hero__grid { grid-template-areas: 'content' 'media' 'actions'; grid-template-rows: auto; gap: 0; }
+	#common-home .sylora-hero { padding-top: 28px; }
+	#common-home .sylora-hero__grid { grid-template-areas: 'content' 'actions' 'media'; grid-template-rows: auto; gap: 0; }
 	#common-home .sylora-hero__copy { display: contents; }
 	#common-home .sylora-hero__content { grid-area: content; }
-	#common-home .sylora-hero__media { grid-area: media; }
+	#common-home .sylora-hero__media { grid-area: media; margin-top: 24px; padding: 7px; }
 	#common-home .sylora-hero__content { align-self: start; }
 	#common-home .sylora-hero h1 { margin-bottom: .4em; }
-	#common-home .sylora-hero__media .swiper-container,
-	#common-home .sylora-hero__media > picture { aspect-ratio: 354 / 386; }
-	#common-home .sylora-actions { grid-area: actions; margin-top: 20px; }
+	#common-home .sylora-hero__media > picture { aspect-ratio: 338 / 225; }
+	#common-home .sylora-hero__product picture { aspect-ratio: 1; }
+	#common-home .sylora-hero__product-name { font-size: 14px; }
+	#common-home .sylora-actions { grid-area: actions; margin-top: 12px; row-gap: 4px; }
 }
 
 @media (max-width: 767px) {
@@ -1396,12 +1401,12 @@ body:has(> #product-category) { background: #f1eee6; }
 }
 
 @media (min-width: 992px) {
-	#common-home .sylora-hero { padding-top: clamp(32px, 3.2vw, 46px); }
-	#common-home .sylora-hero__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(24px, 3.33vw, 48px); align-items: start; }
+	#common-home .sylora-hero { padding-top: clamp(32px, 2.8vw, 40px); }
+	#common-home .sylora-hero__grid { grid-template-columns: minmax(0, 636fr) minmax(0, 604fr); column-gap: clamp(24px, 4.45vw, 64px); align-items: center; }
 	#common-home .sylora-hero__copy { grid-column: 1; grid-row: 1; }
 	#common-home .sylora-hero__content { align-self: auto; }
 	#common-home .sylora-hero h1 { margin-bottom: .4em; }
-	#common-home .sylora-hero__media { grid-column: 2; grid-row: 1; width: 100%; max-width: 624px; justify-self: end; }
+	#common-home .sylora-hero__media { grid-column: 2; grid-row: 1; width: 100%; max-width: 604px; justify-self: end; }
 	#common-home .sylora-actions { margin-top: 4px; }
 	#common-home .sylora-hero + .sylora-section { padding-top: 44px; }
 }
