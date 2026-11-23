@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -8,6 +9,21 @@ const [, , targetUrl, scenario, chromeBinary] = process.argv;
 if (!targetUrl || !scenario || !chromeBinary) {
 	throw new Error('Usage: cookie_consent_browser.mjs <url> <scenario> <chrome-binary>');
 }
+
+const settingsMatch = /^settings-(analytics|essential)-(320|390|1440)$/.exec(scenario);
+const viewportWidth = settingsMatch ? Number(settingsMatch[2]) : 1440;
+const viewportHeight = viewportWidth === 1440 ? 640 : 720;
+const shortViewportHeight = 240;
+const waitTimeoutMilliseconds = 5000;
+const pollIntervalMilliseconds = 50;
+const selectors = {
+	banner: '#analytics-cookie-banner',
+	settings: '[data-cookie-settings]',
+	close: '[data-cookie-close]',
+	accept: '[data-cookie-consent=analytics]',
+	reject: '[data-cookie-consent=essential]',
+	privacy: '#analytics-cookie-banner .ym-consent__privacy a',
+};
 
 const profile = await mkdtemp(join(tmpdir(), 'sylora-cookie-consent-'));
 const chrome = spawn(chromeBinary, [
@@ -63,6 +79,13 @@ async function connect(port) {
 		}
 	});
 
+	socket.addEventListener('close', () => {
+		for (const finish of pending.values()) {
+			finish({ error: { message: 'Chrome DevTools disconnected.' } });
+		}
+		pending.clear();
+	});
+
 	await new Promise((resolve, reject) => {
 		socket.addEventListener('open', resolve, { once: true });
 		socket.addEventListener('error', reject, { once: true });
@@ -76,6 +99,10 @@ async function connect(port) {
 		},
 		command(method, params = {}) {
 			return new Promise((resolve, reject) => {
+				if (socket.readyState !== WebSocket.OPEN) {
+					reject(new Error('Chrome DevTools is disconnected.'));
+					return;
+				}
 				const id = ++commandId;
 				pending.set(id, message => {
 					if (message.error) reject(new Error(message.error.message));
@@ -94,8 +121,143 @@ async function evaluate(client, expression) {
 		awaitPromise: true,
 	});
 
-	if (response.exceptionDetails) throw new Error('Browser expression failed.');
+	if (response.exceptionDetails) {
+		throw new Error(response.exceptionDetails.exception?.description ?? 'Browser expression failed.');
+	}
 	return response.result?.value;
+}
+
+
+async function waitFor(client, expression) {
+	const deadline = Date.now() + waitTimeoutMilliseconds;
+	while (Date.now() < deadline) {
+		try {
+			if (await evaluate(client, expression)) return;
+		} catch (error) {
+			if (!/Execution context was destroyed|Cannot find context with specified id/.test(error.message)) {
+				throw error;
+			}
+		}
+		await delay(pollIntervalMilliseconds);
+	}
+	throw new Error(`Timed out waiting for ${expression}`);
+}
+
+async function setViewport(client, height) {
+	await client.command('Emulation.setDeviceMetricsOverride', {
+		width: viewportWidth, height, deviceScaleFactor: 1, mobile: false,
+	});
+}
+
+function click(client, selector) {
+	return evaluate(client, `document.querySelector(${JSON.stringify(selector)}).click()`);
+}
+
+async function clickVisible(client, selector) {
+	const { x, y } = await evaluate(client, `(() => {
+		const control = document.querySelector(${JSON.stringify(selector)});
+		control.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+		const rect = control.getBoundingClientRect();
+		return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+	})()`);
+	await client.command('Input.dispatchMouseEvent', { type: 'mousePressed', x, y, button: 'left', clickCount: 1 });
+	await client.command('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y, button: 'left', clickCount: 1 });
+}
+
+async function pressKey(client, key, modifiers = 0) {
+	const keyCode = { Tab: 9, Escape: 27 }[key];
+	const params = { key, code: key, modifiers, windowsVirtualKeyCode: keyCode };
+	await client.command('Input.dispatchKeyEvent', { type: 'rawKeyDown', ...params });
+	await client.command('Input.dispatchKeyEvent', { type: 'keyUp', ...params });
+}
+
+function isFocused(client, selector) {
+	return evaluate(client, `document.activeElement.matches(${JSON.stringify(selector)})`);
+}
+
+async function consentState(client, localOrigin) {
+	const { cookies } = await client.command('Network.getCookies', { urls: [localOrigin] });
+	const browserState = await evaluate(client, `({
+		choiceEvents: JSON.parse(sessionStorage.getItem('test-cookie-choices') || '[]'),
+		metricaTagActive: Boolean(document.querySelector('script[src*="mc.yandex.ru/metrika/tag.js"]')),
+		metricaTagMockLoaded: window.__syloraMetricaTagMockLoaded === true,
+		dataLayerExists: Array.isArray(window.dataLayer),
+		counterDisabled: window['disableYaCounter' + JSON.parse(document.querySelector('#yandex-metrica-consent-config').dataset.config).counter],
+	})`);
+	return { ...browserState, consentCookie: cookies.find(cookie => cookie.name === 'sylora_cookie_consent') };
+}
+
+async function checkSettings(client, localOrigin, requests) {
+	const before = await consentState(client, localOrigin);
+	const requestCount = requests.length;
+	const analyticsEnabled = settingsMatch[1] === 'analytics';
+	assert.equal(before.metricaTagActive, analyticsEnabled);
+	assert.equal(before.counterDisabled, !analyticsEnabled);
+	assert.deepEqual(before.choiceEvents, [analyticsEnabled ? 'v1:analytics' : 'v1:essential']);
+	await clickVisible(client, selectors.settings);
+	const dimensions = await evaluate(client, `(() => {
+		const dialog = document.querySelector('#analytics-cookie-banner');
+		const rect = dialog.getBoundingClientRect();
+		return {
+			width: rect.width, height: rect.height, left: rect.left, top: rect.top,
+			viewportWidth: innerWidth, viewportHeight: innerHeight,
+			backdrop: getComputedStyle(dialog, '::backdrop').backgroundColor,
+			modal: dialog.matches(':modal'),
+		};
+	})()`);
+	assert.equal(dimensions.viewportWidth, viewportWidth);
+	assert.equal(dimensions.viewportHeight, viewportHeight);
+	assert.equal(dimensions.width, { 320: 288, 390: 354, 1440: 560 }[viewportWidth], 'Panel width follows the Atelier dialog composition');
+	assert.equal(dimensions.left, (dimensions.viewportWidth - dimensions.width) / 2);
+	assert.ok(Math.abs(dimensions.top - (dimensions.viewportHeight - dimensions.height) / 2) <= 1);
+	assert.equal(dimensions.modal, true);
+	assert.equal(dimensions.backdrop, 'rgba(48, 37, 30, 0.33)');
+	assert.equal(await isFocused(client, selectors.close), true, 'Focus starts on the close button');
+	const savedChoiceLabel = await evaluate(client, 'document.querySelector("#analytics-cookie-choice").textContent');
+	const openCopy = await evaluate(client, `({
+		accept: document.querySelector('[data-cookie-consent=analytics]').textContent,
+		reject: document.querySelector('[data-cookie-consent=essential]').textContent,
+	})`);
+	assert.deepEqual(openCopy, { accept: 'Разрешить аналитику', reject: 'Продолжить без аналитики' });
+
+	const shiftModifier = 8;
+	await pressKey(client, 'Tab', shiftModifier);
+	assert.equal(await isFocused(client, selectors.reject), true, 'Shift+Tab wraps within the dialog');
+	await pressKey(client, 'Tab');
+	assert.equal(await isFocused(client, selectors.close), true, 'Tab wraps within the dialog');
+	await pressKey(client, 'Tab');
+	assert.equal(await isFocused(client, selectors.privacy), true, 'The configured policy is reachable');
+	await pressKey(client, 'Tab');
+	assert.equal(await isFocused(client, selectors.accept), true);
+	await pressKey(client, 'Escape');
+	assert.equal(await evaluate(client, 'document.querySelector("#analytics-cookie-banner").hidden'), true);
+	assert.equal(await isFocused(client, selectors.settings), true, 'Escape restores focus to the footer');
+	assert.deepEqual(await consentState(client, localOrigin), before);
+	assert.equal(requests.length, requestCount);
+
+	await clickVisible(client, selectors.settings);
+	if (viewportWidth === 320) {
+		await setViewport(client, shortViewportHeight);
+		const viewport = await evaluate(client, `(() => {
+			const dialog = document.querySelector('#analytics-cookie-banner');
+			return { height: dialog.clientHeight, contentHeight: dialog.scrollHeight, pageY: scrollY };
+		})()`);
+		assert.ok(viewport.height < viewport.contentHeight, 'Content overflows the short dialog');
+		assert.ok(viewport.height < shortViewportHeight, 'Panel fits in the short viewport');
+		await pressKey(client, 'Tab', shiftModifier);
+		assert.equal(await isFocused(client, selectors.reject), true);
+		assert.ok(await evaluate(client, 'document.querySelector("#analytics-cookie-banner").scrollTop > 0'));
+		assert.equal(await evaluate(client, 'scrollY'), viewport.pageY);
+		await setViewport(client, viewportHeight);
+	}
+	await clickVisible(client, selectors.close);
+	assert.equal(await evaluate(client, 'document.querySelector("#analytics-cookie-banner").hidden'), true);
+	assert.equal(await isFocused(client, selectors.settings), true, 'Close button restores focus to the footer');
+	assert.deepEqual(await consentState(client, localOrigin), before);
+	assert.equal(requests.length, requestCount);
+
+	await clickVisible(client, selectors.settings);
+	return { savedChoiceLabel, settingsWidth: dimensions.width };
 }
 
 let client;
@@ -145,28 +307,53 @@ try {
 		}));
 	});
 	await client.command('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
+	await client.command('Page.enable');
+	await client.command('Page.addScriptToEvaluateOnNewDocument', {
+		source: `document.addEventListener('sylora:cookie-consent-changed', event => {
+			const choices = JSON.parse(sessionStorage.getItem('test-cookie-choices') || '[]');
+			choices.push(event.detail.choice);
+			sessionStorage.setItem('test-cookie-choices', JSON.stringify(choices));
+		});`,
+	});
+	await setViewport(client, viewportHeight);
 	await client.command('Page.navigate', { url: targetUrl });
-	await delay(1800);
+	await waitFor(client, 'document.readyState === "complete" && document.querySelector("#analytics-cookie-banner")');
 	let refusalRequestOffset = metricaMockRequests.length;
+	let settingsEvidence = {};
 
-	if (scenario === 'accept' || scenario === 'refuse' || scenario === 'settings-analytics') {
-		await evaluate(client, 'document.querySelector("[data-cookie-consent=analytics]").click()');
-		await delay(4000);
+	if (scenario === 'initial') {
+		await click(client, selectors.settings);
+		await pressKey(client, 'Escape');
+		assert.equal(await evaluate(client, 'document.querySelector("#analytics-cookie-banner").dataset.cookieMode'), undefined);
+		assert.deepEqual(await evaluate(client, 'JSON.parse(sessionStorage.getItem("test-cookie-choices") || "[]")'), []);
+	}
+
+	if (scenario === 'accept' || scenario === 'refuse' || settingsMatch?.[1] === 'analytics') {
+		await click(client, selectors.accept);
+		await waitFor(client, 'window.__syloraMetricaTagMockLoaded === true');
 	}
 
 	if (scenario === 'refuse') {
-		await evaluate(client, 'document.querySelector("[data-cookie-settings]").click()');
+		await evaluate(client, 'document.cookie = "_ym_consent_test=active; Path=/; SameSite=Lax"');
+		assert.equal(await evaluate(client, 'document.cookie.includes("_ym_consent_test=active")'), true);
+		await clickVisible(client, selectors.settings);
+		const originalPageTime = await evaluate(client, 'performance.timeOrigin');
 		refusalRequestOffset = metricaMockRequests.length;
-		await evaluate(client, 'document.querySelector("[data-cookie-consent=essential]").click()');
-		await delay(2500);
+		await clickVisible(client, selectors.reject);
+		await waitFor(client, `performance.timeOrigin !== ${originalPageTime} && document.readyState === "complete" && document.querySelector("#analytics-cookie-banner")`);
+		assert.deepEqual(await evaluate(client, 'JSON.parse(sessionStorage.getItem("test-cookie-choices"))'), ['v1:analytics', 'v1:essential']);
+		assert.equal(await evaluate(client, 'window.__syloraMetricaTagMockLoaded'), undefined);
+		await clickVisible(client, selectors.settings);
+		assert.equal(await evaluate(client, 'document.querySelector("#analytics-cookie-choice").textContent'), 'Текущий выбор: без аналитики');
+		await pressKey(client, 'Escape');
 	}
 
-	if (scenario === 'settings-essential') {
-		await evaluate(client, 'document.querySelector("[data-cookie-consent=essential]").click()');
+	if (settingsMatch?.[1] === 'essential') {
+		await click(client, selectors.reject);
 	}
 
-	if (scenario === 'settings-analytics' || scenario === 'settings-essential') {
-		await evaluate(client, 'document.querySelector("[data-cookie-settings]").click()');
+	if (settingsMatch) {
+		settingsEvidence = await checkSettings(client, localOrigin, metricaMockRequests);
 	}
 	await Promise.all(interceptionTasks);
 	if (interceptionErrors.length > 0) {
@@ -192,6 +379,7 @@ try {
 		metricaScripts: Array.from(document.scripts).map(script => script.src).filter(source => source.includes('mc.yandex.ru'))
 	})`));
 	const isMetricaRequest = url => /^https:\/\/mc\.yandex\.ru\//.test(url);
+	Object.assign(state, settingsEvidence);
 	state.metricaRequests = metricaMockRequests;
 	state.metricaRequestsAfterRefusal = metricaMockRequests.slice(refusalRequestOffset);
 	state.blockedExternalRequests = blockedExternalRequests;

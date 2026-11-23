@@ -63,24 +63,27 @@ final class CookieConsentTest extends BrowserTestCase {
 	}
 
 	public function testReopeningSettingsKeepsSavedChoicesAndCopy(): void {
-		foreach (array(
-			array('settings-analytics', 'v1:analytics', true, 1),
-			array('settings-essential', 'v1:essential', false, 0)
-		) as $scenario) {
-			$result = CookieConsentBrowserResult::fromArray($this->runBrowserScenario(
-				__DIR__ . '/support/cookie_consent_browser.mjs',
-				$scenario[0]
-			));
+		$scenarios = array(
+			'settings-analytics-320' => array('v1:analytics', true, 1, 288, 'Текущий выбор: аналитика разрешена'),
+			'settings-essential-390' => array('v1:essential', false, 0, 354, 'Текущий выбор: без аналитики'),
+			'settings-essential-1440' => array('v1:essential', false, 0, 560, 'Текущий выбор: без аналитики'),
+		);
+
+		foreach ($scenarios as $name => [$choice, $analyticsEnabled, $requestCount, $width, $choiceLabel]) {
+			$browserState = $this->runBrowserScenario(__DIR__ . '/support/cookie_consent_browser.mjs', $name);
+			$result = CookieConsentBrowserResult::fromArray($browserState);
+			self::assertSame($width, $browserState['settingsWidth'] ?? null);
+			self::assertSame($choiceLabel, $browserState['savedChoiceLabel'] ?? null);
 
 			self::assertFalse($result->bannerHidden);
-			self::assertSame('Настройки cookie', $result->bannerTitle);
+			self::assertSame('Настройки аналитики', $result->bannerTitle);
 			self::assertSame('Вы можете изменить выбор в любой момент. Аналитические cookie используются только с вашего согласия.', $result->bannerDescription);
 			self::assertSame('Политика конфиденциальности', $result->privacyText);
 			self::assertTrue($result->privacyInOwnParagraph);
-			self::assertSame($scenario[1], $result->consent);
-			self::assertSame($scenario[2], $result->dataLayerExists);
-			self::assertSame($scenario[2], $result->metricaTagMockLoaded);
-			self::assertSame($scenario[3], $result->metricaRequestCount);
+			self::assertSame($choice, $result->consent);
+			self::assertSame($analyticsEnabled, $result->dataLayerExists);
+			self::assertSame($analyticsEnabled, $result->metricaTagMockLoaded);
+			self::assertSame($requestCount, $result->metricaRequestCount);
 			self::assertSame(0, $result->ymCookieCount);
 			self::assertSame(0, $result->blockedExternalRequestCount);
 			self::assertSame(0, $result->observedExternalRequestCount);

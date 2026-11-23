@@ -3,7 +3,13 @@
 	position: fixed;
 	inset: auto 0 0;
 	z-index: 1100;
+	box-sizing: border-box;
+	width: auto;
+	max-width: none;
+	margin: 0;
 	padding: 0;
+	border: 0;
+	background: transparent;
 	pointer-events: none;
 }
 
@@ -68,63 +74,115 @@
 	.ym-consent__button { min-height: 44px; }
 }
 
-.ym-consent__brand { display: none; }
-.ym-consent__brand-name {
-	color: var(--color-text, #2a2421);
-	font: 300 20px / 1.1 'Atelier Cormorant', Georgia, serif;
-}
-.ym-consent__brand-tagline {
-	margin: 3px 0 0;
-	color: var(--color-muted, #6e625d);
-	font-size: 11px;
-	line-height: 1.2;
-}
-
 .ym-consent[data-cookie-mode="settings"] {
 	inset: 0;
-	z-index: 1200;
-	min-height: 100vh;
-	overflow-y: auto;
+	width: calc(100% - 2 * clamp(16px, 4.62vw, 18px));
+	max-width: 560px;
+	max-height: calc(100% - 32px);
+	margin: auto;
 	padding: 0;
-	background: #efece5;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	border: 1px solid var(--color-border, #c8bfb2);
+	background: var(--color-surface, #faf8f2);
+	box-shadow: 0 12px 30px rgb(48 37 30 / 22%);
 	pointer-events: auto;
 }
+
+.ym-consent[data-cookie-mode="settings"]::backdrop {
+	background: rgb(48 37 30 / 33%);
+}
+
+html:has(.ym-consent:modal) { overflow: hidden; }
+
 .ym-consent[data-cookie-mode="settings"] .ym-consent__inner {
-	box-sizing: border-box;
 	flex-direction: column;
 	align-items: stretch;
-	justify-content: flex-start;
-	gap: 0;
-	width: 100%;
-	max-width: 640px;
-	min-height: 100vh;
-	margin: 0 auto;
-	padding: 20px 18px 34px;
+	gap: 16px;
+	padding: 16px;
 	border: 0;
 	background: transparent;
 	box-shadow: none;
 }
-.ym-consent[data-cookie-mode="settings"] .ym-consent__brand {
-	display: block;
-	margin-bottom: 28px;
+
+.ym-consent[data-cookie-mode="settings"] .ym-consent__heading {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 8px;
 }
+
 .ym-consent[data-cookie-mode="settings"] .ym-consent__copy h2 {
-	margin-bottom: 18px;
+	margin: 0;
 	font-size: 36px;
-	line-height: 1.1;
+	line-height: 38px;
+	overflow-wrap: anywhere;
 }
+
+.ym-consent__close {
+	display: grid;
+	flex: 0 0 auto;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	background: transparent;
+	color: var(--color-text, #30251e);
+	font: 20px / 1 sans-serif;
+	cursor: pointer;
+}
+
+.ym-consent__close[hidden] { display: none; }
+.ym-consent__close img { width: 20px; height: 20px; }
+
+.ym-consent__close:focus {
+	outline: 2px solid var(--color-focus-ring, #466a81);
+	outline-offset: -2px;
+}
+
+.ym-consent[data-cookie-mode="settings"] .ym-consent__description {
+	margin-top: 16px;
+	color: #4e443d;
+	font-size: 16px;
+	line-height: 24px;
+}
+
+.ym-consent[data-cookie-mode="settings"] .ym-consent__choice {
+	margin-top: 16px;
+	font-size: 13px;
+	line-height: 19px;
+}
+
 .ym-consent[data-cookie-mode="settings"] .ym-consent__actions {
 	flex: 0 0 auto;
 	flex-direction: column;
-	gap: 18px;
-	width: 100%;
-	margin-top: 18px;
+	gap: 8px;
 }
+
 .ym-consent[data-cookie-mode="settings"] .ym-consent__button {
 	box-sizing: border-box;
 	width: 100%;
 	min-height: 48px;
-}
-.ym-consent[data-cookie-mode="settings"] .ym-consent__button:not(.ym-consent__button--primary) {
+	padding-inline: 12px;
 	border-color: var(--color-text, #30251e);
+	border-radius: 3px;
+	background: var(--color-surface, #faf8f2);
+	color: var(--color-text, #30251e);
+	font-weight: 500;
+}
+
+.ym-consent[data-cookie-mode="settings"] .ym-consent__button:focus-visible,
+.ym-consent[data-cookie-mode="settings"] .ym-consent__privacy a:focus-visible {
+	outline: 2px solid var(--color-focus-ring, #466a81);
+	outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+	.ym-consent[data-cookie-mode="settings"] .ym-consent__inner { gap: 20px; padding: 32px; }
+	.ym-consent[data-cookie-mode="settings"] .ym-consent__copy h2 { font-size: 42px; line-height: 44px; }
+	.ym-consent[data-cookie-mode="settings"] .ym-consent__description,
+	.ym-consent[data-cookie-mode="settings"] .ym-consent__choice,
+	.ym-consent[data-cookie-mode="settings"] .ym-consent__privacy { margin-top: 20px; }
 }

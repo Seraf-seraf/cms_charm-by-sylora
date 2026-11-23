@@ -76,10 +76,11 @@
 	var cookieName = 'sylora_cookie_consent';
 	var analyticsChoice = 'v1:analytics';
 	var essentialChoice = 'v1:essential';
-	var settingsTitle = 'Настройки cookie';
+	var settingsTitle = 'Настройки аналитики';
 	var settingsDescription = 'Вы можете изменить выбор в любой момент. Аналитические cookie используются только с вашего согласия.';
 	var initialized = false;
 	var listenersBound = false;
+	var settingsTrigger = null;
 
 	function getChoice() {
 		var cookies = document.cookie ? document.cookie.split(';') : [];
@@ -195,46 +196,67 @@
 		if (config.goals && config.goals.contactSubmit) goal('contact_submit');
 	}
 
-	function setBannerVisible(visible, focusPrimary) {
+	function hideBanner(banner) {
+		banner.close();
+		banner.hidden = true;
+		banner.setAttribute('aria-modal', 'false');
+
+		if (settingsTrigger && settingsTrigger.isConnected) {
+			settingsTrigger.focus();
+		}
+
+		settingsTrigger = null;
+	}
+
+	function openSettings(trigger) {
 		var banner = document.getElementById('analytics-cookie-banner');
 
-		if (!banner) {
+		if (!banner || (!banner.hidden && banner.getAttribute('data-cookie-mode') === 'settings')) {
 			return;
 		}
 
-		banner.hidden = !visible;
-		banner.setAttribute('aria-modal', visible && banner.getAttribute('data-cookie-mode') === 'settings' ? 'true' : 'false');
-
-		if (visible && focusPrimary) {
-			var primary = banner.querySelector('[data-cookie-consent="analytics"]');
-			if (primary) primary.focus();
-		}
-	}
-
-	function openSettings() {
-		var banner = document.getElementById('analytics-cookie-banner');
+		var accept = banner.querySelector('[data-cookie-consent="analytics"]');
+		var reject = banner.querySelector('[data-cookie-consent="essential"]');
+		var close = banner.querySelector('[data-cookie-close]');
 		var title = document.getElementById('analytics-cookie-title');
 		var description = document.getElementById('analytics-cookie-description');
+		var currentChoice = document.getElementById('analytics-cookie-choice');
+		var choice = getChoice();
 
-		if (banner) {
-			banner.setAttribute('data-cookie-mode', 'settings');
+		if (!choice) {
+			banner.removeAttribute('data-cookie-mode');
+			title.textContent = config.banner.title;
+			description.textContent = config.banner.description;
+			currentChoice.hidden = true;
+			accept.textContent = config.banner.accept;
+			reject.textContent = config.banner.reject;
+			close.hidden = true;
+			banner.setAttribute('open', '');
+			banner.hidden = false;
+			accept.focus();
+			return;
 		}
 
-		if (title) {
-			title.textContent = settingsTitle;
-		}
-
-		if (description) {
-			description.textContent = settingsDescription;
-		}
-
-		setBannerVisible(true, true);
+		settingsTrigger = trigger || document.activeElement;
+		banner.close();
+		banner.setAttribute('data-cookie-mode', 'settings');
+		banner.setAttribute('aria-modal', 'true');
+		title.textContent = settingsTitle;
+		description.textContent = settingsDescription;
+		currentChoice.textContent = choice === analyticsChoice ? 'Текущий выбор: аналитика разрешена' : 'Текущий выбор: без аналитики';
+		currentChoice.hidden = false;
+		accept.textContent = 'Разрешить аналитику';
+		reject.textContent = 'Продолжить без аналитики';
+		close.hidden = false;
+		banner.hidden = false;
+		banner.showModal();
+		close.focus();
 	}
 
 	function setChoice(choice) {
 		var previousChoice = getChoice();
 		writeChoice(choice);
-		setBannerVisible(false, false);
+		hideBanner(document.getElementById('analytics-cookie-banner'));
 
 		if (choice === analyticsChoice) {
 			initializeMetrica();
@@ -260,39 +282,54 @@
 	}
 
 	function buildBanner() {
-		var banner = document.createElement('section');
+		var banner = document.createElement('dialog');
 		banner.className = 'ym-consent';
 		banner.id = 'analytics-cookie-banner';
-		banner.setAttribute('role', 'dialog');
 		banner.setAttribute('aria-modal', 'false');
 		banner.setAttribute('aria-labelledby', 'analytics-cookie-title');
+		banner.setAttribute('aria-describedby', 'analytics-cookie-description');
 		banner.hidden = true;
 
 		var inner = document.createElement('div');
 		inner.className = 'ym-consent__inner';
-		var brand = document.createElement('div');
-		brand.className = 'ym-consent__brand';
-		var brandName = document.createElement('div');
-		brandName.className = 'ym-consent__brand-name';
-		brandName.textContent = 'Charm by Sylora';
-		var brandTagline = document.createElement('p');
-		brandTagline.className = 'ym-consent__brand-tagline';
-		brandTagline.textContent = 'украшения ручной работы';
-		brand.appendChild(brandName);
-		brand.appendChild(brandTagline);
-		inner.appendChild(brand);
-
 		var copy = document.createElement('div');
 		copy.className = 'ym-consent__copy';
+		var heading = document.createElement('div');
+		heading.className = 'ym-consent__heading';
 		var title = document.createElement('h2');
 		title.id = 'analytics-cookie-title';
 		title.textContent = config.banner.title;
-		copy.appendChild(title);
+		heading.appendChild(title);
+
+		var close = document.createElement('button');
+		close.type = 'button';
+		close.className = 'ym-consent__close';
+		close.setAttribute('data-cookie-close', '');
+		close.setAttribute('aria-label', 'Закрыть настройки аналитики');
+		close.setAttribute('autofocus', '');
+		close.hidden = true;
+		var closeIcon = document.createElement('img');
+		closeIcon.alt = '';
+		closeIcon.setAttribute('aria-hidden', 'true');
+		closeIcon.addEventListener('load', function() {
+			close.textContent = '';
+			close.appendChild(closeIcon);
+		});
+		closeIcon.src = 'catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg';
+		close.textContent = '×';
+		heading.appendChild(close);
+		copy.appendChild(heading);
 		var description = document.createElement('p');
 		description.className = 'ym-consent__description';
 		description.id = 'analytics-cookie-description';
 		description.textContent = config.banner.description;
 		copy.appendChild(description);
+
+		var currentChoice = document.createElement('p');
+		currentChoice.className = 'ym-consent__choice';
+		currentChoice.id = 'analytics-cookie-choice';
+		currentChoice.hidden = true;
+		copy.appendChild(currentChoice);
 
 		if (config.privacyUrl) {
 			var privacyParagraph = document.createElement('p');
@@ -300,6 +337,7 @@
 
 			var privacyLink = document.createElement('a');
 			privacyLink.href = config.privacyUrl;
+			privacyLink.setAttribute('data-cookie-privacy', '');
 			privacyLink.textContent = config.banner.privacy;
 			privacyParagraph.appendChild(privacyLink);
 			copy.appendChild(privacyParagraph);
@@ -322,6 +360,8 @@
 			settings.className = 'ym-consent-settings';
 			settings.textContent = config.banner.settings;
 			settings.setAttribute('data-cookie-settings', '');
+			settings.setAttribute('aria-haspopup', 'dialog');
+			settings.setAttribute('aria-controls', banner.id);
 			footer.appendChild(settings);
 		}
 
@@ -333,12 +373,39 @@
 			}
 		});
 
+		function dismissSettings() {
+			if (!banner.hidden && banner.getAttribute('data-cookie-mode') === 'settings') {
+				hideBanner(banner);
+			}
+		}
+
+		close.addEventListener('click', dismissSettings);
+		banner.addEventListener('cancel', function(event) {
+			event.preventDefault();
+			dismissSettings();
+		});
+		banner.addEventListener('keydown', function(event) {
+			if (event.key !== 'Tab' || banner.getAttribute('data-cookie-mode') !== 'settings') {
+				return;
+			}
+
+			var last = banner.querySelector('[data-cookie-consent="essential"]');
+
+			if (event.shiftKey && document.activeElement === close) {
+				event.preventDefault();
+				last.focus();
+			} else if (!event.shiftKey && document.activeElement === last) {
+				event.preventDefault();
+				close.focus();
+			}
+		});
+
 		document.addEventListener('click', function(event) {
 			var trigger = event.target.closest ? event.target.closest('[data-cookie-settings]') : null;
 
 			if (trigger) {
 				event.preventDefault();
-				openSettings();
+				openSettings(trigger);
 			}
 		});
 	}
@@ -349,7 +416,11 @@
 		if (getChoice() === analyticsChoice) initializeMetrica();
 		else window['disableYaCounter' + config.counter] = true;
 
-		setBannerVisible(getChoice() === '', false);
+		if (!getChoice()) {
+			var banner = document.getElementById('analytics-cookie-banner');
+			banner.setAttribute('open', '');
+			banner.hidden = false;
+		}
 	}
 
 	window.SyloraCookieConsent = {
