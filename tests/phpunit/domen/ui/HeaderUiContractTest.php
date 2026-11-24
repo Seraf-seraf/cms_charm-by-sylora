@@ -30,7 +30,7 @@ final class HeaderUiContractTest extends TestCase {
 		self::assertIsString($header);
 		self::assertStringContainsString('aria-label="Открыть меню" aria-expanded="false" aria-controls="site-nav"', $header);
 		self::assertMatchesRegularExpression(
-			'/<nav class="site-nav" id="site-nav"[^>]*>.*?<button class="site-nav__close" type="button" aria-label="Закрыть меню">.*?<\/nav>/s',
+			'/<nav class="site-nav" id="site-nav"[^>]*>.*?<button class="site-nav__close popup-close" type="button" aria-label="Закрыть меню">.*?<\/nav>/s',
 			$header
 		);
 	}

@@ -240,13 +240,27 @@ async function checkSettings(client, localOrigin, requests) {
 		await setViewport(client, shortViewportHeight);
 		const viewport = await evaluate(client, `(() => {
 			const dialog = document.querySelector('#analytics-cookie-banner');
-			return { height: dialog.clientHeight, contentHeight: dialog.scrollHeight, pageY: scrollY };
+			const body = dialog.querySelector('.ym-consent__body');
+			return { height: dialog.clientHeight, bodyHeight: body.clientHeight, contentHeight: body.scrollHeight, pageY: scrollY };
 		})()`);
-		assert.ok(viewport.height < viewport.contentHeight, 'Content overflows the short dialog');
+		assert.ok(viewport.bodyHeight < viewport.contentHeight, 'Content overflows the body of the short dialog');
 		assert.ok(viewport.height < shortViewportHeight, 'Panel fits in the short viewport');
+		const scrollState = await evaluate(client, `(() => {
+			const dialog = document.querySelector('#analytics-cookie-banner');
+			const body = dialog.querySelector('.ym-consent__body');
+			const close = dialog.querySelector('[data-cookie-close]');
+			const actions = dialog.querySelector('.ym-consent__actions');
+			const before = [close.getBoundingClientRect().top, actions.getBoundingClientRect().bottom];
+			body.scrollTop = body.scrollHeight;
+			return {
+				scrolled: body.scrollTop > 0 && dialog.scrollTop === 0,
+				controlsStayVisible: before[0] === close.getBoundingClientRect().top
+					&& before[1] === actions.getBoundingClientRect().bottom && before[1] <= innerHeight,
+			};
+		})()`);
+		assert.deepEqual(scrollState, { scrolled: true, controlsStayVisible: true });
 		await pressKey(client, 'Tab', shiftModifier);
 		assert.equal(await isFocused(client, selectors.reject), true);
-		assert.ok(await evaluate(client, 'document.querySelector("#analytics-cookie-banner").scrollTop > 0'));
 		assert.equal(await evaluate(client, 'scrollY'), viewport.pageY);
 		await setViewport(client, viewportHeight);
 	}

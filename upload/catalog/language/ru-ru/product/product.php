@@ -10,6 +10,7 @@
 
 // Text
 $_['text_search']              = 'Искать';
+$_['text_product_photo']       = 'Фото товара';
 $_['text_brand']               = 'Бренд';
 $_['text_breadcrumb_catalog']    = 'Каталог';
 $_['text_breadcrumb_navigation'] = 'Навигация по каталогу';

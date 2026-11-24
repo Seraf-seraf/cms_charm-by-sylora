@@ -48,10 +48,11 @@ final class ProductActionsFunctionalTest extends BrowserTestCase {
 
 		foreach (array(
 			'wishlistTooltip', 'quickViewTooltip', 'keyboardDialog', 'pointerDialog', 'scrollableDialog',
-			'wishlistSelected', 'wishlistLabelUpdated', 'loading', 'restoredAfterError', 'detailsWithoutQuickView'
+			'wishlistSelected', 'wishlistLabelUpdated', 'loading', 'restoredAfterError', 'detailsWithoutQuickView', 'warningDismissal'
 		) as $state) {
 			self::assertTrue($result[$state] ?? false, $state . ': ' . json_encode($result, JSON_UNESCAPED_UNICODE));
 		}
+		self::assertSame(array(true, true, true), $result['warningCloseLayout'] ?? null, 'close button geometry at 320, 390 and 1280 px');
 		$this->assertCartResult($result, (int)$result['minimum']);
 	}
 

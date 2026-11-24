@@ -75,14 +75,14 @@
 }
 
 .ym-consent[data-cookie-mode="settings"] {
+	--ym-consent-inset: 16px;
 	inset: 0;
 	width: calc(100% - 2 * clamp(16px, 4.62vw, 18px));
 	max-width: 560px;
-	max-height: calc(100% - 32px);
+	max-height: calc(100dvh - 2 * var(--ym-consent-inset));
 	margin: auto;
 	padding: 0;
-	overflow-y: auto;
-	overscroll-behavior: contain;
+	overflow: hidden;
 	border: 1px solid var(--color-border, #c8bfb2);
 	background: var(--color-surface, #faf8f2);
 	box-shadow: 0 12px 30px rgb(48 37 30 / 22%);
@@ -96,17 +96,33 @@
 html:has(.ym-consent:modal) { overflow: hidden; }
 
 .ym-consent[data-cookie-mode="settings"] .ym-consent__inner {
+	box-sizing: border-box;
 	flex-direction: column;
 	align-items: stretch;
 	gap: 16px;
+	max-height: calc(100dvh - 2 * var(--ym-consent-inset) - 2px);
 	padding: 16px;
 	border: 0;
 	background: transparent;
 	box-shadow: none;
 }
 
+.ym-consent[data-cookie-mode="settings"] .ym-consent__copy {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	min-height: 0;
+}
+
+.ym-consent[data-cookie-mode="settings"] .ym-consent__body {
+	overflow: auto;
+	overscroll-behavior: contain;
+	overflow-wrap: anywhere;
+}
+
 .ym-consent[data-cookie-mode="settings"] .ym-consent__heading {
 	display: flex;
+	flex: none;
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: 8px;
@@ -126,16 +142,17 @@ html:has(.ym-consent:modal) { overflow: hidden; }
 	width: 44px;
 	height: 44px;
 	padding: 0;
-	border: 1px solid transparent;
+	border: 1px solid var(--color-border, #c8bfb2);
 	border-radius: 3px;
-	background: transparent;
+	background: var(--color-surface, #faf8f2);
 	color: var(--color-text, #30251e);
 	font: 20px / 1 sans-serif;
 	cursor: pointer;
 }
 
 .ym-consent__close[hidden] { display: none; }
-.ym-consent__close img { width: 20px; height: 20px; }
+.ym-consent__close img { width: 24px; height: 24px; }
+.ym-consent__close:hover { background: var(--color-surface-2, #e7e1d7); }
 
 .ym-consent__close:focus {
 	outline: 2px solid var(--color-focus-ring, #466a81);
@@ -143,7 +160,7 @@ html:has(.ym-consent:modal) { overflow: hidden; }
 }
 
 .ym-consent[data-cookie-mode="settings"] .ym-consent__description {
-	margin-top: 16px;
+	margin-top: 0;
 	color: #4e443d;
 	font-size: 16px;
 	line-height: 24px;
@@ -182,7 +199,6 @@ html:has(.ym-consent:modal) { overflow: hidden; }
 @media (min-width: 768px) {
 	.ym-consent[data-cookie-mode="settings"] .ym-consent__inner { gap: 20px; padding: 32px; }
 	.ym-consent[data-cookie-mode="settings"] .ym-consent__copy h2 { font-size: 42px; line-height: 44px; }
-	.ym-consent[data-cookie-mode="settings"] .ym-consent__description,
 	.ym-consent[data-cookie-mode="settings"] .ym-consent__choice,
 	.ym-consent[data-cookie-mode="settings"] .ym-consent__privacy { margin-top: 20px; }
 }

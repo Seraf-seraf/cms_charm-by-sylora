@@ -12,5 +12,8 @@
 $_['text_items']      = 'Товары: %s(%s)';
 $_['text_empty']      = 'Ваша корзина пуста!';
 $_['text_cart']       = 'Просмотр корзины';
+$_['text_cart_heading'] = 'Корзина';
+$_['text_cart_open']  = 'В корзину';
+$_['text_continue_shopping'] = 'Продолжить покупки';
 $_['text_checkout']   = 'Оформить заказ';
 $_['text_recurring']  = 'Платежный профиль';

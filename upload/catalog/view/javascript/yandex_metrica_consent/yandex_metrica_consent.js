@@ -319,17 +319,19 @@
 		close.textContent = '×';
 		heading.appendChild(close);
 		copy.appendChild(heading);
+		var body = document.createElement('div');
+		body.className = 'ym-consent__body';
 		var description = document.createElement('p');
 		description.className = 'ym-consent__description';
 		description.id = 'analytics-cookie-description';
 		description.textContent = config.banner.description;
-		copy.appendChild(description);
+		body.appendChild(description);
 
 		var currentChoice = document.createElement('p');
 		currentChoice.className = 'ym-consent__choice';
 		currentChoice.id = 'analytics-cookie-choice';
 		currentChoice.hidden = true;
-		copy.appendChild(currentChoice);
+		body.appendChild(currentChoice);
 
 		if (config.privacyUrl) {
 			var privacyParagraph = document.createElement('p');
@@ -340,8 +342,9 @@
 			privacyLink.setAttribute('data-cookie-privacy', '');
 			privacyLink.textContent = config.banner.privacy;
 			privacyParagraph.appendChild(privacyLink);
-			copy.appendChild(privacyParagraph);
+			body.appendChild(privacyParagraph);
 		}
+		copy.appendChild(body);
 
 		var actions = document.createElement('div');
 		actions.className = 'ym-consent__actions';

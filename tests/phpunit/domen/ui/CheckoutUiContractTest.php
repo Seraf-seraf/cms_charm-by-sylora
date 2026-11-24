@@ -100,7 +100,7 @@ final class CheckoutUiContractTest extends TestCase {
 		self::assertStringNotContainsString('<style data-cdek>', $cdek);
 		self::assertStringContainsString('type="application/json"', $shipping);
 		self::assertStringNotContainsString('syncShippingButton', $shipping);
-		self::assertStringContainsString("$('input[name=\\'shipping_method\\']:checked').length === 0", $cart);
+		self::assertStringContainsString("modal.find('input[name=\"shipping_method\"]:checked').length === 0", $cart);
 		self::assertStringContainsString('syncShippingButton();', $cart);
 		self::assertMatchesRegularExpression(
 			'/\.btn:disabled, \.btn\.disabled\s*\{[^}]*cursor: not-allowed;[^}]*opacity: \.55;/s',

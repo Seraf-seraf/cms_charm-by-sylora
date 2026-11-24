@@ -348,6 +348,31 @@ async function exerciseCardActions() {
     throw new Error('Wishlist result did not reach the card.');
   })()`);
 
+  const warningCloseLayout = [];
+  for (const width of [320, 390, 1280]) {
+    await client.command('Emulation.setDeviceMetricsOverride', { width, height: 600, deviceScaleFactor: 1, mobile: false });
+    warningCloseLayout.push(await evaluate(client, `(() => {
+      const notice = document.querySelector('#site-notifications .alert-warning');
+      const close = notice?.querySelector('button[aria-label][data-dismiss="alert"]');
+      if (!close) return false;
+      const frame = notice.getBoundingClientRect();
+      const control = close.getBoundingClientRect();
+      return close.getAttribute('aria-label') === 'Закрыть'
+        && control.width === 44 && control.height === 44
+        && control.top - frame.top >= 13 && frame.right - control.right >= 13
+        && control.bottom <= frame.bottom && control.left >= frame.left
+        && frame.left >= 0 && frame.right <= innerWidth
+        && notice.querySelectorAll('.site-notice__message a').length >= 2;
+    })()`));
+  }
+  await client.command('Emulation.setDeviceMetricsOverride', { width: 320, height: 600, deviceScaleFactor: 1, mobile: false });
+  await evaluate(client, `document.querySelector('#site-notifications [data-dismiss="alert"]').focus()`);
+  await pressKey('Enter', 'Enter', 13);
+  const warningDismissal = await waitForBrowserState(
+    `!document.querySelector('#site-notifications .alert-warning')
+      && document.activeElement === document.querySelector('[data-test-card] .catalog-card__wishlist')`,
+  );
+
   rejectNextCartRequest = true;
   const loading = await evaluate(client, `(() => {
     const button = document.querySelector('[data-test-card] .catalog-card__actions [data-cart-add]');
@@ -385,7 +410,7 @@ async function exerciseCardActions() {
   })()`);
   return {
     ...cart, ...wishlist, wishlistTooltip, quickViewTooltip, keyboardDialog, pointerDialog, scrollableDialog,
-    loading, restoredAfterError, detailsWithoutQuickView, minimum: product.minimum,
+    loading, restoredAfterError, detailsWithoutQuickView, warningCloseLayout, warningDismissal, minimum: product.minimum,
     expectedProductId: product.id, expectedProductName: product.name, noticeVisible: notice,
   };
 }

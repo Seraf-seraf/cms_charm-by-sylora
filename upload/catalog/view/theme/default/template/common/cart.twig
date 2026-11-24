@@ -1,6 +1,10 @@
 <div id="cart" class="btn-group btn-block">
-  <button type="button" data-toggle="dropdown" data-loading-text="{{ text_loading }}" class="btn btn-inverse btn-block btn-lg dropdown-toggle"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"> <span id="cart-total">{{ text_items }}</span></button>
-  <ul class="dropdown-menu pull-right mini-cart">
+  <button type="button" data-toggle="dropdown" data-loading-text="{{ text_loading }}" class="btn btn-inverse btn-block btn-lg dropdown-toggle" aria-label="{{ text_cart }}" aria-controls="mini-cart" aria-expanded="false"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"> <span id="cart-total">{{ text_items }}</span></button>
+  <ul id="mini-cart" class="dropdown-menu pull-right mini-cart">
+    <li class="mini-cart__header">
+      <h2>{{ text_cart_heading|default(text_cart) }}</h2>
+      <button class="popup-close" type="button" data-mini-cart-close aria-label="{{ button_close }}"><img src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" width="24" height="24" alt=""></button>
+    </li>
     {% if products or vouchers %}
     <li>
       <div class="mini-cart__items">

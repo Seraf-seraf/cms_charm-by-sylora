@@ -13,146 +13,175 @@ function escapeHtml(value) {
 		.replace(/'/g, '&#039;');
 }
 
+function renderShippingOptions(methods) {
+	var html = '<div class="shipping-methods shipping-methods--modal" data-shipping-methods>';
+
+	Object.keys(methods).forEach(function(key) {
+		var method = methods[key];
+		html += '<section class="shipping-methods__group">';
+		html += '<p class="shipping-methods__title">' + escapeHtml(method.title) + '</p>';
+		if (method.error) {
+			html += '<div class="shipping-methods__status alert alert-danger" role="alert">' + escapeHtml(method.error) + '</div>';
+		} else {
+			html += '<div class="shipping-methods__list">';
+			Object.keys(method.quote).forEach(function(quoteKey) {
+				var quote = method.quote[quoteKey];
+				var checked = quote.code === config.shippingMethod ? ' checked' : '';
+				html += '<label class="shipping-method-card">';
+				html += '<input class="shipping-method-card__control" type="radio" name="shipping_method" value="' + escapeHtml(quote.code) + '"' + checked + '>';
+				html += '<span class="shipping-method-card__marker" aria-hidden="true"></span>';
+				html += '<span class="shipping-method-card__title">' + escapeHtml(quote.title) + '</span>';
+				html += '<span class="shipping-method-card__price">' + escapeHtml(quote.text) + '</span>';
+				html += '</label>';
+			});
+			html += '</div>';
+		}
+		html += '</section>';
+	});
+
+	return html + '</div>';
+}
+
+var shippingRequestPending = false;
+
 $('#button-quote').on('click', function() {
-	$.ajax({
-		url: 'index.php?route=extension/total/shipping/quote',
-		type: 'post',
-		data: 'country_id=' + $('select[name=\'country_id\']').val() + '&zone_id=' + $('select[name=\'zone_id\']').val() + '&postcode=' + encodeURIComponent($('input[name=\'postcode\']').val()),
-		dataType: 'json',
-		beforeSend: function() {
-			$('#button-quote').button('loading');
-		},
-		complete: function() {
-			$('#button-quote').button('reset');
-		},
-		success: function(json) {
-			$('.alert-dismissible, .text-danger').remove();
+	if (shippingRequestPending || document.getElementById('modal-shipping')) {
+		return;
+	}
+	var trigger = this;
+	var fields = {
+		country: $('#input-country'),
+		zone: $('#input-zone'),
+		postcode: $('#input-postcode')
+	};
+	var modal = $('<div id="modal-shipping" class="modal storefront-modal" role="dialog" aria-modal="true" aria-labelledby="shipping-dialog-title" tabindex="-1"></div>');
+	var title = $('<h2 class="modal-title" id="shipping-dialog-title"></h2>');
+	var header = $('<div class="modal-header"></div>').append(
+		title,
+		storefrontCloseButton('modal')
+	);
+	var body = $('<div class="modal-body"></div>');
+	var footer = $('<div class="modal-footer"></div>').append(
+		$('<button type="button" class="btn btn-default" data-dismiss="modal"></button>').text(config.buttonCancel)
+	);
+	var apply = $('<button type="button" id="button-shipping" class="btn btn-primary"></button>').text(config.buttonShipping);
+	var loading = $('<button type="button" class="btn btn-default" disabled></button>').text(config.textLoading);
+	var retry = $('<button type="button" class="btn btn-primary"></button>').text(config.buttonRetry).on('click', function() {
+		header.find('.popup-close').trigger('focus');
+		requestQuote();
+	});
+	var genericError = storefrontLabel('data-popup-error', 'error_popup_action', 'The action failed. Please try again.');
+	modal.append($('<div class="modal-dialog"></div>').append(
+		$('<div class="modal-content"></div>').append(header, body, footer)
+	)).appendTo(document.body);
 
-			if (json['error']) {
-				if (json['error']['warning']) {
-					$('#content').prepend('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+	function showQuoteError(message) {
+		body.empty().append($('<div class="alert alert-danger" role="alert"></div>').append(message));
+		footer.append(retry);
+	}
 
-					$('html, body').animate({ scrollTop: 0 }, 'slow');
+	function finishQuote() {
+		title.text(config.textTitle);
+		loading.detach();
+	}
+
+	function syncShippingButton() {
+		apply.prop('disabled', shippingRequestPending || modal.find('input[name="shipping_method"]:checked').length === 0);
+	}
+
+	function requestQuote() {
+		shippingRequestPending = true;
+		retry.detach();
+		title.text(config.textQuoteLoading);
+		body.empty().append($('<p role="status"></p>').text(config.textWait));
+		footer.append(loading);
+		$.ajax({
+			url: 'index.php?route=extension/total/shipping/quote',
+			type: 'post',
+			data: {country_id: fields.country.val(), zone_id: fields.zone.val(), postcode: fields.postcode.val()},
+			dataType: 'json',
+			complete: function() {
+				shippingRequestPending = false;
+			},
+			success: function(json) {
+				if (!modal[0].isConnected) {
+					return;
 				}
-
-				if (json['error']['country']) {
-					$('select[name=\'country_id\']').after('<div class="text-danger">' + json['error']['country'] + '</div>');
-				}
-
-				if (json['error']['zone']) {
-					$('select[name=\'zone_id\']').after('<div class="text-danger">' + json['error']['zone'] + '</div>');
-				}
-
-				if (json['error']['postcode']) {
-					$('input[name=\'postcode\']').after('<div class="text-danger">' + json['error']['postcode'] + '</div>');
-				}
-			}
-
-			if (json['shipping_method']) {
-				$('#modal-shipping').remove();
-
-				var html = '<div id="modal-shipping" class="modal">';
-				html += '  <div class="modal-dialog">';
-				html += '    <div class="modal-content">';
-				html += '      <div class="modal-header">';
-				html += '        <h4 class="modal-title">' + config.textShippingMethod + '</h4>';
-				html += '      </div>';
-				html += '      <div class="modal-body">';
-				html += '        <div class="shipping-methods shipping-methods--modal" data-shipping-methods aria-busy="false">';
-
-				for (var i in json['shipping_method']) {
-					html += '<section class="shipping-methods__group">';
-					html += '<p class="shipping-methods__title">' + escapeHtml(json['shipping_method'][i]['title']) + '</p>';
-
-					if (!json['shipping_method'][i]['error']) {
-						html += '<div class="shipping-methods__list">';
-						for (var j in json['shipping_method'][i]['quote']) {
-							var quote = json['shipping_method'][i]['quote'][j];
-							html += '<label class="shipping-method-card">';
-
-							if (quote['code'] == '' + config.shippingMethod + '') {
-								html += '<input class="shipping-method-card__control" type="radio" name="shipping_method" value="' + escapeHtml(quote['code']) + '" checked="checked" />';
-							} else {
-								html += '<input class="shipping-method-card__control" type="radio" name="shipping_method" value="' + escapeHtml(quote['code']) + '" />';
-							}
-
-							html += '<span class="shipping-method-card__marker" aria-hidden="true"></span>';
-							html += '<span class="shipping-method-card__title">' + escapeHtml(quote['title']) + '</span>';
-							html += '<span class="shipping-method-card__price">' + escapeHtml(quote['text']) + '</span>';
-							html += '</label>';
-						}
-						html += '</div>';
-					} else {
-						html += '<div class="shipping-methods__status alert alert-danger alert-dismissible" role="alert">' + escapeHtml(json['shipping_method'][i]['error']) + '</div>';
+				finishQuote();
+				$('#collapse-shipping .quote-field-error').remove();
+				var errors = json.error || {};
+				var firstInvalid = null;
+				Object.keys(fields).forEach(function(key) {
+					if (errors[key]) {
+						fields[key].after($('<div class="text-danger quote-field-error"></div>').text(errors[key]));
+						firstInvalid = firstInvalid || fields[key];
 					}
-					html += '</section>';
-				}
-
-				html += '        </div>';
-				html += '      </div>';
-				html += '      <div class="modal-footer">';
-				html += '        <button type="button" class="btn btn-default" data-dismiss="modal">' + config.buttonCancel + '</button>';
-
-				if (config.shippingMethod) {
-				html += '        <input type="button" value="' + config.buttonShipping + '" id="button-shipping" data-loading-text="' + config.textLoading + '" class="btn btn-primary" />';
-				} else {
-				html += '        <input type="button" value="' + config.buttonShipping + '" id="button-shipping" data-loading-text="' + config.textLoading + '" class="btn btn-primary" disabled="disabled" />';
-				}
-
-				html += '      </div>';
-				html += '    </div>';
-				html += '  </div>';
-				html += '</div> ';
-
-				$('body').append(html);
-
-				function syncShippingButton() {
-					$('#button-shipping').prop('disabled', $('input[name=\'shipping_method\']:checked').length === 0);
-				}
-
-				$('#modal-shipping').modal('show');
-				syncShippingButton();
-
-				$('input[name=\'shipping_method\']').on('change', function() {
-					syncShippingButton();
 				});
+				if (firstInvalid) {
+					modal.one('hidden.bs.modal', function() {
+						firstInvalid.trigger('focus');
+					}).modal('hide');
+				} else if (errors.warning) {
+					showQuoteError(errors.warning);
+				} else if (json.shipping_method) {
+					body.html(renderShippingOptions(json.shipping_method));
+					footer.append(apply);
+					syncShippingButton();
+				} else {
+					showQuoteError(document.createTextNode(genericError));
+				}
+			},
+			error: function() {
+				if (modal[0].isConnected) {
+					finishQuote();
+					showQuoteError(document.createTextNode(config.textQuoteError || genericError));
+				}
 			}
-		},
-		error: function(xhr, ajaxOptions, thrownError) {
-			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		});
+	}
+
+	body.on('change', 'input[name="shipping_method"]', syncShippingButton);
+	apply.on('click', function() {
+		var selected = modal.find('input[name="shipping_method"]:checked');
+		if (shippingRequestPending || !selected.length) {
+			return;
 		}
-	});
-});
 
-$(document).delegate('#button-shipping', 'click', function() {
-	$.ajax({
-		url: 'index.php?route=extension/total/shipping/shipping',
-		type: 'post',
-		data: 'shipping_method=' + encodeURIComponent($('input[name=\'shipping_method\']:checked').val()),
-		dataType: 'json',
-		beforeSend: function() {
-			$('#button-shipping').button('loading');
-		},
-		complete: function() {
-			$('#button-shipping').button('reset');
-		},
-		success: function(json) {
-			$('.alert-dismissible').remove();
-
-			if (json['error']) {
-				$('#content').prepend('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-
-				$('html, body').animate({ scrollTop: 0 }, 'slow');
+		shippingRequestPending = true;
+		body.find('.quote-apply-error').remove();
+		apply.prop('disabled', true).text(config.textLoading);
+		var showApplyError = function(message) {
+			if (modal[0].isConnected) {
+				body.prepend($('<div class="alert alert-danger quote-apply-error" role="alert"></div>').text(message));
+				body.scrollTop(0);
 			}
+		};
 
-			if (json['redirect']) {
-				location = json['redirect'];
+		$.ajax({
+			url: 'index.php?route=extension/total/shipping/shipping',
+			type: 'post',
+			data: {shipping_method: selected.val()},
+			dataType: 'json',
+			complete: function() {
+				shippingRequestPending = false;
+				apply.text(config.buttonShipping);
+				syncShippingButton();
+			},
+			success: function(json) {
+				if (json.redirect) {
+					window.location.assign(json.redirect);
+				} else {
+					showApplyError(json.warning || json.error || genericError);
+				}
+			},
+			error: function() {
+				showApplyError(genericError);
 			}
-		},
-		error: function(xhr, ajaxOptions, thrownError) {
-			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-		}
+		});
 	});
+
+	requestQuote();
+	showStorefrontModal(modal, trigger);
 });
 
 $('select[name=\'country_id\']').on('change', function() {

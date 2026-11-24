@@ -1,6 +1,10 @@
 <div id="cart" class="btn-group btn-block">
-  <button type="button" data-toggle="dropdown" data-loading-text="{{ text_loading }}" class="btn btn-inverse btn-block btn-lg dropdown-toggle" aria-label="{{ text_cart }}"><img class="site-action-icon atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"> <span id="cart-total">{{ text_items }}</span></button>
-  <ul class="dropdown-menu pull-right mini-cart">
+  <button type="button" data-toggle="dropdown" data-loading-text="{{ text_loading }}" class="btn btn-inverse btn-block btn-lg dropdown-toggle" aria-label="{{ text_cart }}" aria-controls="mini-cart" aria-expanded="false"><img class="site-action-icon atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true"> <span id="cart-total">{{ text_items }}</span></button>
+  <ul id="mini-cart" class="dropdown-menu pull-right mini-cart">
+    <li class="mini-cart__header">
+      <h2>{{ text_cart_heading|default(text_cart) }}</h2>
+      <button class="popup-close" type="button" data-mini-cart-close aria-label="{{ button_close }}"><img src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" width="24" height="24" alt=""></button>
+    </li>
     {% if products or vouchers %}
     <li>
       <div class="mini-cart__items">
@@ -53,7 +57,7 @@
           {% endfor %}
         </table>
         <div class="mini-cart__actions">
-          <a href="{{ cart }}" class="btn btn-default btn-block">{{ text_cart }}</a>
+          <a href="{{ cart }}" class="btn btn-default btn-block">{{ text_cart_open|default(text_cart) }}</a>
           <a href="{{ checkout }}" class="btn btn-primary btn-block">{{ text_checkout }}</a>
         </div>
       </div>
@@ -62,7 +66,7 @@
     <li>
       <div class="mini-cart__empty">
         <p>{{ text_empty }}</p>
-        <a href="{{ cart }}" class="btn btn-default btn-block">{{ text_cart }}</a>
+        <a href="{{ continue_catalog }}" class="btn btn-default btn-block">{{ text_continue_shopping|default(button_shopping) }}</a>
       </div>
     </li>
     {% endif %}

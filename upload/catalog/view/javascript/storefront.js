@@ -1,6 +1,12 @@
 (function(window, document) {
 	'use strict';
 
+	$(document).on('click', '[data-mini-cart-close]', function(event) {
+		event.stopPropagation();
+		var trigger = $('#cart > [data-toggle="dropdown"]');
+		trigger.dropdown('toggle').trigger('focus');
+	});
+
 	document.addEventListener('click', function(event) {
 		var target = event.target.closest ? event.target.closest('[data-cart-add], [data-cart-remove], [data-voucher-remove], [data-wishlist-add], [data-compare-add], [data-confirm], [data-paypal-modal], [data-payment-confirm]') : null;
 
@@ -8,9 +14,27 @@
 			return;
 		}
 
-		if (target.hasAttribute('data-confirm') && !window.confirm(target.getAttribute('data-confirm'))) {
-			event.preventDefault();
-			return;
+		if (target.hasAttribute('data-confirm')) {
+			var addressDialog = document.getElementById('address-delete-confirm');
+			if (target.hasAttribute('data-address-delete') && addressDialog && typeof addressDialog.showModal === 'function') {
+				event.preventDefault();
+				if (!addressDialog.open) {
+					addressDialog.returnValue = '';
+					addressDialog.addEventListener('close', function() {
+						if (addressDialog.returnValue === 'delete') {
+							window.location.assign(target.href);
+						} else if (target.isConnected) {
+							target.focus({preventScroll: true});
+						}
+					}, {once: true});
+					addressDialog.showModal();
+				}
+				return;
+			}
+			if (!window.confirm(target.getAttribute('data-confirm'))) {
+				event.preventDefault();
+				return;
+			}
 		}
 
 		if (target.hasAttribute('data-cart-add')) {
@@ -296,6 +320,12 @@
 			filterDetails.addEventListener('toggle', function () {
 				if (!desktopFilters.matches && filterDetails.open) {
 					closeFiltersButton.focus();
+				}
+			});
+			filterDetails.addEventListener('keydown', function(event) {
+				if (event.key === 'Escape' && !desktopFilters.matches && filterDetails.open) {
+					event.preventDefault();
+					closeFilters();
 				}
 			});
 

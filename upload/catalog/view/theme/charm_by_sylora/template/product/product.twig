@@ -24,7 +24,7 @@
       {% endif %}
       <div class="product-page">
         <div class="product-page__media"> {% if thumb or images %}
-          <ul class="thumbnails">
+          <ul class="thumbnails" data-gallery-label="{{ text_product_photo|default(heading_title) }}">
             {% if thumb %}
             <li class="product-gallery__main"><a class="thumbnail" href="{{ popup }}" title="{{ main_image_alt }}">
               <picture>
@@ -365,7 +365,7 @@
 </main>
 {% if product_schema %}
 <script nonce="{{ csp_nonce }}" type="application/ld+json">{{ product_schema|raw }}</script>
-<script src="catalog/view/javascript/product.js?v=20261114-cart-icon-v2"></script>
+<script src="catalog/view/javascript/product.js?v=2276ac0bb522"></script>
 {% endif %}
 {% if has_datetime_option %}
 {% endif %}

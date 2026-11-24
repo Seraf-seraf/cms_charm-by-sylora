@@ -1,5 +1,9 @@
 <script nonce="{{ csp_nonce }}" id="cart-shipping-config" type="application/json">{{ {
-  'textShippingMethod': text_shipping_method,
+  'textTitle': text_shipping_title|default(text_shipping_method),
+  'textQuoteLoading': text_quote_loading|default(text_loading),
+  'textWait': text_quote_wait|default(text_loading),
+  'textQuoteError': error_quote,
+  'buttonRetry': button_retry_quote|default(button_quote),
   'shippingMethod': shipping_method,
   'buttonCancel': button_cancel,
   'buttonShipping': button_shipping,

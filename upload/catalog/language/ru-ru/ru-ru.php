@@ -99,6 +99,7 @@ $_['button_map']            = 'Просмотр карты';
 $_['button_details']        = 'Подробнее';
 $_['button_quick_view']     = 'Быстрый просмотр';
 $_['button_close']          = 'Закрыть';
+$_['error_popup_action']    = 'Не удалось выполнить действие. Попробуйте ещё раз.';
 $_['button_filter_apply']   = 'Применить';
 $_['button_filter_reset']   = 'Сбросить';
 $_['button_open_catalog']    = 'Открыть каталог';

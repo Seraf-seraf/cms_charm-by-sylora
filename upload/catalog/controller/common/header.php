@@ -23,6 +23,8 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		$data['title'] = $this->document->getTitle();
+		$data['button_close'] = $this->language->get('button_close');
+		$data['error_popup_action'] = $this->language->get('error_popup_action');
 
 		$data['base'] = $server;
 		$data['description'] = $this->document->getDescription();
