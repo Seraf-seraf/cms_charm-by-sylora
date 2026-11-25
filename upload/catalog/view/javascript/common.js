@@ -35,6 +35,49 @@ function getURLVar(key) {
 	};
 })(window.jQuery);
 
+(function($, window, document) {
+	var widgets = new Map();
+	var providerScript = null;
+
+	function initializeSmartCaptcha() {
+		var containers = document.querySelectorAll('.smart-captcha[data-sitekey]');
+		var captcha = window.smartCaptcha;
+
+		if (captcha) {
+			widgets.forEach(function(widgetId, container) {
+				if (!container.isConnected) {
+					captcha.destroy(widgetId);
+					widgets.delete(container);
+				}
+			});
+		}
+
+		containers.forEach(function(container) {
+			var siteKey = container.getAttribute('data-sitekey');
+
+			if (!siteKey || widgets.has(container)) {
+				return;
+			}
+
+			if (captcha) {
+				widgets.set(container, captcha.render(container, {sitekey: siteKey, hl: 'ru'}));
+			} else if (!providerScript) {
+				providerScript = document.createElement('script');
+				providerScript.src = 'https://smartcaptcha.cloud.yandex.ru/captcha.js?render=onload&onload=syloraSmartCaptchaOnload';
+				providerScript.onerror = function() {
+					providerScript.remove();
+					providerScript = null;
+				};
+				document.head.appendChild(providerScript);
+			}
+		});
+	}
+
+	window.syloraSmartCaptchaOnload = initializeSmartCaptcha;
+	$(initializeSmartCaptcha);
+	$(document).on('ajaxComplete.smartCaptcha', initializeSmartCaptcha);
+})(window.jQuery, window, document);
+
 (function() {
 	var overflowClass = 'is-responsive-overflowing';
 	var frame = null;
