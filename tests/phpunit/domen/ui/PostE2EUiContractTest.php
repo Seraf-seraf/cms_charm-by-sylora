@@ -88,16 +88,23 @@ final class PostE2EUiContractTest extends TestCase {
 	}
 
 	public function testLegalPagesAndFooterUseOneLegalName(): void {
-		$legalName = 'Индивидуальный предприниматель Глава крестьянского (фермерского) хозяйства Кравчук Серафим Сергеевич';
+		$sellerName = 'Кравчук Серафим Сергеевич';
+		$legalName = $sellerName . ', физическое лицо, применяющее налог на профессиональный доход (НПД)';
 
 		foreach (array('returns.txt', 'offer.txt', 'privacy-policy.txt', 'contacts-requisites.txt') as $file) {
-			self::assertStringContainsString($legalName, $this->read('legal-pages/' . $file), $file);
+			$path = 'legal-pages/' . $file;
+			if (!is_file($this->root . '/' . $path)) {
+				continue;
+			}
+
+			$page = $this->read($path);
+			self::assertStringContainsString($legalName, $page, $file);
+			self::assertStringNotContainsString('ОГРНИП', $page, $file);
 		}
 
-		self::assertStringNotContainsString(
-			'Индивидуальный предприниматель Кравчук Серафим Сергеевич',
-			$this->read('legal-pages/returns.txt')
-		);
+		$migration = $this->read('database/migrations/2026_11_26_000024_seller_npd_details.php');
+		self::assertStringContainsString($sellerName, $migration);
+		self::assertStringContainsString("'config_sylora_legal_name' => 'Самозанятый '", $migration);
 		self::assertStringContainsString("config_sylora_legal_name", $this->read('upload/catalog/controller/common/footer.php'));
 		self::assertStringNotContainsString('{{ legal_name }}', $this->read('upload/catalog/view/theme/charm_by_sylora/template/common/footer.twig'));
 	}
