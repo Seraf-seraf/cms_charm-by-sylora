@@ -1,0 +1,1101 @@
+diff --git a/OpenCart 3.x/upload/admin/controller/extension/payment/robokassa.php b/OpenCart 3.x/upload/admin/controller/extension/payment/robokassa.php
+index e0bcef9..83ebe2d 100644
+--- a/OpenCart 3.x/upload/admin/controller/extension/payment/robokassa.php	
++++ b/OpenCart 3.x/upload/admin/controller/extension/payment/robokassa.php	
+@@ -14,7 +14,6 @@ class ControllerExtensionPaymentRobokassa extends Controller
+         $this->load->model('localisation/language');
+         $this->load->model('extension/payment/robokassa');
+         $this->model_extension_payment_robokassa->installMarkingTables();
+-        $this->installPaymentExtensions();
+         $this->registerMarkingEvents();
+ 
+         $refund_cron_token = (string)$this->config->get('payment_robokassa_refund_cron_token');
+@@ -28,37 +27,8 @@ class ControllerExtensionPaymentRobokassa extends Controller
+         $this->document->addScript('view/javascript/robokassa/settings.js');
+ 
+         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+-            $is_update_request = isset($this->request->post['robokassa_action']) && $this->request->post['robokassa_action'] === 'update_methods';
+-            $methods_initialized = (int)$this->config->get('payment_robokassa_methods_initialized') === 1;
+-            $is_first_sync = !$methods_initialized;
+-
+             $this->saveUnifiedSettings($this->request->post);
+ 
+-            if ($is_update_request || $is_first_sync) {
+-                $merchant_login = trim((string)$this->request->post['payment_robokassa_login']);
+-                $aliases = $this->fetchInstallmentAliases($merchant_login);
+-
+-                if ($aliases === false) {
+-                    $this->session->data['error_warning'] = 'Не удалось обновить способы оплаты. Проверьте логин магазина и доступ к WebService.';
+-                    $this->response->redirect($this->url->link('extension/payment/robokassa', 'user_token=' . $this->session->data['user_token'], true));
+-
+-                    return;
+-                }
+-
+-                $this->model_setting_setting->editSetting('payment_robokassa_methods', array(
+-                    'payment_robokassa_methods_login' => $merchant_login,
+-                    'payment_robokassa_methods_initialized' => 1,
+-                    'payment_robokassa_methods_aliases' => $aliases
+-                ));
+-            }
+-
+-            if ($is_update_request) {
+-                $this->session->data['success'] = 'Список способов оплаты обновлен.';
+-                $this->response->redirect($this->url->link('extension/payment/robokassa', 'user_token=' . $this->session->data['user_token'], true));
+-
+-                return;
+-            }
+-
+             $this->session->data['success'] = $this->language->get('text_success');
+             $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
+         }
+@@ -209,23 +179,9 @@ class ControllerExtensionPaymentRobokassa extends Controller
+             $data['payment_robokassa_test_password_2'] = $this->config->get('payment_robokassa_test_password_2');
+         }
+ 
+-        $current_login_for_sync = trim((string)$data['payment_robokassa_login']);
+-        $current_password1_for_sync = trim((string)$data['payment_robokassa_password_1']);
+-        $current_password2_for_sync = trim((string)$data['payment_robokassa_password_2']);
+-        $data['show_update_methods'] = (int)$this->config->get('payment_robokassa_methods_initialized') === 1
+-            && $current_login_for_sync !== ''
+-            && $current_password1_for_sync !== ''
+-            && $current_password2_for_sync !== '';
+-
+-        if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
+-            $data['payment_robokassa_result_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/index.php?route=extension/payment/robokassa/result';
+-            $data['payment_robokassa_success_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/index.php?route=extension/payment/robokassa/success';
+-            $data['payment_robokassa_fail_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/index.php?route=extension/payment/robokassa/fail';
+-        } else {
+-            $data['payment_robokassa_result_url'] = HTTP_CATALOG . 'index.php?route=extension/payment/robokassa/result';
+-            $data['payment_robokassa_success_url'] = HTTP_CATALOG . 'index.php?route=extension/payment/robokassa/success';
+-            $data['payment_robokassa_fail_url'] = HTTP_CATALOG . 'index.php?route=extension/payment/robokassa/fail';
+-        }
++        $data['payment_robokassa_result_url'] = HTTP_CATALOG . 'index.php?route=extension/payment/robokassa/result';
++        $data['payment_robokassa_success_url'] = HTTP_CATALOG . 'index.php?route=extension/payment/robokassa/success';
++        $data['payment_robokassa_fail_url'] = HTTP_CATALOG . 'index.php?route=extension/payment/robokassa/fail';
+ 
+         $data['payment_robokassa_refund_cron_url'] = $this->maskRefundCronUrl($this->getRefundCronUrl($refund_cron_token));
+         $data['payment_robokassa_refund_cron_copy_url'] = $this->url->link('extension/payment/robokassa/copyRefundCronUrl', 'user_token=' . $this->session->data['user_token'], true);
+@@ -490,50 +446,19 @@ class ControllerExtensionPaymentRobokassa extends Controller
+ 
+     private function saveUnifiedSettings(array $settings)
+     {
+-        $child_codes = array(
+-            'payment_robokassa_credit',
+-            'payment_robokassa_mokka',
+-            'payment_robokassa_podeli',
+-            'payment_robokassa_sbp',
+-            'payment_robokassa_yandex_split',
+-            'payment_robokassa_widget'
+-        );
+-        $grouped_settings = array();
+-
+-        foreach ($child_codes as $code) {
+-            $grouped_settings[$code] = array();
+-        }
+-
+-        $main_settings = array();
+-
+-        foreach ($settings as $key => $value) {
+-            if (strpos($key, 'payment_robokassa_') !== 0) {
+-                continue;
+-            }
+-
+-            $child_setting = false;
+-
+-            foreach ($child_codes as $code) {
+-                if (strpos($key, $code . '_') === 0) {
+-                    $grouped_settings[$code][$key] = $value;
+-                    $child_setting = true;
+-                    break;
+-                }
+-            }
+-
+-            if (!$child_setting) {
+-                $main_settings[$key] = $value;
+-            }
+-        }
++        $main_settings = array_filter($settings, function ($key) {
++            return strpos($key, 'payment_robokassa_') === 0;
++        }, ARRAY_FILTER_USE_KEY);
+ 
+         $main_settings['payment_robokassa_refund_cron_token'] = (string)$this->config->get('payment_robokassa_refund_cron_token');
+ 
++        foreach (array('status_iframe', 'status_hold', 'status_podeli', 'marking', 'fiscal') as $option) {
++            $main_settings['payment_robokassa_' . $option] = 0;
++        }
++        $main_settings['payment_robokassa_country'] = 'RUB';
+         $this->model_setting_setting->editSetting('payment_robokassa', $main_settings);
+ 
+-        foreach ($grouped_settings as $code => $values) {
+-            $existing_values = $this->model_setting_setting->getSetting($code);
+-            $this->model_setting_setting->editSetting($code, array_merge($existing_values, $values));
+-        }
++
+     }
+ 
+     private function generateRefundCronToken()
+@@ -615,27 +540,6 @@ class ControllerExtensionPaymentRobokassa extends Controller
+         $this->response->setOutput(json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+     }
+ 
+-    private function installPaymentExtensions()
+-    {
+-        $this->load->model('setting/extension');
+-        $installed_codes = $this->model_setting_extension->getInstalled('payment');
+-
+-        $robokassa_extensions = array(
+-            'robokassa_credit',
+-            'robokassa_mokka',
+-            'robokassa_podeli',
+-            'robokassa_sbp',
+-            'robokassa_widget',
+-            'robokassa_yandex_split'
+-        );
+-
+-        foreach ($robokassa_extensions as $code) {
+-            if (!in_array($code, $installed_codes, true)) {
+-                $this->model_setting_extension->install('payment', $code);
+-            }
+-        }
+-    }
+-
+     private function registerMarkingEvents()
+     {
+         $this->load->model('setting/event');
+@@ -1161,32 +1065,16 @@ class ControllerExtensionPaymentRobokassa extends Controller
+             $this->error['merch_login'] = $this->language->get('error_merch_login');
+         }
+ 
+-        if (!$this->request->post['payment_robokassa_password_1']) {
++        if (empty($this->request->post[!empty($this->request->post['payment_robokassa_test'])
++            ? 'payment_robokassa_test_password_1' : 'payment_robokassa_password_1'])) {
+             $this->error['e_password1'] = $this->language->get('error_password1');
+         }
+ 
+-        if (!$this->request->post['payment_robokassa_password_2']) {
++        if (empty($this->request->post[!empty($this->request->post['payment_robokassa_test'])
++            ? 'payment_robokassa_test_password_2' : 'payment_robokassa_password_2'])) {
+             $this->error['e_password2'] = $this->language->get('error_password2');
+         }
+ 
+-        if (!empty($this->request->post['payment_robokassa_status_hold'])) {
+-            $status_ids = array(
+-                (int)($this->request->post['payment_robokassa_hold_pending_status_id'] ?? 0),
+-                (int)($this->request->post['payment_robokassa_hold_confirm_status_id'] ?? 0),
+-                (int)($this->request->post['payment_robokassa_hold_cancel_status_id'] ?? 0)
+-            );
+-
+-            if (in_array(0, $status_ids, true) || count(array_unique($status_ids)) !== 3) {
+-                $this->error['warning'] = $this->language->get('error_hold_statuses');
+-            } else {
+-                $query = $this->db->query("SELECT COUNT(DISTINCT `order_status_id`) AS total FROM `" . DB_PREFIX . "order_status` WHERE `order_status_id` IN (" . implode(',', $status_ids) . ")");
+-
+-                if ((int)$query->row['total'] !== 3) {
+-                    $this->error['warning'] = $this->language->get('error_hold_statuses');
+-                }
+-            }
+-        }
+-
+         return !$this->error;
+     }
+ 
+@@ -1254,9 +1142,7 @@ class ControllerExtensionPaymentRobokassa extends Controller
+ 	{
+ 		$this->load->model('extension/payment/robokassa');
+ 		$this->model_extension_payment_robokassa->installMarkingTables();
+-		$this->installPaymentExtensions();
+ 		$this->registerMarkingEvents();
+-		$this->sendPulseStatusChange('enabled');
+ 	}
+ 
+ 	public function uninstall()
+@@ -1272,6 +1158,5 @@ class ControllerExtensionPaymentRobokassa extends Controller
+ 		$this->model_setting_event->deleteEventByCode('robokassa_marking_product_form');
+ 		$this->model_setting_event->deleteEventByCode('robokassa_marking_product_edit');
+ 		$this->model_setting_event->deleteEventByCode('robokassa_marking_product_add');
+-		$this->sendPulseStatusChange('disabled');
+ 	}
+ }
+diff --git a/OpenCart 3.x/upload/admin/view/template/extension/payment/robokassa.twig b/OpenCart 3.x/upload/admin/view/template/extension/payment/robokassa.twig
+index a3411b4..5611130 100644
+--- a/OpenCart 3.x/upload/admin/view/template/extension/payment/robokassa.twig	
++++ b/OpenCart 3.x/upload/admin/view/template/extension/payment/robokassa.twig	
+@@ -3,11 +3,6 @@
+   <div class="page-header robokassa-page-header">
+     <div class="container-fluid">
+       <div class="pull-right robokassa-header-actions">
+-        {% if show_update_methods %}
+-          <button type="submit" form="form-payment" name="robokassa_action" value="update_methods" class="btn btn-default">
+-            <i class="fa fa-refresh"></i> {{ button_update_methods }}
+-          </button>
+-        {% endif %}
+         <button type="submit" form="form-payment" class="btn btn-primary">
+           <i class="fa fa-save"></i> {{ button_save }}
+         </button>
+@@ -38,7 +33,7 @@
+           <div class="robokassa-hero__logo"><img src="view/image/payment/robokassa.png" alt="Robokassa"></div>
+           <div>
+             <h2>Настройки Robokassa для OpenCart</h2>
+-            <p>Подключение, чеки, способы оплаты и виджеты — в одном месте.</p>
++            <p>Карты и СБП включаются в кабинете Robokassa. Чеки НПД оформляют «Робочеки СМЗ».</p>
+           </div>
+         </div>
+         <label class="robokassa-master-switch">
+@@ -53,15 +48,6 @@
+         <button type="button" class="robokassa-nav__item is-active" data-robokassa-tab="connection">
+           <i class="fa fa-plug"></i><span><strong>Подключение</strong><small>Магазин и API</small></span>
+         </button>
+-        <button type="button" class="robokassa-nav__item" data-robokassa-tab="receipts">
+-          <i class="fa fa-file-text-o"></i><span><strong>Чеки</strong><small>Фискализация</small></span>
+-        </button>
+-        <button type="button" class="robokassa-nav__item" data-robokassa-tab="methods">
+-          <i class="fa fa-credit-card"></i><span><strong>Способы оплаты</strong><small>СБП и рассрочки</small></span>
+-        </button>
+-        <button type="button" class="robokassa-nav__item" data-robokassa-tab="widgets">
+-          <i class="fa fa-object-group"></i><span><strong>Виджеты</strong><small>Карточка товара</small></span>
+-        </button>
+         <button type="button" class="robokassa-nav__item" data-robokassa-tab="advanced">
+           <i class="fa fa-sliders"></i><span><strong>Дополнительно</strong><small>Поведение модуля</small></span>
+         </button>
+@@ -135,116 +121,12 @@
+         </section>
+       </div>
+ 
+-      <div class="robokassa-tab" data-robokassa-panel="receipts">
+-        <section class="robokassa-card">
+-          <div class="robokassa-card__header"><div><h3>Фискализация и маркировка</h3><p>Параметры формирования первого и итогового чеков.</p></div></div>
+-          <div class="robokassa-form-grid">
+-            <div class="robokassa-field">
+-              <label for="input-fiscal"><span data-toggle="tooltip" title="{{ help_fiscal }}">{{ entry_fiscal }}</span></label>
+-              <select name="payment_robokassa_fiscal" id="input-fiscal" class="form-control"><option value="0" {% if not payment_robokassa_fiscal %}selected{% endif %}>{{ text_no }}</option><option value="1" {% if payment_robokassa_fiscal %}selected{% endif %}>{{ text_yes }}</option></select>
+-            </div>
+-            <div class="robokassa-field" data-fiscal-only data-russia-only>
+-              <label for="input-marking"><span data-toggle="tooltip" title="{{ help_marking }}">{{ entry_marking }}</span></label>
+-              <select name="payment_robokassa_marking" id="input-marking" class="form-control"><option value="0" {% if not payment_robokassa_marking %}selected{% endif %}>{{ text_no }}</option><option value="1" {% if payment_robokassa_marking %}selected{% endif %}>{{ text_yes }}</option></select>
+-            </div>
+-            <div class="robokassa-field" data-fiscal-only>
+-              <label for="input-tax-type">{{ entry_tax_type }}</label>
+-              <select name="payment_robokassa_tax_type" id="input-tax-type" class="form-control">{% for key, value in robokassa_tax_type_list %}<option value="{{ key }}" {% if payment_robokassa_tax_type == key %}selected{% endif %}>{{ value }}</option>{% endfor %}</select>
+-            </div>
+-            <div class="robokassa-field" data-fiscal-only>
+-              <label for="input-tax">{{ entry_tax }}</label>
+-              <select name="payment_robokassa_tax" id="input-tax" class="form-control">
+-                {% if payment_robokassa_country == 'KZT' %}{% for key, value in robokassa_tax_list_kz %}<option value="{{ key }}" {% if payment_robokassa_tax == key %}selected{% endif %}>{{ value }}</option>{% endfor %}{% else %}{% for key, value in robokassa_tax_list %}<option value="{{ key }}" {% if payment_robokassa_tax == key %}selected{% endif %}>{{ value }}</option>{% endfor %}{% endif %}
+-              </select>
+-            </div>
+-            <div class="robokassa-field" data-fiscal-only data-russia-only>
+-              <label for="input-payment-method">{{ entry_payment_method }}</label>
+-              <select name="payment_robokassa_payment_method" id="input-payment-method" class="form-control">{% for key, value in robokassa_payment_method_list %}<option value="{{ key }}" {% if payment_robokassa_payment_method == key %}selected{% endif %}>{{ value }}</option>{% endfor %}</select>
+-            </div>
+-            <div class="robokassa-field" data-fiscal-only data-russia-only>
+-              <label for="input-payment-object">{{ entry_payment_object }}</label>
+-              <select name="payment_robokassa_payment_object" id="input-payment-object" class="form-control">{% for key, value in robokassa_payment_object_list %}<option value="{{ key }}" {% if payment_robokassa_payment_object == key %}selected{% endif %}>{{ value }}</option>{% endfor %}</select>
+-            </div>
+-            <div class="robokassa-field robokassa-field--wide" data-fiscal-only data-russia-only>
+-              <label for="input-status-id-check2">Статус заказа для итогового чека</label>
+-              <select name="payment_robokassa_order_status_id_2check" id="input-status-id-check2" class="form-control"><option value="0">Не выбрано</option>{% for order_status in order_statuses %}<option value="{{ order_status.order_status_id }}" {% if order_status.order_status_id == payment_robokassa_order_status_id_2check %}selected{% endif %}>{{ order_status.name }}</option>{% endfor %}</select>
+-              <small>Итоговый чек отправится один раз при переходе заказа в выбранный статус.</small>
+-            </div>
+-          </div>
+-        </section>
+-      </div>
+-
+-      <div class="robokassa-tab" data-robokassa-panel="methods">
+-        <section class="robokassa-card">
+-          <div class="robokassa-card__header">
+-            <div><h3>Дополнительные способы оплаты</h3><p>Они останутся отдельными вариантами для покупателя, но управляются из этой страницы.</p></div>
+-            {% if show_update_methods %}<button type="submit" name="robokassa_action" value="update_methods" class="btn btn-default"><i class="fa fa-refresh"></i> {{ button_update_methods }}</button>{% endif %}
+-          </div>
+-          <div class="robokassa-method-grid">
+-            {% for method in robokassa_payment_methods %}
+-              <article class="robokassa-method-card {% if method.enabled %}is-enabled{% endif %}">
+-                <div class="robokassa-method-card__icon"><i class="fa {% if method.code == 'sbp' %}fa-qrcode{% else %}fa-credit-card{% endif %}"></i></div>
+-                <div class="robokassa-method-card__content">
+-                  <div class="robokassa-method-card__title"><h4>{{ method.title }}</h4>{% if method.availability_known %}<span class="robokassa-availability {% if method.available %}is-available{% else %}is-unavailable{% endif %}">{% if method.available %}Доступен{% else %}Недоступен магазину{% endif %}</span>{% else %}<span class="robokassa-availability">Не проверен</span>{% endif %}</div>
+-                  <p>{{ method.description }}</p>
+-                </div>
+-                <label class="robokassa-toggle" title="Включить способ оплаты">
+-                  <input type="hidden" name="{{ method.setting_key }}" value="0">
+-                  <input type="checkbox" name="{{ method.setting_key }}" value="1" {% if method.enabled %}checked{% endif %}>
+-                  <span class="robokassa-switch" aria-hidden="true"></span>
+-                </label>
+-              </article>
+-            {% endfor %}
+-          </div>
+-          <div class="robokassa-inline-note"><i class="fa fa-info-circle"></i><span>Список доступности берётся из Robokassa. Если вы подключили новый способ в личном кабинете, нажмите «{{ button_update_methods }}».</span></div>
+-        </section>
+-      </div>
+-
+-      <div class="robokassa-tab" data-robokassa-panel="widgets">
+-        <section class="robokassa-card">
+-          <div class="robokassa-card__header">
+-            <div><h3>Виджеты в карточке товара</h3><p>Настройте внешний вид блоков оплаты частями, кредита и рассрочки.</p></div>
+-            <label class="robokassa-toggle robokassa-toggle--labeled"><input type="hidden" name="payment_robokassa_widget_status" value="0"><input type="checkbox" name="payment_robokassa_widget_status" value="1" {% if payment_robokassa_widget_status %}checked{% endif %}><span class="robokassa-switch"></span><strong>Показывать виджеты</strong></label>
+-          </div>
+-          <div class="robokassa-widget-grid">
+-            <div class="robokassa-subcard">
+-              <h4><i class="fa fa-pie-chart"></i> Оплата частями</h4>
+-              <div class="robokassa-form-grid robokassa-form-grid--single">
+-                <div class="robokassa-field"><label for="input-bnpl-theme">Тема</label><select name="payment_robokassa_widget_bnpl_theme" id="input-bnpl-theme" class="form-control"><option value="light" {% if payment_robokassa_widget_bnpl_theme == 'light' %}selected{% endif %}>Светлая</option><option value="dark" {% if payment_robokassa_widget_bnpl_theme == 'dark' %}selected{% endif %}>Тёмная</option></select></div>
+-                <div class="robokassa-field"><label for="input-bnpl-size">Размер</label><select name="payment_robokassa_widget_bnpl_size" id="input-bnpl-size" class="form-control"><option value="s" {% if payment_robokassa_widget_bnpl_size == 's' %}selected{% endif %}>S</option><option value="m" {% if payment_robokassa_widget_bnpl_size == 'm' %}selected{% endif %}>M</option></select></div>
+-                <div class="robokassa-field"><label for="input-bnpl-logo">Показывать логотип</label><select name="payment_robokassa_widget_bnpl_show_logo" id="input-bnpl-logo" class="form-control"><option value="1" {% if payment_robokassa_widget_bnpl_show_logo %}selected{% endif %}>{{ text_yes }}</option><option value="0" {% if not payment_robokassa_widget_bnpl_show_logo %}selected{% endif %}>{{ text_no }}</option></select></div>
+-                <div class="robokassa-field"><label for="input-bnpl-radius">Скругление углов</label><input type="number" min="0" max="100" name="payment_robokassa_widget_bnpl_border_radius" value="{{ payment_robokassa_widget_bnpl_border_radius }}" id="input-bnpl-radius" class="form-control"></div>
+-                <div class="robokassa-field"><label for="input-bnpl-second-line">Вторая строка</label><select name="payment_robokassa_widget_bnpl_has_second_line" id="input-bnpl-second-line" class="form-control"><option value="1" {% if payment_robokassa_widget_bnpl_has_second_line %}selected{% endif %}>{{ text_yes }}</option><option value="0" {% if not payment_robokassa_widget_bnpl_has_second_line %}selected{% endif %}>{{ text_no }}</option></select></div>
+-                <div class="robokassa-field"><label for="input-bnpl-position">Позиция описания</label><select name="payment_robokassa_widget_bnpl_description_position" id="input-bnpl-position" class="form-control"><option value="left" {% if payment_robokassa_widget_bnpl_description_position == 'left' %}selected{% endif %}>Слева</option><option value="right" {% if payment_robokassa_widget_bnpl_description_position == 'right' %}selected{% endif %}>Справа</option></select></div>
+-              </div>
+-            </div>
+-            <div class="robokassa-subcard robokassa-subcard--dark">
+-              <h4><i class="fa fa-line-chart"></i> Кредит и рассрочка</h4>
+-              <div class="robokassa-form-grid robokassa-form-grid--single">
+-                <div class="robokassa-field"><label for="input-credit-theme">Тема</label><select name="payment_robokassa_widget_credit_theme" id="input-credit-theme" class="form-control"><option value="light" {% if payment_robokassa_widget_credit_theme == 'light' %}selected{% endif %}>Светлая</option><option value="dark" {% if payment_robokassa_widget_credit_theme == 'dark' %}selected{% endif %}>Тёмная</option></select></div>
+-                <div class="robokassa-field"><label for="input-credit-size">Размер</label><select name="payment_robokassa_widget_credit_size" id="input-credit-size" class="form-control"><option value="s" {% if payment_robokassa_widget_credit_size == 's' %}selected{% endif %}>S</option><option value="m" {% if payment_robokassa_widget_credit_size == 'm' %}selected{% endif %}>M</option></select></div>
+-                <div class="robokassa-field"><label for="input-credit-logo">Показывать логотип</label><select name="payment_robokassa_widget_credit_show_logo" id="input-credit-logo" class="form-control"><option value="1" {% if payment_robokassa_widget_credit_show_logo %}selected{% endif %}>{{ text_yes }}</option><option value="0" {% if not payment_robokassa_widget_credit_show_logo %}selected{% endif %}>{{ text_no }}</option></select></div>
+-                <div class="robokassa-field"><label for="input-credit-radius">Скругление углов</label><input type="number" min="0" max="100" name="payment_robokassa_widget_credit_border_radius" value="{{ payment_robokassa_widget_credit_border_radius }}" id="input-credit-radius" class="form-control"></div>
+-                <div class="robokassa-field"><label for="input-credit-second-line">Вторая строка</label><select name="payment_robokassa_widget_credit_has_second_line" id="input-credit-second-line" class="form-control"><option value="1" {% if payment_robokassa_widget_credit_has_second_line %}selected{% endif %}>{{ text_yes }}</option><option value="0" {% if not payment_robokassa_widget_credit_has_second_line %}selected{% endif %}>{{ text_no }}</option></select></div>
+-                <div class="robokassa-field"><label for="input-credit-position">Позиция описания</label><select name="payment_robokassa_widget_credit_description_position" id="input-credit-position" class="form-control"><option value="left" {% if payment_robokassa_widget_credit_description_position == 'left' %}selected{% endif %}>Слева</option><option value="right" {% if payment_robokassa_widget_credit_description_position == 'right' %}selected{% endif %}>Справа</option></select></div>
+-              </div>
+-            </div>
+-          </div>
+-        </section>
+-      </div>
+-
+       <div class="robokassa-tab" data-robokassa-panel="advanced">
+         <section class="robokassa-card">
+           <div class="robokassa-card__header"><div><h3>Дополнительные настройки</h3><p>География, отображение и технические параметры модуля.</p></div></div>
+           <div class="robokassa-form-grid">
+             <div class="robokassa-field"><label for="input-geo-zone">{{ entry_geo_zone }}</label><select name="payment_robokassa_geo_zone_id" id="input-geo-zone" class="form-control"><option value="0">{{ text_all_zones }}</option>{% for geo_zone in geo_zones %}<option value="{{ geo_zone.geo_zone_id }}" {% if geo_zone.geo_zone_id == payment_robokassa_geo_zone_id %}selected{% endif %}>{{ geo_zone.name }}</option>{% endfor %}</select></div>
+             <div class="robokassa-field"><label for="input-sort-order">{{ entry_sort_order }}</label><input type="number" name="payment_robokassa_sort_order" value="{{ payment_robokassa_sort_order }}" id="input-sort-order" class="form-control"></div>
+-            <div class="robokassa-field"><label for="input-product-options">{{ entry_product_options }}</label><select name="payment_robokassa_send_product_options" id="input-product-options" class="form-control"><option value="1" {% if payment_robokassa_send_product_options %}selected{% endif %}>{{ text_enabled }}</option><option value="0" {% if not payment_robokassa_send_product_options %}selected{% endif %}>{{ text_disabled }}</option></select></div>
+-            <div class="robokassa-field"><label for="input-iframe"><span data-toggle="tooltip" title="{{ help_iframe }}">{{ entry_iframe }}</span></label><select name="payment_robokassa_status_iframe" id="input-iframe" class="form-control"><option value="1" {% if payment_robokassa_status_iframe %}selected{% endif %}>{{ text_enabled }}</option><option value="0" {% if not payment_robokassa_status_iframe %}selected{% endif %}>{{ text_disabled }}</option></select></div>
+-            <div class="robokassa-field"><label for="input-hold"><span data-toggle="tooltip" title="{{ help_hold }}">{{ entry_hold }}</span></label><select name="payment_robokassa_status_hold" id="input-hold" class="form-control"><option value="1" {% if payment_robokassa_status_hold %}selected{% endif %}>{{ text_enabled }}</option><option value="0" {% if not payment_robokassa_status_hold %}selected{% endif %}>{{ text_disabled }}</option></select></div>
+-            <div class="robokassa-field"><label for="input-hold-pending-status">{{ entry_hold_pending_status }}</label><select name="payment_robokassa_hold_pending_status_id" id="input-hold-pending-status" class="form-control">{% for order_status in order_statuses %}<option value="{{ order_status.order_status_id }}" {% if order_status.order_status_id == payment_robokassa_hold_pending_status_id %}selected{% endif %}>{{ order_status.name }}</option>{% endfor %}</select><small>{{ help_hold_statuses }}</small></div>
+-            <div class="robokassa-field"><label for="input-hold-confirm-status">{{ entry_hold_confirm_status }}</label><select name="payment_robokassa_hold_confirm_status_id" id="input-hold-confirm-status" class="form-control">{% for order_status in order_statuses %}<option value="{{ order_status.order_status_id }}" {% if order_status.order_status_id == payment_robokassa_hold_confirm_status_id %}selected{% endif %}>{{ order_status.name }}</option>{% endfor %}</select></div>
+-            <div class="robokassa-field"><label for="input-hold-cancel-status">{{ entry_hold_cancel_status }}</label><select name="payment_robokassa_hold_cancel_status_id" id="input-hold-cancel-status" class="form-control">{% for order_status in order_statuses %}<option value="{{ order_status.order_status_id }}" {% if order_status.order_status_id == payment_robokassa_hold_cancel_status_id %}selected{% endif %}>{{ order_status.name }}</option>{% endfor %}</select></div>
+             <div class="robokassa-field"><label for="input-refund-status">Статус после полного возврата</label><select name="payment_robokassa_refund_status_id" id="input-refund-status" class="form-control">{% for order_status in order_statuses %}<option value="{{ order_status.order_status_id }}" {% if order_status.order_status_id == payment_robokassa_refund_status_id %}selected{% endif %}>{{ order_status.name }}</option>{% endfor %}</select><small>При частичном возврате статус заказа не меняется.</small></div>
+             <div class="robokassa-field robokassa-field--wide"><label>{{ entry_languages_map }}</label><div class="robokassa-language-grid">{% for language in opencart_languages %}<label><span>{{ language.name }}</span><select class="form-control" name="payment_robokassa_languages_map[{{ language.language_id }}]">{% for robokassa_language in robokassa_available_languages %}<option value="{{ robokassa_language }}" {% if payment_robokassa_languages_map[language.language_id] == robokassa_language %}selected{% endif %}>{{ robokassa_language }}</option>{% endfor %}</select></label>{% endfor %}</div></div>
+           </div>
+diff --git a/OpenCart 3.x/upload/catalog/controller/extension/payment/robokassa.php b/OpenCart 3.x/upload/catalog/controller/extension/payment/robokassa.php
+index a38e0d5..fdf2915 100644
+--- a/OpenCart 3.x/upload/catalog/controller/extension/payment/robokassa.php	
++++ b/OpenCart 3.x/upload/catalog/controller/extension/payment/robokassa.php	
+@@ -2,6 +2,9 @@
+ 
+ class ControllerExtensionPaymentRobokassa extends Controller
+ {
++    private const KOPECKS_PER_RUBLE = 100;
++    private const RECEIPT_ITEM_NAME_MAX_LENGTH = 128;
++
+     public function refundCron()
+     {
+         $this->response->addHeader('Content-Type: application/json');
+@@ -146,7 +149,7 @@ class ControllerExtensionPaymentRobokassa extends Controller
+         $variants[] = $this->buildResultSignature($out_summ, $order_id, $password, $normalized_request_data);
+ 
+         foreach (array_unique($variants) as $candidate) {
+-            if ($candidate === $signature) {
++            if (hash_equals($candidate, $signature)) {
+                 return true;
+             }
+         }
+@@ -207,371 +210,267 @@ class ControllerExtensionPaymentRobokassa extends Controller
+ 	}
+     public function index()
+     {
+-
+-        $data['button_confirm'] = $this->language->get('button_confirm');
+-
++        $this->load->language('extension/payment/robokassa');
+         $this->load->model('checkout/order');
+-        $this->load->model('account/order');
+-
+-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+ 
+-
+-        $ruUrl = 'https://auth.robokassa.ru/Merchant/Index.aspx';
+-        $kzUrl = 'https://auth.robokassa.kz/Merchant/Index.aspx';
+-
+-        if ($this->config->get('payment_robokassa_country') == 'RUB') {
+-            $paymentUrl = $ruUrl;
+-        } else {
+-            $paymentUrl = $kzUrl;
++        $orderId = (int)($this->session->data['order_id'] ?? 0);
++        $order = $this->model_checkout_order->getOrder($orderId);
++        if (!$order || $order['payment_code'] !== 'robokassa' || $order['currency_code'] !== 'RUB') {
++            return '';
+         }
+ 
+-        if ($this->config->get('payment_robokassa_test')) {
+-
+-            $password_1 = $this->config->get('payment_robokassa_test_password_1');
+-            $password_2 = $this->config->get('payment_robokassa_test_password_2');
+-            $data['payment_url'] = $paymentUrl;
+-
+-        } else {
+-
+-            $password_1 = $this->config->get('payment_robokassa_password_1');
+-            $password_2 = $this->config->get('payment_robokassa_password_2');
+-            $data['payment_url'] = $paymentUrl;
+-
++        $testMode = (bool)$this->config->get('payment_robokassa_test');
++        $password = (string)$this->config->get($testMode ? 'payment_robokassa_test_password_1' : 'payment_robokassa_password_1');
++        $login = (string)$this->config->get('payment_robokassa_login');
++        if ($password === '' || $login === '') {
++            return '';
+         }
+ 
+-        $data['robokassa_login'] = $this->config->get('payment_robokassa_login');
+-
+-        $data['robokassa_fiscal'] = $this->config->get('payment_robokassa_fiscal');
+-
+-        $data['inv_id'] = $this->session->data['order_id'];
+-
+-        $data['order_desc'] = 'Покупка в ' . $this->config->get('config_name');
+-
+-        $data['result2_url'] = HTTP_SERVER . 'index.php?route=extension/payment/robokassa/result2';
+-
+-        if (isset($this->session->data['guest']['email'])) {
+-            $data['email'] = $this->session->data['guest']['email'];
+-        } else {
+-            $data['email'] = '';
++        $amount = $this->orderAmount($order);
++        $receipt = $this->buildNpdReceipt($orderId, (int)round((float)$amount * self::KOPECKS_PER_RUBLE));
++        if ($receipt === null) {
++            $this->log->write('Robokassa: unable to build receipt for order ' . $orderId);
++            return '<p class="alert alert-danger">' . htmlspecialchars($this->language->get('error_receipt'), ENT_QUOTES, 'UTF-8') . '</p>';
+         }
+ 
+-        if ($this->config->get('payment_robokassa_status_hold')) {
+-            $data['robokassa_status_hold'] = 1;
+-        } else {
+-            $data['robokassa_status_hold'] = 0;
+-        }
++        $fields = array(
++            'MerchantLogin' => $login,
++            'OutSum' => $amount,
++            'InvId' => $orderId,
++            'Description' => 'Заказ №' . $orderId . ' в ' . $this->config->get('config_name'),
++            'Email' => $order['email'],
++            'Receipt' => $receipt,
++            'SignatureValue' => md5(implode(':', array(
++                $login, $amount, $orderId, $receipt, $password, 'Shp_item=1', 'Shp_label=official_opencart'
++            ))),
++            'Shp_item' => '1',
++            'Shp_label' => 'official_opencart',
++            'Culture' => substr($this->config->get('config_language'), 0, 2)
++        );
+ 
+-        if ($order_info['currency_code'] != $this->config->get('payment_robokassa_country') && $order_info['currency_code'] != 'RUB') {
+-            $data['out_summ_currency'] = $order_info['currency_code'];
++        if ($testMode) {
++            $fields['IsTest'] = '1';
+         }
+-        $bonus_points = 0; // Инициализируем переменную для учета бонусных баллов
+-
+-        // Расчет стоимости заказа с учетом бонусных баллов
+-        $total_order_cost = $order_info['total'] - $bonus_points;
+-		$data['out_summ'] = (float)$this->currency->format($total_order_cost, $order_info['currency_code'], false, false);
+-
+-
+-
+-        // $data['out_summ'] = (float) $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
+-
+-        $customer_language_id = $this->config->get('config_language_id');
+-        $languages_map = $this->config->get('payment_robokassa_languages_map');
+-
+-        $language = isset($languages_map[$customer_language_id]) ? $languages_map[$customer_language_id] : 'ru';
+-
+-        $data['culture'] = $language;
+-
+-
+-        if ($this->config->get('payment_robokassa_fiscal')) {
+-
+-            $tax_type = $this->config->get('payment_robokassa_tax_type');
+-            $tax = $this->config->get('payment_robokassa_tax');
+-            $payment_method = $this->config->get('payment_robokassa_payment_method');
+-            $payment_object = $this->config->get('payment_robokassa_payment_object');
+-
+-			$is_send_product_options = (bool)$this->config->get('payment_robokassa_send_product_options');
+-
+-            $receipt = [];
+ 
+-            $items = [];
+-
+-            $discount = 0;
+-            foreach ($this->model_checkout_order->getOrderTotals($order_info['order_id']) as $row) {
+-                if ($row['value'] < 0) {
+-                    $discount = abs($row['value']);
+-                }
+-            };
+-
+-            $total_price = 0;
+-            $order_products = $this->model_account_order->getOrderProducts($order_info['order_id']);
+-
+-            foreach ($order_products as $order_product) {
+-                $total_price += $order_product['price'] * $order_product['quantity'];
+-            }
+-
+-			$discount_percent = ($total_price > 0) ? ($discount / $total_price) : 0;
+-
+-            foreach ($order_products as $order_product) {
+-                $item_price = $order_product['price'];
+-
+-                // вычисляем стоимость скидки для каждого товара
+-                $item_discount = round($item_price * $discount_percent, 2);
+-                $item_price -= $item_discount;
+-
+-                $items[] = [
+-					'name' => $this->buildProductName($order_info['order_id'], $order_product, $is_send_product_options),
+-                    'cost' => round($item_price, 2),
+-                    'quantity' => $order_product['quantity'],
+-                    'payment_method' => $payment_method,
+-                    'payment_object' => $payment_object,
+-                    'tax' => $tax
+-                ];
+-            }
+-
+-            if (isset($this->session->data['shipping_method'])) {
+-                $shipping_name = $this->session->data['shipping_method']['title'];
+-                $shipping_price = $this->session->data['shipping_method']['cost'];
+-
+-                if ($shipping_price > 0) {
+-
+-                    $items[] = [
+-                        'name' => utf8_substr(trim(htmlspecialchars($shipping_name)), 0, 128),
+-                        'cost' => $this->currency->format($shipping_price, 'RUB', false, false),
+-                        'quantity' => 1,
+-                        'tax' => $tax,
+-                        'payment_method' => $payment_method,
+-                        'payment_object' => $payment_object,
+-                    ];
++        return $this->load->view('extension/payment/robokassa', array(
++            'button_confirm' => $this->language->get('button_confirm'),
++            'fields' => $fields,
++        ));
++    }
+ 
+-                }
++    private function buildNpdReceipt(int $orderId, int $amountKopecks): ?string
++    {
++        $lines = array();
++        foreach ($this->model_checkout_order->getOrderProducts($orderId) as $product) {
++            $quantity = (int)$product['quantity'];
++            $total = (int)round(((float)$product['total'] + (float)$product['tax'] * $quantity) * self::KOPECKS_PER_RUBLE);
++            if ($quantity > 0 && $total > 0) {
++                $lines[] = array($product['name'], $quantity, $total, 'commodity');
+             }
++        }
+ 
+-            $data['receipt'] = $receipt[] = json_encode(array(
+-                'sno' => $tax_type,
+-                'items' => $items
+-
+-            ));
+-
+-
+-            $data['receipt'] = urlencode($data['receipt']);
+-
+-            if (isset($data['out_summ_currency'])) {
+-                $data['crc'] = md5($data['robokassa_login'] . ":" . $data['out_summ'] . ":" . $data['inv_id'] . ":" . $data['out_summ_currency'] . ":" . $data['receipt'] . ":" . ($data['robokassa_status_hold'] == 1 ? "true:" . urldecode($data['result2_url']) : "") . $password_1 . ":Shp_item=1" . ":Shp_label=official_opencart");
+-            } else {
+-                $data['crc'] = md5($data['robokassa_login'] . ":" . $data['out_summ'] . ":" . $data['inv_id'] . ":" . $data['receipt'] . ":" . ($data['robokassa_status_hold'] == 1 ? "true:" . urldecode($data['result2_url']) . ":" : "") . $password_1 . ":Shp_item=1" . ":Shp_label=official_opencart");
++        $productLines = count($lines);
++        foreach ($this->model_checkout_order->getOrderTotals($orderId) as $total) {
++            if (in_array($total['code'], array('sub_total', 'tax', 'total'), true)) {
++                continue;
+             }
+-        } else {
+-            if (isset($data['out_summ_currency'])) {
+-                $data['crc'] = md5($data['robokassa_login'] . ":" . $data['out_summ'] . ":" . $data['inv_id'] . ":" . $data['out_summ_currency'] . ":" . (($data['robokassa_status_hold'] == 1 ? "true:" . urldecode($data['result2_url']) : "") . $password_1 . ":Shp_item=1" . ":Shp_label=official_opencart"));
+-
+-            } else {
+-                $data['crc'] = md5($data['robokassa_login'] . ":" . $data['out_summ'] . ":" . $data['inv_id'] . ":" . (($data['robokassa_status_hold'] == 1 ? "true:" . urldecode($data['result2_url']) . ":" : "") . $password_1 . ":Shp_item=1" . ":Shp_label=official_opencart"));
++            $value = (int)round((float)$total['value'] * self::KOPECKS_PER_RUBLE);
++            if ($value > 0) {
++                $lines[] = array($total['title'], 1, $value, $total['code'] === 'shipping' ? 'service' : 'payment');
+             }
+         }
+ 
+-        if ($this->config->get('payment_robokassa_test')) {
+-            $data['robokassa_test'] = '1';
+-        } else {
+-            $data['robokassa_test'] = '0';
+-        }
+-
+-
+-
+-
+-        $ruIframeUrl = "https://auth.robokassa.ru/Merchant/bundle/robokassa_iframe.js";
+-        $kzIframeUrl = "https://auth.robokassa.kz/Merchant/bundle/robokassa_iframe.js";
+-
+-        if ($this->config->get('payment_robokassa_country') == 'RUB') {
+-            $data['iframeUrl'] = $ruIframeUrl;
+-        } else {
+-            $data['iframeUrl'] = $kzIframeUrl;
+-        }
+-
+-        if ($this->config->get('payment_robokassa_status_iframe')) {
+-            $data['robokassa_status_iframe'] = 1;
+-        } else {
+-            $data['robokassa_status_iframe'] = 0;
++        $totalKopecks = array_sum(array_column($lines, 2));
++        if ($totalKopecks <= 0 || $amountKopecks <= 0) {
++            return null;
+         }
+ 
+-        // подели
+-        if ($this->config->get('payment_robokassa_status_podeli')) {
+-
+-            // Проверка, находится ли сумма в диапазоне от 300 до 35000
+-            $minAmount = 300;
+-            $maxAmount = 35000;
+-
+-            if ($data['out_summ'] >= $minAmount && $data['out_summ'] <= $maxAmount) {
+-                $data['robokassa_status_podeli'] = 1;
+-                $data['IncCurrLabel'] = 'Podeli';
+-            } else {
+-                $data['robokassa_status_podeli'] = 0;
++        $productKopecks = array_sum(array_column(array_slice($lines, 0, $productLines), 2));
++        $chargesKopecks = $totalKopecks - $productKopecks;
++        $keepCharges = $productKopecks > 0 && $amountKopecks > $chargesKopecks;
++        $allocationBase = $keepCharges ? $productKopecks : $totalKopecks;
++        $allocationTarget = $keepCharges ? $amountKopecks - $chargesKopecks : $amountKopecks;
++
++        // Allocate discounts in kopecks and retain the selected delivery charge when covered.
++        $items = array();
++        $allocatedKopecks = 0;
++        $seenKopecks = 0;
++        foreach ($lines as $index => list($name, $quantity, $lineKopecks, $object)) {
++            $lineAmount = $lineKopecks;
++            if (!$keepCharges || $index < $productLines) {
++                $seenKopecks += $lineKopecks;
++                $newAllocation = (int)round(($seenKopecks / $allocationBase) * $allocationTarget);
++                $lineAmount = $newAllocation - $allocatedKopecks;
++                $allocatedKopecks = $newAllocation;
++            }
++            if ($lineAmount <= 0) {
++                continue;
+             }
+ 
++            $items[] = array(
++                'name' => utf8_substr(trim(html_entity_decode($name, ENT_QUOTES | ENT_HTML5, 'UTF-8')), 0, self::RECEIPT_ITEM_NAME_MAX_LENGTH),
++                'quantity' => $quantity,
++                'sum' => $lineAmount / self::KOPECKS_PER_RUBLE,
++                'payment_method' => 'full_payment',
++                'payment_object' => $object,
++                'tax' => 'none',
++            );
+         }
+ 
+-        return $this->load->view('extension/payment/robokassa', $data);
++        $json = json_encode(array('items' => $items), JSON_UNESCAPED_UNICODE);
++
++        return $json === false ? null : urlencode($json);
+     }
+ 
+     public function success()
+     {
+-        $session = $this->session;
+-        $request_data = array_merge($this->request->get, $this->request->post);
++        $request = array_merge($this->request->get, $this->request->post);
++        $order = $this->verifiedOrder($request, 1);
+ 
+-        if ($this->config->get('payment_robokassa_test')) {
+-            $password_1 = $this->config->get('payment_robokassa_test_password_1');
+-        } else {
+-            $password_1 = $this->config->get('payment_robokassa_password_1');
++        if (!$order || (int)($this->session->data['order_id'] ?? 0) !== (int)$order['order_id']) {
++            $this->response->redirect($this->url->link('checkout/checkout', '', true));
++            return;
+         }
+ 
+-
+-        $out_summ = isset($request_data['OutSum']) ? $request_data['OutSum'] : '';
+-        $order_id = isset($request_data['InvId']) ? $request_data['InvId'] : 0;
+-        $crc = isset($request_data['SignatureValue']) ? $request_data['SignatureValue'] : '';
+-
+-        $crc = strtoupper($crc);
+-
+-        if ($this->isValidResultSignature($out_summ, $order_id, $password_1, $request_data, $crc)) {
+-            $this->load->model('checkout/order');
+-
+-            $order_info = $this->model_checkout_order->getOrder($order_id);
+-
+-            if ($order_info['order_status_id'] == 0) {
+-                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_order_status_id'));
+-            }
+-
+-            $this->response->redirect($this->url->link('checkout/success', '', true));
+-
+-        } else {
+-
+-            $this->log->write('ROBOKASSA ошибка в заказе: ' . $order_id . 'Контрольные суммы не совпадают');
+-
+-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+-
+-            $this->response->redirect($this->url->link('error/error', '', true));
+-
++        $orderId = (int)$order['order_id'];
++        if (!$this->hasConfirmation($orderId, $this->confirmationComment($orderId))) {
++            $this->response->addHeader('Cache-Control: private, no-store');
++            $this->response->setOutput($this->load->view('extension/payment/robokassa_pending', array(
++                'header' => $this->load->controller('common/header'),
++                'footer' => $this->load->controller('common/footer'),
++                'order_id' => $orderId,
++                'refresh' => $this->url->link('extension/payment/robokassa/success', http_build_query(array_filter($request, function ($key) {
++                    return in_array($key, array('OutSum', 'InvId', 'SignatureValue'), true)
++                        || stripos((string)$key, 'shp_') === 0;
++                }, ARRAY_FILTER_USE_KEY)), true),
++            )));
++            return;
+         }
+ 
+-        return true;
++        $this->response->redirect($this->url->link('checkout/success', '', true));
+     }
+ 
+     public function fail()
+     {
+-
+         $this->response->redirect($this->url->link('checkout/checkout', '', true));
+-
+-        return true;
+     }
+ 
+     public function result()
+     {
+-
+-        if ($this->config->get('payment_robokassa_test')) {
+-            $password_2 = $this->config->get('payment_robokassa_test_password_2');
+-        } else {
+-            $password_2 = $this->config->get('payment_robokassa_password_2');
++        $request = $this->request->post;
++        if (($this->request->server['REQUEST_METHOD'] ?? '') !== 'POST' || !$this->verifiedOrder($request, 2)) {
++            $this->response->addHeader('HTTP/1.1 400 Bad Request');
++            $this->response->setOutput('Invalid payment notification');
++            return;
+         }
+ 
+-        $out_summ = $this->request->post['OutSum'];
+-        $order_id = $this->request->post["InvId"];
+-        $crc = $this->request->post["SignatureValue"];
+-
+-        $crc = strtoupper($crc);
++        $orderId = (int)$request['InvId'];
++        $paidStatusId = (int)$this->config->get('payment_robokassa_order_status_id');
++        if ($paidStatusId <= 0) {
++            $this->response->addHeader('HTTP/1.1 503 Service Unavailable');
++            $this->response->setOutput('Payment confirmation temporarily unavailable');
++            return;
++        }
+ 
+-        if ($this->isValidResultSignature($out_summ, $order_id, $password_2, $this->request->post, $crc)) {
+-            $this->load->model('checkout/order');
++        $lock = 'rk_' . substr(hash('sha256', DB_DATABASE . ':' . DB_PREFIX . ':' . $orderId), 0, 60);
++        $locked = $this->db->query("SELECT GET_LOCK('" . $lock . "', 5) AS locked");
++        if ((int)($locked->row['locked'] ?? 0) !== 1) {
++            $this->response->addHeader('HTTP/1.1 503 Service Unavailable');
++            $this->response->setOutput('Payment confirmation temporarily unavailable');
++            return;
++        }
+ 
+-            $order_info = $this->model_checkout_order->getOrder($order_id);
+-            $new_order_status_id = $this->config->get('payment_robokassa_order_status_id');
++        try {
++            $order = $this->verifiedOrder($request, 2);
++            if (!$order) {
++                $this->response->addHeader('HTTP/1.1 400 Bad Request');
++                $this->response->setOutput('Invalid payment notification');
++                return;
++            }
+ 
+-            echo 'OK' . $this->request->post["InvId"];
++            $comment = $this->confirmationComment($orderId);
++            if (!$this->hasConfirmation($orderId, $comment)) {
++                $this->model_checkout_order->addOrderHistory($orderId, $paidStatusId, $comment);
++                if (!$this->hasConfirmation($orderId, $comment)) {
++                    $this->response->addHeader('HTTP/1.1 503 Service Unavailable');
++                    $this->response->setOutput('Payment confirmation temporarily unavailable');
++                    return;
++                }
++            }
+ 
+-            if ($order_info['order_status_id'] == 0) {
+-                $this->model_checkout_order->addOrderHistory($order_id, $new_order_status_id);
+-            } elseif ($order_info['order_status_id'] != $new_order_status_id) {
+-                $this->model_checkout_order->addOrderHistory($order_id, $new_order_status_id);
++            $this->response->setOutput('OK' . $orderId);
++        } finally {
++            $this->db->query("SELECT RELEASE_LOCK('" . $lock . "')");
++        }
++    }
+ 
+-                if ($this->config->get('payment_robokassa_test')) {
+-                    $this->log->write('ROBOKASSA в заказе: ' . $order_id . '. Статус заказа успешно изменен');
+-                }
++    private function confirmationComment(int $orderId): string
++    {
++        return 'Robokassa: подтверждение оплаты заказа ' . $orderId;
++    }
+ 
+-            }
++    private function hasConfirmation(int $orderId, string $comment): bool
++    {
++        $history = $this->db->query(
++            "SELECT order_history_id FROM `" . DB_PREFIX . "order_history` WHERE order_id = " . $orderId .
++            " AND comment = '" . $this->db->escape($comment) . "' LIMIT 1"
++        );
+ 
++        return (bool)$history->num_rows;
++    }
+ 
+-            return true;
+-        } else {
++    private function verifiedOrder(array $request, int $passwordNumber): ?array
++    {
++        $amount = $request['OutSum'] ?? null;
++        $invoice = $request['InvId'] ?? null;
++        $signature = $request['SignatureValue'] ?? null;
++
++        if (
++            !is_string($amount) || !preg_match('/^\d{1,12}(?:\.\d{1,6})?$/D', $amount)
++            || !is_string($invoice) || !preg_match('/^[1-9]\d{0,9}$/D', $invoice)
++            || !is_string($signature) || !preg_match('/^[a-f0-9]{32}$/iD', $signature)
++        ) {
++            return null;
++        }
+ 
+-            if ($this->config->get('payment_robokassa_test')) {
+-                $this->log->write('ROBOKASSA ошибка в заказе: ' . $order_id . '. Контрольные суммы не совпадают');
++        foreach ($request as $key => $value) {
++            if (stripos((string)$key, 'shp_') === 0 && !is_string($value)) {
++                return null;
+             }
+-
+         }
+ 
+-    }
++        $keyPrefix = $this->config->get('payment_robokassa_test')
++            ? 'payment_robokassa_test_password_'
++            : 'payment_robokassa_password_';
++        $password = (string)$this->config->get($keyPrefix . $passwordNumber);
++        if ($password === '' || !$this->isValidResultSignature($amount, $invoice, $password, $request, $signature)) {
++            return null;
++        }
+ 
+-    public function result2()
+-    {
+         $this->load->model('checkout/order');
+-        $input_data = file_get_contents('php://input');
+-
+-        // Проверяем тип контента на "application/json"
+-        if (strpos($_SERVER['CONTENT_TYPE'], 'application/json') !== false) {
+-            // Разбиваем JWT на три части
+-            $token_parts = explode('.', $input_data);
+-
+-            // Проверяем, что есть три части
+-            if (count($token_parts) === 3) {
+-                // Декодируем вторую часть (полезные данные)
+-                $json_data = json_decode(base64_decode($token_parts[1]), true);
+-
+-                // Проверяем наличие ключевого поля "state" со значением "HOLD"
+-                if (isset($json_data['data']['state']) && $json_data['data']['state'] === 'HOLD') {
+-                    // Изменяем статус заказа
+-                    /*$order = new WC_Order($json_data['data']['invId']);
+-                    $date_in_five_days = date('Y-m-d H:i:s', strtotime('+5 days'));
+-                    $order->add_order_note("Robokassa: Платеж успешно подтвержден. Он ожидает подтверждения до {$date_in_five_days}, после чего автоматически отменится");
+-                    $order->update_status('on-hold');*/
+-                    $order_id = $json_data['data']['invId'];
+-                    $order_info = $this->model_checkout_order->getOrder($order_id);
+-                    $new_order_status_id = (int)($this->config->get('payment_robokassa_hold_pending_status_id') ?: 1);
+-                    $message = "Robokassa: Платеж захолдирован.";
+-
+-                    if ($order_info['order_status_id'] == 0) {
+-                        $this->model_checkout_order->addOrderHistory($order_id, $new_order_status_id);
+-                    } elseif ($order_info['order_status_id'] != $new_order_status_id) {
+-                        $this->model_checkout_order->addOrderHistory($order_id, $new_order_status_id, $message);
+-                    }
+-
+-                    // Добавляем событие, которое делает unhold через 5 дней
+-                    //wp_schedule_single_event(strtotime('+5 days'), 'robokassa_cancel_payment_event', array($order->get_id()));
+-                }
+-                if (isset($json_data['data']['state']) && $json_data['data']['state'] === 'OK') {
+-                    // Изменяем статус заказа
+-                    $order_id = $json_data['data']['invId'];
+-                    $order_info = $this->model_checkout_order->getOrder($order_id);
+-                    $new_order_status_id = (int)($this->config->get('payment_robokassa_hold_confirm_status_id') ?: 2);
+-                    $message = "Robokassa: Платеж успешно подтвержден.";
+-
+-                    if ($order_info['order_status_id'] == 0) {
+-                        $this->model_checkout_order->addOrderHistory($order_id, $new_order_status_id);
+-                    } elseif ($order_info['order_status_id'] != $new_order_status_id) {
+-                        $this->model_checkout_order->addOrderHistory($order_id, $new_order_status_id, $message);
+-                    }
++        $order = $this->model_checkout_order->getOrder((int)$invoice);
++        if (
++            !$order
++            || $order['payment_code'] !== 'robokassa'
++            || $order['currency_code'] !== 'RUB'
++            || (int)$order['store_id'] !== (int)$this->config->get('config_store_id')
++        ) {
++            return null;
++        }
+ 
+-                }
+-                http_response_code(200);
+-            } else {
+-                http_response_code(400);
+-            }
+-        } else {
+-            http_response_code(415); // Unsupported Media Type
++        $parts = explode('.', $amount, 2);
++        $fraction = str_pad($parts[1] ?? '', 2, '0');
++        $normalized = (int)$parts[0] . '.' . substr($fraction, 0, 2);
++
++        if (trim(substr($fraction, 2), '0') !== '' || $normalized !== $this->orderAmount($order)) {
++            return null;
+         }
++
++        return $order;
+     }
+ 
+-    public function test()
++    private function orderAmount(array $order): string
+     {
+-        $this->load->model('extension/payment/robokassa');
+-
+-        $this->model_extension_payment_robokassa->robokassa_hold_cancel(584);
++        return number_format(round((float)$order['total'] * (float)$order['currency_value'], 2), 2, '.', '');
+     }
+-
+ }
+diff --git a/OpenCart 3.x/upload/catalog/language/en-gb/extension/payment/robokassa.php b/OpenCart 3.x/upload/catalog/language/en-gb/extension/payment/robokassa.php
+index c49ebf8..39a37c2 100644
+--- a/OpenCart 3.x/upload/catalog/language/en-gb/extension/payment/robokassa.php	
++++ b/OpenCart 3.x/upload/catalog/language/en-gb/extension/payment/robokassa.php	
+@@ -1,4 +1,6 @@
+ <?php
+ // Text
+-$_['text_title']       = 'Робокасса <img src="image/payment/robokassa.png" alt="" style="max-width: 150px;">';
+-$_['text_description']       = 'Робокасса <img src="image/payment/robokassa.png" alt="" style="max-width: 150px;">';
+\ No newline at end of file
++$_['text_title'] = 'Bank card or SBP (Robokassa)';
++$_['button_confirm'] = 'Pay with Robokassa';
++$_['error_receipt'] = 'Unable to prepare the receipt. Please contact the store.';
++$_['text_description']       = 'Робокасса <img src="image/payment/robokassa.png" alt="" style="max-width: 150px;">';
+diff --git a/OpenCart 3.x/upload/catalog/language/ru-ru/extension/payment/robokassa.php b/OpenCart 3.x/upload/catalog/language/ru-ru/extension/payment/robokassa.php
+index c49ebf8..5de0006 100644
+--- a/OpenCart 3.x/upload/catalog/language/ru-ru/extension/payment/robokassa.php	
++++ b/OpenCart 3.x/upload/catalog/language/ru-ru/extension/payment/robokassa.php	
+@@ -1,4 +1,6 @@
+ <?php
+ // Text
+-$_['text_title']       = 'Робокасса <img src="image/payment/robokassa.png" alt="" style="max-width: 150px;">';
+-$_['text_description']       = 'Робокасса <img src="image/payment/robokassa.png" alt="" style="max-width: 150px;">';
+\ No newline at end of file
++$_['text_title'] = 'Банковская карта или СБП (Robokassa)';
++$_['button_confirm'] = 'Оплатить через Robokassa';
++$_['error_receipt'] = 'Не удалось подготовить состав чека. Обратитесь в магазин.';
++$_['text_description']       = 'Робокасса <img src="image/payment/robokassa.png" alt="" style="max-width: 150px;">';
+diff --git a/OpenCart 3.x/upload/catalog/model/extension/payment/robokassa.php b/OpenCart 3.x/upload/catalog/model/extension/payment/robokassa.php
+index e4ae43b..20458c4 100644
+--- a/OpenCart 3.x/upload/catalog/model/extension/payment/robokassa.php	
++++ b/OpenCart 3.x/upload/catalog/model/extension/payment/robokassa.php	
+@@ -3,7 +3,11 @@ class ModelExtensionPaymentRobokassa extends Model {
+     public function getMethod($address, $total) {
+         $this->load->language('extension/payment/robokassa');
+ 
+-        if ($this->config->get('payment_robokassa_status')) {
++        if (
++            $this->config->get('payment_robokassa_status')
++            && (float)$total > 0
++            && ($this->session->data['currency'] ?? $this->config->get('config_currency')) === 'RUB'
++        ) {
+             $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_robokassa_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+ 
+             if (!$this->config->get('payment_robokassa_geo_zone_id')) {
+diff --git a/OpenCart 3.x/upload/catalog/view/theme/default/template/extension/payment/robokassa.twig b/OpenCart 3.x/upload/catalog/view/theme/default/template/extension/payment/robokassa.twig
+index 1aa4fcf..3abea2f 100644
+--- a/OpenCart 3.x/upload/catalog/view/theme/default/template/extension/payment/robokassa.twig	
++++ b/OpenCart 3.x/upload/catalog/view/theme/default/template/extension/payment/robokassa.twig	
+@@ -1,59 +1,10 @@
+-{% if robokassa_status_iframe %}
+-    <script type="text/javascript" src="{{ iframeUrl }}"></script>
+-    <div class="buttons">
+-        <div class="pull-right">
+-            <input type="submit" value="{{ button_confirm }}" class="btn btn-primary"
+-                   onclick="Robokassa.StartPayment({MerchantLogin: '{{ robokassa_login }}',    OutSum: '{{ out_summ }}', InvId: '{{ inv_id }}', Description: '{{ order_desc }}', Email: '{{ email }}', {% if out_summ_currency %} OutSumCurrency: '{{ out_summ_currency }}', {% endif %} {% if robokassa_fiscal %} Receipt: '{{ receipt }}', {% endif %} SignatureValue: '{{ crc }}', Shp_item: '1', Shp_label: 'official_opencart', Culture: '{{ culture }}'{% if robokassa_test %}, IsTest: '1' {% endif %}})">
+-        </div>
++<form action="https://auth.robokassa.ru/Merchant/Index.aspx" method="post">
++  {% for name, value in fields %}
++    <input type="hidden" name="{{ name|e('html_attr') }}" value="{{ value|e('html_attr') }}">
++  {% endfor %}
++  <div class="buttons">
++    <div class="pull-right">
++      <button type="submit" class="btn btn-primary">{{ button_confirm|e }}</button>
+     </div>
+-{% else %}
+-    <form action="{{ payment_url }}" method="post">
+-        <input type="hidden" name="MerchantLogin" value="{{ robokassa_login }}"/>
+-        <input type="hidden" name="OutSum" value="{{ out_summ }}"/>
+-        <input type="hidden" name="InvId" value="{{ inv_id }}"/>
+-        {% if robokassa_status_hold %}
+-            <input type="hidden" name="StepByStep" value="true"/>
+-            <input type="hidden" name="ResultUrl2" value="{{ result2_url }}"/>
+-        {% endif %}
+-        <input type="hidden" name="Description" value="{{ order_desc }}"/>
+-        <input type="hidden" name="Email" value="{{ email }}"/>
+-
+-        {% if out_summ_currency %}
+-            <input type="hidden" name="OutSumCurrency" value="{{ out_summ_currency }}"/>
+-        {% endif %}
+-        {% if robokassa_fiscal %}
+-            <input type="hidden" name="Receipt" value="{{ receipt }}"/>
+-        {% endif %}
+-        <input type="hidden" name="SignatureValue" value="{{ crc }}"/>
+-        <input type="hidden" name="Shp_item" value="1"/>
+-        <input type="hidden" name="Shp_label" value="official_opencart"/>
+-
+-        {% if robokassa_test %}
+-            <input type="hidden" name="IsTest" value="1"/>
+-        {% endif %}
+-        <input type="hidden" name="IncCurrLabel" value=""/>
+-        <input type="hidden" name="Culture" value="{{ culture }}"/>
+-        <div class="buttons">
+-            <div class="pull-right">
+-                <input type="submit" value="{{ button_confirm }}" class="btn btn-primary"/>
+-            </div>
+-        </div>
+-    </form>
+-{% endif %}
+-
+-{% if robokassa_status_podeli %}
+-    <body>
+-    <div class="alert alert-info">
+-        <p>Вы можете воспользоваться способом оплаты "Подели". Этот способ доступен для заказов на сумму от 300 до 35000 руб.</p>
+-        <p>Оплата "Подели" позволяет разбить сумму заказа на части и оплатить её частями. Оплата возможна в интернет-банках, салонах связи и других местах.</p>
+-    </div>
+-    <script type="text/javascript" src="https://auth.robokassa.ru/Merchant/PaymentForm/DirectPayment.js"></script>
+-    <div class="buttons">
+-        <div class="pull-left">
+-            <!-- <button onclick="Robo.directPayment.startOp({MrchLogin: '{{ robokassa_login }}',   IncCurrLabel: '{{ IncCurrLabel }}', Encoding: 'utf-8',  OutSum: '{{ out_summ }}', Description: '{{ order_desc }}',  SignatureValue: '{{ crc }}',  Culture: '{{ culture }}'})" >ОплатитьПодели</button> -->
+-            <button onclick="Robo.directPayment.startOp({MrchLogin: '{{ robokassa_login }}',   IncCurrLabel: '{{ IncCurrLabel }}', InvId: '{{ inv_id }}',  Encoding: 'utf-8', {% if robokassa_fiscal %} Receipt: '{{ receipt }}', {% endif %} OutSum: '{{ out_summ }}', Description: '{{ order_desc }}',  SignatureValue: '{{ crc }}', Shp_item: '1', Shp_label: 'official_opencart',  Culture: '{{ culture }}'})" >Оплатить Подели</button>
+-        </div>
+-    </div>
+-    </body>
+-    </html>
+-{% endif %}
++  </div>
++</form>
+diff --git a/OpenCart 3.x/upload/catalog/view/theme/default/template/extension/payment/robokassa_pending.twig b/OpenCart 3.x/upload/catalog/view/theme/default/template/extension/payment/robokassa_pending.twig
+new file mode 100644
+index 0000000..05d8921
+--- /dev/null
++++ b/OpenCart 3.x/upload/catalog/view/theme/default/template/extension/payment/robokassa_pending.twig	
+@@ -0,0 +1,7 @@
++{{ header }}
++<main class="container">
++  <h1>Ожидаем подтверждение оплаты</h1>
++  <p>Проверяем оплату заказа №{{ order_id }}. Подтверждение может занять несколько секунд.</p>
++  <a class="btn btn-primary" href="{{ refresh|replace({'&amp;': '&'})|e('html_attr') }}">Обновить статус</a>
++</main>
++{{ footer }}

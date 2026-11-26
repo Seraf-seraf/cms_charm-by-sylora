@@ -309,12 +309,17 @@ class ControllerStartupStartup extends Controller {
 			'https://metrika.yandex.kz',
 			'https://metrika.yandex.uz'
 		));
+		$form_action = "form-action 'self'";
+		if (($this->request->get['route'] ?? '') === 'checkout/checkout') {
+			$form_action .= ' https://auth.robokassa.ru';
+		}
+
 		$directives = array(
 			"default-src 'self'",
 			"base-uri 'self'",
 			"object-src 'none'",
 			"frame-ancestors 'self' " . $metrica_frame_ancestors . " https://webvisor.com https://*.webvisor.com",
-			"form-action 'self'",
+			$form_action,
 			"script-src 'self' 'nonce-" . $nonce . "' " . $metrica_http_sources . " https://yastatic.net https://cdn.jsdelivr.net/npm/@cdek-it/widget@3.10.4/dist/cdek-widget.umd.js https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://suggest-maps.yandex.ru https://yandex.ru https://widget.pochta.ru https://smartcaptcha.cloud.yandex.ru",
 			"script-src-attr 'none'",
 			"connect-src 'self' " . $metrica_http_sources . ' ' . $metrica_websocket_sources . " https://api-maps.yandex.ru https://*.api-maps.yandex.ru https://*.maps.yandex.net https://suggest-maps.yandex.ru https://search-maps.yandex.ru https://api.routing.yandex.net",
