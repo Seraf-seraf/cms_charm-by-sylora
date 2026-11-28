@@ -64,13 +64,10 @@
 	function updateAddressVisibility(scope, name, existing, replacement) {
 		var value = scope.find('input[name="' + name + '"]:checked').val();
 
-		if (value === 'new') {
-			scope.find(existing).hide();
-			scope.find(replacement).show();
-		} else {
-			scope.find(existing).show();
-			scope.find(replacement).hide();
-		}
+		const useExistingAddress = value === 'existing';
+
+		scope.find(existing).toggle(useExistingAddress);
+		scope.find(replacement).toggle(!useExistingAddress);
 	}
 
 	function updateCountry(select) {
