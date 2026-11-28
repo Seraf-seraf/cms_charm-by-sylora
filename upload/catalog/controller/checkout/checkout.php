@@ -95,6 +95,7 @@ class ControllerCheckoutCheckout extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
+		$this->load->controller('startup/startup/checkoutContentSecurityPolicy');
 		$this->response->setOutput($this->load->view('checkout/checkout', $data));
 	}
 

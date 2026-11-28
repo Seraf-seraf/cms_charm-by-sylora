@@ -258,7 +258,15 @@ class ControllerStartupStartup extends Controller {
 		$this->response->addHeader('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 	}
 
-	private function getContentSecurityPolicy($nonce) {
+	public function checkoutContentSecurityPolicy(): void {
+		if (($this->request->get['route'] ?? '') === 'checkout/checkout') {
+			// Replace the startup policy after SEO routing has resolved the checkout page.
+			$nonce = $this->config->get('csp_nonce');
+			$this->response->addHeader('Content-Security-Policy: ' . $this->getContentSecurityPolicy($nonce, allow_robokassa: true));
+		}
+	}
+
+	private function getContentSecurityPolicy(string $nonce, bool $allow_robokassa = false): string {
 		$metrica_http_sources = implode(' ', array(
 			'https://mc.yandex.ru',
 			'https://mc.yandex.az',
@@ -310,7 +318,7 @@ class ControllerStartupStartup extends Controller {
 			'https://metrika.yandex.uz'
 		));
 		$form_action = "form-action 'self'";
-		if (($this->request->get['route'] ?? '') === 'checkout/checkout') {
+		if ($allow_robokassa) {
 			$form_action .= ' https://auth.robokassa.ru';
 		}
 
