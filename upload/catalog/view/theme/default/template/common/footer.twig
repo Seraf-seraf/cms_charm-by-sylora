@@ -1,0 +1,37 @@
+<footer>
+  <div class="container site-footer">
+    <div class="site-footer__grid site-footer__grid--{{ footer_column_count }}">
+      {% for column in footer_columns %}
+      <div class="site-footer__column">
+        {% if column.title %}
+        <h5>{{ column.title }}</h5>
+        {% endif %}
+        {% if column.items %}
+        <ul class="list-unstyled">
+          {% for item in column.items %}
+          <li>
+            {% if item.href %}
+            <a href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>{{ item.text }}</a>
+            {% else %}
+            <span>{{ item.text|nl2br }}</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="site-footer__bottom">
+      <p>{{ powered }}</p>
+      <p class="site-footer__developer">Разработано <a href="https://bastyle.tech" target="_blank" rel="noopener">Bastyle.tech</a></p>
+    </div>
+  </div>
+</footer>
+{% for style in styles %}
+<link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
+{% endfor %}
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+</body></html>

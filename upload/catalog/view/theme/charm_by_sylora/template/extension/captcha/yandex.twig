@@ -1,0 +1,10 @@
+<fieldset class="captcha-section" aria-describedby="{{ container_id }}-label">
+  <legend class="sr-only">{{ text_captcha }}</legend>
+  <div class="form-group required smartcaptcha-field{% if error_captcha %} has-error{% endif %}">
+    <span id="{{ container_id }}-label" class="control-label">{{ entry_captcha }}</span>
+    <div id="{{ container_id }}" class="smart-captcha" data-sitekey="{{ site_key }}" aria-labelledby="{{ container_id }}-label"{% if error_captcha %} aria-describedby="{{ container_id }}-error"{% endif %}></div>
+    {% if error_captcha %}
+    <div id="{{ container_id }}-error" class="text-danger" role="alert">{{ error_captcha }}</div>
+    {% endif %}
+  </div>
+</fieldset>

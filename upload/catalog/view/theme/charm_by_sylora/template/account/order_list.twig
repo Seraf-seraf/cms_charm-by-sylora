@@ -1,0 +1,55 @@
+{{ header }}
+<div id="account-order" class="container account-order-list">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      {{ account_navigation }}
+      <main class="atelier-account-page-content">
+      {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+      {% set subheading_tag = account_navigation ? 'h3' : 'h2' %}
+      <{{ heading_tag }}>{{ heading_title }}</{{ heading_tag }}>
+      {% if orders %}
+      <div class="order-history-list">
+        {% for order in orders %}
+        <article class="order-history-card" aria-label="{{ column_customer }}: {{ order.name }}">
+          <{{ subheading_tag }}>{{ text_order }} № {{ order.order_id }}</{{ subheading_tag }}>
+          <div class="order-history-card__summary">
+            <p aria-label="{{ text_order_date_status }}">{{ order.date_added }} · {{ order.status }}</p>
+            <p>{{ text_order_items_count }}: {{ order.products }} · {{ text_order_amount }}: {{ order.total }}</p>
+          </div>
+        </article>
+        <a href="{{ order.view }}" class="btn btn-default order-history-card__details">{{ button_order_details }}</a>
+        {% endfor %}
+      </div>
+      <div class="order-history-list__actions">
+        <a href="{{ continue }}" class="btn btn-default">{{ button_return_to_account }}</a>
+      </div>
+      {% if pagination %}
+      <div class="order-history-list__pagination">
+        <div class="text-left">{{ pagination }}</div>
+        <div class="text-right">{{ results }}</div>
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="order-empty">
+        <{{ subheading_tag }} class="order-empty__mobile-title">{{ text_empty_title }}</{{ subheading_tag }}>
+        <p class="order-empty__description">{{ text_empty }}</p>
+        <p class="order-empty__desktop-message">{{ text_order_empty_desktop }}</p>
+        <div class="order-empty__actions">
+          <a href="{{ catalog }}" class="btn btn-primary order-empty__catalog"><span class="order-empty__mobile-label">{{ button_open_catalog }}</span><span class="order-empty__desktop-label">{{ button_open_catalog_desktop }}</span></a>
+          <a href="{{ continue }}" class="btn btn-default order-empty__account">{{ button_return_to_account }}</a>
+        </div>
+      </div>
+      <p class="order-empty__note">{{ text_order_empty_note }}</p>
+      {% endif %}
+      </main>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

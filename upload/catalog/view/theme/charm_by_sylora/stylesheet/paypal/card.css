@@ -1,0 +1,26 @@
+/* Card forms embedded by the payment provider. */
+#paypal_card_tokens .paypal-card-token { display: flex; width: 100%; margin-bottom: 1em; }
+#paypal_card_tokens .card-token-button, #paypal_card_tokens .card-token-delete-button { position: relative; min-height: 60px; border: 1px solid var(--color-border, #c8bfb2); background: var(--color-surface, #faf8f2); color: var(--color-text, #30251e); cursor: pointer; }
+#paypal_card_tokens .card-token-button { flex: 1; min-width: 0; padding: 8px 8px 8px 80px; text-align: left; }
+#paypal_card_tokens .card-token-delete-button { flex: none; padding-inline: 16px; border-left: 0; }
+#paypal_card_tokens .card-icon { position: absolute; top: 50%; left: 8px; width: 61px; height: 36px; transform: translateY(-50%); background: url('../../image/paypal/card.svg') left 0 / 61px 432px no-repeat; }
+#paypal_card_tokens .card-icon-american-express { background-position-y: -36px; }
+#paypal_card_tokens .card-icon-diners-club { background-position-y: -72px; }
+#paypal_card_tokens .card-icon-discover { background-position-y: -108px; }
+#paypal_card_tokens .card-icon-jcb { background-position-y: -144px; }
+#paypal_card_tokens .card-icon-mastercard { background-position-y: -180px; }
+#paypal_card_tokens .card-icon-maestro { background-position-y: -216px; }
+#paypal_card_tokens .card-icon-unionpay { background-position-y: -252px; }
+#paypal_card_tokens .card-icon-visa { background-position-y: -288px; }
+#paypal_card_tokens .card-icon-elo { background-position-y: -324px; }
+#paypal_card_tokens .card-icon-hiper { background-position-y: -360px; }
+#paypal_card_tokens .card-icon-hipercard { background-position-y: -396px; }
+#paypal_card_form, #fastlane_card_form { margin-bottom: 20px; padding: 20px; border: 1px solid var(--color-border, #c8bfb2); background: var(--color-surface, #faf8f2); color: var(--color-text, #30251e); }
+#paypal_card_form .card-info-holder-name, #paypal_card_form .card-info-number, #paypal_card_form .card-info-date-cvv { position: relative; }
+#paypal_card_form .card-info-date, #paypal_card_form .card-info-cvv { width: 48%; margin-bottom: .5em; }
+#paypal_card_form .card-info-date { float: left; }
+#paypal_card_form .card-info-cvv { float: right; }
+#fastlane_card_form .fastlane-card-form-container { margin-bottom: 1em; }
+#paypal_card_form .paypal-card-button, #fastlane_card_form .fastlane-card-button { width: 100%; min-height: 48px; border: 1px solid var(--color-text, #30251e); background: var(--color-text, #30251e); color: var(--color-surface, #faf8f2); }
+#paypal_card_form .paypal-card-button { opacity: .1; }
+#paypal_card_form .paypal-card-button.show-button { opacity: 1; cursor: pointer; }

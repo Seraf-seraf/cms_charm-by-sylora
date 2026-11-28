@@ -1,0 +1,51 @@
+{{ header }}
+<div id="account-wishlist" class="container">
+  {% if success %}
+  <div class="alert alert-success alert-dismissible">{{ success }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      {{ account_navigation }}
+      <main class="atelier-account-page-content">
+      {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+      <{{ heading_tag }}>{{ heading_title }}</{{ heading_tag }}>
+      {% if products %}
+      <div class="wishlist-intro"><p>{{ text_saved_items }}</p></div>
+      <div class="wishlist-grid">
+        {% for product in products %}
+        <article class="wishlist-card">
+          {% if product.thumb %}<a class="wishlist-card__image" href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" loading="lazy" decoding="async" /></a>{% endif %}
+          <h3><a href="{{ product.href }}">{{ product.name }}</a></h3>
+          <p><span class="sr-only">{{ column_model }}: </span>{{ product.model }}</p>
+          <p><span class="sr-only">{{ column_stock }}: </span>{{ product.stock }}</p>
+          {% if product.price %}<div class="price"><span class="sr-only">{{ column_price }}: </span>{% if not product.special %}{{ product.price }}{% else %}<b>{{ product.special }}</b> <s>{{ product.price }}</s>{% endif %}</div>{% endif %}
+          <div class="wishlist-card__actions"><button type="button" data-cart-add="{{ product.product_id }}" data-toggle="tooltip" title="{{ button_cart }}" aria-label="{{ button_cart }}" class="btn btn-primary"><img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true" width="24" height="24"></button>
+            <a href="{{ product.remove }}" data-toggle="tooltip" title="{{ button_remove }}" aria-label="{{ button_remove }}" class="btn btn-danger"><img class="atelier-icon atelier-icon--trash" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/trash.svg" alt="" aria-hidden="true" width="24" height="24"></a></div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="wishlist-empty">
+        <p>{{ text_empty }}</p>
+      </div>
+      <a href="{{ catalog }}" class="btn btn-primary wishlist-empty__catalog">{{ button_open_catalog }}</a>
+      {% endif %}
+      {% if products %}
+      <div class="buttons clearfix">
+        <div class="pull-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
+      </div>
+      {% endif %}
+      </main>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

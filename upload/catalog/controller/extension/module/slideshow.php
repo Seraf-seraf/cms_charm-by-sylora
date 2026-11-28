@@ -1,0 +1,31 @@
+<?php
+class ControllerExtensionModuleSlideshow extends Controller {
+	public function index($setting) {
+		static $module = 0;		
+
+		$this->load->model('design/banner');
+		$this->load->model('tool/image');
+
+		$this->document->addScript('catalog/view/javascript/jquery/swiper/js/swiper.jquery.min.js');
+		
+		$data['banners'] = array();
+		$data['width'] = max(1, (int)$setting['width']);
+		$data['height'] = max(1, (int)$setting['height']);
+
+		$results = $this->model_design_banner->getBanner($setting['banner_id']);
+
+		foreach ($results as $result) {
+			if (is_file(DIR_IMAGE . $result['image'])) {
+				$data['banners'][] = array(
+					'title' => $result['title'],
+					'link'  => $result['link'],
+					'image' => $this->model_tool_image->resize($result['image'], $data['width'], $data['height'])
+				);
+			}
+		}
+
+		$data['module'] = $module++;
+
+		return $this->load->view('extension/module/slideshow', $data);
+	}
+}

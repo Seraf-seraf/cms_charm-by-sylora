@@ -1,0 +1,372 @@
+{{ header }}
+<main id="product-product" class="container" data-product-id="{{ product_id }}" data-datepicker="{{ datepicker }}">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      {% if product_breadcrumbs %}
+      <nav class="product-breadcrumbs" aria-label="{{ text_breadcrumb_navigation }}">
+        <ol class="product-breadcrumbs__list">
+          {% for breadcrumb in product_breadcrumbs %}
+          <li class="product-breadcrumbs__item">
+            {% if not loop.first %}<span class="product-breadcrumbs__separator" aria-hidden="true">/</span>{% endif %}
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+          </li>
+          {% endfor %}
+          <li class="sr-only"><span aria-current="page">{{ heading_title }}</span></li>
+        </ol>
+      </nav>
+      {% endif %}
+      <div class="product-page">
+        <div class="product-page__media"> {% if thumb or images %}
+          <ul class="thumbnails" data-gallery-label="{{ text_product_photo|default(heading_title) }}">
+            {% if thumb %}
+            <li class="product-gallery__main"><a class="thumbnail" href="{{ popup }}" title="{{ main_image_alt }}">
+              <picture>
+                {% for source in image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img src="{{ image.src }}" title="{{ heading_title }}" alt="{{ main_image_alt }}" width="{{ image.width }}" height="{{ image.height }}" loading="eager" decoding="async" />
+              </picture>
+            </a></li>
+            {% endif %}
+            {% if images %}
+            {% for image in images %}
+            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ image.alt }}">
+              <picture>
+                {% for source in image.image.sources %}
+                <source srcset="{{ source.src }}" type="{{ source.type }}">
+                {% endfor %}
+                <img src="{{ image.image.src }}" title="{{ heading_title }}" alt="{{ image.alt }}" width="{{ image.image.width }}" height="{{ image.image.height }}" loading="lazy" decoding="async" />
+              </picture>
+            </a></li>
+            {% endfor %}
+            {% endif %}
+          </ul>
+          {% endif %}
+        </div>
+        <div class="product-page__summary">
+          <div class="product-summary__tools">
+            <button type="button" data-toggle="tooltip" class="btn btn-default" title="{{ button_wishlist }}" aria-label="{{ button_wishlist }}" aria-pressed="false" data-wishlist-add="{{ product_id }}"><img class="atelier-icon atelier-icon--heart" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/heart.svg" alt="" aria-hidden="true"></button>
+          </div>
+          <h1>{{ heading_title }}</h1>
+          {% if price %}
+          <div class="product-price">
+            <div class="product-price__primary">
+              <strong class="product-price__current">{{ special ? special : price }}</strong>
+              {% if compare_price %}<span class="product-price__old">{{ compare_price }}</span>{% endif %}
+            </div>
+            {% if saving %}
+            <p class="product-price__saving">Экономия {{ saving }}{% if saving_percent %} ({{ saving_percent }}%){% endif %}</p>
+            {% endif %}
+            {% if tax %}
+            <p class="product-price__tax">{{ text_tax }} {{ tax }}</p>
+            {% endif %}
+          </div>
+          {% endif %}
+          <p class="product-availability"><span>Наличие</span> <strong class="product-stock {{ stock_class }}">{{ stock }}</strong></p>
+          <div id="product" class="product-purchase"> {% if options %}
+            <h2>Выберите вариант</h2>
+            {% for option in options %}
+            {% if option.type == 'select' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+              <select name="option[{{ option.product_option_id }}]" id="input-option{{ option.product_option_id }}" class="form-control">
+                <option value="">{{ text_select }}</option>
+                {% for option_value in option.product_option_value %}
+                <option value="{{ option_value.product_option_value_id }}">{{ option_value.name }}
+                {% if option_value.price %}
+                ({{ option_value.price_prefix }}{{ option_value.price }})
+                {% endif %} </option>
+                {% endfor %}
+              </select>
+            </div>
+            {% endif %}
+            {% if option.type == 'radio' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label">{{ option.name }}</label>
+              <div id="input-option{{ option.product_option_id }}"> {% for option_value in option.product_option_value %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" />
+                    {% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" width="50" height="50" loading="lazy" decoding="async" /> {% endif %}
+                    {{ option_value.name }}
+                    {% if option_value.price %}
+                    ({{ option_value.price_prefix }}{{ option_value.price }})
+                    {% endif %} </label>
+                </div>
+                {% endfor %} </div>
+            </div>
+            {% endif %}
+            {% if option.type == 'checkbox' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label">{{ option.name }}</label>
+              <div id="input-option{{ option.product_option_id }}"> {% for option_value in option.product_option_value %}
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" />
+                    {% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" width="50" height="50" loading="lazy" decoding="async" /> {% endif %}
+                    {{ option_value.name }}
+                    {% if option_value.price %}
+                    ({{ option_value.price_prefix }}{{ option_value.price }})
+                    {% endif %} </label>
+                </div>
+                {% endfor %} </div>
+            </div>
+            {% endif %}
+            {% if option.type == 'text' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+              <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control" />
+            </div>
+            {% endif %}
+            {% if option.type == 'textarea' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+              <textarea name="option[{{ option.product_option_id }}]" rows="5" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control">{{ option.value }}</textarea>
+            </div>
+            {% endif %}
+            {% if option.type == 'file' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label">{{ option.name }}</label>
+              <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block"> {{ button_upload }}</button>
+              <input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option{{ option.product_option_id }}" />
+            </div>
+            {% endif %}
+            {% if option.type == 'date' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+              <div class="input-group date">
+                <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD" id="input-option{{ option.product_option_id }}" class="form-control" />
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="button" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
+                </span></div>
+            </div>
+            {% endif %}
+            {% if option.type == 'datetime' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+              <div class="input-group datetime">
+                <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD HH:mm" id="input-option{{ option.product_option_id }}" class="form-control" />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
+                </span></div>
+            </div>
+            {% endif %}
+            {% if option.type == 'time' %}
+            <div class="form-group{% if option.required %} required {% endif %}">
+              <label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+              <div class="input-group time">
+                <input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="HH:mm" id="input-option{{ option.product_option_id }}" class="form-control" />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" aria-label="Выбрать дату" title="Выбрать дату"><span class="date-picker-control" aria-hidden="true">▦</span></button>
+                </span></div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% if recurrings %}
+            <hr>
+            <h3>{{ text_payment_recurring }}</h3>
+            <div class="form-group required">
+              <select name="recurring_id" class="form-control">
+                <option value="">{{ text_select }}</option>
+                {% for recurring in recurrings %}
+                <option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>
+                {% endfor %}
+              </select>
+              <div class="help-block" id="recurring-description"></div>
+            </div>
+            {% endif %}
+            <div class="form-group product-purchase__submit">
+              <div class="product-purchase__quantity">
+                <label class="control-label" for="input-quantity">Количество</label>
+                <input type="number" name="quantity" value="{{ minimum }}" min="{{ minimum }}" step="1" inputmode="numeric" id="input-quantity" class="form-control" required />
+                <input type="hidden" name="product_id" value="{{ product_id }}" />
+              </div>
+              {% if can_buy %}
+              <button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary btn-lg btn-block">В корзину</button>
+              {% else %}
+              <button type="button" id="button-cart" class="btn btn-primary btn-lg btn-block" disabled aria-disabled="true">Нет в наличии</button>
+              {% endif %}
+            </div>
+            {% if minimum > 1 %}
+            <div class="alert alert-info">{{ text_minimum }}</div>
+            {% endif %}</div>
+          {% if points or discounts %}
+          <ul class="list-unstyled product-price__details">
+            {% if points %}
+            <li>{{ text_points }} {{ points }}</li>
+            {% endif %}
+            {% for discount in discounts %}
+            <li>{{ discount.quantity }}{{ text_discount }}{{ discount.price }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <ul class="list-unstyled product-meta product-meta--secondary">
+            {% if manufacturer %}
+            <li><span class="product-meta__label">Бренд</span> <span class="product-meta__value">{{ manufacturer }}</span></li>
+            {% endif %}
+            <li><span class="product-meta__label">Артикул</span> <span class="product-meta__value">{{ model }}</span></li>
+            {% if reward %}
+            <li><span class="product-meta__label">Бонусные баллы</span> <span class="product-meta__value">{{ reward }}</span></li>
+            {% endif %}
+            {% if product_details.materials %}
+            <li><span class="product-meta__label">Материалы</span> <span class="product-meta__value">{{ product_details.materials }}</span></li>
+            {% endif %}
+            {% if product_details.size %}
+            <li><span class="product-meta__label">Размер</span> <span class="product-meta__value">{{ product_details.size }}</span></li>
+            {% endif %}
+            {% if product_details.color %}
+            <li><span class="product-meta__label">Цвет</span> <span class="product-meta__value">{{ product_details.color }}</span></li>
+            {% endif %}
+          </ul>
+          <div class="product-trust">
+            <div><strong>Бережная упаковка</strong><span>Подходит для подарка без дополнительной подготовки.</span></div>
+            <div><strong>Доставка по России</strong><span>Сроки и стоимость уточняются при оформлении заказа.</span></div>
+            <div><strong>Уход за украшением</strong><span>Храните изделие отдельно и избегайте длительного контакта с водой.</span></div>
+          </div>
+          <div class="product-accordions" role="list">
+            <details open>
+              <summary>Описание</summary>
+              <div>{{ description }}</div>
+            </details>
+            <details>
+              <summary>Уход</summary>
+              <div>
+                <p>{{ care_text }}</p>
+              </div>
+            </details>
+            <details>
+              <summary>Доставка и возврат</summary>
+              <div>
+                <p>{{ delivery_return_text }}</p>
+              </div>
+            </details>
+          </div>
+          {% if review_status %}
+          <div class="rating">
+            <p class="product-review__links"><span class="product-review__stars" role="img" aria-label="Оценка: {{ rating }} из 5">{% for i in 1..5 %}
+              {% if rating < i %}<span class="rating-star" aria-hidden="true">☆</span>{% else %}<span class="rating-star" aria-hidden="true">★</span>{% endif %}
+              {% endfor %}</span> <a href="{{ share }}#product-reviews">{{ reviews }}</a> <span aria-hidden="true">/</span> <a href="{{ share }}#form-review">{{ text_write }}</a></p>
+          </div>
+          {% endif %} </div>
+      </div>
+      {% if attribute_groups or review_status %}
+      <div class="product-sections">
+        {% if attribute_groups %}
+        <section class="product-section" id="product-specifications" aria-labelledby="product-specifications-title">
+          <h2 id="product-specifications-title">Характеристики</h2>
+          <div class="product-section__table">
+            <table class="table table-bordered">
+              {% for attribute_group in attribute_groups %}
+              <tbody>
+                <tr>
+                  <th colspan="2" scope="rowgroup">{{ attribute_group.name }}</th>
+                </tr>
+              {% for attribute in attribute_group.attribute %}
+              <tr>
+                <th scope="row">{{ attribute.name }}</th>
+                <td>{{ attribute.text }}</td>
+              </tr>
+              {% endfor %}
+                </tbody>
+              {% endfor %}
+            </table>
+          </div>
+        </section>
+        {% endif %}
+        {% if review_status %}
+        <section class="product-section" id="product-reviews" aria-labelledby="product-reviews-title">
+          <h2 id="product-reviews-title">Отзывы</h2>
+          <div id="review"></div>
+          <form class="form-horizontal" id="form-review" aria-labelledby="product-review-form-title">
+            <h3 id="product-review-form-title">{{ text_write }}</h3>
+            {% if review_guest %}
+            <div class="form-group required">
+              <div class="col-sm-12">
+                <label class="control-label" for="input-name">{{ entry_name }}</label>
+                <input type="text" name="name" value="{{ customer_name }}" id="input-name" class="form-control" />
+              </div>
+            </div>
+            <div class="form-group required">
+              <div class="col-sm-12">
+                <label class="control-label" for="input-review">{{ entry_review }}</label>
+                <textarea name="text" rows="5" id="input-review" class="form-control"></textarea>
+                <div class="help-block">{{ text_note }}</div>
+              </div>
+            </div>
+            <div class="form-group required">
+              <fieldset class="col-sm-12 product-review__rating-fieldset">
+                <legend class="control-label" id="product-review-rating-label">{{ entry_rating }}</legend>
+                <div class="product-review__rating" role="radiogroup" aria-labelledby="product-review-rating-label">
+                  <span class="product-review__rating-edge">{{ entry_bad }}</span>
+                  {% for score in 1..5 %}
+                  <label class="product-review__rating-option">
+                    <input type="radio" name="rating" value="{{ score }}" />
+                    <span class="product-review__rating-star" aria-hidden="true">&#9733;</span>
+                    <span class="sr-only">{{ score }} из 5</span>
+                  </label>
+                  {% endfor %}
+                  <span class="product-review__rating-edge">{{ entry_good }}</span>
+                </div>
+              </fieldset>
+            </div>
+            <div class="form-group required product-review__consent">
+              <div class="col-sm-12">
+                <label class="product-review__consent-label" for="input-publication-consent">
+                  <input type="checkbox" name="publication_consent" value="1" id="input-publication-consent" />
+                  <span>{{ entry_publication_consent|raw }}</span>
+                </label>
+              </div>
+            </div>
+            {{ captcha }}
+            <div class="buttons clearfix">
+              <div class="pull-right">
+                <button type="button" id="button-review" data-loading-text="{{ text_loading }}" class="btn btn-primary">{{ button_continue }}</button>
+              </div>
+            </div>
+            {% else %}
+            {{ text_login }}
+            {% endif %}
+          </form>
+        </section>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if products %}
+      <section class="related-products">
+      <div class="sylora-section__head">
+        <h2>Похожие украшения</h2>
+      </div>
+      <div class="catalog-grid">
+        {% for product in products %}
+        {% set heading_level = 'h3' %}
+        {% set enable_quick_view = false %}
+        {% include 'product/product_card.twig' %}
+        {% endfor %}
+      </div>
+      </section>
+        {% endif %}
+        {% if tags %}
+        <p>{{ text_tags }}
+        {% for i in 0..tags|length - 1 %}
+        {% if i < (tags|length - 1) %} <a href="{{ tags[i].href }}">{{ tags[i].tag }}</a>,
+        {% else %} <a href="{{ tags[i].href }}">{{ tags[i].tag }}</a> {% endif %}
+        {% endfor %} </p>
+        {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</main>
+{% if product_schema %}
+<script nonce="{{ csp_nonce }}" type="application/ld+json">{{ product_schema|raw }}</script>
+<script src="catalog/view/javascript/product.js?v=2276ac0bb522"></script>
+{% endif %}
+{% if has_datetime_option %}
+{% endif %}
+{{ footer }}

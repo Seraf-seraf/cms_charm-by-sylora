@@ -1,0 +1,81 @@
+<div id="paypal_recurring" class="paypal-recurring">
+	{% if ((recurring_status == '2') or (recurring_status == '3')) %}
+	<button type="button" class="btn btn-primary button-enable-recurring">{{ button_enable_recurring }}</button>
+	{% else %}
+	<button type="button" class="btn btn-primary button-disable-recurring">{{ button_disable_recurring }}</button>
+	{% endif %}
+</div>
+<br />
+<script type="text/javascript">
+
+$('#paypal_recurring').on('click', '.button-enable-recurring', function() {
+	$.ajax({
+		type: 'post',
+		url: '{{ enable_url }}',
+		data: {'order_recurring_id' : '{{ order_recurring_id }}'},
+		dataType: 'json',
+		beforeSend: function() {
+			$('#paypal_recurring .btn').prop('disabled', true);
+		},
+		complete: function() {
+			$('#paypal_recurring .btn').prop('disabled', false);
+		},
+		success: function(json) {
+			$('.alert-dismissible').remove();
+			
+			if (json['error'] && json['error']['warning']) {
+				$('#content').parent().before('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				
+				$('html, body').animate({scrollTop: 0}, 'slow');
+			}
+			
+			if (json['success']) {
+				$('#content').parent().before('<div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				
+				$('html, body').animate({scrollTop: 0}, 'slow');
+				
+				$('#paypal_recurring').load('{{ info_url }} #paypal_recurring >');
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$('#paypal_recurring').on('click', '.button-disable-recurring', function() {
+	$.ajax({
+		type: 'post',
+		url: '{{ disable_url }}',
+		data: {'order_recurring_id' : '{{ order_recurring_id }}'},
+		dataType: 'json',
+		beforeSend: function() {
+			$('#paypal_recurring .btn').prop('disabled', true);
+		},
+		complete: function() {
+			$('#paypal_recurring .btn').prop('disabled', false);
+		},
+		success: function(json) {
+			$('.alert-dismissible').remove();
+			
+			if (json['error'] && json['error']['warning']) {
+				$('#content').parent().before('<div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> ' + json['error']['warning'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				
+				$('html, body').animate({scrollTop: 0}, 'slow');
+			}
+			
+			if (json['success']) {
+				$('#content').parent().before('<div class="alert alert-success alert-dismissible"><img class="atelier-icon atelier-icon--check" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/check.svg" alt="" aria-hidden="true"> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				
+				$('html, body').animate({scrollTop: 0}, 'slow');
+				
+				$('#paypal_recurring').load('{{ info_url }} #paypal_recurring >');
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+</script>

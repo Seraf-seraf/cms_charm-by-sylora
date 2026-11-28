@@ -1,0 +1,55 @@
+name: payment-health
+description: Check that payment-service is healthy before production deployment.
+
+inputs:
+  host:
+    description: Base URL from the PAY_SERVICE_HOST GitHub variable.
+    required: true
+  attempts:
+    description: Maximum health-check attempts.
+    required: false
+    default: "10"
+  delay-seconds:
+    description: Delay between attempts.
+    required: false
+    default: "5"
+
+runs:
+  using: composite
+  steps:
+    - name: Check payment-service health
+      shell: bash
+      env:
+        PAY_SERVICE_HOST: ${{ inputs.host }}
+        ATTEMPTS: ${{ inputs.attempts }}
+        DELAY_SECONDS: ${{ inputs['delay-seconds'] }}
+      run: |
+        set -eu
+
+        if [ -z "$PAY_SERVICE_HOST" ]; then
+          echo "GitHub variable PAY_SERVICE_HOST is empty."
+          exit 1
+        fi
+
+        health_url="${PAY_SERVICE_HOST%/}/api/v1/health"
+
+        for attempt in $(seq 1 "$ATTEMPTS"); do
+          echo "Checking payment-service health ($attempt/$ATTEMPTS): $health_url"
+
+          if response="$(curl --fail --silent --show-error --location \
+            --connect-timeout 5 --max-time 10 "$health_url")"; then
+            if printf '%s' "$response" | grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"'; then
+              echo "payment-service is healthy."
+              exit 0
+            fi
+
+            echo "Unexpected health response: $response"
+          fi
+
+          if [ "$attempt" -lt "$ATTEMPTS" ]; then
+            sleep "$DELAY_SECONDS"
+          fi
+        done
+
+        echo "payment-service health check failed after $ATTEMPTS attempts."
+        exit 1

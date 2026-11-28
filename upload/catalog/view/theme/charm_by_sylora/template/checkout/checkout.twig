@@ -1,0 +1,134 @@
+{{ header }}
+<main id="checkout-checkout" class="container">
+  {% if error_warning %}
+  <div class="alert alert-danger alert-dismissible"><img class="atelier-icon atelier-icon--alert" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/alert.svg" alt="" aria-hidden="true"> {{ error_warning }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <section class="checkout-page">
+        <header class="checkout-head">
+          <h1>{{ heading_title }}</h1>
+          <p class="checkout-head__intro">
+            <span class="checkout-head__intro--mobile">{{ text_checkout_intro_mobile }}</span>
+            <span class="checkout-head__intro--desktop">{{ text_checkout_intro_desktop }}</span>
+          </p>
+        </header>
+      <div class="checkout-layout">
+      <div class="panel-group checkout-accordion" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">{{ text_checkout_option }}</h4>
+          </div>
+          <div class="panel-collapse collapse" id="collapse-checkout-option">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+        {% if not logged and account != 'guest' %}
+        <div class="panel panel-default checkout-account-panel checkout-account-panel--conditional">
+          <div class="panel-heading">
+            <h4 class="panel-title">{{ text_checkout_account }}</h4>
+          </div>
+          <div class="panel-collapse collapse" id="collapse-payment-address">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+        {% else %}
+        <div class="panel panel-default checkout-account-panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">{{ text_checkout_payment_address }}</h4>
+          </div>
+          <div class="panel-collapse collapse" id="collapse-payment-address">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+        {% endif %}
+        {% if shipping_required %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">{{ text_checkout_shipping_address }}</h4>
+          </div>
+          <div class="panel-collapse collapse" id="collapse-shipping-address">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">{{ text_checkout_shipping_method }}</h4>
+          </div>
+          <div class="panel-collapse collapse" id="collapse-shipping-method">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+        <template id="checkout-shipping-loading">
+          <p class="alert shipping-methods__load-message" role="status">{{ text_shipping_loading }}</p>
+          <div class="shipping-methods__empty-actions">
+            <button type="button" class="btn btn-default" disabled>{{ text_shipping_loading_wait }}</button>
+          </div>
+        </template>
+        <template id="checkout-shipping-load-error">
+          <p class="alert shipping-methods__unavailable" role="alert">{{ text_shipping_load_error }}</p>
+          <div class="shipping-methods__empty-actions">
+            <button type="button" class="btn btn-default" data-shipping-load-retry>{{ button_shipping_retry }}</button>
+            <a href="#collapse-shipping-address" data-toggle="collapse" data-parent="#accordion" class="btn btn-default">{{ button_change_address }}</a>
+          </div>
+        </template>
+        {% endif %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">{{ text_checkout_payment_method }}</h4>
+          </div>
+          <div class="panel-collapse collapse" id="collapse-payment-method">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">{{ text_checkout_confirm }}</h4>
+          </div>
+          <div class="panel-collapse collapse" id="collapse-checkout-confirm">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+      </div>
+      <aside class="checkout-summary" aria-labelledby="checkout-summary-title">
+        <h2 id="checkout-summary-title">{{ text_checkout_summary }}</h2>
+        <p class="checkout-summary__note">
+          <span class="checkout-summary__note--mobile">{{ text_checkout_summary_note_mobile }}</span>
+          <span class="checkout-summary__note--desktop">{{ text_checkout_summary_note_desktop }}</span>
+        </p>
+        <div id="checkout-summary-data" aria-live="polite" aria-busy="false">{{ text_checkout_summary_error }}</div>
+        <button type="button" id="checkout-summary-retry" hidden>{{ text_checkout_summary_retry }}</button>
+        <a href="{{ cart_url }}">{{ text_cart }}</a>
+      </aside>
+      </div>
+      </section>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</main>
+<script nonce="{{ csp_nonce }}" id="checkout-config" type="application/json">{{ {
+  'logged': logged,
+  'shippingRequired': shipping_required,
+  'textCheckoutAccount': text_checkout_account,
+  'textCheckoutPaymentAddress': text_checkout_payment_address,
+  'textCheckoutOption': text_checkout_option,
+  'textCheckoutShippingAddress': text_checkout_shipping_address,
+  'textCheckoutShippingMethod': text_checkout_shipping_method,
+  'textCheckoutPaymentMethod': text_checkout_payment_method,
+  'textCheckoutConfirm': text_checkout_confirm,
+  'summaryLoading': text_checkout_summary_loading,
+  'summaryPending': text_checkout_summary_pending,
+  'summaryError': text_checkout_summary_error
+}|json_encode|raw }}</script>
+<script nonce="{{ csp_nonce }}" src="catalog/view/javascript/checkout-csp.js?v=20261115-fragment-nonce-v1"></script>
+<script src="catalog/view/javascript/checkout-fragments.js?v=20260815-csp-v1"></script>
+<script src="catalog/view/javascript/checkout.js?v=20261123-shipping-loading-v5"></script>
+{{ footer }}

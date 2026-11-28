@@ -1,0 +1,55 @@
+<script nonce="{{ csp_nonce }}" id="cart-shipping-config" type="application/json">{{ {
+  'textTitle': text_shipping_title|default(text_shipping_method),
+  'textQuoteLoading': text_quote_loading|default(text_loading),
+  'textWait': text_quote_wait|default(text_loading),
+  'textQuoteError': error_quote,
+  'buttonRetry': button_retry_quote|default(button_quote),
+  'shippingMethod': shipping_method,
+  'buttonCancel': button_cancel,
+  'buttonShipping': button_shipping,
+  'textLoading': text_loading,
+  'textSelect': text_select,
+  'zoneId': zone_id,
+  'textNone': text_none
+}|json_encode|raw }}</script>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title"><a href="#collapse-shipping" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion">{{ heading_title }} <img class="atelier-icon atelier-icon--chevron-down" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/chevron-down.svg" alt="" aria-hidden="true"></a></h4>
+  </div>
+  <div id="collapse-shipping" class="panel-collapse collapse">
+    <div class="panel-body">
+      <p>{{ text_shipping }}</p>
+      <div class="form-horizontal">
+        <div class="form-group required">
+          <label class="col-sm-2 control-label" for="input-country">{{ entry_country }}</label>
+          <div class="col-sm-10">
+            <select name="country_id" id="input-country" class="form-control">
+              <option value="">{{ text_select }}</option>
+              {% for country in countries %}
+              {% if country.country_id == country_id %}
+              <option value="{{ country.country_id }}" selected="selected">{{ country.name }}</option>
+              {% else %}
+              <option value="{{ country.country_id }}">{{ country.name }}</option>
+              {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="form-group required">
+          <label class="col-sm-2 control-label" for="input-zone">{{ entry_zone }}</label>
+          <div class="col-sm-10">
+            <select name="zone_id" id="input-zone" class="form-control">
+            </select>
+          </div>
+        </div>
+        <div class="form-group required">
+          <label class="col-sm-2 control-label" for="input-postcode">{{ entry_postcode }}</label>
+          <div class="col-sm-10">
+            <input type="text" name="postcode" value="{{ postcode }}" placeholder="{{ entry_postcode }}" id="input-postcode" class="form-control" />
+          </div>
+        </div>
+        <button type="button" id="button-quote" data-loading-text="{{ text_loading }}" class="btn btn-primary">{{ button_quote }}</button>
+      </div>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,2 @@
+# Patch context contains whitespace from upstream and must be preserved.
+opencart3-npd.patch -whitespace

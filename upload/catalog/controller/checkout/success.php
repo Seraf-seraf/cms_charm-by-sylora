@@ -1,0 +1,61 @@
+<?php
+class ControllerCheckoutSuccess extends Controller {
+	public function index() {
+		$this->load->language('checkout/success');
+
+		if (isset($this->session->data['order_id'])) {
+			$this->load->model('checkout/order');
+			$order_id = (int)$this->session->data['order_id'];
+			$order_info = $this->model_checkout_order->getOrder($order_id);
+			$order_products = $this->model_checkout_order->getOrderProducts($order_id);
+			$products = array();
+
+			foreach ($order_products as $product) {
+				$products[] = array('id' => (string)$product['product_id'], 'name' => $product['name'], 'price' => (float)$product['price'], 'quantity' => (int)$product['quantity']);
+			}
+
+			if ($order_info && $products) {
+				$this->session->data['analytics_purchase'] = array('ecommerce' => array('currencyCode' => $order_info['currency_code'], 'purchase' => array('actionField' => array('id' => (string)$order_id, 'revenue' => (float)$order_info['total']), 'products' => $products)));
+			}
+
+			$this->cart->clear();
+
+			unset($this->session->data['shipping_method']);
+			unset($this->session->data['shipping_methods']);
+			unset($this->session->data['payment_method']);
+			unset($this->session->data['payment_methods']);
+			unset($this->session->data['guest']);
+			unset($this->session->data['comment']);
+			unset($this->session->data['order_id']);
+			unset($this->session->data['coupon']);
+			unset($this->session->data['reward']);
+			unset($this->session->data['voucher']);
+			unset($this->session->data['vouchers']);
+			unset($this->session->data['totals']);
+		}
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+
+
+
+
+
+		if ($this->customer->isLogged()) {
+			$data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/account', '', true), $this->url->link('account/order', '', true), $this->url->link('account/download', '', true), $this->url->link('information/contact'));
+		} else {
+			$data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
+		}
+
+		$data['continue'] = $this->url->link('common/home');
+
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
+
+		$this->response->setOutput($this->load->view('common/success', $data));
+	}
+}

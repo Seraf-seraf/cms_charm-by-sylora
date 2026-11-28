@@ -1,0 +1,46 @@
+<footer>
+  <div class="container site-footer{% if checkout_page %} site-footer--checkout{% endif %}">
+    {% if checkout_page %}
+    <div class="site-footer__checkout-brand">
+      <h2>{{ checkout_footer_title }}</h2>
+    </div>
+    <details class="site-footer__details">
+      <summary>{{ text_footer_navigation }}</summary>
+    {% endif %}
+    <div class="site-footer__grid site-footer__grid--{{ footer_column_count }}">
+      {% for column in footer_columns %}
+      <div class="site-footer__column">
+        {% if column.title %}
+        <h5>{{ column.title }}</h5>
+        {% endif %}
+        {% if column.items %}
+        <ul class="list-unstyled">
+          {% for item in column.items %}
+          <li>
+            {% if item.href %}
+            <a href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}>{{ item.text }}</a>
+            {% else %}
+            <span>{{ item.text|nl2br }}</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% if checkout_page %}
+    </details>
+    {% endif %}
+    <div class="site-footer__bottom">
+      <p>{{ powered }}</p>
+    </div>
+  </div>
+</footer>
+{% for style in styles %}
+<link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
+{% endfor %}
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+</body></html>

@@ -1,0 +1,99 @@
+{% set card_heading = heading_level|default('h2') %}
+{% set has_quick_view = enable_quick_view|default(false) %}
+{% set cart_action %}
+  {% if product.can_buy %}
+  <button type="button" class="catalog-card__cart" data-cart-add="{{ product.product_id }}" data-quantity="{{ product.minimum }}">
+    <img class="atelier-icon atelier-icon--bag" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/bag.svg" alt="" aria-hidden="true">
+    <span class="catalog-card__cart-label">{{ button_cart }}</span>
+    <span class="catalog-card__cart-loading">{{ text_catalog_card_adding }}</span>
+    <span class="catalog-card__cart-confirmed">{{ text_catalog_card_added }}</span>
+  </button>
+  {% else %}
+  <button type="button" class="catalog-card__cart" disabled aria-disabled="true">{{ text_out_of_stock }}</button>
+  {% endif %}
+{% endset %}
+<article class="product-layout product-grid catalog-card">
+  <div class="product-thumb">
+    <div class="catalog-card__media">
+      <a class="catalog-card__image" href="{{ product.href }}">
+        <picture>
+          {% for source in product.image.sources %}
+          <source srcset="{{ source.src }}" type="{{ source.type }}">
+          {% endfor %}
+          <img class="catalog-card__image-primary" src="{{ product.image.src }}" alt="{{ product.name }}" title="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+        </picture>
+        {% if product.hover_image.src %}
+        <picture class="catalog-card__hover-picture" aria-hidden="true">
+          {% for source in product.hover_image.sources %}
+          <source srcset="{{ source.src }}" type="{{ source.type }}">
+          {% endfor %}
+          <img class="catalog-card__image-hover" src="{{ product.hover_image.src }}" alt="{{ text_additional_image|format(product.name) }}" title="{{ product.name }}" width="{{ product.hover_image.width }}" height="{{ product.hover_image.height }}" loading="lazy" decoding="async" />
+        </picture>
+        {% endif %}
+      </a>
+      {% if product.badge %}
+      <span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>
+      {% endif %}
+      <button type="button" class="catalog-card__icon catalog-card__wishlist" aria-label="{{ button_wishlist }}" aria-pressed="false" data-wishlist-add="{{ product.product_id }}" data-wishlist-selected-label="{{ text_catalog_card_wishlisted|e('html_attr') }}">
+        <img class="atelier-icon atelier-icon--heart" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/heart.svg" alt="" aria-hidden="true">
+        <span class="catalog-card__tooltip" aria-hidden="true">{{ button_wishlist }}</span>
+      </button>
+    </div>
+    <div class="catalog-card__body">
+      <div class="caption">
+        <{{ card_heading }} class="catalog-card__title"><a href="{{ product.href }}">{{ product.name }}</a></{{ card_heading }}>
+        {% if product.price %}
+        <p class="price">{% if product.special %}<span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>{% else %}{{ product.price }}{% endif %}{% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>{% endif %}</p>
+        {% endif %}
+        <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+        {% if product.description %}
+        <p class="catalog-card__description">{{ product.description }}</p>
+        {% endif %}
+        {% if product.rating %}
+        <div class="rating" role="img" aria-label="{{ product.rating }} / 5">{% for i in 1..5 %}{% if product.rating < i %}<span class="rating-star" aria-hidden="true">☆</span>{% else %}<span class="rating-star" aria-hidden="true">★</span>{% endif %}{% endfor %}</div>
+        {% endif %}
+      </div>
+      <footer class="catalog-card__actions">
+        {{ cart_action }}
+        <div class="catalog-card__secondary{% if not has_quick_view %} catalog-card__secondary--single{% endif %}">
+          <a class="catalog-card__more" href="{{ product.href }}">{{ button_details }}</a>
+          {% if has_quick_view %}
+          <button type="button" class="catalog-card__icon js-quick-view-open" data-dialog-id="quick-view-{{ product.product_id }}" aria-controls="quick-view-{{ product.product_id }}" aria-label="{{ button_quick_view }}" aria-haspopup="dialog" aria-expanded="false">
+            <img class="atelier-icon atelier-icon--eye" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/eye.svg" alt="" aria-hidden="true">
+            <span class="catalog-card__tooltip" aria-hidden="true">{{ button_quick_view }}</span>
+          </button>
+          {% endif %}
+        </div>
+      </footer>
+    </div>
+  </div>
+  {% if has_quick_view %}
+  <dialog class="quick-view" id="quick-view-{{ product.product_id }}" aria-labelledby="quick-view-title-{{ product.product_id }}">
+    <header class="quick-view__header">
+      <span>{{ button_quick_view }}</span>
+      <form class="quick-view__close" method="dialog">
+        <button class="popup-close" type="submit" aria-label="{{ button_close }}" autofocus><img src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" width="24" height="24" alt=""></button>
+      </form>
+    </header>
+    <div class="quick-view__grid">
+      <picture>
+        {% for source in product.image.sources %}
+        <source srcset="{{ source.src }}" type="{{ source.type }}">
+        {% endfor %}
+        <img src="{{ product.image.src }}" alt="{{ product.name }}" width="{{ product.image.width }}" height="{{ product.image.height }}" loading="lazy" decoding="async" />
+      </picture>
+      <div class="quick-view__content">
+        {% if product.badge %}<span class="catalog-card__badge {{ product.badge_class }}">{{ product.badge }}</span>{% endif %}
+        <h2 id="quick-view-title-{{ product.product_id }}">{{ product.name }}</h2>
+        {% if product.price %}<p class="price">{% if product.special %}<span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>{% else %}{{ product.price }}{% endif %}{% if product.tax %} <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>{% endif %}</p>{% endif %}
+        <p class="catalog-card__stock {{ product.stock_class }}">{{ product.stock }}</p>
+        {% if product.quick_description %}<p class="quick-view__description">{{ product.quick_description }}</p>{% elseif product.description %}<p class="quick-view__description">{{ product.description }}</p>{% endif %}
+        <div class="quick-view__actions">
+          {{ cart_action }}
+          <a class="catalog-card__more" href="{{ product.href }}">{{ button_details }}</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  {% endif %}
+</article>

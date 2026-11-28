@@ -1,0 +1,40 @@
+{{ header }}
+<div id="account-newsletter" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      {{ account_navigation }}
+      <main class="atelier-account-page-content newsletter-page">
+        {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+        <{{ heading_tag }}>{{ heading_title }}</{{ heading_tag }}>
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" class="newsletter-form">
+          <fieldset>
+            <legend>{{ entry_newsletter }}</legend>
+            <div class="newsletter-form__options">
+              <label class="newsletter-option">
+                <input type="radio" name="newsletter" value="1"{% if newsletter %} checked="checked"{% endif %} />
+                <span>{{ text_yes }}</span>
+              </label>
+              <label class="newsletter-option">
+                <input type="radio" name="newsletter" value="0"{% if not newsletter %} checked="checked"{% endif %} />
+                <span>{{ text_no }}</span>
+              </label>
+            </div>
+          </fieldset>
+          <div class="newsletter-form__actions">
+            <input type="submit" value="{{ button_save }}" class="btn btn-primary newsletter-form__save" />
+            <a href="{{ back }}" class="newsletter-form__back">{{ button_back }}</a>
+          </div>
+        </form>
+        {{ content_bottom }}
+      </main>
+    </div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

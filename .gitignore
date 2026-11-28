@@ -1,0 +1,128 @@
+# Config and Htaccess Files
+/upload/.htaccess
+/upload/config.php
+/upload/admin/config.php
+/.env
+/.env.*
+
+# Image File
+!/upload/image/no_image.jpg
+
+# Product images uploaded through the OpenCart admin panel
+/upload/image/catalog/
+
+# Image Cache Files
+/upload/image/cache/*
+!/upload/image/cache/.gitkeep
+
+# System Cache Files
+/upload/system/storage/cache/*
+!/upload/system/storage/cache/.gitkeep
+/storage/cache/*
+!/storage/cache/.gitkeep
+
+# Modification Files
+/upload/system/storage/modification/*
+!/upload/system/storage/modification/.gitkeep
+/storage/modification/*
+!/storage/modification/.gitkeep
+
+# Templates Files
+/upload/image/templates/*
+/upload/image/templates/default.jpg
+
+# Download Files
+/upload/system/storage/download/*
+!/upload/system/storage/download/.gitkeep
+/storage/download/*
+!/storage/download/.gitkeep
+
+# Session Files
+/upload/system/storage/session/*
+!/upload/system/storage/session/.gitkeep
+/storage/session/*
+!/storage/session/.gitkeep
+
+# Upload Files
+/upload/system/storage/upload/*
+!/upload/system/storage/upload/.gitkeep
+/storage/upload/*
+!/storage/upload/.gitkeep
+
+# Flags
+# remove sharp char if you want to add flags to gitignore
+# /upload/flags/*
+
+# Log Files
+/logs/*
+/upload/system/storage/logs/*
+!/upload/system/storage/logs/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# If you want to ignore install file use following lines [on development mode]
+# /upload/backup.install/*
+# /upload/install/*
+/upload/install_disabled/
+
+# Composer dependencies
+/vendor/
+/upload/system/storage/vendor/
+/storage/vendor/
+/tests/phpunit/vendor/*
+
+# Test lock file
+/tests/phpunit/composer.lock
+
+# Test Config File
+/tests/phpunit/bootstrap.php
+
+# Generated production assets
+/upload/catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.min.css
+
+# Local legal document drafts. These files can contain seller requisites and
+# must be reviewed by a lawyer before publication.
+/legal-pages/*.txt
+
+# IDE Project files
+/.idea
+/upload/.idea
+/.vscode
+/.cache/
+/extensions/yandex-metrica-consent/
+/extensions/russian-post-delivery/
+
+# Russian Post is installed from the external OCMOD package.
+/upload/admin/controller/extension/shipping/russian_post.php
+/upload/admin/language/en-gb/extension/shipping/russian_post.php
+/upload/admin/language/ru-ru/extension/shipping/russian_post.php
+/upload/admin/view/template/extension/shipping/russian_post.twig
+/upload/admin/view/template/extension/shipping/russian_post_order.twig
+/upload/catalog/controller/extension/shipping/russian_post.php
+/upload/catalog/language/en-gb/extension/shipping/russian_post.php
+/upload/catalog/language/ru-ru/extension/shipping/russian_post.php
+/upload/catalog/model/extension/shipping/russian_post.php
+/upload/catalog/view/javascript/shipping/russian_post.js
+/upload/catalog/view/theme/default/stylesheet/shipping/russian_post.css
+/upload/system/library/russian_post_delivery.php
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Personal agent tools and local work artifacts
+/.agents/
+/.codex/
+/skills-lock.json
+/seo-audit.md
+/.codex-attachments/
+/.codex-task-state.md
+/.codex-testcontainers-plan.md
+/.playwright-mcp/
+
+тз.md
+ЗАДАЧИ_ПО_ТЗ.md
+ИТЕРАЦИИ.md
+AGENTS.md

@@ -1,0 +1,16 @@
+/* Payment provider containers and loading state. */
+.paypal-button, .googlepay-button, .applepay-button, .fastlane-customer { position: relative; width: 100%; margin-block: 1em; }
+.paypal-card, .paypal-card-container, .paypal-card-tokens, .paypal-card-tokens-container, .fastlane-card, .fastlane-card-container, .paypal-message { position: relative; }
+.paypal-message { margin-bottom: 10px; }
+.paypal-message [data-pp-message] > * { max-width: none !important; }
+.googlepay-button-container .gpay-card-info-container-fill { height: 100%; }
+.googlepay-button-container.shape-pill .gpay-card-info-container { border-radius: 1000px; }
+.googlepay-button-container.shape-rect .gpay-card-info-container { border-radius: 4px; }
+.fastlane-customer .watermark { text-align: right; }
+.fastlane-customer .watermark-container { display: inline-block; text-align: left; }
+.paypal-spinner { position: relative; min-height: 20px; }
+.paypal-spinner::before { content: ''; position: absolute; z-index: 1; top: 50%; left: 50%; width: 20px; height: 20px; margin: -10px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: payment-spinner .75s linear infinite; }
+@keyframes payment-spinner { to { transform: rotate(360deg); } }
+@media (max-width: 476px) {
+ .paypal-button-container, .googlepay-button-container, .applepay-button-container, .applepay-button #apple-pay-button, .paypal-card-tokens-container, .paypal-card-container, .fastlane-card-container { width: 100% !important; }
+}

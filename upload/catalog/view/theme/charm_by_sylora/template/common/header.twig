@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html dir="{{ direction }}" lang="{{ lang }}">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{{ title }}</title>
+<base href="{{ base }}" />
+{% if description %}
+<meta name="description" content="{{ description }}" />
+{% endif %}
+{% if keywords %}
+<meta name="keywords" content="{{ keywords }}" />
+{% endif %}
+<meta name="robots" content="{{ robots }}" />
+<meta property="og:type" content="{{ og_type }}" />
+<meta property="og:title" content="{{ og_title }}" />
+{% if og_description %}
+<meta property="og:description" content="{{ og_description }}" />
+{% endif %}
+<meta property="og:url" content="{{ og_url }}" />
+<meta property="og:image" content="{{ og_image }}" />
+<meta property="og:image:width" content="{{ og_image_width }}" />
+<meta property="og:image:height" content="{{ og_image_height }}" />
+{% if site_schema %}
+<script nonce="{{ csp_nonce }}" type="application/ld+json">{{ site_schema|raw }}</script>
+{% endif %}
+<script src="catalog/view/javascript/jquery/jquery-3.7.1.min.js" type="text/javascript"></script>
+<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="catalog/view/theme/charm_by_sylora/stylesheet/stylesheet.min.css?v=2926609f76df" rel="stylesheet">
+{% for style in styles %}
+<link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
+{% endfor %}
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+<script src="catalog/view/javascript/common.min.js?v=20f90be3113c" type="text/javascript"></script>
+<script src="catalog/view/javascript/storefront.js?v=78df5ccc03fe" type="text/javascript"></script>
+{% for link in links %}
+<link href="{{ link.href }}" rel="{{ link.rel }}" />
+{% endfor %}
+<link rel="apple-touch-icon" sizes="180x180" href="image/catalog/sylora/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="image/catalog/sylora/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="image/catalog/sylora/favicons/favicon-16x16.png">
+<link rel="icon" href="image/catalog/sylora/favicons/favicon.ico">
+<link rel="manifest" href="image/catalog/sylora/favicons/site.webmanifest">
+{% for analytic in analytics %}
+{{ analytic }}
+{% endfor %}
+</head>
+<body data-close-label="{{ button_close }}" data-popup-error="{{ error_popup_action }}">
+{% set account_url = logged ? account : login %}
+{% set account_label = logged ? 'Личный кабинет' : 'Войти' %}
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-brand" href="{{ home }}" aria-label="Charm by Sylora">
+      {% if brand_logo_image.src %}
+      <picture>
+        {% for source in brand_logo_image.sources %}
+        <source srcset="{{ source.src }}" type="{{ source.type }}">
+        {% endfor %}
+        <img class="site-brand__logo" src="{{ brand_logo_image.src }}" alt="" width="54" height="54" loading="eager" decoding="async">
+      </picture>
+      {% endif %}
+      <span class="site-brand__text">
+        <span class="site-brand__mark">Charm by Sylora</span>
+        <span class="site-brand__sub">украшения ручной работы</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Основное меню">
+      <div class="site-nav__heading">
+        <span>Меню</span>
+        <button class="site-nav__close popup-close" type="button" aria-label="Закрыть меню">
+          <img class="atelier-icon atelier-icon--close" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" alt="" aria-hidden="true">
+        </button>
+      </div>
+      <a href="{{ home }}">Главная</a>
+      <a href="{{ catalog }}">Каталог</a>
+      <a href="{{ about }}">Обо мне</a>
+      <a href="{{ contact }}">Контакты</a>
+      <a class="site-nav__cart" href="{{ shopping_cart }}">Корзина</a>
+      <a class="site-nav__account" href="{{ account_url }}" aria-label="{{ account_label }}">
+        <img class="atelier-icon atelier-icon--user" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/user.svg" alt="" aria-hidden="true">
+        <span>{{ account_label }}</span>
+      </a>
+    </nav>
+
+    <div class="site-actions">
+      <div class="site-search">{{ search }}</div>
+      <div class="site-cart">{{ cart }}</div>
+      <a class="site-account" href="{{ account_url }}" aria-label="{{ account_label }}">
+        <img class="atelier-icon atelier-icon--user" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/user.svg" alt="" aria-hidden="true">
+        <span class="site-account__label">{{ account_label }}</span>
+      </a>
+      <button class="mobile-nav-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="site-nav">
+        <img class="site-action-icon atelier-icon atelier-icon--menu" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/menu.svg" alt="" aria-hidden="true">
+      </button>
+    </div>
+  </div>
+</header>
+<div class="site-nav-backdrop" hidden></div>
+<div id="site-notifications" class="site-notifications" aria-live="polite" aria-atomic="true"></div>

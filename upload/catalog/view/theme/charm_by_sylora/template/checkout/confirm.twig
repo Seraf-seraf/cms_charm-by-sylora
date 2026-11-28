@@ -1,0 +1,53 @@
+{% if not redirect %}
+<div class="table-responsive">
+  <table class="table table-bordered table-hover checkout-confirm__table">
+    <thead>
+      <tr>
+        <td class="text-left">{{ column_name }}</td>
+        <td class="text-left">{{ column_model }}</td>
+        <td class="text-right">{{ column_quantity }}</td>
+        <td class="text-right">{{ column_price }}</td>
+        <td class="text-right">{{ column_total }}</td>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for product in products %}
+    <tr>
+      <td class="text-left" data-label="{{ column_name|e('html_attr') }}"><a href="{{ product.href }}">{{ product.name }}</a> {% for option in product.option %} <br/>
+        &nbsp;<small> - {{ option.name }}: {{ option.value }}</small> {% endfor %}
+        {% if product.recurring %} <br/>
+        <span class="label label-info">{{ text_recurring_item }}</span> <small>{{ product.recurring }}</small> {% endif %}</td>
+      <td class="text-left" data-label="{{ column_model|e('html_attr') }}">{{ product.model }}</td>
+      <td class="text-right" data-label="{{ column_quantity|e('html_attr') }}">{{ product.quantity }}</td>
+      <td class="text-right" data-label="{{ column_price|e('html_attr') }}">{{ product.price }}</td>
+      <td class="text-right" data-label="{{ column_total|e('html_attr') }}">{{ product.total }}</td>
+    </tr>
+    {% endfor %}
+    {% for voucher in vouchers %}
+    <tr>
+      <td class="text-left" data-label="{{ column_name|e('html_attr') }}">{{ voucher.description }}</td>
+      <td class="text-left" data-label="{{ column_model|e('html_attr') }}"></td>
+      <td class="text-right" data-label="{{ column_quantity|e('html_attr') }}">1</td>
+      <td class="text-right" data-label="{{ column_price|e('html_attr') }}">{{ voucher.amount }}</td>
+      <td class="text-right" data-label="{{ column_total|e('html_attr') }}">{{ voucher.amount }}</td>
+    </tr>
+    {% endfor %}
+      </tbody>
+
+    <tfoot>
+
+    {% for total in totals %}
+    <tr>
+      <td colspan="4" class="text-right"><strong>{{ total.title }}:</strong></td>
+      <td class="text-right">{{ total.text }}</td>
+    </tr>
+    {% endfor %}
+      </tfoot>
+
+  </table>
+</div>
+{{ payment }}
+{% else %}
+<div data-checkout-redirect="{{ redirect }}"></div>
+{% endif %}

@@ -1,0 +1,677 @@
+<?php
+class ControllerProductCategory extends Controller {
+	public function index() {
+		$this->load->language('product/category');
+
+		$this->load->model('catalog/category');
+
+		$this->load->model('catalog/product');
+
+		$this->load->model('tool/image');
+		$this->load->library('seo');
+		$this->load->library('catalog_schema');
+		$this->load->library('product_availability');
+		$catalog_schema = $this->registry->get('catalog_schema');
+
+		if (!$catalog_schema instanceof Catalog_schema) {
+			throw new RuntimeException('Catalog schema library is not available.');
+		}
+
+		if (isset($this->request->get['filter'])) {
+			if (is_array($this->request->get['filter'])) {
+				$filter = implode(',', array_map('intval', $this->request->get['filter']));
+			} else {
+				$filter = $this->request->get['filter'];
+			}
+		} else {
+			$filter = '';
+		}
+
+		if (isset($this->request->get['price_min']) && $this->request->get['price_min'] !== '') {
+			$price_min = max(0, (float)$this->request->get['price_min']);
+		} else {
+			$price_min = '';
+		}
+
+		if (isset($this->request->get['price_max']) && $this->request->get['price_max'] !== '') {
+			$price_max = max(0, (float)$this->request->get['price_max']);
+		} else {
+			$price_max = '';
+		}
+
+		if ($price_min !== '' && $price_max !== '' && $price_min > $price_max) {
+			$tmp = $price_min;
+			$price_min = $price_max;
+			$price_max = $tmp;
+		}
+
+		if (isset($this->request->get['availability']) && in_array($this->request->get['availability'], array('in_stock', 'out_of_stock'))) {
+			$availability_filter = $this->request->get['availability'];
+		} else {
+			$availability_filter = '';
+		}
+
+		$filter_is_new = !empty($this->request->get['is_new']) ? 1 : 0;
+		$filter_is_sale = !empty($this->request->get['is_sale']) ? 1 : 0;
+		$filter_parameters = array('filter', 'price_min', 'price_max', 'availability', 'is_new', 'is_sale');
+		$has_filter_parameters = (bool)array_intersect($filter_parameters, array_keys($this->request->get));
+
+		$filter_url = '';
+
+		if ($filter !== '') {
+			$filter_url .= '&filter=' . urlencode(html_entity_decode($filter, ENT_QUOTES, 'UTF-8'));
+		}
+
+		if ($price_min !== '') {
+			$filter_url .= '&price_min=' . $price_min;
+		}
+
+		if ($price_max !== '') {
+			$filter_url .= '&price_max=' . $price_max;
+		}
+
+		if ($availability_filter !== '') {
+			$filter_url .= '&availability=' . $availability_filter;
+		}
+
+		if ($filter_is_new) {
+			$filter_url .= '&is_new=1';
+		}
+
+		if ($filter_is_sale) {
+			$filter_url .= '&is_sale=1';
+		}
+
+		if (isset($this->request->get['sort'])) {
+			$sort = $this->request->get['sort'];
+		} else {
+			$sort = 'p.sort_order';
+		}
+
+		if (isset($this->request->get['order'])) {
+			$order = $this->request->get['order'];
+		} else {
+			$order = 'ASC';
+		}
+
+		if (isset($this->request->get['page'])) {
+			$page = (int)$this->request->get['page'];
+		} else {
+			$page = 1;
+		}
+
+		if (isset($this->request->get['limit']) && (int)$this->request->get['limit'] > 0) {
+			$limit = (int)$this->request->get['limit'];
+		} else {
+			$limit = $this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit');
+		}
+
+		if (isset($this->request->get['path'])) {
+			$parts = explode('_', (string)$this->request->get['path']);
+			$category_id = (int)array_pop($parts);
+		} else {
+			$category_id = 0;
+		}
+
+		$category_info = $this->model_catalog_category->getCategory($category_id);
+
+		if ($category_info) {
+			$this->document->setTitle($this->seo->title($category_info['meta_title'], $category_info['name'], 'category'));
+			$this->document->setDescription($this->seo->description($category_info['meta_description'], $category_info['description'], $category_info['name'], 'category'));
+			$this->document->setKeywords($category_info['meta_keyword']);
+
+			$data['heading_title'] = $category_info['name'];
+			$catalog_category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+			if (!$catalog_category) {
+				$catalog_category = $this->model_catalog_category->getCategoryByName('Все украшения');
+			}
+
+			$data['is_catalog_root'] = $catalog_category && (int)$catalog_category['category_id'] === $category_id;
+
+			$data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+
+			if ($category_info['image']) {
+				$data['thumb'] = $this->model_tool_image->resize($category_info['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_category_height'));
+			} else {
+				$data['thumb'] = '';
+			}
+
+			$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+			$data['compare'] = $this->url->link('product/compare');
+
+			$url = '';
+
+			$url .= $filter_url;
+
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			$data['categories'] = array();
+
+			$results = $this->model_catalog_category->getCategories($category_id);
+
+			foreach ($results as $result) {
+				$filter_data = array(
+					'filter_category_id'  => $result['category_id'],
+					'filter_sub_category' => true
+				);
+
+				$data['categories'][] = array(
+					'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
+					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
+				);
+			}
+
+			$data['filter_categories'] = array();
+
+			foreach ($this->model_catalog_category->getCategories(0) as $filter_category) {
+				$filter_category_data = array(
+					'filter_category_id' => (int)$filter_category['category_id'],
+					'filter_sub_category' => true
+				);
+
+				$category_href = 'path=' . (int)$filter_category['category_id'];
+
+				if (isset($this->request->get['sort'])) {
+					$category_href .= '&sort=' . $this->request->get['sort'];
+				}
+
+				if (isset($this->request->get['order'])) {
+					$category_href .= '&order=' . $this->request->get['order'];
+				}
+
+				if (isset($this->request->get['limit'])) {
+					$category_href .= '&limit=' . $this->request->get['limit'];
+				}
+
+				$data['filter_categories'][] = array(
+					'category_id' => (int)$filter_category['category_id'],
+					'name' => $filter_category['name'],
+					'total' => $this->model_catalog_product->getTotalProducts($filter_category_data),
+					'selected' => (int)$filter_category['category_id'] === $category_id,
+					'href' => $this->url->link('product/category', $category_href)
+				);
+			}
+
+			$data['products'] = array();
+
+			$filter_data = array(
+				'filter_category_id' => $category_id,
+				'filter_filter'      => $filter,
+				'filter_price_min'   => $price_min,
+				'filter_price_max'   => $price_max,
+				'filter_availability' => $availability_filter,
+				'filter_is_new'      => $filter_is_new,
+				'filter_is_sale'     => $filter_is_sale,
+				'sort'               => $sort,
+				'order'              => $order,
+				'start'              => ($page - 1) * $limit,
+				'limit'              => $limit
+			);
+
+			$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
+
+			$results = $this->model_catalog_product->getProducts($filter_data);
+
+			foreach ($results as $result) {
+				$image_width = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_width');
+				$image_height = (int)$this->config->get('theme_' . $this->config->get('config_theme') . '_image_product_height');
+
+				if ($result['image']) {
+					$image = $this->model_tool_image->resizeWithSources($result['image'], $image_width, $image_height);
+				} else {
+					$image = $this->model_tool_image->resizeWithSources('placeholder.png', $image_width, $image_height);
+				}
+
+				$hover_image = array(
+					'src'     => '',
+					'sources' => array(),
+					'width'   => $image_width,
+					'height'  => $image_height
+				);
+				$product_images = $this->model_catalog_product->getProductImages($result['product_id']);
+
+				foreach ($product_images as $product_image) {
+					if (!empty($product_image['image']) && $product_image['image'] !== $result['image']) {
+						$hover_image = $this->model_tool_image->resizeWithSources($product_image['image'], $image_width, $image_height);
+						break;
+					}
+				}
+
+				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
+					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+				} else {
+					$price = false;
+				}
+
+				if (!is_null($result['special']) && (float)$result['special'] >= 0) {
+					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+					$tax_price = (float)$result['special'];
+				} else {
+					$special = false;
+					$tax_price = (float)$result['price'];
+				}
+	
+				if ($this->config->get('config_tax')) {
+					$tax = $this->currency->format($tax_price, $this->session->data['currency']);
+				} else {
+					$tax = false;
+				}
+
+				if ($this->config->get('config_review_status')) {
+					$rating = (int)$result['rating'];
+				} else {
+					$rating = false;
+				}
+
+				$product_availability = $this->registry->get('product_availability');
+				$availability = array(
+					'state' => ProductAvailability::STATE_OUT_OF_STOCK,
+					'text' => 'Нет в наличии',
+					'css_class' => 'is-out',
+					'can_buy' => false,
+					'schema_org' => 'https://schema.org/OutOfStock'
+				);
+
+				if ($product_availability instanceof ProductAvailability) {
+					$availability = $product_availability->resolve($result);
+				}
+
+				$stock = (string)$availability['text'];
+				$stock_class = (string)$availability['css_class'];
+
+				$is_new = !empty($result['date_added']) && strtotime($result['date_added']) >= strtotime('-30 days');
+				$badge = '';
+				$badge_class = '';
+
+				if ($availability['state'] === ProductAvailability::STATE_OUT_OF_STOCK) {
+					$badge = 'Нет в наличии';
+					$badge_class = 'is-out';
+				} elseif ($availability['state'] === ProductAvailability::STATE_PREORDER) {
+					$badge = 'Под заказ';
+					$badge_class = 'is-preorder';
+				} elseif ($special) {
+					$badge = 'Скидка';
+					$badge_class = 'is-sale';
+				} elseif ($is_new) {
+					$badge = 'Новинка';
+					$badge_class = 'is-new';
+				}
+
+				$data['products'][] = array(
+					'product_id'  => $result['product_id'],
+					'thumb'       => $image['src'],
+					'hover_thumb' => $hover_image['src'],
+					'image'       => $image,
+					'hover_image' => $hover_image,
+					'name'        => $result['name'],
+					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
+					'quick_description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, 220) . '..',
+					'price'       => $price,
+					'special'     => $special,
+					'is_new'      => $is_new,
+					'badge'       => $badge,
+					'badge_class' => $badge_class,
+					'stock'       => $stock,
+					'stock_class' => $stock_class,
+					'can_buy'     => !empty($availability['can_buy']),
+					'tax'         => $tax,
+					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
+					'rating'      => $result['rating'],
+					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
+				);
+			}
+
+			$url = '';
+
+			$url .= $filter_url;
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			$data['sorts'] = array();
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_default'),
+				'value' => 'p.sort_order-ASC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.sort_order&order=ASC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_popular_desc'),
+				'value' => 'p.viewed-DESC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.viewed&order=DESC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_date_desc'),
+				'value' => 'p.date_added-DESC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.date_added&order=DESC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_name_asc'),
+				'value' => 'pd.name-ASC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=pd.name&order=ASC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_name_desc'),
+				'value' => 'pd.name-DESC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=pd.name&order=DESC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_price_asc'),
+				'value' => 'p.price-ASC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.price&order=ASC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_price_desc'),
+				'value' => 'p.price-DESC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.price&order=DESC' . $url)
+			);
+
+			if ($this->config->get('config_review_status')) {
+				$data['sorts'][] = array(
+					'text'  => $this->language->get('text_rating_desc'),
+					'value' => 'rating-DESC',
+					'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=rating&order=DESC' . $url)
+				);
+
+				$data['sorts'][] = array(
+					'text'  => $this->language->get('text_rating_asc'),
+					'value' => 'rating-ASC',
+					'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=rating&order=ASC' . $url)
+				);
+			}
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_model_asc'),
+				'value' => 'p.model-ASC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.model&order=ASC' . $url)
+			);
+
+			$data['sorts'][] = array(
+				'text'  => $this->language->get('text_model_desc'),
+				'value' => 'p.model-DESC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.model&order=DESC' . $url)
+			);
+
+			$url = '';
+
+			$url .= $filter_url;
+
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			$data['limits'] = array();
+
+			$limits = array_unique(array($this->config->get('theme_' . $this->config->get('config_theme') . '_product_limit'), 25, 50, 75, 100));
+
+			sort($limits);
+
+			foreach($limits as $value) {
+				$data['limits'][] = array(
+					'text'  => $value,
+					'value' => $value,
+					'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url . '&limit=' . $value)
+				);
+			}
+
+			$url = '';
+
+			$url .= $filter_url;
+
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			$pagination = new Pagination();
+			$pagination->total = $product_total;
+			$pagination->page = $page;
+			$pagination->limit = $limit;
+			$pagination->url = $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url . '&page={page}');
+
+			$data['pagination'] = $pagination->render();
+
+			$data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
+
+			// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
+			$canonical_path = isset($this->request->get['path']) ? $this->request->get['path'] : $category_info['category_id'];
+			$canonical_url = $has_filter_parameters ? '' : $filter_url;
+
+			if ($page == 1 || $has_filter_parameters) {
+				$schema_url = $this->url->link('product/category', 'path=' . $canonical_path . $canonical_url, true);
+			} else {
+				$schema_url = $this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . '&page=' . $page, true);
+			}
+
+			$this->document->addLink($schema_url, 'canonical');
+			
+			if (!$has_filter_parameters && $page > 1) {
+			    $this->document->addLink($this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . (($page - 2) ? '&page='. ($page - 1) : '')), 'prev');
+			}
+
+			if (!$has_filter_parameters && $limit && ceil($product_total / $limit) > $page) {
+			    $this->document->addLink($this->url->link('product/category', 'path=' . $canonical_path . $canonical_url . '&page='. ($page + 1)), 'next');
+			}
+
+			$data['sort'] = $sort;
+			$data['order'] = $order;
+			$data['limit'] = $limit;
+			$data['filter_groups'] = $this->model_catalog_category->getCategoryProductFilters($category_id);
+			$data['filter_category'] = $filter !== '' ? array_values(array_filter(explode(',', $filter), 'strlen')) : array();
+			if ($catalog_category && !$data['is_catalog_root'] && $data['filter_category']) {
+				$data['filter_groups'] = $this->includeSelectedCatalogFilters(
+					$data['filter_groups'],
+					$data['filter_category'],
+					(int)$catalog_category['category_id']
+				);
+			}
+
+			$data['filter_price_min'] = $price_min;
+			$data['filter_price_max'] = $price_max;
+			$data['filter_availability'] = $availability_filter;
+			$data['filter_is_new'] = $filter_is_new;
+			$data['filter_is_sale'] = $filter_is_sale;
+			$data['filter_path'] = isset($this->request->get['path']) ? $this->request->get['path'] : '';
+			$data['filter_action'] = 'index.php';
+			$data['filter_reset'] = $this->url->link('product/category', 'path=' . $this->request->get['path']);
+			$applied_filters = array();
+			$display_price_min = str_replace('.', ',', (string)$price_min);
+			$display_price_max = str_replace('.', ',', (string)$price_max);
+
+			if ($price_min !== '' && $price_max !== '') {
+				$applied_filters[] = sprintf(
+					$this->language->get('text_filter_applied_price_range'),
+					$display_price_min,
+					$display_price_max
+				);
+			} elseif ($price_min !== '') {
+				$applied_filters[] = sprintf($this->language->get('text_filter_applied_price_min'), $display_price_min);
+			} elseif ($price_max !== '') {
+				$applied_filters[] = sprintf($this->language->get('text_filter_applied_price_max'), $display_price_max);
+			}
+
+			if ($availability_filter !== '') {
+				$applied_filters[] = $this->language->get('text_filter_' . $availability_filter);
+			}
+
+			if ($filter_is_new) {
+				$applied_filters[] = $this->language->get('text_filter_new');
+			}
+
+			if ($filter_is_sale) {
+				$applied_filters[] = $this->language->get('text_filter_sale');
+			}
+
+			foreach ($data['filter_groups'] as $filter_group) {
+				foreach ($filter_group['filter'] as $filter_option) {
+					if (in_array($filter_option['filter_id'], $data['filter_category'])) {
+						$applied_filters[] = sprintf(
+							$this->language->get('text_filter_applied_attribute'),
+							$filter_group['name'],
+							$filter_option['name']
+						);
+					}
+				}
+			}
+
+			$data['applied_filters'] = $applied_filters;
+			$data['active_filter_count'] = count($applied_filters);
+			$data['catalog_reset_available'] = $filter_url !== '' || $page > 1;
+
+			if (!$product_total) {
+				$data['catalog_results'] = $this->language->get('text_catalog_zero_results');
+			} elseif (!$data['products']) {
+				$data['catalog_results'] = sprintf($this->language->get('text_catalog_empty_page_count'), $product_total);
+			} else {
+				$data['catalog_results'] = sprintf(
+					$this->language->get('text_catalog_results'),
+					(($page - 1) * $limit) + 1,
+					min($page * $limit, $product_total),
+					$product_total
+				);
+			}
+
+			$schema_breadcrumbs = array(
+				array(
+					'text' => $this->language->get('text_breadcrumb_home'),
+					'href' => $this->url->link('common/home', '', true)
+				)
+			);
+			$schema_path = array();
+
+			foreach (explode('_', (string)$canonical_path) as $schema_category_id) {
+				$schema_category = $this->model_catalog_category->getCategory((int)$schema_category_id);
+
+				if (!$schema_category) {
+					continue;
+				}
+
+				$schema_path[] = (int)$schema_category_id;
+				$schema_breadcrumbs[] = array(
+					'text' => $schema_category['name'],
+					'href' => $this->url->link('product/category', 'path=' . implode('_', $schema_path), true)
+				);
+			}
+
+			$data['catalog_schema'] = $catalog_schema->build($data['heading_title'], $schema_url, $schema_breadcrumbs, $data['products'], $page, $limit);
+
+			if ($has_filter_parameters || !$this->model_catalog_category->hasActiveProducts($category_id)) {
+				$this->document->setRobots('noindex, follow');
+			}
+
+			$data['continue'] = $this->url->link('common/home');
+
+			$data['column_left'] = '';
+			$data['column_right'] = $this->load->controller('common/column_right');
+			$data['content_top'] = $this->load->controller('common/content_top');
+			$data['content_bottom'] = $this->load->controller('common/content_bottom');
+			$data['footer'] = $this->load->controller('common/footer');
+			$data['header'] = $this->load->controller('common/header');
+
+			$this->response->setOutput($this->load->view('product/category', $data));
+		} else {
+			$url = '';
+
+			if (isset($this->request->get['path'])) {
+				$url .= '&path=' . $this->request->get['path'];
+			}
+
+			if (isset($this->request->get['filter'])) {
+				$url .= '&filter=' . $this->request->get['filter'];
+			}
+
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+
+			$this->document->setTitle($this->language->get('text_error'));
+
+			$data['continue'] = $this->url->link('common/home');
+
+			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+			$this->document->setRobots('noindex, nofollow');
+
+			$data['column_left'] = $this->load->controller('common/column_left');
+			$data['column_right'] = $this->load->controller('common/column_right');
+			$data['content_top'] = $this->load->controller('common/content_top');
+			$data['content_bottom'] = $this->load->controller('common/content_bottom');
+			$data['footer'] = $this->load->controller('common/footer');
+			$data['header'] = $this->load->controller('common/header');
+
+			$this->response->setOutput($this->load->view('error/not_found', $data));
+		}
+	}
+
+	private function includeSelectedCatalogFilters(array $groups, array $selected_filters, int $catalog_category_id): array {
+		$groups = array_column($groups, null, 'filter_group_id');
+		$missing_filters = array_fill_keys(array_map('intval', $selected_filters), true);
+
+		foreach ($groups as $group) {
+			foreach ($group['filter'] as $option) {
+				unset($missing_filters[$option['filter_id']]);
+			}
+		}
+
+		if (!$missing_filters) {
+			return $groups;
+		}
+
+		foreach ($this->model_catalog_category->getCategoryProductFilters($catalog_category_id) as $group) {
+			$selected_options = array_filter($group['filter'], function ($option) use ($missing_filters) {
+				return isset($missing_filters[$option['filter_id']]);
+			});
+
+			if (!$selected_options) {
+				continue;
+			}
+
+			$group_id = $group['filter_group_id'];
+			$groups[$group_id] ??= array('name' => $group['name'], 'filter' => array());
+			$groups[$group_id]['filter'] = array_merge($groups[$group_id]['filter'], $selected_options);
+		}
+
+		return $groups;
+	}
+}

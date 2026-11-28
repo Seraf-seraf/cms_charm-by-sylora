@@ -1,0 +1,64 @@
+<?php
+class ControllerErrorNotFound extends Controller {
+	public function index() {
+		$this->load->language('error/not_found');
+		$this->load->model('catalog/category');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setRobots('noindex, nofollow');
+
+		$data['heading_title'] = $this->language->get('heading_title');
+		$data['text_error'] = $this->language->get('text_error');
+		$data['text_catalog'] = $this->language->get('text_catalog');
+		$data['text_home'] = $this->language->get('text_home');
+		$data['text_contact'] = $this->language->get('text_contact');
+
+
+
+		if (isset($this->request->get['route'])) {
+			$url_data = $this->request->get;
+
+			unset($url_data['_route_']);
+
+			$route = $url_data['route'];
+
+			unset($url_data['route']);
+
+			$url = '';
+
+			if ($url_data) {
+				$url = '&' . urldecode(http_build_query($url_data, '', '&'));
+			}
+
+		}
+
+		$data['continue'] = $this->url->link('common/home');
+		$data['catalog'] = $this->getCatalogUrl();
+		$data['contact'] = $this->url->link('information/contact');
+
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['header'] = $this->load->controller('common/header');
+
+		$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+
+		$this->response->setOutput($this->load->view('error/not_found', $data));
+	}
+
+	private function getCatalogUrl() {
+		$category = $this->model_catalog_category->getCategoryBySeoKeyword('all-jewelry');
+
+		if (!$category) {
+			$category = $this->model_catalog_category->getCategoryByName('Все украшения');
+		}
+
+		if ($category) {
+			return $this->url->link('product/category', 'path=' . (int)$category['category_id']);
+		}
+
+		return $this->url->link('product/search');
+	}
+}

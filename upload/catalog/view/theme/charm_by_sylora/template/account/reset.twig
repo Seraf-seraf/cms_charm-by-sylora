@@ -1,0 +1,48 @@
+{{ header }}
+<main id="account-reset" class="container account-auth account-auth--narrow">
+  <div{% if column_left or column_right %} class="row"{% endif %}>
+    {{ column_left }}
+    {% set column_class = '' %}
+    {% if column_left and column_right %}
+      {% set column_class = ' col-sm-6' %}
+    {% elseif column_left or column_right %}
+      {% set column_class = ' col-sm-9' %}
+    {% endif %}
+    <div id="content" class="account-auth__content{{ column_class }}">
+      {{ content_top }}
+      <header class="account-auth__header">
+        <h1>
+          <span class="account-auth__title--mobile">{{ heading_title }}</span>
+          <span class="account-auth__title--desktop">{{ text_account }}</span>
+        </h1>
+      </header>
+      <section class="account-auth__card">
+        <h2 class="account-auth__card-title">{{ heading_title }}</h2>
+        <p class="account-auth__intro" id="reset-password-help">{{ text_password }}</p>
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" class="account-auth__form">
+          <div class="form-group{% if error_password %} has-error{% endif %}">
+            <label class="control-label" for="input-password">{{ entry_password }}</label>
+            <input type="password" name="password" value="{{ password }}" id="input-password" class="form-control" autocomplete="new-password" aria-describedby="reset-password-help{% if error_password %} reset-password-error{% endif %}"{% if error_password %} aria-invalid="true"{% endif %} />
+            {% if error_password %}
+            <p class="text-danger" id="reset-password-error" role="alert">{{ error_password }}</p>
+            {% endif %}
+          </div>
+          <div class="form-group{% if error_confirm %} has-error{% endif %}">
+            <label class="control-label" for="input-confirm">{{ entry_confirm }}</label>
+            <input type="password" name="confirm" value="{{ confirm }}" id="input-confirm" class="form-control" autocomplete="new-password"{% if error_confirm %} aria-invalid="true" aria-describedby="reset-confirm-error"{% endif %} />
+            {% if error_confirm %}
+            <p class="text-danger" id="reset-confirm-error" role="alert">{{ error_confirm }}</p>
+            {% endif %}
+          </div>
+          <div class="account-auth__actions">
+            <button type="submit" class="btn btn-primary">{{ button_continue }}</button>
+            <a href="{{ back }}" class="btn btn-default">{{ button_back }}</a>
+          </div>
+        </form>
+      </section>
+      {{ content_bottom }}
+    </div>
+    {{ column_right }}
+  </div>
+</main>
+{{ footer }}

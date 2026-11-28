@@ -1,0 +1,51 @@
+{{ header }}
+<div id="account-return" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      {{ account_navigation }}
+      <main class="atelier-account-page-content">
+      {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+      <{{ heading_tag }}>{{ text_return_list_title }}</{{ heading_tag }}>
+      {% if returns %}
+      <div class="return-list">
+        {% for return in returns %}
+        <div class="return-list__item">
+          <article class="return-card">
+            <p class="return-card__summary">{{ text_atelier_return_summary|format(return.return_id, return.order_id) }}</p>
+            <p class="return-card__status">{{ text_status }} {{ return.status }}</p>
+          </article>
+          <div class="return-card__actions">
+            <a href="{{ return.href }}" data-toggle="tooltip" title="{{ text_atelier_return_details }}" aria-label="{{ text_atelier_return_details }}" class="btn btn-default return-card__details">{{ text_atelier_return_details }}</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% if pagination %}
+      <div class="row">
+        <div class="col-sm-6 text-left">{{ pagination }}</div>
+        <div class="col-sm-6 text-right">{{ results }}</div>
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="return-empty">
+        <p>{{ text_empty }}</p>
+        <a href="{{ continue }}" class="btn btn-default">{{ button_return_to_account }}</a>
+      </div>
+      {% endif %}
+      {% if returns %}
+      <div class="return-list__footer">
+        <a href="{{ continue }}" class="btn btn-default return-list__continue">{{ button_return_to_account }}</a>
+      </div>
+      {% endif %}
+      </main>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

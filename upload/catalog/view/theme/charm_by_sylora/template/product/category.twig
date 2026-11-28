@@ -1,0 +1,203 @@
+{{ header }}
+<main id="product-category" class="container{% if is_catalog_root %} catalog-root{% endif %}">
+  <div class="row catalog-page-layout">
+    <div id="content" class="col-sm-12">{{ content_top }}
+      <header class="catalog-head{% if is_catalog_root %} catalog-head--root{% endif %}">
+        {% if is_catalog_root %}
+        <h1 class="catalog-head__title catalog-head__title--mobile">{{ text_catalog_root_title_mobile }}</h1>
+        <h1 class="catalog-head__title catalog-head__title--desktop">{{ text_catalog_root_title_desktop }}</h1>
+        <div class="catalog-head__subtitle">
+          <span class="catalog-head__subtitle--mobile">{{ text_catalog_root_subtitle_mobile }}</span>
+          <div class="catalog-head__subtitle--desktop">
+            {% if description %}{{ description }}{% else %}{{ text_catalog_root_subtitle_desktop }}{% endif %}
+          </div>
+        </div>
+        {% else %}
+        <p class="sylora-eyebrow">Каталог</p>
+        <h1>{{ heading_title }}</h1>
+        {% endif %}
+      </header>
+      {% if is_catalog_root and thumb %}
+      <div class="catalog-root__thumb">
+        <img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" width="80" height="80" loading="lazy" decoding="async" />
+      </div>
+      {% endif %}
+      {% if is_catalog_root %}<hr class="catalog-root__separator" />{% endif %}
+      {% if not is_catalog_root and (thumb or description) %}
+      <div class="row"> {% if thumb %}
+        <div class="col-sm-2"><img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" width="80" height="80" loading="lazy" decoding="async" /></div>
+        {% endif %}
+        {% if description %}
+        <div class="col-sm-10">{{ description }}</div>
+        {% endif %}</div>
+      <hr>
+      {% endif %}
+      {% if filter_categories %}
+      <nav class="catalog-category-chips" aria-label="{{ text_filter_categories }}">
+        {% for category in filter_categories %}
+        {% if category.total or category.selected %}
+        <a class="catalog-category-chips__item" href="{{ category.href }}"{% if category.selected %} aria-current="page"{% endif %}>{{ category.name }}</a>
+        {% endif %}
+        {% endfor %}
+      </nav>
+      {% endif %}
+      <div class="catalog-shell">
+        <aside class="catalog-shell__sidebar">
+          <details class="catalog-filters">
+            <summary class="catalog-filters__summary">
+              <img class="atelier-icon" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/filter.svg" alt="" width="16" height="16" />
+              <span>{{ text_filters }}{% if active_filter_count %} ({{ active_filter_count }}){% endif %}</span>
+            </summary>
+            <form class="catalog-filters__form" action="{{ filter_action }}" method="get">
+              <div class="catalog-filters__header">
+                <h2 class="catalog-filters__heading">{{ text_filters }}</h2>
+                <button type="button" class="catalog-filters__close popup-close" aria-label="{{ button_filter_close }}">
+                  <img class="atelier-icon" src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" alt="" />
+                </button>
+              </div>
+              <input type="hidden" name="route" value="product/category" />
+              <input type="hidden" name="sort" value="{{ sort }}" />
+              <input type="hidden" name="order" value="{{ order }}" />
+              <input type="hidden" name="limit" value="{{ limit }}" />
+              <div class="catalog-filters__grid">
+                <fieldset class="catalog-filters__group catalog-filters__categories">
+                  <legend>{{ text_filter_categories }}</legend>
+                  {% set current_category_listed = false %}
+                  {% for category in filter_categories %}
+                  {% if category.selected %}{% set current_category_listed = true %}{% endif %}
+                  <label class="catalog-filters__option">
+                    <input type="radio" name="path" value="{{ category.selected ? filter_path : category.category_id }}" {% if category.selected %}checked="checked"{% endif %} />
+                    <span>{{ category.name }}</span>
+                    <small>{{ category.total }}</small>
+                  </label>
+                  {% endfor %}
+                  {% if not current_category_listed %}
+                  <label class="catalog-filters__option">
+                    <input type="radio" name="path" value="{{ filter_path|e }}" checked="checked" />
+                    <span>{{ heading_title }}</span>
+                  </label>
+                  {% endif %}
+                </fieldset>
+                <fieldset class="catalog-filters__group">
+                  <legend>{{ text_filter_price }}</legend>
+                  <div class="catalog-filters__price">
+                    <label for="input-price-min">
+                      <span>{{ text_filter_from }}</span>
+                      <input type="number" name="price_min" value="{{ filter_price_min }}" min="0" step="any" inputmode="decimal" placeholder="{{ text_filter_price_currency }}" id="input-price-min" />
+                    </label>
+                    <label for="input-price-max">
+                      <span>{{ text_filter_to }}</span>
+                      <input type="number" name="price_max" value="{{ filter_price_max }}" min="0" step="any" inputmode="decimal" placeholder="{{ text_filter_price_currency }}" id="input-price-max" />
+                    </label>
+                  </div>
+                </fieldset>
+                <fieldset class="catalog-filters__group">
+                  <legend>{{ text_filter_availability }}</legend>
+                  <label class="catalog-filters__option">
+                    <input type="radio" name="availability" value="" {% if not filter_availability %}checked="checked"{% endif %} />
+                    <span>{{ text_filter_any }}</span>
+                  </label>
+                  <label class="catalog-filters__option">
+                    <input type="radio" name="availability" value="in_stock" {% if filter_availability == 'in_stock' %}checked="checked"{% endif %} />
+                    <span>{{ text_filter_in_stock }}</span>
+                  </label>
+                  <label class="catalog-filters__option">
+                    <input type="radio" name="availability" value="out_of_stock" {% if filter_availability == 'out_of_stock' %}checked="checked"{% endif %} />
+                    <span>{{ text_filter_out_of_stock }}</span>
+                  </label>
+                </fieldset>
+                <fieldset class="catalog-filters__group">
+                  <legend>{{ text_filter_collections }}</legend>
+                  <label class="catalog-filters__option">
+                    <input type="checkbox" name="is_new" value="1" {% if filter_is_new %}checked="checked"{% endif %} />
+                    <span>{{ text_filter_new }}</span>
+                  </label>
+                  <label class="catalog-filters__option">
+                    <input type="checkbox" name="is_sale" value="1" {% if filter_is_sale %}checked="checked"{% endif %} />
+                    <span>{{ text_filter_sale }}</span>
+                  </label>
+                </fieldset>
+                {% for filter_group in filter_groups %}
+                <fieldset class="catalog-filters__group">
+                  <legend>{{ filter_group.name }}</legend>
+                  {% for filter in filter_group.filter %}
+                  <label class="catalog-filters__option">
+                    <input type="checkbox" name="filter[]" value="{{ filter.filter_id }}" {% if filter.filter_id in filter_category %}checked="checked"{% endif %} />
+                    <span>{{ filter.name }}</span>
+                  </label>
+                  {% endfor %}
+                </fieldset>
+                {% endfor %}
+              </div>
+              <div class="catalog-filters__actions">
+                <button type="submit">{{ button_filter_apply }}</button>
+                {% if active_filter_count %}
+                <a href="{{ filter_reset }}">{{ button_filter_reset_all }}</a>
+                {% endif %}
+              </div>
+            </form>
+          </details>
+        </aside>
+        <div class="catalog-shell__main">
+          <div class="catalog-toolbar">
+            <div class="catalog-toolbar__field catalog-toolbar__field--sort">
+              <label for="input-sort">{{ text_catalog_root_sort }}</label>
+              <select id="input-sort" class="form-control" data-location-select>
+                {% for item in sorts %}
+                <option value="{{ item.href }}"{% if item.value == '%s-%s'|format(sort, order) %} selected="selected"{% endif %}>{{ item.text }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <p class="catalog-toolbar__count" id="catalog-result-count">{{ catalog_results }}</p>
+            <div class="catalog-toolbar__field catalog-toolbar__field--limit">
+              <label for="input-limit">{{ text_limit }}</label>
+              <select id="input-limit" class="form-control" data-location-select>
+                {% for item in limits %}
+                <option value="{{ item.href }}"{% if item.value == limit %} selected="selected"{% endif %}>{{ item.text }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          {% if active_filter_count %}
+          <div class="catalog-applied" id="catalog-applied-filters">
+            <ul aria-label="{{ text_filter_applied }}">
+              {% for label in applied_filters %}
+              <li>{{ label|e }}</li>
+              {% endfor %}
+            </ul>
+            <a href="{{ filter_reset }}">{{ button_filter_reset }}</a>
+          </div>
+          {% endif %}
+          {% if products %}
+          <div class="catalog-grid">
+            {% for product in products %}
+            {% set heading_level = 'h2' %}
+            {% set enable_quick_view = true %}
+            {% include 'product/product_card.twig' %}
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% if pagination %}
+          <nav class="catalog-pagination" aria-label="{{ text_pagination_navigation }}">{{ pagination }}</nav>
+          {% endif %}
+          {% if not products %}
+          <section class="catalog-empty" aria-labelledby="catalog-empty-title">
+            <h2 id="catalog-empty-title">{{ text_catalog_filtered_empty_title }}</h2>
+            {% if catalog_reset_available %}
+            <p>{{ text_catalog_filtered_empty }}</p>
+            <a href="{{ filter_reset }}">{{ button_filter_reset_all }}</a>
+            {% else %}
+            <p>{{ text_empty }}</p>
+            <a href="{{ continue }}">{{ button_continue }}</a>
+            {% endif %}
+          </section>
+          {% endif %}
+        </div>
+      </div>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</main>
+{% if catalog_schema %}
+<script nonce="{{ csp_nonce }}" type="application/ld+json">{{ catalog_schema|raw }}</script>
+{% endif %}
+{{ footer }}

@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>{{ title }}</title>
+</head>
+<body style="margin: 0; padding: 16px; background: #f1eee6; color: #30251e; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.5;">
+<div style="width: 100%; max-width: 680px; margin: 0 auto;"><a href="{{ store_url }}" title="{{ store_name }}"><img src="{{ logo }}" alt="{{ store_name }}" style="max-width: 100%; height: auto; margin-bottom: 20px; border: 0;" /></a>
+  <p style="margin: 0 0 16px;">{{ text_greeting }}</p>
+  {% if customer_id %}
+  <p style="margin: 0 0 16px;">{{ text_link }}</p>
+  <p style="margin: 0 0 16px;"><a href="{{ link }}">{{ link }}</a></p>
+  {% endif %}
+  {% if download %}
+  <p style="margin: 0 0 16px;">{{ text_download }}</p>
+  <p style="margin: 0 0 16px;"><a href="{{ download }}">{{ download }}</a></p>
+  {% endif %}
+  <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse; border: 1px solid #c8bfb2;">
+    <thead>
+      <tr>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px; background: #e7e1d7; font-weight: bold;" colspan="2">{{ text_order_detail }}</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;"><b>{{ text_order_id }}</b> {{ order_id }}<br/>
+          <b>{{ text_date_added }}</b> {{ date_added }}<br/>
+          <b>{{ text_payment_method }}</b> {{ payment_method }}<br/>
+          {% if shipping_method %} <b>{{ text_shipping_method }}</b> {{ shipping_method }}
+          {% endif %}</td>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;"><b>{{ text_email }}</b> {{ email }}<br/>
+          <b>{{ text_telephone }}</b> {{ telephone }}<br/>
+          <b>{{ text_ip }}</b> {{ ip }}<br/>
+          <b>{{ text_order_status }}</b> {{ order_status }}<br/></td>
+      </tr>
+    </tbody>
+  </table>
+  {% if comment %}
+  <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse; border: 1px solid #c8bfb2;">
+    <thead>
+      <tr>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px; background: #e7e1d7; font-weight: bold;">{{ text_instruction }}</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;">{{ comment }}</td>
+      </tr>
+    </tbody>
+  </table>
+  {% endif %}
+  <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse; border: 1px solid #c8bfb2;">
+    <thead>
+      <tr>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px; background: #e7e1d7; font-weight: bold;">{{ text_payment_address }}</td>
+        {% if shipping_address %}
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px; background: #e7e1d7; font-weight: bold;">{{ text_shipping_address }}</td>
+        {% endif %} </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;">{{ payment_address }}</td>
+        {% if shipping_address %}
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;">{{ shipping_address }}</td>
+        {% endif %} </tr>
+    </tbody>
+  </table>
+  <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse; border: 1px solid #c8bfb2;">
+    <thead>
+      <tr>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px; background: #e7e1d7; font-weight: bold;">{{ text_product }}</td>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px; background: #e7e1d7; font-weight: bold;">{{ text_model }}</td>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px; background: #e7e1d7; font-weight: bold;">{{ text_quantity }}</td>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px; background: #e7e1d7; font-weight: bold;">{{ text_price }}</td>
+        <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px; background: #e7e1d7; font-weight: bold;">{{ text_total }}</td>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for product in products %}
+    <tr>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;">{{ product.name }}
+        {% for option in product.option %}<br/>
+        &nbsp;<small> - {{ option.name }}: {{ option.value }}</small>{% endfor %}</td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;">{{ product.model }}</td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px;">{{ product.quantity }}</td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px;">{{ product.price }}</td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px;">{{ product.total }}</td>
+    </tr>
+    {% endfor %}
+    {% for voucher in vouchers %}
+    <tr>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;">{{ voucher.description }}</td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: left; font-size: 12px;"></td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px;">1</td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px;">{{ voucher.amount }}</td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px;">{{ voucher.amount }}</td>
+    </tr>
+    {% endfor %}
+      </tbody>
+
+    <tfoot>
+
+    {% for total in totals %}
+    <tr>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px;" colspan="4"><b>{{ total.title }}:</b></td>
+      <td style="padding: 3px; overflow-wrap: break-word; word-break: normal; border: 1px solid #c8bfb2; color: #30251e; text-align: right; font-size: 12px;">{{ total.text }}</td>
+    </tr>
+    {% endfor %}
+      </tfoot>
+
+  </table>
+  <p style="margin: 0 0 16px;">{{ text_footer }}</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{{ header }}
+<div id="account-address" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      {{ account_navigation }}
+      <main class="atelier-account-page-content">
+      {% set heading_tag = account_navigation ? 'h2' : 'h1' %}
+      <{{ heading_tag }}>{{ text_address_book }}</{{ heading_tag }}>
+      {% if success %}
+      <div class="address-status" role="status">{{ success }}</div>
+      {% endif %}
+      {% if error_warning %}
+      <div class="address-status address-status--error" role="alert">{{ error_warning }}</div>
+      {% endif %}
+      {% if addresses %}
+      <div class="address-list">
+        {% for result in addresses %}
+        <div class="address-list__item">
+          <article class="address-card">
+            {% if result.is_default %}<h3 class="address-card__title">{{ text_primary_address }}</h3>{% endif %}
+            <div class="address-card__content">{{ result.address }}</div>
+          </article>
+          <form action="{{ result.delete }}" method="post" enctype="multipart/form-data" id="form-address-{{ result.address_id }}">
+            <div class="address-list__actions">
+              <a href="{{ result.update }}" class="btn btn-default">{{ button_edit }}</a>
+              <a href="{{ result.delete }}" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-default" data-confirm="{{ text_confirm }}" data-address-delete aria-haspopup="dialog">{{ button_delete }}</a>
+            </div>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+      <dialog class="storefront-confirm" id="address-delete-confirm" aria-labelledby="address-delete-title">
+        <form method="dialog">
+          <header class="storefront-confirm__header">
+            <h2 class="storefront-confirm__title" id="address-delete-title">{{ text_delete_address|default(button_delete) }}</h2>
+            <button type="submit" value="cancel" class="popup-close" aria-label="{{ button_close }}">
+              <img src="catalog/view/theme/charm_by_sylora/image/icons/atelier/close.svg" width="24" height="24" alt="">
+            </button>
+          </header>
+          <p>{{ text_delete_description|default(text_confirm) }}</p>
+          <button type="submit" value="cancel" class="btn btn-default" autofocus>{{ button_cancel }}</button>
+          <button type="submit" value="delete" class="btn btn-primary">{{ button_delete }}</button>
+        </form>
+      </dialog>
+      {% else %}
+      <div class="address-empty"><p>{{ text_empty }}</p></div>
+      {% endif %}
+
+      <div class="buttons address-list__buttons">
+        <div class="pull-left"><a href="{{ back }}" class="btn btn-default">{{ button_return_to_account }}</a></div>
+        <div class="pull-right"><a href="{{ add }}" class="btn btn-primary">{{ button_address_add }}</a></div>
+      </div>
+      </main>
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+{{ footer }}

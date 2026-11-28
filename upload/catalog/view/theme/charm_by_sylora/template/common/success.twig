@@ -1,0 +1,27 @@
+{{ header }}
+<main id="common-success" class="container{% if registration_confirmed %} registration-success{% endif %}">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+      <h1>{{ heading_title }}</h1>
+      {% if registration_confirmed %}
+      <div class="success-message" role="status">{{ text_registration_complete }}</div>
+      {% else %}
+      <div class="success-message">{{ text_message }}</div>
+      {% endif %}
+      <div class="buttons">
+        <div class="pull-right"><a href="{{ continue }}" class="btn {{ registration_confirmed ? 'btn-default' : 'btn-primary' }}">{{ button_continue }}</a></div>
+      </div>
+      {% if registration_confirmed %}
+      <div class="registration-success__details">{{ text_message }}</div>
+      {% endif %}
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</main>
+{{ footer }}
