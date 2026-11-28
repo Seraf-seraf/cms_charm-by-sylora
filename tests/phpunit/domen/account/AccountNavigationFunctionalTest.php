@@ -188,15 +188,19 @@ final class AccountNavigationFunctionalTest extends TestCase {
 
 		$this->logIn();
 		$dashboard = $this->request('account/account');
-		self::assertSame(3, $this->countAccountModules($dashboard));
+		self::assertSame(0, $this->countAccountModules($dashboard));
+		self::assertSame(1, $dashboard->query('//*[@id="column-right"]//*[@id="synthetic-account-layout-module"]')->length);
+		self::assertSame(array('account/logout'), $this->routes($dashboard, '//*[@id="content"]//a[contains(@href, "route=account/logout")]'));
 		self::assertSame(0, $dashboard->query('//header[@class="atelier-account-navigation"]')->length);
 
 		$moduleCode = 'html.' . self::$htmlModuleId;
 		self::$database->execute_query('DELETE FROM layout_module WHERE layout_id = ? AND code = ?', array(self::$layoutId, $moduleCode));
 		try {
-			$page = $this->request('account/newsletter');
-			self::assertSame(0, $page->query('//*[@id="column-right"]')->length);
-			self::assertSame(1, $page->query('//*[@id="content" and @class="col-sm-12"]')->length);
+			foreach (array('account/account', 'account/newsletter') as $route) {
+				$page = $this->request($route);
+				self::assertSame(0, $page->query('//*[@id="column-right"]')->length, $route);
+				self::assertSame(1, $page->query('//*[@id="content" and @class="col-sm-12"]')->length, $route);
+			}
 		} finally {
 			self::$database->execute_query("INSERT INTO layout_module (layout_id, code, position, sort_order) VALUES (?, ?, 'column_right', 2)", array(self::$layoutId, $moduleCode));
 		}

@@ -23,6 +23,13 @@ class ControllerAccountAccount extends Controller {
 		}
 
 		$data['account_navigation'] = $data['success'] ? $this->load->controller('account/navigation') : '';
+		$uses_atelier_navigation = $this->config->get('config_theme') === 'charm_by_sylora';
+
+		if ($uses_atelier_navigation) {
+			$this->load->language('account/navigation', 'atelier_navigation');
+			$data['text_atelier_logout'] = $this->language->get('atelier_navigation')->get('text_atelier_nav_logout');
+			$data['logout'] = $this->url->link('account/logout', '', true);
+		}
 		
 		$data['edit'] = $this->url->link('account/edit', '', true);
 		$data['password'] = $this->url->link('account/password', '', true);
@@ -77,7 +84,7 @@ class ControllerAccountAccount extends Controller {
 		}
 		
 		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['column_right'] = $this->load->controller('common/column_right', array('exclude_account' => $uses_atelier_navigation));
 		$data['content_top'] = $this->load->controller('common/content_top');
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
